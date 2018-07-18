@@ -1,0 +1,18 @@
+{
+  presets: ['react-native', 'flow'],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: ['./src'],
+        cwd: 'babelrc',
+        alias: {
+          '@': './src/'
+        },
+        extensions: ['.js', '.jsx']
+      }
+    ]
+  ],
+  retainLines: true,
+  sourceMaps: true
+}
