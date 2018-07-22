@@ -1,17 +1,14 @@
-/**
- * @providesModule TempScreen
- */
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-export const TAG = 'HomeScreen';
+export const TAG = 'TempScreen';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
   }
 });
-class HomeScreen extends Component {
+class TempScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -30,7 +27,7 @@ class HomeScreen extends Component {
   }
 }
 
-HomeScreen.propTypes = {};
+TempScreen.propTypes = {};
 
-HomeScreen.defaultProps = {};
-export default HomeScreen;
+TempScreen.defaultProps = {};
+export default TempScreen;

@@ -1,6 +1,3 @@
-/**
- * @providesModule TempScreen
- */
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 
@@ -11,7 +8,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   }
 });
-class HomeScreen extends Component {
+export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -33,4 +30,3 @@ class HomeScreen extends Component {
 HomeScreen.propTypes = {};
 
 HomeScreen.defaultProps = {};
-export default HomeScreen;

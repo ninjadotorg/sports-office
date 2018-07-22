@@ -8,12 +8,12 @@ import * as Screens from '@/screens';
 
 const DrawerRouter = DrawerNavigator(
   {
-    Home_Screen: {
-      screen: Screens.CustomizeScreen,
-      navigationOptions: {
-        drawerLabel: 'SMART OFFICE'
-      }
-    }
+    // Home_Screen: {
+    //   screen: Screens.CustomizeScreen,
+    //   navigationOptions: {
+    //     drawerLabel: 'SMART OFFICE'
+    //   }
+    // }
   },
   {
     // contentComponent: Menu

@@ -1,6 +1,6 @@
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, createStackNavigator } from 'react-navigation';
 
-import Screens from '@/screens';
+import HomeScreen from '@/screens/HomeScreen';
 import { FONT_FAMILY, fontSizeHeader } from '@/utils/TextStyle';
 import { COLOR } from '@/utils/Constants';
 
@@ -48,25 +48,21 @@ const detailNavigationOption = {
   }
 };
 
-export const SignInStack = StackNavigator({
-  SignInScreen: {
-    screen: Screens.SignInScreen,
-    navigationOptions: customNavigationOption
-  },
-  ForgotPasswordScreen: {
-    screen: Screens.ForgotPasswordScreen,
-    navigationOptions: detailNavigationOption
-  }
-});
+// export const SignInStack = StackNavigator({
+//   SignInScreen: {
+//     screen: Screens.SignInScreen,
+//     navigationOptions: customNavigationOption
+//   },
+//   ForgotPasswordScreen: {
+//     screen: Screens.ForgotPasswordScreen,
+//     navigationOptions: detailNavigationOption
+//   }
+// });
 
-const StackRouter = StackNavigator({
+const StackRouter = createStackNavigator({
   HomeScreen: {
-    screen: Screens.HomeScreen,
+    screen: HomeScreen,
     navigationOptions: customNavigationOption
-  },
-  SignInStack: {
-    screen: SignInStack,
-    navigationOptions: { header: null }
   }
 });
 

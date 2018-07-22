@@ -1,6 +1,6 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
 
-import { COLOR } from '@/constants/Constants';
+import { COLOR } from '@/utils/Constants';
 
 export const screenWidth = Dimensions.get('window').width;
 export const fontSizer = () => {
