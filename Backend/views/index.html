@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Melody example: chatting</title>
+  </head>
+
+  <style>
+    #chat {
+      text-align: left;
+      background: #f1f1f1;
+      width: 500px;
+      min-height: 300px;
+      padding: 20px;
+    }
+  </style>
+
+  <body>
+    <center>
+      <h3>Chat</h3>
+      <pre id="chat"></pre>
+      <input placeholder="say something" id="text" type="text">
+    </center>
+
+    <script>
+      var url = "ws://" + window.location.host + "/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjgzOTM0MDAsImlkIjoxLCJ1c2VybmFtZSI6ImJpbmhucSJ9.hLSCSmcxX0-D5ebYon0Mj6ibM57U-OMpsimNnJg-zVk";
+      
+      //var ws = new WebSocket(url);
+      var ws = new WebSocket("ws://eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjgzOTM0MDAsImlkIjoxLCJ1c2VybmFtZSI6ImJpbmhucSJ9.hLSCSmcxX0-D5ebYon0Mj6ibM57U-OMpsimNnJg-zVk:1@" + window.location.host+"/game/ws")
+
+      //ws.SetCredentials ("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjgzOTM0MDAsImlkIjoxLCJ1c2VybmFtZSI6ImJpbmhucSJ9.hLSCSmcxX0-D5ebYon0Mj6ibM57U-OMpsimNnJg-zVk", "123456789", true);
+      
+      var name = "Guest" + Math.floor(Math.random() * 1000);
+      var chat = document.getElementById("chat");
+      var text = document.getElementById("text");
+      
+      var now = function () {
+          var iso = new Date().toISOString();
+          return iso.split("T")[1].split(".")[0];
+      };
+
+      ws.onmessage = function (msg) {
+
+          var line =  now() + " " + msg.data + "\n";
+          chat.innerText += line;
+      };
+
+      ws.onopen = function(evt) {
+            console.log(evt);
+      };
+		 
+		
+      ws.onerror = function(evt) {
+         console.log(evt)
+      };
+
+      text.onkeydown = function (e) {
+        if (e.keyCode === 13 && text.value !== "") {
+          ws.send("<" + name + "> " + text.value);
+          text.value = "";
+        }
+      };
+    </script>
+  </body>
+</html>
