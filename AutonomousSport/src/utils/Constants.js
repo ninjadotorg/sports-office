@@ -4,7 +4,15 @@
 export default class Constants {
   static BACK_KEY = 'BACK';
 }
-
+export const Config = {
+  API_URL: (() => {
+    if (!__DEV__) {
+      return 'http://handshake.autonomous.ai/api-handshake';
+    } else {
+      return 'http://192.168.0.113:8081';
+    }
+  })()
+};
 export const COLOR = {
   TRANSPARENT: 'transparent',
   WHITE: '#ffffff',

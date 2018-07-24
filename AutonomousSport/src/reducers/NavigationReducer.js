@@ -1,7 +1,7 @@
 import * as Routers from '@/routers';
 import { NavigationActions } from 'react-navigation';
 import Constants from '@/utils/Constants';
-import { TAG as TAGHOME } from '@/screens/HomeScreen';
+import { TAG as TAGHOME } from '@/screens/Home';
 
 // const initTabState = Routers.TabRouter.router.getStateForAction(TAGHOME);
 // export function TabReducer(state = initTabState, action) {

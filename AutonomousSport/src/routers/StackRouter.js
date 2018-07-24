@@ -1,6 +1,6 @@
-import { StackNavigator, createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 
-import HomeScreen from '@/screens/HomeScreen';
+import * as Screens from '@/screens';
 import { FONT_FAMILY, fontSizeHeader } from '@/utils/TextStyle';
 import { COLOR } from '@/utils/Constants';
 
@@ -61,7 +61,15 @@ const detailNavigationOption = {
 
 const StackRouter = createStackNavigator({
   HomeScreen: {
-    screen: HomeScreen,
+    screen: Screens.HomeScreen,
+    navigationOptions: customNavigationOption
+  },
+  ChallengeScreen: {
+    screen: Screens.ChallengeScreen,
+    navigationOptions: customNavigationOption
+  },
+  CreateRoomScreen: {
+    screen: Screens.CreateRoomScreen,
     navigationOptions: customNavigationOption
   }
 });
