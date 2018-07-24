@@ -5,5 +5,5 @@
   "flow.useNPMPackagedFlow": true,
   "javascript.validate.enable": false,
   "prettier.singleQuote": true,
-  "java.configuration.updateBuildConfiguration": "disabled"
+  "git.ignoreLimitWarning": true
 }

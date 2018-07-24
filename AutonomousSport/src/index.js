@@ -1,1 +1,1 @@
-import React from 'react';
+export { default as MainContainer } from '@/containers/MainContainer';
