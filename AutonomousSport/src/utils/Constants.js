@@ -1,6 +1,8 @@
 /**
  * @providesModule Constants
  */
+import * as ConfigReact from 'react-native-config';
+
 export default class Constants {
   static BACK_KEY = 'BACK';
 }
@@ -11,7 +13,8 @@ export const Config = {
     } else {
       return 'http://192.168.0.113:8081';
     }
-  })()
+  })(),
+  OPENTOK_API_KEY: ConfigReact.OPENTOK_API_KEY
 };
 export const COLOR = {
   TRANSPARENT: 'transparent',

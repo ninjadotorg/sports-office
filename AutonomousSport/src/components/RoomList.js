@@ -10,7 +10,6 @@ import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { withNavigation } from 'react-navigation';
-import Room from '@/models/Room';
 
 export const TAG = 'RoomList';
 const styles = StyleSheet.create({
@@ -21,6 +20,9 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1
+  },
+  item: {
+    paddingVertical: 10
   }
 });
 class RoomList extends Component {
@@ -45,7 +47,7 @@ class RoomList extends Component {
 
   onPressItem = item => {
     console.log(TAG, ' - onPressItem - item ', item);
-    this.props.navigation?.navigate(TAGCHALLENGE,item);
+    this.props.navigation?.navigate(TAGCHALLENGE, item);
   };
 
   fetchData = async () => {
@@ -78,6 +80,7 @@ class RoomList extends Component {
   renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        style={styles.item}
         key={String(item.id)}
         onPress={onClickView(() => {
           this.onPressItem(item);

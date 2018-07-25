@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
 import styles from './styles';
 import Room from '@/models/Room';
+import { Config } from '@/utils/Constants';
 
 export const TAG = 'BikerProfile';
 
@@ -28,7 +29,7 @@ class BikerProfile extends Component {
     return (
       <View style={styles.container}>
         <OTSession
-          apiKey=""
+          apiKey={Config.OPENTOK_API_KEY}
           sessionId={this.room?.session || ''}
           token={this.room?.token || ''}
         >
