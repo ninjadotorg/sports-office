@@ -59,19 +59,24 @@ const detailNavigationOption = {
 //   }
 // });
 
-const StackRouter = createStackNavigator({
-  HomeScreen: {
-    screen: Screens.HomeScreen,
-    navigationOptions: customNavigationOption
+const StackRouter = createStackNavigator(
+  {
+    HomeScreen: {
+      screen: Screens.HomeScreen,
+      navigationOptions: customNavigationOption
+    },
+    ChallengeScreen: {
+      screen: Screens.ChallengeScreen,
+      navigationOptions: customNavigationOption
+    },
+    CreateRoomScreen: {
+      screen: Screens.CreateRoomScreen,
+      navigationOptions: customNavigationOption
+    }
   },
-  ChallengeScreen: {
-    screen: Screens.ChallengeScreen,
-    navigationOptions: customNavigationOption
-  },
-  CreateRoomScreen: {
-    screen: Screens.CreateRoomScreen,
-    navigationOptions: customNavigationOption
+  {
+    // initialRouteName: 'ChallengeScreen'
   }
-});
+);
 
 export default StackRouter;

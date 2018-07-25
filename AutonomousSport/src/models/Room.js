@@ -10,4 +10,17 @@ export default class Room {
     this.token = roomJson?.token || '';
     this.win = roomJson?.win || 0;
   }
+  toJSON() {
+    return {
+      id: this.id,
+      userId: this.userId,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      deletedAt: this.deletedAt,
+      name: this.name,
+      session: this.session,
+      token: this.token,
+      win: this.win
+    };
+  }
 }

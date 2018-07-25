@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Text,TouchableOpacity } from 'react-native';
-import ViewUtil from '@/utils/ViewUtil';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  TouchableOpacity
+} from 'react-native';
+import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
-import {NavigationActions} from 'react-navigation';
-import {TAG as TAGCHALLENGE} from '@/screens/Challenge';
+import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
+import { withNavigation } from 'react-navigation';
+import Room from '@/models/Room';
+
 export const TAG = 'RoomList';
 const styles = StyleSheet.create({
   container: {
@@ -35,6 +43,11 @@ class RoomList extends Component {
     );
   }
 
+  onPressItem = item => {
+    console.log(TAG, ' - onPressItem - item ', item);
+    this.props.navigation?.navigate(TAGCHALLENGE,item);
+  };
+
   fetchData = async () => {
     try {
       const roomList = await ApiService.getRoomList({ page: 1, page_size: 10 });
@@ -46,12 +59,6 @@ class RoomList extends Component {
       console.log(TAG, ' - fetchData - error ', e);
     }
   };
-
-  onPressItem = ()=>{
-    NavigationActions.action({
-      route:TAGCHALLENGE
-    });
-  }
 
   handleRefresh = () => {
     return this.state.refreshing;
@@ -70,7 +77,12 @@ class RoomList extends Component {
 
   renderItem = ({ item, index }) => {
     return (
-      <TouchableOpacity key={String(item.id)} onPress={this.onPressItem}>
+      <TouchableOpacity
+        key={String(item.id)}
+        onPress={onClickView(() => {
+          this.onPressItem(item);
+        })}
+      >
         <Text>
           {item.createdAt}
         </Text>
@@ -102,4 +114,4 @@ class RoomList extends Component {
 RoomList.propTypes = {};
 
 RoomList.defaultProps = {};
-export default RoomList;
+export default withNavigation(RoomList);
