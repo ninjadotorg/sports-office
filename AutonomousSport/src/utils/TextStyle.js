@@ -3,6 +3,7 @@ import { StyleSheet, Platform, Dimensions } from 'react-native';
 import { COLOR } from '@/utils/Constants';
 
 export const screenWidth = Dimensions.get('window').width;
+export const screenSize = Dimensions.get('window');
 export const fontSizer = () => {
   return scale() * 12;
 };

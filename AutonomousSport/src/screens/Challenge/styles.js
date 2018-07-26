@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   map: {
+    flex: 1,
     backgroundColor: 'green'
   }
 });

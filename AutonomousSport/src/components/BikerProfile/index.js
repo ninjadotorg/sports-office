@@ -19,13 +19,8 @@ class BikerProfile extends Component {
 
   componentDidMount() {}
 
-  componentWillUpdate(nextProps) {
-    console.log(
-      `${TAG} - componentWillUpdate - nextProps = ${JSON.stringify(nextProps)} `
-    );
-  }
-
   render() {
+    console.log(TAG, ' render TOK_KEY = ', Config.OPENTOK_API_KEY);
     return (
       <View style={styles.container}>
         <OTSession

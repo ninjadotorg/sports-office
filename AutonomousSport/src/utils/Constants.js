@@ -14,7 +14,7 @@ export const Config = {
       return 'http://192.168.0.113:8081';
     }
   })(),
-  OPENTOK_API_KEY: ConfigReact.OPENTOK_API_KEY
+  OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || ''
 };
 export const COLOR = {
   TRANSPARENT: 'transparent',
