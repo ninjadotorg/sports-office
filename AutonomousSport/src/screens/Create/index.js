@@ -6,6 +6,7 @@ import Carousel from 'react-native-snap-carousel';
 import { ParallaxImage } from 'react-native-snap-carousel';
 import styles, { sliderWidth, itemWidth } from './styles';
 import TextStyle from '@/utils/TextStyle';
+import ApiService from '@/services/ApiService';
 
 export const TAG = 'CreateRoomScreen';
 export const DATA_MAP_LIST = [
@@ -56,7 +57,13 @@ export default class CreateRoomScreen extends BaseScreen {
 
   componentDidMount() {}
 
-  onPressCreateRoom = () => {};
+  onPressCreateRoom = () => {
+    try {
+      const roomInfo = ApiService.createRoom();
+    } catch (error) {
+      
+    }
+  };
   renderItem = ({ item, index }, parallaxProps) => {
     const { uri = '', title = '' } = item || {};
     return (

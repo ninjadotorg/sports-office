@@ -9,7 +9,9 @@ import {
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
+import { compose } from 'redux';
 import { withNavigation } from 'react-navigation';
+import { connect } from 'react-redux';
 
 export const TAG = 'RoomList';
 const styles = StyleSheet.create({
@@ -29,26 +31,36 @@ class RoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: {},
       data: [],
       isFetching: false,
       refreshing: false
     };
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
+  componentDidMount() {}
 
-  componentWillUpdate(nextProps) {
-    console.log(
-      `${TAG} - componentWillUpdate - nextProps = ${JSON.stringify(nextProps)} `
-    );
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps?.user !== this.state?.user) {
+      this.fetchData();
+    }
   }
 
   onPressItem = item => {
     console.log(TAG, ' - onPressItem - item ', item);
     this.props.navigation?.navigate(TAGCHALLENGE, item);
   };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+      console.log(TAG, ' getDerivedStateFromProps - user = ', JSON.stringify(nextProps?.user));
+      return {
+        user: nextProps.user
+      };
+    }
+    return null;
+  }
+
 
   fetchData = async () => {
     try {
@@ -117,4 +129,10 @@ class RoomList extends Component {
 RoomList.propTypes = {};
 
 RoomList.defaultProps = {};
-export default withNavigation(RoomList);
+export default compose(
+  withNavigation,
+  connect(
+    state => ({ user: state.user }),
+    null
+  )
+)(RoomList);

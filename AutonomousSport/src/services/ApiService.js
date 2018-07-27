@@ -4,11 +4,11 @@ import METHOD from '@/services/Method';
 import Util from '@/utils/Util';
 // import _ from 'lodash';
 import Room from '@/models/Room';
+import LocalDatabase from '@/utils/LocalDatabase';
 
 const TAG = 'ApiService';
 export default class ApiService {
-  static token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJpbmhAdGVzdC5jb20iLCJleHAiOjE1MzQ5OTU2NjAsImlkIjoxfQ.yC0bMtAczc_aT0j8_nziTBHr2QXWdU54e5z7lB_1H24';
+  static token = '';
 
   static buildUrl(url, parameters) {
     let qs = '';
@@ -59,8 +59,8 @@ export default class ApiService {
     console.log('getURL Params:', params);
 
     if (!ApiService.token) {
-      ApiService.token = await Util.getUserAccessToken();
-      console.log(ApiService.token);
+      ApiService.token = await LocalDatabase.getUserAccessToken();
+      console.log(TAG, ' getURL token =', ApiService.token);
     }
     const Authorization = `Bearer ${ApiService.token}`;
 
@@ -137,10 +137,10 @@ export default class ApiService {
     });
     return response;
   }
-  static async createRoom() {
+  static async createRoom(): Room {
     const url = Api.CREATE_ROOM;
     const response = await ApiService.getURL(METHOD.GET, url, {});
-    return response;
+    return response ? new Room(response) : null;
   }
 
   static async getRoomList({ page = 1, page_size = 10 }) {
