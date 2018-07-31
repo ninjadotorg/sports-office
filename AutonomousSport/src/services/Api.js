@@ -6,5 +6,5 @@ export default class Api {
   static INIT_HANDSHAKE = `${Config.API_URL}/api/handshake/init`;
   static GET_LIST_ROOM = `${Config.API_URL}/api/room/list`;
   static CREATE_ROOM = `${Config.API_URL}/api/room/session/create`;
-  static JOIN_ROOM = `${Config.API_URL}/api/room/session/create`;
+  static JOIN_ROOM = `${Config.API_URL}/api/room/session/create-token`;
 }

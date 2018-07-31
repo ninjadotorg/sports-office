@@ -12,6 +12,7 @@ import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { compose } from 'redux';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 export const TAG = 'RoomList';
 const styles = StyleSheet.create({
@@ -46,21 +47,34 @@ class RoomList extends Component {
     }
   }
 
-  onPressItem = item => {
-    console.log(TAG, ' - onPressItem - item ', item);
-    this.props.navigation?.navigate(TAGCHALLENGE, item);
+  onPressItem = async (item: JSON) => {
+    try {
+      // console.log(TAG, ' - onPressItem - item ', item);
+      const response = await ApiService.joinRoom({
+        session: item?.session || ''
+      });
+      // console.log(TAG, ' - onPressItem - response ', response);
+      if (!_.isEmpty(response) && _.has(response, 'token')) {
+        console.log(TAG, ' - onPressItem - response111 ', response);
+        item['token'] = response['token'];
+        this.props.navigation?.navigate(TAGCHALLENGE, item);
+      }
+    } catch (error) {}
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
-      console.log(TAG, ' getDerivedStateFromProps - user = ', JSON.stringify(nextProps?.user));
+      console.log(
+        TAG,
+        ' getDerivedStateFromProps - user = ',
+        JSON.stringify(nextProps?.user)
+      );
       return {
         user: nextProps.user
       };
     }
     return null;
   }
-
 
   fetchData = async () => {
     try {

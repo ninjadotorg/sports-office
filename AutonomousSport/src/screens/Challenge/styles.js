@@ -8,7 +8,9 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-    backgroundColor: 'green'
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'grey'
   }
 });
 

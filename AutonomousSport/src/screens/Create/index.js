@@ -7,6 +7,7 @@ import { ParallaxImage } from 'react-native-snap-carousel';
 import styles, { sliderWidth, itemWidth } from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
+import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 
 export const TAG = 'CreateRoomScreen';
 export const DATA_MAP_LIST = [
@@ -57,12 +58,14 @@ export default class CreateRoomScreen extends BaseScreen {
 
   componentDidMount() {}
 
-  onPressCreateRoom = () => {
+  onPressCreateRoom = async () => {
     try {
-      const roomInfo = ApiService.createRoom();
-    } catch (error) {
-      
-    }
+      const roomInfo = await ApiService.createRoom();
+      console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
+      if (roomInfo) {
+        this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
+      }
+    } catch (error) {}
   };
   renderItem = ({ item, index }, parallaxProps) => {
     const { uri = '', title = '' } = item || {};

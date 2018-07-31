@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 
+import { Button } from 'react-native-elements';
 import styles from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
@@ -26,7 +27,7 @@ export default class ChallengeScreen extends BaseScreen {
   };
   constructor(props) {
     super(props);
-    const room: Room = new Room(props.navigation?.getParam() || dataTest);
+    const room: Room = new Room(props.navigation?.state.params || dataTest);
     this.state = {
       room: room
     };
@@ -43,7 +44,7 @@ export default class ChallengeScreen extends BaseScreen {
   renderMap = () => {
     return (
       <View style={styles.map}>
-        <Text>
+        <Text style={{ fontSize: 20, color: 'white' }}>
 Map
         </Text>
       </View>
@@ -55,7 +56,13 @@ Map
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <BikerProfile room={room} />
+        <View style={{alignItems:'center'}}>
+          <BikerProfile room={room} />
+          <Button
+            title="Get ready"
+            buttonStyle={{ backgroundColor: 'green' }}
+          />
+        </View>
       </View>
     );
   }

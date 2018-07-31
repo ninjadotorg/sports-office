@@ -3,9 +3,10 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     width: 100,
-    flexDirection: 'row'
+    flex: 1,
+    flexDirection: 'column'
   },
-  publisher: {},
-  subscriber: {}
+  publisher: { height: 100 },
+  subcriber: { height: 100 }
 });
 export default styles;

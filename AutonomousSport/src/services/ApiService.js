@@ -160,11 +160,12 @@ export default class ApiService {
     return listRoom;
   }
 
-  static async joinRoom() {
+  static async joinRoom({ session = '' }) {
     const url = Api.JOIN_ROOM;
     const response = await ApiService.getURL(METHOD.POST, url, {
-      chain_id: ApiService.chain_id
+      session: session
     });
+    console.log(TAG, ' - joinRoom = ', response);
     return response;
   }
 }

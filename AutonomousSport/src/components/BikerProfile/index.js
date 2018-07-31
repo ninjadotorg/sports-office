@@ -20,7 +20,7 @@ class BikerProfile extends Component {
   componentDidMount() {}
 
   render() {
-    console.log(TAG, ' render TOK_KEY = ', Config.OPENTOK_API_KEY);
+    console.log(TAG, ' render room = ', this.room?.toJSON());
     return (
       <View style={styles.container}>
         <OTSession
