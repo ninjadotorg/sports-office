@@ -30,8 +30,7 @@ var OPENTOK_API_KEY,_ = strconv.Atoi( os.Getenv("OPENTOK_API_KEY")  )
 var gormConn *gorm.DB
 
 func GetDatabaseConnection() *gorm.DB {
-
-	//SecretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
+ 
 	DB_DIALECT :=  os.Getenv("DBCONNECT") //"root:root@/sportbike?charset=utf8&parseTime=True&loc=Local"
 	// os.Getenv("FOO")
 	//	db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
