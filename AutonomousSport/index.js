@@ -1,7 +1,8 @@
 /** @format */
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+import { AppRegistry } from 'react-native';
+import { name as appName } from './app.json';
+import MainContainer from '@/containers/MainContainer';
 
-AppRegistry.registerComponent(appName, () => App);
+console.disableYellowBox = true;
+AppRegistry.registerComponent(appName, () => MainContainer);
