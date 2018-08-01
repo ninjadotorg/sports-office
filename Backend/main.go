@@ -254,6 +254,8 @@ func main() {
 	ctl := &controllers.BaseController{Dao:db} 
 	e.POST("/api/auth", ctl.Auth) 
 	e.POST("/api/signup", ctl.Signup) 
+	e.GET("/api/room/list", ctl.ListRoom)
+	e.GET("/api/user/list", ctl.ListUser)
 	e.Static("/", "views")   
  
 	//======================USER_GAME_API=============================
@@ -262,9 +264,9 @@ func main() {
 	userapi.GET("/info", ctl.GetInfo)
   
 	//userapi.GET("/history/:coin/:action/:size/:page", ctl.History) 
-	userapi.GET("/room/list", ctl.ListRoom)
 	userapi.GET("/room/session/create", ctl.CreateSession)
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
+	userapi.POST("/room/session/close", ctl.CloseSession)
 	
 
 	//===================================================

@@ -1,8 +1,9 @@
 package config
 
 import (
-	//"os"  
+	"os"  
 //	"time"
+	"strconv"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	//_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -24,15 +25,16 @@ var TOKEN_EXP_TIME = 720
 var MIN_WITHDRAW_BTC = 0.0001
 var MIN_WITHDRAW_ETH = 0.005
 
-var OPENTOK_SCRET = ""
-var OPENTOK_API_KEY = 46154422
+var OPENTOK_SCRET = os.Getenv("OPENTOK_SCRET")  
+var OPENTOK_API_KEY,_ = strconv.Atoi( os.Getenv("OPENTOK_API_KEY")  )  
 var gormConn *gorm.DB
 
 func GetDatabaseConnection() *gorm.DB {
 
 	//SecretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
-	DB_DIALECT :="root:root@/sportbike?charset=utf8&parseTime=True&loc=Local"
-//	db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
+	DB_DIALECT :=  os.Getenv("DBCONNECT") //"root:root@/sportbike?charset=utf8&parseTime=True&loc=Local"
+	// os.Getenv("FOO")
+	//	db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 
 	//DB_DIALECT :="host=127.0.0.1 port=5432 user=postgres dbname=dice password=gopklGgf90889GDvvdflk  sslmode=disable"
 	// Check if a connection allready exists
