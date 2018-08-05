@@ -4,7 +4,7 @@ import (
 	"time"
 	"fmt"
 	//"strings"
-	//"strconv"
+	"strconv"
 	"../models"
 	"../config"
 	"net/http"
@@ -101,30 +101,38 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	user.Email = c.FormValue("email")
 	//user.Password, _ = models.HashPassword(c.FormValue("password"))  
 	user.FetchByUsername(basectl.Dao)
-	if models.CheckPasswordHash( c.FormValue("password"), user.Password ) == false {
-		return echo.ErrUnauthorized 
-	}  
+	 
 	//===============
-	if user.ID > 0 { 
-		   
-		token := jwt.New(jwt.SigningMethodHS256) 
-		// Set claims
-		claims := token.Claims.(jwt.MapClaims)
-		claims["id"] = user.ID
-		claims["email"] = user.Email 
-		claims["exp"] = time.Now().Add(time.Hour * time.Duration(config.TOKEN_EXP_TIME) ).Unix()  
-		t, err := token.SignedString([]byte(config.SECRET_KEY))
-		if err != nil {
-			return err
-		}  
-		var f interface{}
-		f = map[string]interface{}{
-			"token": t,
-			"email":  user.Email,
-		}
-		return c.JSON(http.StatusOK,f) 
+	fmt.Println("data: ", user.ID) 
+	if user.ID <=0 {
+		user = new(models.User)  
+		user.Email = c.FormValue("email")
+		user.Password, _ = models.HashPassword(c.FormValue("password"))  
+		user.Create(basectl.Dao) 
+	}else{
+		
+		if models.CheckPasswordHash( c.FormValue("password"), user.Password ) == false {
+			return echo.ErrUnauthorized 
+		} 
 	}
-
+		   
+	token := jwt.New(jwt.SigningMethodHS256) 
+	// Set claims
+	claims := token.Claims.(jwt.MapClaims)
+	claims["id"] = user.ID
+	claims["email"] = user.Email 
+	claims["exp"] = time.Now().Add(time.Hour * time.Duration(config.TOKEN_EXP_TIME) ).Unix()  
+	t, err := token.SignedString([]byte(config.SECRET_KEY))
+	if err != nil {
+		return err
+	}  
+	var f interface{}
+	f = map[string]interface{}{
+		"token": t,
+		"email":  user.Email,
+	}
+	return c.JSON(http.StatusOK,f) 
+	  
 	return echo.ErrUnauthorized
 
 }
@@ -161,11 +169,34 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	room := new(models.Room) 
 	room.Session = s.ID 
 	room.Token = string(*t)
-	room.Status = 0
+	room.Status = 1
 	room.UserId = userid
 
 	room.Create(basectl.Dao) 
 
+	return c.JSON(http.StatusOK,f) 
+ 
+}
+// CloseSession
+func (basectl *BaseController)CloseSession(c echo.Context) error{
+
+	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET) 
+	
+	archive, _ := ot.ArchiveStart(c.FormValue("session"), nil)
+	 
+	if archive != nil { 
+		ot.ArchiveStop(archive.ID)  
+	}  
+	var room models.Room
+	//room := new(models.Room) 
+	basectl.Dao.Where(&models.Room{Session: c.FormValue("session")  }).First(&room) 
+	room.Status =0
+	basectl.Dao.Save(&room)     
+	fmt.Println("data room: ",room)  
+	var f interface{}
+	f = map[string]interface{}{ 
+		"archive": room.ID,
+	}
 	return c.JSON(http.StatusOK,f) 
  
 }
@@ -192,8 +223,8 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
 func (basectl *BaseController)ListRoom(c echo.Context) error{
 
 	var listroom []models.Room
-	//Offset(3)
-	basectl.Dao.Where(&models.Room{Status:0}).Find(&listroom) //Limit(50).Find(&dices)
+	//Offset(3) User{Name: "Jinzhu"}
+	basectl.Dao.Where(models.Room{Status:1}).Order("ID desc").Find(&listroom) //Limit(50).Find(&dices)
 	//db.Limit(3).Find(&users)
 	//loguser := models.Loggame{UserId: c.user.ID , ActionType:"DICE" , CoinType: dat.Symbol, OldCoin: myCoinAmount.Balance, NewCoin:myCoinAmount.Balance}
 	var f interface{}
@@ -205,3 +236,33 @@ func (basectl *BaseController)ListRoom(c echo.Context) error{
  
 }
 
+
+
+
+//list users. 
+func (basectl *BaseController)ListUser(c echo.Context) error{
+
+	var listuser []models.User  
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+	offset, _ := strconv.Atoi(c.QueryParam("offset"))
+
+	basectl.Dao.Where(models.User{}).Order("ID desc").Offset(offset).Limit(limit).Find(&listuser) //Limit(50).Find(&dices)
+	
+	 
+	var next = ""  
+	fmt.Println("limit: ", limit) 
+	fmt.Println("data: ", len(listuser)) 
+
+	if len(listuser) == limit {
+		next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+	}
+	
+	var f interface{}
+	f = map[string]interface{}{ 
+		"list": listuser,
+		"next": next,
+	}  
+	 
+	return c.JSON(http.StatusOK,f) 
+ 
+}

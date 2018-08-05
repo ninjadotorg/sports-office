@@ -21,7 +21,7 @@ type Room struct {
 	Name string `json:"name, omitempty" gorm:"not null; type:varchar(100)"` 
 	Session     string `json:"session, omitempty" gorm:"type:varchar(100);unique;unique_index"`
 	Token string `json:"token, omitempty" gorm:"not null; type:varchar(500)"`  
-	Status     int        `json:"win, omitempty" gorm:"not null"`  
+	Status     int        `json:"status, omitempty" gorm:"not null"`  
 	
 
 }

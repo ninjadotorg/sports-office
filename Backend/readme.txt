@@ -1,7 +1,4 @@
-//====================================Node config server ================================================
-https://stackoverflow.com/questions/12102110/nginx-to-reverse-proxy-websockets-and-enable-ssl-wss
-https://www.tutorialspoint.com/articles/how-to-configure-nginx-as-reverse-proxy-for-websocket
-
+ 
 upstream localhost {
     server localhost:8082;
 }
