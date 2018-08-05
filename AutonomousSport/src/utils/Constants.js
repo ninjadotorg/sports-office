@@ -9,9 +9,10 @@ export default class Constants {
 export const Config = {
   API_URL: (() => {
     if (!__DEV__) {
-      return 'http://handshake.autonomous.ai/api-handshake';
+      return '';
     } else {
-      return 'http://192.168.0.113:8081';
+      return ConfigReact.default.API_URL;
+      //'http://192.168.0.113:8081';
     }
   })(),
   OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || ''

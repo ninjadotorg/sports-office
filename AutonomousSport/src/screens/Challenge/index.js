@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 
 import { Button } from 'react-native-elements';
 import styles from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
+import images, { icons } from '@/assets';
 
 export const TAG = 'ChallengeScreen';
 const dataTest = {
@@ -22,9 +23,9 @@ const dataTest = {
   win: 0
 };
 export default class ChallengeScreen extends BaseScreen {
-  static navigationOptions = {
-    title: 'Challenge'
-  };
+  // static navigationOptions = {
+  //   title: 'Challenge'
+  // };
   constructor(props) {
     super(props);
     const room: Room = new Room(props.navigation?.state.params || dataTest);
@@ -44,25 +45,44 @@ export default class ChallengeScreen extends BaseScreen {
   renderMap = () => {
     return (
       <View style={styles.map}>
-        <Text style={{ fontSize: 20, color: 'white' }}>
-Map
-        </Text>
+        <Image
+          style={{ width: '100%', height: '100%', position: 'absolute' }}
+          source={images.map_list[0]}
+        />
+        <Button
+          containerViewStyle={{
+            position: 'absolute',
+            width: 300,
+            bottom: 10
+          }}
+          title="Get ready"
+          buttonStyle={{
+            backgroundColor: 'green'
+          }}
+        />
       </View>
     );
   };
-
+  onPressClose = () => {
+    this.props?.navigation.goBack();
+  };
   render() {
     const { room } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <View style={{alignItems:'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <BikerProfile room={room} />
-          <Button
-            title="Get ready"
-            buttonStyle={{ backgroundColor: 'green' }}
-          />
         </View>
+
+        {icons.close({
+          onPress: this.onPressClose,
+          containerStyle: {
+            position: 'absolute',
+            top: 10,
+            left: 10
+          }
+        })}
       </View>
     );
   }
