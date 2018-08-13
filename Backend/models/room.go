@@ -22,7 +22,9 @@ type Room struct {
 	Session     string `json:"session, omitempty" gorm:"type:varchar(100);unique;unique_index"`
 	Token string `json:"token, omitempty" gorm:"not null; type:varchar(500)"`  
 	Status     int        `json:"status, omitempty" gorm:"not null"`  
-	
+	MapId	   int        `json:"mapId, omitempty" gorm:"not null"`  
+	Loop	   int        `json:"loop, omitempty" gorm:"not null"`  
+	Miles	   float64        `json:"miles, omitempty" gorm:"not null"`  
 
 }
 

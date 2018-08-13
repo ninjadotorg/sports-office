@@ -16,8 +16,8 @@ import (
 	"./controllers"
 	"./config"
 	"./models"
-	"github.com/jinzhu/gorm"
-
+	"github.com/jinzhu/gorm" 
+	
 )
 
 // jwtCustomClaims are custom claims extending default ones.
@@ -33,7 +33,6 @@ var (
     }
 )
  
-var db = config.GetDatabaseConnection()  
  
 type ConfigGlobalPaypout struct {
 	Min    float64 `json:"min"`
@@ -82,6 +81,14 @@ var manager = ClientManager{
 	clients:    make(map[*Client]bool), 
 	 
 }
+
+//++++++++++++++++++++++++++++
+
+var db = config.GetDatabaseConnection()  
+var fbApp = config.InitFB()
+// var fbData, _ = fbApp.Database(context.Background())
+// var refDB = fbData.NewRef("games") 
+
 //++++++++++++++++++++++++++++GAME ENGINE===========
 func random( min, max int) int {
 	
@@ -251,11 +258,22 @@ func main() {
   
 
 	migrateDatabase(db)  
-	ctl := &controllers.BaseController{Dao:db} 
+	ctl := &controllers.BaseController{Dao:db, FbApp: fbApp } 
+	
+	// fmt.Printf("%+v ",refDB)
+	
+	// if err2 := refDB.Child("race-rooms").Set(context.Background(), &Message{
+	// 	Sender:"FDSF", 
+	// }); err2 != nil {
+	// 		log.Fatalln("Error setting value:", err2)
+	// }
+
 	e.POST("/api/auth", ctl.Auth) 
 	e.POST("/api/signup", ctl.Signup) 
 	e.GET("/api/room/list", ctl.ListRoom)
 	e.GET("/api/user/list", ctl.ListUser)
+	e.GET("/api/map/list", ctl.ListMap)
+	
 	e.Static("/", "views")   
  
 	//======================USER_GAME_API=============================
@@ -263,11 +281,17 @@ func main() {
 	userapi.Use(middleware.JWT([]byte(config.SECRET_KEY)))
 	userapi.GET("/info", ctl.GetInfo)
   
-	//userapi.GET("/history/:coin/:action/:size/:page", ctl.History) 
-	userapi.GET("/room/session/create", ctl.CreateSession)
+	//userapi.GET("/room/session/create", ctl.CreateSession)
+	userapi.POST("/room/session/create", ctl.CreateSession)
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
+	//add Friends AddFriend  friendId
+	userapi.POST("/friend/add", ctl.AddFriend) 
+	userapi.POST("/friend/del", ctl.RemoveFriend) 
+	userapi.GET("/friend/list", ctl.ListMyFriends) 
+	
+	//stream-data-
 
 	//===================================================
 	g := e.Group("/game")
@@ -283,7 +307,7 @@ func main() {
 		claims := user.Claims.(jwt.MapClaims)  
 		usermodel := new(models.User)  
 		usermodel.ID =   int(claims["id"].(float64))
-		usermodel.FetchById()
+		usermodel.FetchById(db)
 
 		if usermodel.Email != config.GUEST_USER {
 			for conn := range manager.clients {
@@ -356,7 +380,17 @@ func migrateDatabase(db *gorm.DB) {
 	
 	db.AutoMigrate(&models.User{})  
 	db.AutoMigrate(&models.Room{})  
-
-	//db.Create(&models.User{Fullname:"binh nguuyen",Email:"abc@gmail.com", Password:"123456" })
+	db.AutoMigrate(&models.Map{})  
+	db.AutoMigrate(&models.Friend{})  
+	// db.Create(&models.Map{Name:"Weston", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Weston_ntuxxLP0LeY5u023r6dM.png" })
+	// db.Create(&models.Map{Name:"Upper Bay",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Upper_Bay_yF0wp8xBqUWMsbzZuXbB.png" })
+	// db.Create(&models.Map{Name:"Slamon", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Slamon_uIoylyaC6TI3eCAuztH4.png" })
+	// db.Create(&models.Map{Name:"Lakewood", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Lakewood_EyJn9zKE9mBNxue0m7Rp.png" })
+	// db.Create(&models.Map{Name:"Lake Suppoeri",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Lake_Suppoeri_Yzv5gEdRYTI885mVmkkq.png" })
+	// db.Create(&models.Map{Name:"Lake Pont", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Lake_Pont_y3A6fo1JMVs1vH0MZZW9.png" })
+	// db.Create(&models.Map{Name:"Gradnd Canyon",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Gradnd_canyon_ukVdWrN87Xx2hKacF2lP.png" })
+	// db.Create(&models.Map{Name:"Chiago", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Chiago_gcfQ7CkOufkVj2Xrmx5L.png" })
+	// db.Create(&models.Map{Name:"Center Park",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Center_Park_YV7YGwd8HKv0weW7tgQy.png" })
+	// db.Create(&models.Map{Name:"Calop Pumbo", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/calop_pumbo_cKNc071ADymBnwq4IAbt.png" })
 
 }
