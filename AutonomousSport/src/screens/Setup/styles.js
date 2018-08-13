@@ -6,12 +6,13 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'white'
   },
-  button: {
-    backgroundColor: 'green'
+  scroll: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
+    margin: 10
   },
-  joinRoom: {
-    width: 100,
-    padding: 10
+  row: {
+    margin: 10
   }
 });
 

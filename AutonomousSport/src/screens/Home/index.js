@@ -6,14 +6,17 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import RoomList from '@/components/RoomList';
 import { TAG as TAGCREATE } from '@/screens/Create';
-import ApiService from '@/services/ApiService';
-import LocalDatabase from '@/utils/LocalDatabase';
-import Util from '@/utils/Util';
+// import ApiService from '@/services/ApiService';
+// import LocalDatabase from '@/utils/LocalDatabase';
+// import Util from '@/utils/Util';
 import { fetchUser } from '@/actions/UserAction';
 
 export const TAG = 'HomeScreen';
 
 class HomeScreen extends BaseScreen {
+  static navigationOptions = {
+    title: 'Home'
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -41,28 +44,12 @@ class HomeScreen extends BaseScreen {
   render() {
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginVertical: 10
-          }}
-        >
-          <Button
-            title="Create Room"
-            buttonStyle={styles.button}
-            onPress={this.onPressCreateRoom}
-          />
-          <Button title="Join Room" buttonStyle={styles.button} />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1
-          }}
-        >
-          <RoomList />
-        </View>
+        <RoomList />
+        <Button
+          title="Create Room"
+          buttonStyle={styles.button}
+          onPress={this.onPressCreateRoom}
+        />
       </View>
     );
   }

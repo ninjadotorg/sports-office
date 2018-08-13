@@ -67,15 +67,22 @@ const StackRouter = createStackNavigator(
     },
     ChallengeScreen: {
       screen: Screens.ChallengeScreen,
-      navigationOptions: customNavigationOption
+      navigationOptions: {
+        header: null
+      }
     },
     CreateRoomScreen: {
       screen: Screens.CreateRoomScreen,
       navigationOptions: customNavigationOption
+    },
+    SetupScreen: {
+      screen: Screens.SetupScreen,
+      navigationOptions: customNavigationOption
     }
   },
   {
-    // initialRouteName: 'ChallengeScreen'
+    headerMode: 'screen',
+    initialRouteName: 'HomeScreen'
   }
 );
 

@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-ble-manager')
     compile project(':react-native-config')
     compile project(':react-native-vector-icons')
     compile project(':opentok-react-native')
