@@ -77,12 +77,32 @@ const StackRouter = createStackNavigator(
     },
     SetupScreen: {
       screen: Screens.SetupScreen,
-      navigationOptions: customNavigationOption
+      navigationOptions: {
+        header: null
+      }
+    },
+    SignInScreen: {
+      screen: Screens.SignInScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    StartScreen: {
+      screen: Screens.StartScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    FriendsScreen: {
+      screen: Screens.FriendsScreen,
+      navigationOptions: {
+        header: null
+      }
     }
   },
   {
     headerMode: 'screen',
-    initialRouteName: 'HomeScreen'
+    initialRouteName: 'FriendsScreen'
   }
 );
 

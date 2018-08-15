@@ -6,13 +6,13 @@ import {
   Text,
   TouchableOpacity
 } from 'react-native';
+import _ from 'lodash';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { compose } from 'redux';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 export const TAG = 'RoomList';
 const styles = StyleSheet.create({
@@ -31,21 +31,59 @@ const styles = StyleSheet.create({
 class RoomList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: {},
-      data: [],
-      isFetching: false,
-      refreshing: false
-    };
   }
-
+  state = {
+    user: {},
+    data: [],
+    isFetching: false,
+    refreshing: false
+  };
   componentDidMount() {}
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps?.user !== this.state?.user) {
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log(
+  //     TAG,
+  //     ' getDerivedStateFromProps - prevState?.user =  ',
+  //     prevState?.user
+  //   );
+  //   if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+  //     console.log(
+  //       TAG,
+  //       ' getDerivedStateFromProps - user = ',
+  //       JSON.stringify(nextProps?.user)
+  //     );
+  //     return {
+  //       user: nextProps.user
+  //     };
+  //   }
+  //   return null;
+  // }
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(nextProps?.user) !== JSON.stringify(this.state.user)) {
+      console.log(
+        TAG,
+        ' componentWillReceiveProps - user = ',
+        JSON.stringify(nextProps?.user)
+      );
       this.fetchData();
+      this.setState({
+        user: nextProps.user
+      });
     }
   }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log(
+  //     TAG,
+  //     ' componentDidUpdate - prevProps?.user =  ',
+  //     prevProps?.user,
+  //     ' user = ',
+  //     this.props.user
+  //   );
+  //   if (JSON.stringify(prevState?.user) !== JSON.stringify(this.state.user)) {
+  //     console.log(TAG, ' - componentDidUpdate - begin # ');
+  //     this.fetchData();
+  //   }
+  // }
 
   onPressItem = async (item: JSON) => {
     try {
@@ -62,22 +100,9 @@ class RoomList extends Component {
     } catch (error) {}
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
-      console.log(
-        TAG,
-        ' getDerivedStateFromProps - user = ',
-        JSON.stringify(nextProps?.user)
-      );
-      return {
-        user: nextProps.user
-      };
-    }
-    return null;
-  }
-
   fetchData = async () => {
     try {
+      console.log(TAG, ' - fetchData - begin ');
       const roomList = await ApiService.getRoomList({ page: 1, page_size: 10 });
       console.log(TAG, ' - fetchData - roomList ', roomList);
       this.setState({
@@ -120,18 +145,19 @@ class RoomList extends Component {
   };
 
   render() {
+    const { data, isFetching } = this.state;
     return (
       <View style={styles.container}>
         <FlatList
           style={[styles.list, {}]}
           removeClippedSubviews={false}
           ListHeaderComponent={this.renderHeader}
-          data={this.state.data}
+          data={data}
           keyExtractor={item => String(item.id)}
           renderItem={this.renderItem}
           onEndReachedThreshold={0.7}
           onRefresh={this.handleRefresh}
-          refreshing={this.state.isFetching}
+          refreshing={isFetching}
           onEndReached={this.handleLoadMore}
           ListFooterComponent={this.renderLoading}
         />
@@ -147,6 +173,10 @@ export default compose(
   withNavigation,
   connect(
     state => ({ user: state.user }),
-    null
+    {}
   )
 )(RoomList);
+// export default connect(
+//   state => ({ user: state.user }),
+//   {}
+// )(RoomList);

@@ -1,5 +1,5 @@
 export default class User {
-  constructor(userJson) {
+  constructor(userJson: JSON) {
     this.id = userJson?.id || -1;
     this.username = userJson.username || '';
     this.email = userJson.email || '';

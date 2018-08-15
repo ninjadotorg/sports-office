@@ -94,7 +94,7 @@ export default class ApiService {
           body: this.buildFormData(params)
         });
         const resJson = await res.json();
-        // console.log('Response data:', resJson);
+        console.log('Response data:', resJson);
         return resJson;
       } catch (error) {
         console.error(error);
@@ -120,11 +120,12 @@ export default class ApiService {
     }
   }
 
-  static async signIn({ email = '', password = '' }) {
+  static async signIn({ email = '', password = '', name }) {
     const url = Api.SIGN_IN;
     const response = await ApiService.getURL(METHOD.POST, url, {
       email,
-      password
+      password,
+      fullname: name
     });
     return response;
   }
