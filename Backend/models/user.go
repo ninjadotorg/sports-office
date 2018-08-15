@@ -79,9 +79,8 @@ func (u *User) FetchAll() []User {
 }
 
 // FetchById ...
-func (u *User) FetchById() error {
-	db := config.GetDatabaseConnection()
-
+func (u *User) FetchById(db *gorm.DB) error {
+ 
 	if err := db.Where("id = ?", u.ID).Find(&u).Error; err != nil {
 		return errors.New("Could not find the user")
 	}

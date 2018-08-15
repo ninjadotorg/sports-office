@@ -38,3 +38,19 @@ type ApiDepositsRespone struct {
 		BlockNumber int    `json:"blockNumber"`
 	} `json:"deposits"`
 }
+
+
+//===========
+type FbRacingRoom struct { 
+	Session string  `json:"session"`
+	MapId 	int 	`json:"mapId"`
+	Loop 	int 	`json:"loop"`
+	Miles	float64 `json:"miles"`
+	Players []FbRoomPlayer  `json:"players"`
+}
+
+type FbRoomPlayer struct { 
+	Token string  `json:"token"`
+	Speed float64 	`json:"speed"`
+	Goal  float64	`json:"goal"`
+}
