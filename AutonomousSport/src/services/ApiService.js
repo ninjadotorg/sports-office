@@ -161,12 +161,40 @@ export default class ApiService {
     return listRoom;
   }
 
+  static async getAllUser({ offset = 0, limit = 12 }) {
+    const url = Api.GET_ALL_USER;
+    const response = await ApiService.getURL(METHOD.GET, url, {
+      offset,
+      limit
+    });
+    // console.log(TAG, ' - getAllUser = ', response);
+    return response || {};
+  }
+
+  static async getAllFriend({ offset = 0, limit = 12 }) {
+    const url = Api.GET_ALL_FRIEND;
+    const response = await ApiService.getURL(METHOD.GET, url, {
+      offset,
+      limit
+    });
+    // console.log(TAG, ' - getAllUser = ', response);
+    return response || {};
+  }
+
   static async joinRoom({ session = '' }) {
     const url = Api.JOIN_ROOM;
     const response = await ApiService.getURL(METHOD.POST, url, {
       session: session
     });
     console.log(TAG, ' - joinRoom = ', response);
+    return response;
+  }
+  static async makeFriend({ friendId = -1 }) {
+    const url = Api.MAKE_FRIEND;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      friendId: friendId
+    });
+    console.log(TAG, ' - makeFriend = ', response);
     return response;
   }
 }

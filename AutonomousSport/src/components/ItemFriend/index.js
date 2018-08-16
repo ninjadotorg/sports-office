@@ -1,22 +1,28 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text } from 'react-native';
 import { Avatar, Button } from 'react-native-elements';
 import { verticalScale } from 'react-native-size-matters';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import styles from './styles';
 import { Config } from '@/utils/Constants';
 import TextStyle, { scale } from '@/utils/TextStyle';
+import User from '@/models/User';
+import { makeFriend } from '@/actions/FriendAction';
 
 export const TAG = 'ItemFriend';
 
-class ItemFriend extends Component {
+class ItemFriend extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      // data: props.data
+    };
   }
   componentDidMount() {}
 
   render() {
-    console.log(TAG, ' render room = ', this.room?.toJSON());
+    const { dataItem } = this.props;
     return (
       <View style={styles.container}>
         <Avatar
@@ -42,7 +48,7 @@ class ItemFriend extends Component {
               }
             ]}
           >
-            Explore the world
+            {dataItem?.fullname || dataItem?.email || ''}
           </Text>
           <Text
             style={[
@@ -53,7 +59,7 @@ class ItemFriend extends Component {
               }
             ]}
           >
-            12 kcal
+            {`${dataItem.kcal} Kcal`}
           </Text>
         </View>
         <Text
@@ -66,7 +72,7 @@ class ItemFriend extends Component {
             }
           ]}
         >
-          12 miles
+          {`${dataItem.route} ${dataItem.textRouteUnit}`}
         </Text>
         <Button
           rounded
@@ -77,6 +83,9 @@ class ItemFriend extends Component {
           }}
           buttonStyle={{ height: verticalScale(18) }}
           title="Friend"
+          onPress={() => {
+            this.props.makeFriend(dataItem?.id);
+          }}
           backgroundColor="#02BB4F"
           rightIcon={{ name: 'envira', type: 'font-awesome' }}
         />
@@ -85,7 +94,13 @@ class ItemFriend extends Component {
   }
 }
 
-ItemFriend.propTypes = {};
+ItemFriend.propTypes = {
+  dataItem: PropTypes.instanceOf(User).isRequired
+};
 
 ItemFriend.defaultProps = {};
-export default ItemFriend;
+
+export default connect(
+  state => ({}),
+  { makeFriend }
+)(ItemFriend);
