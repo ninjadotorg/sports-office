@@ -31,7 +31,7 @@ var gormConn *gorm.DB
 
 func GetDatabaseConnection() *gorm.DB {
  
-	DB_DIALECT :=  os.Getenv("DBCONNECT") //"root:root@/sportbike?charset=utf8&parseTime=True&loc=Local"
+	DB_DIALECT :=  os.Getenv("DBCONNECT") //export DBCONNECT="root:root@/sportbike?charset=utf8&parseTime=True&loc=Local"
 	// os.Getenv("FOO")
 	//	db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 

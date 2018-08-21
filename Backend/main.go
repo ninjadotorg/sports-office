@@ -382,6 +382,7 @@ func migrateDatabase(db *gorm.DB) {
 	db.AutoMigrate(&models.Room{})  
 	db.AutoMigrate(&models.Map{})  
 	db.AutoMigrate(&models.Friend{})  
+	db.AutoMigrate(&models.Profile{})  
 	// db.Create(&models.Map{Name:"Weston", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Weston_ntuxxLP0LeY5u023r6dM.png" })
 	// db.Create(&models.Map{Name:"Upper Bay",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Upper_Bay_yF0wp8xBqUWMsbzZuXbB.png" })
 	// db.Create(&models.Map{Name:"Slamon", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Slamon_uIoylyaC6TI3eCAuztH4.png" })

@@ -46,6 +46,7 @@ type FbRacingRoom struct {
 	MapId 	int 	`json:"mapId"`
 	Loop 	int 	`json:"loop"`
 	Miles	float64 `json:"miles"`
+	Status  string	`json:"status"`
 	Players []FbRoomPlayer  `json:"players"`
 }
 

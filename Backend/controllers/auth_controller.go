@@ -107,6 +107,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	//secretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
 	user := new(models.User)  
 	user.Email = c.FormValue("email")
+	user.Fullname = c.FormValue("fullname")
 	//user.Password, _ = models.HashPassword(c.FormValue("password"))  
 	user.FetchByUsername(basectl.Dao)
 	 
@@ -172,6 +173,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		"id": user.ID,
 		"fbuid": fbuser.UID,
 		"email":  user.Email,
+		"fullname": user.Fullname,
 	}
 	return c.JSON(http.StatusOK,f) 
 	  
@@ -229,6 +231,7 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		MapId:room.MapId,
 		Loop:room.Loop,
 		Miles:room.Miles,
+		Status:"New",
 	} ); err2 != nil {
 		log.Fatalln("Error setting value:", err2)
 	} 
@@ -336,25 +339,29 @@ func (basectl *BaseController)ListMap(c echo.Context) error{
 //list users. 
 func (basectl *BaseController)ListUser(c echo.Context) error{
 
-	var listuser []models.User  
+	var listuser []models.UserView  
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 	offset, _ := strconv.Atoi(c.QueryParam("offset"))
 
-	basectl.Dao.Where(models.User{}).Order("ID desc").Offset(offset).Limit(limit).Find(&listuser) //Limit(50).Find(&dices)
-	
-	 
-	var next = ""  
-	fmt.Println("limit: ", limit) 
-	fmt.Println("data: ", len(listuser)) 
+	//"email LIKE ? OR fullname LIKE ?", "%jin%", "%jin%"
+	search := c.QueryParam("search")
 
-	if len(listuser) == limit {
-		next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+	if search != "" {
+		basectl.Dao.Model(&models.UserView{}).Where("email LIKE ? OR fullname LIKE ?", "%"+search+"%",  "%"+search+"%" ).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
+	}else{
+		basectl.Dao.Model(&models.UserView{}).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
 	}
-	
+	if len(listuser) == limit {
+		offset= limit + offset
+	} 
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listuser,
-		"next": next,
+		"next": map[string]interface{}{ 
+			"limit":limit,
+			"offset":offset,
+			
+		},
 	}  
 	 
 	return c.JSON(http.StatusOK,f) 
@@ -376,18 +383,22 @@ func (basectl *BaseController)ListMyFriends(c echo.Context) error{
 
 	basectl.Dao.Table("users").Select("users.id, users.email, users.fullname").Joins("JOIN friends ON users.id = friends.friend_id").Where("friends.user_id = ?", userid ).Offset(offset).Limit(limit).Find(&listuser)
  
-	var next = ""  
+	//var next = ""  
 	fmt.Println("limit: ", limit) 
 	fmt.Println("data: ", len(listuser)) 
 
 	if len(listuser) == limit {
-		next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+		//next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+		offset = limit + offset
 	}
 	
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listuser,
-		"next": next,
+		"next": map[string]interface{}{ 
+			"offset":offset,
+			"limit":limit,
+		},
 	}  
 	 
 	return c.JSON(http.StatusOK,f) 
@@ -425,8 +436,11 @@ func (basectl *BaseController)AddFriend(c echo.Context) error{
 		basectl.Dao.Create(&models.Friend{UserId: FriendId, FriendId: userid}) 
 	} 
 	var f interface{}
+	
+	friendUser.Password ="" 
 	f = map[string]interface{}{ 
 		"success": "1",
+		"user": friendUser,
 	}   
 	return c.JSON(http.StatusOK,f) 
  
