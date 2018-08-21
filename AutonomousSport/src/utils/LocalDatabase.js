@@ -7,7 +7,7 @@ const KEY_SAVE = {
   USER: 'USER'
 };
 export default class LocalDatabase {
-  static async getValue(key: String): {} {
+  static async getValue(key: String): String {
     return await AsyncStorage.getItem(key);
   }
   static async saveValue(key: String, value: Object): {} {
@@ -17,9 +17,9 @@ export default class LocalDatabase {
     const oldUser = await this.getValue(KEY_SAVE.USER);
     if (jsonUser !== oldUser) await this.saveValue(KEY_SAVE.USER, jsonUser);
   }
-  static async getUserInfo() {
-    const userJson = (await this.getValue(KEY_SAVE.USER)) || {};
-    return _.isEmpty(userJson) ? null : new User(userJson);
+  static async getUserInfo(): User {
+    const userJson = (await this.getValue(KEY_SAVE.USER)) || '';
+    return _.isEmpty(userJson) ? null : new User(JSON.parse(userJson));
   }
 
   static async getUserAccessToken(): String {

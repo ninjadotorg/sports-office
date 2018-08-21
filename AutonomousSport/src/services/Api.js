@@ -5,6 +5,9 @@ export default class Api {
   static SIGN_UP = `${Config.API_URL}/api/signup`;
   static INIT_HANDSHAKE = `${Config.API_URL}/api/handshake/init`;
   static GET_LIST_ROOM = `${Config.API_URL}/api/room/list`;
+  static GET_ALL_USER = `${Config.API_URL}/api/user/list`;
+  static GET_ALL_FRIEND = `${Config.API_URL}/api/friend/list`;
   static CREATE_ROOM = `${Config.API_URL}/api/room/session/create`;
   static JOIN_ROOM = `${Config.API_URL}/api/room/session/create-token`;
+  static MAKE_FRIEND = `${Config.API_URL}/api/friend/add`;
 }

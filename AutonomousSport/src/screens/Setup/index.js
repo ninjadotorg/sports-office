@@ -13,15 +13,19 @@ import {
   PermissionsAndroid,
   FlatList,
   ScrollView,
+  Image,
   AppState,
   Alert,
   Dimensions
 } from 'react-native';
+
 import { stringToBytes, bytesToString } from 'convert-string';
 import BleManager from 'react-native-ble-manager';
 import BaseScreen from '@/screens/BaseScreen';
 import styles from './styles';
-
+import images, { icons } from '@/assets';
+import TextStyle from '@/utils/TextStyle';
+import {TAG as TAGSIGNIN} from '@/screens/SignIn';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 const TAG = 'SetupScreen';
@@ -35,6 +39,7 @@ export default class SetupScreen extends BaseScreen {
       refreshing: false,
       appState: ''
     };
+    
     this.handlerUpdate = null;
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
     this.handleStopScan = this.handleStopScan.bind(this);
@@ -154,6 +159,9 @@ export default class SetupScreen extends BaseScreen {
     // let a = temp + '';
     // let b = a.split(',')[1];
     // console.log('Received data from characteristic ' + temp);
+    if(!_.isEmpty(data)){
+      this.props.navigation.navigate(TAGSIGNIN);
+    }
   };
 
   handleStopScan() {
@@ -163,7 +171,7 @@ export default class SetupScreen extends BaseScreen {
 
   startScan = () => {
     if (!this.state.scanning) {
-      BleManager.scan([], 3, true).then(results => {
+      BleManager.scan([], 5, true).then(results => {
         console.log('Scanning...');
         this.setState({ scanning: true, peripherals: new Map() });
       });
@@ -262,20 +270,23 @@ export default class SetupScreen extends BaseScreen {
   };
   renderItem = item => {
     const color = item.connected ? 'green' : '#fff';
-    // console.log(TAG, ' renderItem = ', item);
+    console.log(TAG, ' renderItem = ', item);
     return (
       <TouchableOpacity
-        style={[styles.row, { backgroundColor: color }]}
+        style={[styles.row, { backgroundColor: 'transparent' }]}
         key={item.id}
-        onPress={() => this.connect(item)}
-      >
+        onPress={() =>{
+            this.connect(item);
+            // this.props.navigation.navigate(TAGSIGNIN);
+          }
+        }>
+        
         <Text
-          style={{
-            fontSize: 12,
+          style={[TextStyle.mediumText,{
             textAlign: 'center',
-            color: '#333333',
+            color: '#FFFFFF',
             padding: 10
-          }}
+          }]}
         >
           {item?.item?.name || ''}
         </Text>
@@ -283,7 +294,7 @@ export default class SetupScreen extends BaseScreen {
     );
   };
   getListAdress = () => {
-    // console.log(TAG, ' getListAdress = ', this.state.peripherals.values());
+    console.log(TAG, ' getListAdress = ', this.state.peripherals.values());
     return Array.from(this.state.peripherals.values());
   };
   renderEmpty = () => {
@@ -301,14 +312,22 @@ No peripherals
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
-          onRefresh={this.startScan}
-          refreshing={this.state.scanning}
-          keyExtractor={(item, index) => item.id}
-          style={styles.scroll}
-          data={this.getListAdress()}
-          renderItem={this.renderItem}
-        />
+        <Image source={images.logo} style={{width:40,height:40,margin:10}} />
+        <View style={styles.containerRight}>
+          <Text style={[TextStyle.mediumText,styles.textLabel]}>Autonomous</Text>
+          <Text style={[TextStyle.normalText,styles.textLabel2]}>Welcome to Autonomous Bike. Please connect the app to the Bike via Bluetooth.</Text>
+          <Text style={[TextStyle.normalText,styles.textLabel2]}>Select Autonomous Bike below:</Text>
+        
+          <FlatList
+            onRefresh={this.startScan}
+            refreshing={this.state.scanning}
+            keyExtractor={(item, index) => item.id}
+            style={styles.scroll}
+            data={this.getListAdress()}
+            renderItem={this.renderItem}
+          />
+          <Image source={images.bike} style={{width:120,height:120,bottom:0,right:0,position:'absolute'}} />
+        </View>
       </View>
     );
   }

@@ -3,11 +3,17 @@ import _ from 'lodash';
 import LocalDatabase from '@/utils/LocalDatabase';
 import ApiService from '@/services/ApiService';
 
+const TAG = 'UserReceducer';
 const initialState = { userInfo: {} };
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.AUTH_LOGIN: {
-      break;
+      const payload = action.payload || {};
+      if (!_.isEmpty(payload)) {
+        ApiService.token = payload.token;
+        LocalDatabase.saveUserInfo(JSON.stringify(payload));
+      }
+      return { ...state, userInfo: payload };
     }
 
     case ACTIONS.AUTH_UPDATE: {
@@ -16,8 +22,8 @@ const UserReducer = (state = initialState, action) => {
     case ACTIONS.GET_USER: {
       const payload = action.payload || {};
       if (!_.isEmpty(payload)) {
+        console.log(TAG, ' UserReducer-GET_USER payload = ', payload);
         ApiService.token = payload.token;
-        LocalDatabase.saveUserInfo(payload);
       }
       return { ...state, userInfo: payload };
     }

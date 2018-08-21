@@ -16,12 +16,12 @@ const ViewUtil = {
     <ActivityIndicator animating size="small" color={color} />
   ),
 
-  lineWithText: (
+  lineWithText: ({
     text = '',
     styleText = {},
     styleContainer = {},
     colorLine = '#E0E0E0'
-  ) => {
+  }) => {
     return (
       <View
         style={[
@@ -33,11 +33,23 @@ const ViewUtil = {
         ]}
       >
         <View style={{ height: 1, flex: 1, backgroundColor: colorLine }} />
-        <Text style={[TextStyle.smallText, { color: '#7A7A7A' }, styleText]}>
-          {text}
-        </Text>
+        {text ? (
+          <Text style={[TextStyle.smallText, { color: '#7A7A7A' }, styleText]}>
+            {text}
+          </Text>
+        ) : null}
         <View style={{ height: 1, flex: 1, backgroundColor: colorLine }} />
       </View>
+    );
+  },
+  line: ({ styleContainer = {} }) => {
+    return (
+      <View
+        style={[
+          { height: 1, flex: 1, backgroundColor: 'white' },
+          styleContainer
+        ]}
+      />
     );
   }
 };

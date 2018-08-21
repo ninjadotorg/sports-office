@@ -1,5 +1,5 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
-
+import { moderateScale } from 'react-native-size-matters';
 import { COLOR } from '@/utils/Constants';
 
 export const screenWidth = Dimensions.get('window').width;
@@ -21,6 +21,14 @@ export const fontSizeHeader = () => 15 * scale();
 
 export const FONT_FAMILY = Platform.OS === 'ios' ? 'Poppins' : 'poppins';
 const TextStyle = StyleSheet.create({
+  xxExtraText: {
+    fontFamily: FONT_FAMILY,
+    fontSize: 30 * scale()
+  },
+  xExtraText: {
+    fontFamily: FONT_FAMILY,
+    fontSize: 26 * scale()
+  },
   extraText: {
     fontFamily: FONT_FAMILY,
     fontSize: 22 * scale()

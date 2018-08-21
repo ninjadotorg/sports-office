@@ -94,7 +94,7 @@ export default class ApiService {
           body: this.buildFormData(params)
         });
         const resJson = await res.json();
-        // console.log('Response data:', resJson);
+        console.log('Response data:', resJson);
         return resJson;
       } catch (error) {
         console.error(error);
@@ -120,11 +120,12 @@ export default class ApiService {
     }
   }
 
-  static async signIn({ email = '', password = '' }) {
+  static async signIn({ email = '', password = '', name }) {
     const url = Api.SIGN_IN;
     const response = await ApiService.getURL(METHOD.POST, url, {
       email,
-      password
+      password,
+      fullname: name
     });
     return response;
   }
@@ -160,12 +161,40 @@ export default class ApiService {
     return listRoom;
   }
 
+  static async getAllUser({ offset = 0, limit = 12 }) {
+    const url = Api.GET_ALL_USER;
+    const response = await ApiService.getURL(METHOD.GET, url, {
+      offset,
+      limit
+    });
+    // console.log(TAG, ' - getAllUser = ', response);
+    return response || {};
+  }
+
+  static async getAllFriend({ offset = 0, limit = 12 }) {
+    const url = Api.GET_ALL_FRIEND;
+    const response = await ApiService.getURL(METHOD.GET, url, {
+      offset,
+      limit
+    });
+    // console.log(TAG, ' - getAllUser = ', response);
+    return response || {};
+  }
+
   static async joinRoom({ session = '' }) {
     const url = Api.JOIN_ROOM;
     const response = await ApiService.getURL(METHOD.POST, url, {
       session: session
     });
     console.log(TAG, ' - joinRoom = ', response);
+    return response;
+  }
+  static async makeFriend({ friendId = -1 }) {
+    const url = Api.MAKE_FRIEND;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      friendId: friendId
+    });
+    console.log(TAG, ' - makeFriend = ', response);
     return response;
   }
 }
