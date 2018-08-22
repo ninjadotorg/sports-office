@@ -190,23 +190,29 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	fbuid := claims["fbuid"].(string)
  
 	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET)
+	var f21 interface{}
 
 	s, err := ot.Session(nil) 
 	if err != nil {
-			panic(err)
+			//panic(err)  
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Cant not create session",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
 	}
 
 	t, err := ot.Token(s.ID, nil)
 	if err != nil {
-			panic(err)
+			//panic(err)
+			f21 = map[string]interface{}{ 
+				"status" : 0,
+				"message": "Cant not create Token",
+			}
+			return c.JSON(http.StatusBadRequest,f21) 
 	}   
 
- 
-	var f interface{}
-	f = map[string]interface{}{
-		"session":s.ID ,
-		"token":t,
-	}  
+
  
 	room := new(models.Room) 
 	room.Session = s.ID 
@@ -217,10 +223,33 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	MapId,_ := strconv.Atoi(c.FormValue("mapid") )  
 	Loop,_ := strconv.Atoi(c.FormValue("loop") )  
 	Miles,_ := strconv.ParseFloat(c.FormValue("miles") , 64) 
-	
+	var NameRoom =  c.FormValue("name") 
+
+	mapf := new(models.Map)
+	mapf.ID = MapId 
+
+	if err := basectl.Dao.Where(&models.Map{ID:mapf.ID}).Find(&mapf).Error; err != nil {
+		 
+		var f2 interface{}
+		f2 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Map is invalid",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	}  
+
+	if NameRoom == "" {
+		NameRoom = mapf.Name 
+	}
+
+
 	room.MapId = MapId
 	room.Loop = Loop
 	room.Miles = Miles 
+	room.Photo =mapf.Photo 
+	room.Name  = NameRoom
+
 	room.Create(basectl.Dao)  
 
 	var fbData, _ = basectl.FbApp.Database(context.Background())
@@ -231,6 +260,8 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		MapId:room.MapId,
 		Loop:room.Loop,
 		Miles:room.Miles,
+		Photo:room.Photo,
+		Name :room.Name, 
 		Status:"New",
 	} ); err2 != nil {
 		log.Fatalln("Error setting value:", err2)
@@ -245,6 +276,11 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		log.Fatalln("Error setting value:", err3)
 	} 
 
+	 
+	var f interface{}
+	f = map[string]interface{}{ 
+		"room": room,
+	}   
 	return c.JSON(http.StatusOK,f) 
  
 }
