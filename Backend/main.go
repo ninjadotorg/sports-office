@@ -272,6 +272,7 @@ func main() {
 	e.POST("/api/signup", ctl.Signup) 
 	e.GET("/api/room/list", ctl.ListRoom)
 	e.GET("/api/user/list", ctl.ListUser)
+	e.GET("/api/user/info", ctl.GetUser) 
 	e.GET("/api/map/list", ctl.ListMap)
 	
 	e.Static("/", "views")   
@@ -298,6 +299,7 @@ func main() {
 
 	//update UpdateUser
 	userapi.POST("/user/update", ctl.UpdateUser) 
+	
 	//stream-data-
 
 	

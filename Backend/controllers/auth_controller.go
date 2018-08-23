@@ -447,7 +447,35 @@ func (basectl *BaseController)ListMap(c echo.Context) error{
 
 
 
+//GetUser users. 
+func (basectl *BaseController)GetUser(c echo.Context) error{
 
+	userid , _ := strconv.Atoi(c.QueryParam("id"))  
+	fmt.Println("userid: ", userid) 
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)   
+
+	usermodel.Password = ""
+	if userid==0 || usermodel.ID <= 0 {
+		 
+		var f2 interface{}
+		f2 = map[string]interface{}{  
+			"message": "Not found user",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	} 
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"user": usermodel,
+	}   
+	return c.JSON(http.StatusOK,f) 
+
+
+	 
+}
 //list users. 
 func (basectl *BaseController)ListUser(c echo.Context) error{
 
