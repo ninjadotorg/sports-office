@@ -284,6 +284,19 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	return c.JSON(http.StatusOK,f) 
  
 }
+
+//ActionSession START / FINISH
+func (basectl *BaseController)ActionSession(c echo.Context) error{
+
+	//ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET)  
+	 
+	var f interface{}
+	f = map[string]interface{}{ 
+		"archive": "",
+	}
+	return c.JSON(http.StatusOK,f) 
+
+}
 // CloseSession
 func (basectl *BaseController)CloseSession(c echo.Context) error{
 
@@ -338,6 +351,69 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
 		log.Fatalln("Error setting value:", err3)
 	}  
 
+	return c.JSON(http.StatusOK,f) 
+ 
+}
+
+// api/practive/archivement
+func (basectl *BaseController)PractiveArchivement(c echo.Context) error{
+ 
+	Miles, _ := strconv.ParseFloat(c.FormValue("miles"),64)
+	Kcals, _ := strconv.ParseFloat(c.FormValue("kcals"),64)
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64))  
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel) 
+
+	fmt.Println("Error setting value: %v ", usermodel.Profile)
+	usermodel.Profile.Kcal = Kcals + usermodel.Profile.Kcal
+	usermodel.Profile.Miles = Miles + usermodel.Profile.Miles 
+
+	basectl.Dao.Save(&usermodel.Profile)
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"Profile": usermodel.Profile,
+	}   
+	return c.JSON(http.StatusOK,f) 
+ 
+}
+
+// api/practive/archivement
+func (basectl *BaseController)UpdateUser(c echo.Context) error{
+ 
+	var Fullname =  c.FormValue("fullname") 
+	//Kcals, _ := strconv.ParseFloat(c.FormValue("kcals"),64)
+	if Fullname =="" {
+		 
+		var f2 interface{}
+		f2 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Fullname is invalid",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	}
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64))  
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)  
+	usermodel.Fullname = Fullname
+
+	basectl.Dao.Save(&usermodel)
+
+	usermodel.Password = ""
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"user": usermodel,
+	}   
 	return c.JSON(http.StatusOK,f) 
  
 }

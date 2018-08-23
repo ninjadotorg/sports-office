@@ -282,7 +282,9 @@ func main() {
 	userapi.GET("/info", ctl.GetInfo)
   
 	//userapi.GET("/room/session/create", ctl.CreateSession)
-	userapi.POST("/room/session/create", ctl.CreateSession)
+	userapi.POST("/room/session/create", ctl.CreateSession) 
+	userapi.POST("/room/session/action", ctl.ActionSession)
+
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
@@ -290,9 +292,15 @@ func main() {
 	userapi.POST("/friend/add", ctl.AddFriend) 
 	userapi.POST("/friend/del", ctl.RemoveFriend) 
 	userapi.GET("/friend/list", ctl.ListMyFriends) 
-	
+
+	//archivement  
+	userapi.POST("/practive/archivement", ctl.PractiveArchivement) 
+
+	//update UpdateUser
+	userapi.POST("/user/update", ctl.UpdateUser) 
 	//stream-data-
 
+	
 	//===================================================
 	g := e.Group("/game")
 	g.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
