@@ -272,6 +272,7 @@ func main() {
 	e.POST("/api/signup", ctl.Signup) 
 	e.GET("/api/room/list", ctl.ListRoom)
 	e.GET("/api/user/list", ctl.ListUser)
+	e.GET("/api/user/info", ctl.GetUser) 
 	e.GET("/api/map/list", ctl.ListMap)
 	
 	e.Static("/", "views")   
@@ -282,7 +283,9 @@ func main() {
 	userapi.GET("/info", ctl.GetInfo)
   
 	//userapi.GET("/room/session/create", ctl.CreateSession)
-	userapi.POST("/room/session/create", ctl.CreateSession)
+	userapi.POST("/room/session/create", ctl.CreateSession) 
+	userapi.POST("/room/session/action", ctl.ActionSession)
+
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
@@ -290,9 +293,16 @@ func main() {
 	userapi.POST("/friend/add", ctl.AddFriend) 
 	userapi.POST("/friend/del", ctl.RemoveFriend) 
 	userapi.GET("/friend/list", ctl.ListMyFriends) 
+
+	//archivement  
+	userapi.POST("/practive/archivement", ctl.PractiveArchivement) 
+
+	//update UpdateUser
+	userapi.POST("/user/update", ctl.UpdateUser) 
 	
 	//stream-data-
 
+	
 	//===================================================
 	g := e.Group("/game")
 	g.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
@@ -382,6 +392,7 @@ func migrateDatabase(db *gorm.DB) {
 	db.AutoMigrate(&models.Room{})  
 	db.AutoMigrate(&models.Map{})  
 	db.AutoMigrate(&models.Friend{})  
+	db.AutoMigrate(&models.Profile{})  
 	// db.Create(&models.Map{Name:"Weston", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Weston_ntuxxLP0LeY5u023r6dM.png" })
 	// db.Create(&models.Map{Name:"Upper Bay",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Upper_Bay_yF0wp8xBqUWMsbzZuXbB.png" })
 	// db.Create(&models.Map{Name:"Slamon", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Slamon_uIoylyaC6TI3eCAuztH4.png" })
