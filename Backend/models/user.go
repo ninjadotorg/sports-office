@@ -27,7 +27,43 @@ type User struct {
 	Email     string `json:"email, omitempty" gorm:"type:varchar(100);unique;unique_index"`
 	Password string `json:"password, omitempty" gorm:"not null; type:varchar(100)"`  
 	PhotoUrl  string `json:"photoUrl, omitempty" gorm:"type:varchar(100)"`
+	Profile  Profile 
+	ProfileID  int
 
+}
+
+// User ...
+type UserView struct { 
+	ID         int        `json:"id" gorm:"primary_key"`
+	CreatedAt *time.Time `json:"createdAt, omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
+	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
+	Fullname   string `json:"fullname, omitempty" gorm:"not null; type:varchar(100)"` 
+	Email      string `json:"email, omitempty" gorm:"type:varchar(100);unique;unique_index"` 
+	PhotoUrl   string `json:"photoUrl, omitempty" gorm:"type:varchar(100)"`
+	Profile  Profile   
+	ProfileID  int
+}
+
+
+// User ...
+type Profile struct { 
+	ID        int        `json:"id" gorm:"primary_key"`
+	CreatedAt *time.Time `json:"createdAt, omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
+	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
+	Kcal 	  float64 `json:"kcal, omitempty" gorm:"not null"` 
+	Miles   float64  `json:"miles, omitempty" gorm:"not null"` 
+}
+
+// TableName set User's table name to be `profiles`
+func (Profile) TableName() string {
+	return "profiles"
+}
+
+// TableName set User's table name to be `profiles`
+func (UserView) TableName() string {
+	return "users"
 }
 
 // TableName set User's table name to be `profiles`
@@ -122,12 +158,18 @@ func (u *User) Create(db *gorm.DB) error {
 		return errors.New("New records can not have primary key id")
 	}
 
+	profile := new(Profile)    
+	profile.Kcal = 0
+	profile.Miles = 0 
+	db.Create(&profile)
+	u.ProfileID = profile.ID
+
 	if err := db.Create(&u).Error; err != nil {
 		return errors.New("Could not create user")
 	}
 	
 	//InitBalance...
-	// db.Create(&Balance{UserId: u.ID, Name:"ETH", Balance:0})
+	
 	// db.Create(&Balance{UserId: u.ID, Name:"BTC", Balance:0})
 	// db.Create(&Balance{UserId:  u.ID, Name:"LTC", Balance:0}) 
 

@@ -19,6 +19,7 @@ type Room struct {
 	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
 	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
 	Name string `json:"name, omitempty" gorm:"not null; type:varchar(100)"` 
+	Photo string `json:"photo, omitempty" gorm:"not null; type:varchar(500)"` 
 	Session     string `json:"session, omitempty" gorm:"type:varchar(100);unique;unique_index"`
 	Token string `json:"token, omitempty" gorm:"not null; type:varchar(500)"`  
 	Status     int        `json:"status, omitempty" gorm:"not null"`  

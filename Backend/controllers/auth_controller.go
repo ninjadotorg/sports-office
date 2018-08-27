@@ -107,6 +107,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	//secretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
 	user := new(models.User)  
 	user.Email = c.FormValue("email")
+	user.Fullname = c.FormValue("fullname")
 	//user.Password, _ = models.HashPassword(c.FormValue("password"))  
 	user.FetchByUsername(basectl.Dao)
 	 
@@ -172,6 +173,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		"id": user.ID,
 		"fbuid": fbuser.UID,
 		"email":  user.Email,
+		"fullname": user.Fullname,
 	}
 	return c.JSON(http.StatusOK,f) 
 	  
@@ -188,23 +190,29 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	fbuid := claims["fbuid"].(string)
  
 	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET)
+	var f21 interface{}
 
 	s, err := ot.Session(nil) 
 	if err != nil {
-			panic(err)
+			//panic(err)  
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Cant not create session",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
 	}
 
 	t, err := ot.Token(s.ID, nil)
 	if err != nil {
-			panic(err)
+			//panic(err)
+			f21 = map[string]interface{}{ 
+				"status" : 0,
+				"message": "Cant not create Token",
+			}
+			return c.JSON(http.StatusBadRequest,f21) 
 	}   
 
- 
-	var f interface{}
-	f = map[string]interface{}{
-		"session":s.ID ,
-		"token":t,
-	}  
+
  
 	room := new(models.Room) 
 	room.Session = s.ID 
@@ -215,10 +223,33 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	MapId,_ := strconv.Atoi(c.FormValue("mapid") )  
 	Loop,_ := strconv.Atoi(c.FormValue("loop") )  
 	Miles,_ := strconv.ParseFloat(c.FormValue("miles") , 64) 
-	
+	var NameRoom =  c.FormValue("name") 
+
+	mapf := new(models.Map)
+	mapf.ID = MapId 
+
+	if err := basectl.Dao.Where(&models.Map{ID:mapf.ID}).Find(&mapf).Error; err != nil {
+		 
+		var f2 interface{}
+		f2 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Map is invalid",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	}  
+
+	if NameRoom == "" {
+		NameRoom = mapf.Name 
+	}
+
+
 	room.MapId = MapId
 	room.Loop = Loop
 	room.Miles = Miles 
+	room.Photo =mapf.Photo 
+	room.Name  = NameRoom
+
 	room.Create(basectl.Dao)  
 
 	var fbData, _ = basectl.FbApp.Database(context.Background())
@@ -229,6 +260,9 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		MapId:room.MapId,
 		Loop:room.Loop,
 		Miles:room.Miles,
+		Photo:room.Photo,
+		Name :room.Name, 
+		Status:"New",
 	} ); err2 != nil {
 		log.Fatalln("Error setting value:", err2)
 	} 
@@ -242,8 +276,26 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		log.Fatalln("Error setting value:", err3)
 	} 
 
+	 
+	var f interface{}
+	f = map[string]interface{}{ 
+		"room": room,
+	}   
 	return c.JSON(http.StatusOK,f) 
  
+}
+
+//ActionSession START / FINISH
+func (basectl *BaseController)ActionSession(c echo.Context) error{
+
+	//ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET)  
+	 
+	var f interface{}
+	f = map[string]interface{}{ 
+		"archive": "",
+	}
+	return c.JSON(http.StatusOK,f) 
+
 }
 // CloseSession
 func (basectl *BaseController)CloseSession(c echo.Context) error{
@@ -303,6 +355,69 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
  
 }
 
+// api/practive/archivement
+func (basectl *BaseController)PractiveArchivement(c echo.Context) error{
+ 
+	Miles, _ := strconv.ParseFloat(c.FormValue("miles"),64)
+	Kcals, _ := strconv.ParseFloat(c.FormValue("kcals"),64)
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64))  
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel) 
+
+	fmt.Println("Error setting value: %v ", usermodel.Profile)
+	usermodel.Profile.Kcal = Kcals + usermodel.Profile.Kcal
+	usermodel.Profile.Miles = Miles + usermodel.Profile.Miles 
+
+	basectl.Dao.Save(&usermodel.Profile)
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"Profile": usermodel.Profile,
+	}   
+	return c.JSON(http.StatusOK,f) 
+ 
+}
+
+// api/practive/archivement
+func (basectl *BaseController)UpdateUser(c echo.Context) error{
+ 
+	var Fullname =  c.FormValue("fullname") 
+	//Kcals, _ := strconv.ParseFloat(c.FormValue("kcals"),64)
+	if Fullname =="" {
+		 
+		var f2 interface{}
+		f2 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Fullname is invalid",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	}
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64))  
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)  
+	usermodel.Fullname = Fullname
+
+	basectl.Dao.Save(&usermodel)
+
+	usermodel.Password = ""
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"user": usermodel,
+	}   
+	return c.JSON(http.StatusOK,f) 
+ 
+}
+
 
 //generation opentokcode. 
 func (basectl *BaseController)ListRoom(c echo.Context) error{
@@ -332,29 +447,61 @@ func (basectl *BaseController)ListMap(c echo.Context) error{
 
 
 
+//GetUser users. 
+func (basectl *BaseController)GetUser(c echo.Context) error{
 
+	userid , _ := strconv.Atoi(c.QueryParam("id"))  
+	fmt.Println("userid: ", userid) 
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)   
+
+	usermodel.Password = ""
+	if userid==0 || usermodel.ID <= 0 {
+		 
+		var f2 interface{}
+		f2 = map[string]interface{}{  
+			"message": "Not found user",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	} 
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"user": usermodel,
+	}   
+	return c.JSON(http.StatusOK,f) 
+
+
+	 
+}
 //list users. 
 func (basectl *BaseController)ListUser(c echo.Context) error{
 
-	var listuser []models.User  
+	var listuser []models.UserView  
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 	offset, _ := strconv.Atoi(c.QueryParam("offset"))
 
-	basectl.Dao.Where(models.User{}).Order("ID desc").Offset(offset).Limit(limit).Find(&listuser) //Limit(50).Find(&dices)
-	
-	 
-	var next = ""  
-	fmt.Println("limit: ", limit) 
-	fmt.Println("data: ", len(listuser)) 
+	//"email LIKE ? OR fullname LIKE ?", "%jin%", "%jin%"
+	search := c.QueryParam("search")
 
-	if len(listuser) == limit {
-		next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+	if search != "" {
+		basectl.Dao.Model(&models.UserView{}).Where("email LIKE ? OR fullname LIKE ?", "%"+search+"%",  "%"+search+"%" ).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
+	}else{
+		basectl.Dao.Model(&models.UserView{}).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
 	}
-	
+	if len(listuser) == limit {
+		offset= limit + offset
+	} 
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listuser,
-		"next": next,
+		"next": map[string]interface{}{ 
+			"limit":limit,
+			"offset":offset,
+			
+		},
 	}  
 	 
 	return c.JSON(http.StatusOK,f) 
@@ -376,18 +523,22 @@ func (basectl *BaseController)ListMyFriends(c echo.Context) error{
 
 	basectl.Dao.Table("users").Select("users.id, users.email, users.fullname").Joins("JOIN friends ON users.id = friends.friend_id").Where("friends.user_id = ?", userid ).Offset(offset).Limit(limit).Find(&listuser)
  
-	var next = ""  
+	//var next = ""  
 	fmt.Println("limit: ", limit) 
 	fmt.Println("data: ", len(listuser)) 
 
 	if len(listuser) == limit {
-		next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+		//next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
+		offset = limit + offset
 	}
 	
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listuser,
-		"next": next,
+		"next": map[string]interface{}{ 
+			"offset":offset,
+			"limit":limit,
+		},
 	}  
 	 
 	return c.JSON(http.StatusOK,f) 
@@ -425,8 +576,11 @@ func (basectl *BaseController)AddFriend(c echo.Context) error{
 		basectl.Dao.Create(&models.Friend{UserId: FriendId, FriendId: userid}) 
 	} 
 	var f interface{}
+	
+	friendUser.Password ="" 
 	f = map[string]interface{}{ 
 		"success": "1",
+		"user": friendUser,
 	}   
 	return c.JSON(http.StatusOK,f) 
  

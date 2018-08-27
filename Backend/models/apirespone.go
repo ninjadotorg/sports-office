@@ -43,9 +43,12 @@ type ApiDepositsRespone struct {
 //===========
 type FbRacingRoom struct { 
 	Session string  `json:"session"`
+	Name  string  `json:"name"`
+	Photo  string  `json:"photo"`
 	MapId 	int 	`json:"mapId"`
 	Loop 	int 	`json:"loop"`
 	Miles	float64 `json:"miles"`
+	Status  string	`json:"status"`
 	Players []FbRoomPlayer  `json:"players"`
 }
 
@@ -53,4 +56,5 @@ type FbRoomPlayer struct {
 	Token string  `json:"token"`
 	Speed float64 	`json:"speed"`
 	Goal  float64	`json:"goal"`
+	Archivement int 	`json:"archivement"` // Ket qua, dung thu may : 1, 2, 3, 4, 5, 6, 7, 8, 9 , 10 ...
 }
