@@ -7,7 +7,9 @@ const images = {
   bike: require('@/assets/images/bike.png'),
   user: require('@/assets/images/ic_user.png'),
   image_start: require('@/assets/images/image_start.png'),
-  image_velocity: require('@/assets/images/image_velocity.png')
+  image_velocity: require('@/assets/images/image_velocity.png'),
+  ic_plus_down: require('@/assets/images/ic_plus_down.png'),
+  ic_plus_up: require('@/assets/images/ic_plus_up.png')
 };
 export const icons = {
   close: ({
@@ -40,6 +42,36 @@ export const icons = {
       onPress={onPress}
       name="md-bluetooth"
       type="ionicon"
+    />
+  ),
+  bike: ({
+    containerStyle = {},
+    color = '#ADAFB2',
+    size = 18,
+    onPress = null
+  }) => (
+    <Icon
+      containerStyle={containerStyle}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="bike"
+      type="material-community"
+    />
+  ),
+  groupUser: ({
+    containerStyle = {},
+    color = '#ADAFB2',
+    size = 18,
+    onPress = null
+  }) => (
+    <Icon
+      containerStyle={containerStyle}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="users"
+      type="feather"
     />
   ),
   back: ({

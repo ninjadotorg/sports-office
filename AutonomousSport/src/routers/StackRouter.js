@@ -63,7 +63,9 @@ const StackRouter = createStackNavigator(
   {
     HomeScreen: {
       screen: Screens.HomeScreen,
-      navigationOptions: customNavigationOption
+      navigationOptions: {
+        header: null
+      }
     },
     ChallengeScreen: {
       screen: Screens.ChallengeScreen,
@@ -73,7 +75,9 @@ const StackRouter = createStackNavigator(
     },
     CreateRoomScreen: {
       screen: Screens.CreateRoomScreen,
-      navigationOptions: customNavigationOption
+      navigationOptions: {
+        header: null
+      }
     },
     SetupScreen: {
       screen: Screens.SetupScreen,
@@ -87,8 +91,8 @@ const StackRouter = createStackNavigator(
         header: null
       }
     },
-    StartScreen: {
-      screen: Screens.StartScreen,
+    NewRoomScreen: {
+      screen: Screens.NewRoomScreen,
       navigationOptions: {
         header: null
       }
@@ -98,11 +102,23 @@ const StackRouter = createStackNavigator(
       navigationOptions: {
         header: null
       }
+    },
+    ProfileScreen: {
+      screen: Screens.ProfileScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    ChooseRoundScreen: {
+      screen: Screens.ChooseRoundScreen,
+      navigationOptions: {
+        header: null
+      }
     }
   },
   {
     headerMode: 'screen',
-    initialRouteName: 'FriendsScreen'
+    initialRouteName: 'SignInScreen'
   }
 );
 

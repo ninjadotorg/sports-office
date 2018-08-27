@@ -33,7 +33,7 @@ class SignInScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
+      user: undefined,
       swap:false,
       error:'',
       loading:false
@@ -55,7 +55,8 @@ class SignInScreen extends BaseScreen {
     if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
       console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
       return {
-        user: nextProps.user
+        user: nextProps.user,
+        loading:false
       };
     }
     return null;
@@ -70,7 +71,8 @@ class SignInScreen extends BaseScreen {
         }
       );
       if(isLogged){
-        this.props.navigation.navigate(TAGHOME);
+        this.props.navigation.replace(TAGHOME);
+        // Util.resetRoute(this.props.navigation,TAGHOME);
       }
     } catch (error) {
       this.setState({

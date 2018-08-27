@@ -20,7 +20,11 @@ const FriendReducer = (state = initialState, action) => {
     case ACTIONS.MAKE_FRIEND: {
       const payload = action.payload || {};
       if (!_.isEmpty(payload) && String(payload?.success) === '1') {
-        console.log(TAG, ' FriendReducer-MAKE_FRIEND payload = ', payload);
+        console.log(
+          TAG,
+          ' FriendReducer-MAKE_FRIEND success payload = ',
+          payload
+        );
         const { id } = payload;
         let list = state.friendList?.list || [];
         if (id && !_.isEmpty(list)) {

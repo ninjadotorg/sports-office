@@ -21,7 +21,7 @@ import ItemFriend from '@/components/ItemFriend';
 import { fetchAllUser,fetchAllFriend } from '@/actions/FriendAction';
 import {connect} from 'react-redux';
 import User from '@/models/User';
-
+const limitRow = 24;
 export const TAG = 'FriendsScreen';
 const buttons = ['Your Friends', 'All The World'];
 class FriendsScreen extends BaseScreen {
@@ -36,7 +36,7 @@ class FriendsScreen extends BaseScreen {
     this.state = {
       selectedIndex: 0,
       offset:0,
-      limit:12,
+      limit:limitRow,
       friends:{},
       isLoading:false,
       listFriends:[]
@@ -45,7 +45,7 @@ class FriendsScreen extends BaseScreen {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if(JSON.stringify(nextProps?.friends) !== JSON.stringify(prevState?.friends)){
-      // console.log(TAG," getDerivedStateFromProps = ",nextProps?.friends);
+      console.log(TAG," getDerivedStateFromProps = ",nextProps?.friends);
       
       const listFriends = nextProps?.friends?.list?.map(item => {
         return new User(item);
@@ -54,7 +54,8 @@ class FriendsScreen extends BaseScreen {
         friends:nextProps?.friends,
         listFriends:listFriends,
         offset:nextProps?.friends?.next?.offset||0,
-        limit:nextProps?.friends?.next?.limit||12
+        limit:nextProps?.friends?.next?.limit||limitRow,
+        isLoading:false
       };
     };
     return null;
@@ -77,7 +78,8 @@ class FriendsScreen extends BaseScreen {
     let {selectedIndex,offset,limit} = this.state;
     if(selectedIndexItem !== selectedIndex){
       offset = 0;
-      this.setState({ selectedIndex:selectedIndexItem,offset },()=>{
+      limit = limitRow;
+      this.setState({ selectedIndex:selectedIndexItem },()=>{
         // selectedIndexItem ===0? this.props.fetchAllFriend({offset,limit}):this.props.fetchAllUser({offset,limit});
         this.onRefreshData();
       });
@@ -85,20 +87,29 @@ class FriendsScreen extends BaseScreen {
   };
   fetchData = ({offset,limit})=>{
     let {selectedIndex} = this.state;
+    console.log(TAG,' fetchData begin');
     selectedIndex ===0? this.props.fetchAllFriend({offset,limit}):this.props.fetchAllUser({offset,limit});
   }
   onRefreshData = ()=>{
-    let {isLoading,limit} = this.state;
+    let {isLoading} = this.state;
+    console.log(TAG,' onRefreshData begin');
     if(!isLoading){
       this.setState({
-        offset:0
+        offset:0,
+        limit :limitRow,
+        isLoading:true
+      },()=>{
+        this.fetchData({offset:0,limitRow});
       });
-      this.fetchData({offset:0,limit});
+      
     }
   }
   onLoadMore = ()=>{
-    let {offset,limit} = this.state;
-    this.fetchData({offset,limit});
+    console.log(TAG,' onLoadMore begin');
+    let {isLoading,offset,limit} = this.state;
+    if(!isLoading){
+      this.fetchData({offset,limit});
+    }
   }
   onPressBack = () => {
     this.props.navigation.goBack();
@@ -180,7 +191,7 @@ class FriendsScreen extends BaseScreen {
           refreshing={isLoading}
           onRefresh={this.onRefreshData}
           data={listFriends}
-          onEndReachedThreshold={50}
+          onEndReachedThreshold={0.5}
           onEndReached={this.onLoadMore}
           renderItem={this.renderItem}
         />

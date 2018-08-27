@@ -1,3 +1,4 @@
+import { NavigationActions, StackActions } from 'react-navigation';
 import LocalDatabase from './LocalDatabase';
 
 const TAG = 'Util';
@@ -14,4 +15,13 @@ export default class Util {
     const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return reg.test(email);
   }
+
+  static resetRoute = (navigation, routeName, params = {}) => {
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName, params })]
+    });
+
+    navigation.dispatch(resetAction);
+  };
 }

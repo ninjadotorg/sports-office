@@ -12,6 +12,10 @@ class BaseScreen extends Component {
   constructor(props) {
     super(props);
   }
+
+  onPressBack = () => {
+    this.props.navigation.goBack();
+  };
 }
 
 BaseScreen.propTypes = {};

@@ -129,6 +129,13 @@ export default class ApiService {
     });
     return response;
   }
+  static async updateName({ fullname = '' }) {
+    const url = Api.UPDATE_NAME;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      fullname
+    });
+    return response;
+  }
   static async signUp({ email = '', password = '', fullname = '' }) {
     const url = Api.SIGN_UP;
     const response = await ApiService.getURL(METHOD.POST, url, {
@@ -154,11 +161,12 @@ export default class ApiService {
       page_size
     });
     console.log(TAG, ' - getRoomList = ', response);
-    const listRoom =
-      response?.list?.map(item => {
-        return new Room(item);
-      }) || [];
-    return listRoom;
+    return response;
+    // const listRoom =
+    //   response?.list?.map(item => {
+    //     return new Room(item);
+    //   }) || [];
+    // return listRoom;
   }
 
   static async getAllUser({ offset = 0, limit = 12 }) {
@@ -178,6 +186,13 @@ export default class ApiService {
       limit
     });
     // console.log(TAG, ' - getAllUser = ', response);
+    return response || {};
+  }
+
+  static async getMapList({ offset = 0, limit = 12 }) {
+    const url = Api.GET_ALL_MAP;
+    const response = await ApiService.getURL(METHOD.GET, url, {});
+    // console.log(TAG, ' - getMapList = ', response);
     return response || {};
   }
 

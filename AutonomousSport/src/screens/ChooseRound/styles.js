@@ -34,6 +34,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between'
   },
+  containerCenter: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   slider: {
     marginTop: 15,
     overflow: 'visible' // for custom animations

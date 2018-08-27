@@ -9,7 +9,8 @@ export const ACTIONS = {
   AUTH_LOGOUT: 'AUTH_LOGOUT',
   AUTH_UPDATE: 'AUTH_UPDATE',
   GET_USER: 'GET_USER',
-  GET_USER_LOCAL: 'GET_USER'
+  GET_USER_LOCAL: 'GET_USER',
+  UPDATE_USER_NAME: 'UPDATE_USER_NAME'
 };
 
 export const setError = msg => ({ type: ACTIONS.AUTH_ERROR_SET, payload: msg });
@@ -29,8 +30,9 @@ export const signIn = ({
 }) => async dispatch => {
   try {
     console.log(TAG, ' - signIn - begin ');
-    const response = await ApiService.signIn({ email, password, name });
-    console.log(TAG, ' - signIn - response ', response);
+    let response = await ApiService.signIn({ email, password, name });
+    console.log(TAG, ' - signIn - response ', response) || {};
+    response = response && response['id'] ? response : {};
     dispatch({ type: ACTIONS.AUTH_LOGIN, payload: response });
     return;
   } catch (e) {
@@ -43,14 +45,17 @@ export const fetchUser = () => async dispatch => {
     dispatch({ type: ACTIONS.GET_USER, payload: user.toJSON() });
     return;
   } else {
-    // try {
-    //   const response = await ApiService.signIn(Util.createDataForSignIn());
-    //   console.log(TAG, ' - fetchUser - response ', response);
-    //   dispatch({ type: ACTIONS.GET_USER, payload: response });
-    //   return;
-    // } catch (e) {
-    //   console.log(TAG, ' - fetchData - error ', e);
-    // }
   }
   dispatch({ type: ACTIONS.GET_USER, payload: {} });
+};
+export const updateName = (fullname = '') => async dispatch => {
+  try {
+    const response = await ApiService.updateName({ fullname: fullname });
+    console.log(TAG, ' - updateName - response ', response);
+    dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: response?.user || {} });
+    return;
+  } catch (e) {
+    console.log(TAG, ' - updateName - error ', e);
+  }
+  dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: {} });
 };

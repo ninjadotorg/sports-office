@@ -17,6 +17,9 @@ export default class LocalDatabase {
     const oldUser = await this.getValue(KEY_SAVE.USER);
     if (jsonUser !== oldUser) await this.saveValue(KEY_SAVE.USER, jsonUser);
   }
+  static async logout() {
+    return AsyncStorage.removeItem(KEY_SAVE.USER);
+  }
   static async getUserInfo(): User {
     const userJson = (await this.getValue(KEY_SAVE.USER)) || '';
     return _.isEmpty(userJson) ? null : new User(JSON.parse(userJson));

@@ -4,9 +4,22 @@ export default class User {
     this.fullname = userJson.fullname || '';
     this.email = userJson.email || '';
     this.token = userJson.token || '';
-    this.kcal = userJson.kcal || 0;
-    this.route = userJson.route || 0;
+    this.photoUrl = userJson.photoUrl || '';
+    this.profile = userJson.Profile || {};
+
     this.routeUnit = userJson.routeUnit || 'mile';
+  }
+
+  get kcal() {
+    return this.profile?.kcal || 0;
+  }
+
+  get route() {
+    return this.profile?.miles || 0;
+  }
+
+  get Profile() {
+    return this.profile;
   }
 
   get textRouteUnit() {
@@ -19,7 +32,8 @@ export default class User {
       fullname: this.fullname,
       email: this.email,
       token: this.token,
-      kcal: this.kcal,
+      photoUrl: this.photoUrl,
+      profile: this.profile,
       route: this.route
     };
   }

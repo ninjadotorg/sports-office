@@ -2,59 +2,59 @@ import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { SearchBar, Button, Header, ButtonGroup } from 'react-native-elements';
-
-import styles from './styles';
+import Carousel from 'react-native-snap-carousel';
+import { ParallaxImage } from 'react-native-snap-carousel';
+import styles, { sliderWidth, itemWidth } from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
-import { TAG as TAGNEWROOM } from '@/screens/NewRoom';
+import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import images, { icons } from '@/assets';
-import RoomList from '@/components/RoomList';
+import MapList from '@/components/MapList';
+import { connect } from 'react-redux';
+import { fetchUser } from '@/actions/UserAction';
 
-export const TAG = 'CreateRoomScreen';
-const component1 = () => <Text>Hello</Text>
-const component2 = () => <Text>World</Text>
-const component3 = () => <Text>ButtonGroup</Text>
+export const TAG = 'NewRoomScreen';
 
-const buttons = [{ element: component1 }, { element: component2 }, { element: component3 }]
 export const DATA_MAP_LIST = [
   {
+    id:1,
     title: 'Map 1',
     subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
     uri: 'https://i.imgur.com/UYiroysl.jpg'
   },
   {
+    id:2,
     title: 'Map 2',
     subtitle: 'Lorem ipsum dolor sit amet',
     uri: 'https://i.imgur.com/UPrs1EWl.jpg'
   },
   {
+    id:3,
     title: 'Map 3',
     subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
     uri: 'https://i.imgur.com/MABUbpDl.jpg'
   },
   {
+    id:4,
     title: 'Map 4',
     subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
     uri: 'https://i.imgur.com/KZsmUi2l.jpg'
   },
   {
+    id:5,
     title: 'Map 5',
     subtitle: 'Lorem ipsum dolor sit amet',
     uri: 'https://i.imgur.com/2nCt3Sbl.jpg'
   },
   {
+    id:6,
     title: 'Map 6',
     subtitle: 'Lorem ipsum dolor sit amet',
     uri: 'https://i.imgur.com/lceHsT6l.jpg'
   }
 ];
 
-export default class CreateRoomScreen extends BaseScreen {
-  static navigationOptions = navigation => {
-    return {
-      title: 'Create'
-    };
-  };
+class NewRoomScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,17 +63,18 @@ export default class CreateRoomScreen extends BaseScreen {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getUser();
+  }
 
   onPressCreateRoom = async () => {
-    this.props.navigation.navigate(TAGNEWROOM);
-    // try {
-    //   const roomInfo = await ApiService.createRoom();
-    //   console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
-    //   if (roomInfo) {
-        
-    //   }
-    // } catch (error) {}
+    try {
+      const roomInfo = await ApiService.createRoom();
+      console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
+      if (roomInfo) {
+        this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
+      }
+    } catch (error) {}
   };
   
   onPressBack = ()=>{
@@ -97,23 +98,8 @@ export default class CreateRoomScreen extends BaseScreen {
             }
           ]}
         >
-          Choose a race to start
+          Choose map
         </Text>
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={['Level 1','Level 2','Level 3','Level 4']} 
-          textStyle={[TextStyle.normalText, styles.textStyleButton]}
-          selectedTextStyle={[
-            TextStyle.normalText,
-            styles.selectedTextStyleButton
-          ]}
-          underlayColor="transparent"
-          // buttonStyle={{backgroundColor:'#181818'}}
-          selectedButtonStyle={styles.selectedButtonStyle}
-          containerStyle={styles.buttonGroup}
-      />
-        
       </View>
     );
   };
@@ -123,19 +109,12 @@ export default class CreateRoomScreen extends BaseScreen {
         <Header backgroundColor="transparent">
           {this.renderLeftHeader()}
         </Header>
-        <RoomList />
-        
+        <MapList />
         <View style={styles.containerBottom}>
           <Button
-            title="Random"
+            title="Next"
             textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
             buttonStyle={[styles.button]}
-            onPress={this.onPressCreateRoom}
-          />
-          <Button
-            title="New Racing"
-            buttonStyle={[styles.button,{backgroundColor:'#02BB4F'}]}
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold'}]}
             onPress={this.onPressCreateRoom}
           />
         </View>
@@ -144,6 +123,12 @@ export default class CreateRoomScreen extends BaseScreen {
   }
 }
 
-CreateRoomScreen.propTypes = {};
+NewRoomScreen.propTypes = {};
 
-CreateRoomScreen.defaultProps = {};
+NewRoomScreen.defaultProps = {};
+export default connect(
+  state => ({
+    user: state.user
+  }),
+  { getUser: fetchUser }
+)(NewRoomScreen);
