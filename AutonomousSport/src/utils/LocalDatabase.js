@@ -11,11 +11,15 @@ export default class LocalDatabase {
     return await AsyncStorage.getItem(key);
   }
   static async saveValue(key: String, value: Object): {} {
+    // value = value instanceof JSON ? JSON.stringify(value) : value;
     return await AsyncStorage.setItem(key, value);
   }
   static async saveUserInfo(jsonUser: String) {
     const oldUser = await this.getValue(KEY_SAVE.USER);
-    if (jsonUser !== oldUser) await this.saveValue(KEY_SAVE.USER, jsonUser);
+    if (jsonUser !== oldUser) {
+      const data = { ...JSON.parse(oldUser), ...JSON.parse(jsonUser) };
+      await this.saveValue(KEY_SAVE.USER, JSON.stringify(data));
+    }
   }
   static async logout() {
     return AsyncStorage.removeItem(KEY_SAVE.USER);

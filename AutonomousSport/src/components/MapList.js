@@ -9,7 +9,6 @@ import {
 import _ from 'lodash';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
-import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { compose } from 'redux';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -80,11 +79,11 @@ class MapList extends Component {
 
   renderItem = ({ item, index }) => {
     const checked = String(this.state.itemSelected) === String(item.id);
-    console.log(
-      TAG,
-      ' renderItem = ' + item.id + ' itemSelected = ',
-      this.state.itemSelected + ' checked = ' + checked
-    );
+    // console.log(
+    //   TAG,
+    //   ' renderItem = ' + item.id + ' itemSelected = ',
+    //   this.state.itemSelected + ' checked = ' + checked
+    // );
     return (
       <ItemMap
         key={item.id}

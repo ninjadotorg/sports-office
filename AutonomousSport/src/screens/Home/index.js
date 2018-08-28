@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { fetchUser} from '@/actions/UserAction';
 
 export const TAG = 'HomeScreen';
-const sizeImageCenter = moderateScale(100);
+const sizeImageCenter = moderateScale(130);
 class HomeScreen extends BaseScreen {
   static navigationOptions = navigation => {
     return {
@@ -84,7 +84,7 @@ class HomeScreen extends BaseScreen {
             </TouchableOpacity>
           </View>
           <View>
-            <DashboardProfile kcal={userInfo?.profile.kcal||0} mile={userInfo?.profile.miles||0}/>
+            <DashboardProfile kcal={userInfo?.profile?.kcal||0} mile={userInfo?.profile?.miles||0}/>
           </View>
         </View>
         <View style={styles.containerCenter}>

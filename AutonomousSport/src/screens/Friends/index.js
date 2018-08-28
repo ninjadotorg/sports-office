@@ -13,7 +13,6 @@ import { Header, SearchBar, ButtonGroup } from 'react-native-elements';
 import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
-import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import images, { icons } from '@/assets';
 import { moderateScale, scale } from 'react-native-size-matters';
 import ViewUtil from '@/utils/ViewUtil';
