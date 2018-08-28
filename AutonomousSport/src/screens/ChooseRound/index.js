@@ -20,10 +20,15 @@ class ChooseRoundScreen extends BaseScreen {
   constructor(props) {
     super(props);
     const mile = this.props.navigation.getParam('miles')||0;
+    const mapId = this.props.navigation.getParam('id')||-1;
     console.log(TAG," contructor mile = ", mile);
     this.state = {
       valueRound:0,
-      mile:mile
+      mile:mile,
+      mapId:mapId,
+      sumMiles:0,
+      error:'',
+      isLoading:false
     };
   }
 
@@ -33,12 +38,33 @@ class ChooseRoundScreen extends BaseScreen {
 
   onPressCreateRoom = async () => {
     try {
-      const roomInfo = await ApiService.createRoom();
+      this.setState({
+        isLoading:true
+      });
+      const {valueRound,mapId,sumMiles} = this.state;
+      if(sumMiles>0){
+      const roomInfo = await ApiService.createRoom({
+        mapId,
+        loop:valueRound,
+        miles:sumMiles
+      });
+    
       console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
       if (roomInfo) {
-        this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
+        console.log(TAG,' onPressCreateRoom roomInFo ');
+        this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
+        // this.props.navigation.replace(TAGCHALLENGE, roomInfo.toJSON());
       }
-    } catch (error) {}
+    }else{
+      this.setState({
+        error:'number of round is not zero'
+      });
+    }
+    } catch (error) {}finally{
+      this.setState({
+        isLoading:false
+      });
+    }
   };
   
   onPressBack = ()=>{
@@ -68,15 +94,17 @@ class ChooseRoundScreen extends BaseScreen {
     );
   };
   onPress = (direct)=>{
-    let {valueRound} = this.state;
+    let {valueRound,mile = 0} = this.state;
     valueRound = valueRound + (direct*1);
+    valueRound = valueRound<0?0:(valueRound>10?10:valueRound);
     this.setState({
-      valueRound:valueRound<0?0:(valueRound>10?10:valueRound)
+      valueRound:valueRound,
+      sumMiles:mile* valueRound
     });
   }
   render() {
-    const {valueRound,mile=0} = this.state;
-    const sum = mile* valueRound;
+    const {valueRound,mile=0,sumMiles = 0,isLoading = false} = this.state;
+    
     return (
       <View style={styles.container}>
         <Header backgroundColor="transparent">
@@ -85,7 +113,7 @@ class ChooseRoundScreen extends BaseScreen {
         <View style={{flex:1,flexDirection:'column',justifyContent:'center'}}>
           <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
             <TouchableOpacity onPress={()=>this.onPress(-1)}>
-              <Image source={images.ic_plus_down} />
+              <Image source={images.ic_plus_down} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}} />
             </TouchableOpacity>
             <View style={[styles.containerCenter,{minWidth:sizeImageCenter,minHeight:sizeImageCenter,marginHorizontal:moderateScale(30)}]}>
               <Image source={images.image_velocity} style={{position:'absolute',width:sizeImageCenter,height:sizeImageCenter}} />
@@ -93,14 +121,14 @@ class ChooseRoundScreen extends BaseScreen {
               <Text style={[TextStyle.mediumText,{color:'white'}]}>{`${valueRound>1?'rounds':'round'}`}</Text>
             </View>
             <TouchableOpacity onPress={()=>this.onPress(1)}>
-              <Image source={images.ic_plus_up}/>
+              <Image source={images.ic_plus_up} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}}/>
             </TouchableOpacity>
           </View>
           <Text
             style={[
               TextStyle.mediumText,
               {
-                marginTop:10,
+                marginTop:20,
                 color: 'white',
                 fontWeight:'bold',
                 textAlignVertical: 'center',
@@ -108,11 +136,12 @@ class ChooseRoundScreen extends BaseScreen {
               }
             ]}
           >
-          {`~${sum} ${sum>1?'miles':'mile'}`}
+          {`~${sumMiles} ${sumMiles>1?'miles':'mile'}`}
           </Text>
         </View>
         <View style={styles.containerBottom}>
           <Button
+            loading={isLoading}
             title="Next"
             textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
             buttonStyle={[styles.button]}

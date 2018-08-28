@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import Api from '@/services/Api';
 import METHOD from '@/services/Method';
 import Util from '@/utils/Util';
-// import _ from 'lodash';
+import _ from 'lodash';
 import Room from '@/models/Room';
 import LocalDatabase from '@/utils/LocalDatabase';
 
@@ -145,10 +145,25 @@ export default class ApiService {
     });
     return response;
   }
-  static async createRoom(): Room {
+  static async createRoom({ mapId = -1, loop = 1, miles = 0 }): Room {
     const url = Api.CREATE_ROOM;
-    const response = await ApiService.getURL(METHOD.GET, url, {});
-    return response ? new Room(response) : null;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      mapId,
+      loop,
+      miles
+    });
+    return !_.isEmpty(response) ? new Room(response?.room) : null;
+  }
+
+  static async leftRoom({ session = '' }) {
+    if (session) {
+      const url = Api.LEFT_ROOM;
+      const response = await ApiService.getURL(METHOD.POST, url, {
+        session: session
+      });
+      return response;
+    }
+    return {};
   }
 
   static async getRoomList({ page = 1, page_size = 10 }) {

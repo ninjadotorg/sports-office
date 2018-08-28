@@ -7,28 +7,31 @@ import styles from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
-
+import { TAG as TAGHOME } from '@/screens/Home';
+import { connect } from 'react-redux';
+import { fetchUser } from '@/actions/UserAction';
+import { leftRoom } from '@/actions/RoomAction';
 export const TAG = 'ChallengeScreen';
-const dataTest = {
-  id: 1,
-  userId: 1,
-  createdAt: '2018-07-24T11:14:18+07:00',
-  updatedAt: '2018-07-24T11:14:18+07:00',
-  deletedAt: null,
-  name: '',
-  session:
-    '1_MX40NjE1NDQyMn5-MTUzMjQwNTY1ODI1NH5qVG5McnlvcjAxaE9IY01mdC9ya3NpTVR-fg',
-  token:
-    'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTIxMGI3MDZhOTY0NTczNDFlMTEzODJmYTcwNTA1MjZiOTdlNmZmMjpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpNalF3TlRZMU9ESTFOSDVxVkc1TWNubHZjakF4YUU5SVkwMW1kQzl5YTNOcFRWUi1mZyZjcmVhdGVfdGltZT0xNTMyNDA1NjU4Jm5vbmNlPTk1MDI4NSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTMyNDkyMDU4',
-  win: 0
-};
-export default class ChallengeScreen extends BaseScreen {
+// const dataTest = {
+//   id: 1,
+//   userId: 1,
+//   createdAt: '2018-07-24T11:14:18+07:00',
+//   updatedAt: '2018-07-24T11:14:18+07:00',
+//   deletedAt: null,
+//   name: '',
+//   session:
+//     '1_MX40NjE1NDQyMn5-MTUzMjQwNTY1ODI1NH5qVG5McnlvcjAxaE9IY01mdC9ya3NpTVR-fg',
+//   token:
+//     'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTIxMGI3MDZhOTY0NTczNDFlMTEzODJmYTcwNTA1MjZiOTdlNmZmMjpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpNalF3TlRZMU9ESTFOSDVxVkc1TWNubHZjakF4YUU5SVkwMW1kQzl5YTNOcFRWUi1mZyZjcmVhdGVfdGltZT0xNTMyNDA1NjU4Jm5vbmNlPTk1MDI4NSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTMyNDkyMDU4',
+//   win: 0
+// };
+class ChallengeScreen extends BaseScreen {
   // static navigationOptions = {
   //   title: 'Challenge'
   // };
   constructor(props) {
     super(props);
-    const room: Room = new Room(props.navigation?.state.params || dataTest);
+    const room: Room = new Room(props.navigation?.state.params);
     this.state = {
       room: room
     };
@@ -43,11 +46,12 @@ export default class ChallengeScreen extends BaseScreen {
   }
 
   renderMap = () => {
+    const { room } = this.state;
     return (
       <View style={styles.map}>
         <Image
           style={{ width: '100%', height: '100%', position: 'absolute' }}
-          source={images.map_list[0]}
+          source={{ uri: room?.photo || '' }}
         />
         <Button
           containerViewStyle={{
@@ -64,7 +68,9 @@ export default class ChallengeScreen extends BaseScreen {
     );
   };
   onPressClose = () => {
-    this.props?.navigation.goBack();
+    const {room} = this.state;
+    this.props.leftRoom({session:room.session});
+    this.replaceScreen(this.props.navigation, TAGHOME);
   };
   render() {
     const { room } = this.state;
@@ -91,3 +97,10 @@ export default class ChallengeScreen extends BaseScreen {
 ChallengeScreen.propTypes = {};
 
 ChallengeScreen.defaultProps = {};
+export default connect(
+  state => ({
+    user: state.user,
+    closeRoom:state.room?.closeRoom
+  }),
+  { getUser: fetchUser,leftRoom }
+)(ChallengeScreen);

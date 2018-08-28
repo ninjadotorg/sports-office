@@ -8,7 +8,8 @@ import Room from '@/models/Room';
 const TAG = 'RoomAction';
 export const ACTIONS = {
   GET_ALL_MAP: 'GET_ALL_MAP',
-  GET_ALL_ROOM: 'GET_ALL_ROOM'
+  GET_ALL_ROOM: 'GET_ALL_ROOM',
+  LEFT_ROOM: 'LEFT_ROOM'
 };
 
 export const fetchMap = ({ offset = 0, limit = 12 }) => async dispatch => {
@@ -51,6 +52,24 @@ export const fetchRoom = ({ offset = 0, limit = 12 }) => async dispatch => {
   }
 
   dispatch({ type: ACTIONS.GET_ALL_ROOM, payload: {} });
+};
+
+export const leftRoom = ({ session = '' }) => async dispatch => {
+  try {
+    if (session) {
+      let response = await ApiService.leftRoom({
+        session: session
+      });
+      console.log(TAG, ' - leftRoom - response ', response);
+      dispatch({ type: ACTIONS.LEFT_ROOM, payload: response });
+
+      return;
+    }
+  } catch (e) {
+    console.log(TAG, ' - leftRoom - error ', e);
+  }
+
+  dispatch({ type: ACTIONS.LEFT_ROOM, payload: {} });
 };
 
 // export const makeFriend = ({ friendId }) => async dispatch => {

@@ -10,6 +10,7 @@ export default class Api {
   static GET_ALL_FRIEND = `${Config.API_URL}/api/friend/list`;
   static GET_ALL_MAP = `${Config.API_URL}/api/map/list`;
   static CREATE_ROOM = `${Config.API_URL}/api/room/session/create`;
+  static LEFT_ROOM = `${Config.API_URL}/api/room/session/close`;
   static JOIN_ROOM = `${Config.API_URL}/api/room/session/create-token`;
   static MAKE_FRIEND = `${Config.API_URL}/api/friend/add`;
 }

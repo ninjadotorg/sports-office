@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+import Util from '@/utils/Util';
 
 export const TAG = 'BaseScreen';
 const styles = StyleSheet.create({
@@ -15,6 +16,10 @@ class BaseScreen extends Component {
 
   onPressBack = () => {
     this.props.navigation.goBack();
+  };
+
+  replaceScreen = (navigation, routeName, params = {}) => {
+    Util.resetRoute(navigation, routeName, params);
   };
 }
 
