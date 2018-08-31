@@ -189,10 +189,24 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	userid := int(claims["id"].(float64)) 
 	fbuid := claims["fbuid"].(string)
  
-	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET)
+	userModel := new(models.User)   
+	userModel.ID = userid
+	err12 := userModel.FetchById(basectl.Dao) 
+
 	var f21 interface{}
 
+	if err12 != nil {
+		//panic(err)  
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "User account not found.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+	}
+
+	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET) 
 	s, err := ot.Session(nil) 
+
 	if err != nil {
 			//panic(err)  
 		f21 = map[string]interface{}{ 
@@ -211,8 +225,6 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 			}
 			return c.JSON(http.StatusBadRequest,f21) 
 	}   
-
-
  
 	room := new(models.Room) 
 	room.Session = s.ID 
@@ -252,6 +264,15 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 
 	room.Create(basectl.Dao)  
 
+	player := new(models.RoomPlayer) 
+	player.RoomId = room.ID 
+	player.UserId = userModel.ID 
+	player.PlayerName = userModel.Fullname
+	player.Token  =room.Token
+	player.Status = 1  // Ready join. 
+	player.CreateRoomPlayer(basectl.Dao)  
+
+
 	var fbData, _ = basectl.FbApp.Database(context.Background())
 	var refDB = fbData.NewRef("games")  
 
@@ -269,6 +290,7 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 
 	//write first player user. 
 	if err3 := refDB.Child("race-rooms/"+ room.Session +"/players/"+ fbuid).Set(context.Background(), &models.FbRoomPlayer{
+		PlayerName: userModel.Fullname,
 		Token:room.Token,
 		Speed:0,
 		Goal:0,
@@ -327,26 +349,81 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)   
 	fbuid := claims["fbuid"].(string)
+	userid := int(claims["id"].(float64)) 
+
+	userModel := new(models.User)   
+	userModel.ID = userid
+	err12 := userModel.FetchById(basectl.Dao) 
+
+	var f21 interface{}
+	if err12 != nil {
+		//panic(err)  
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "User account not found.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+	}
+
+	//find this room ... session.
+
+	room := new(models.Room)
+	room.Session = c.FormValue("session")
+	basectl.Dao.Where(&models.Room{Session : room.Session }).First(&room) 
+	if room.ID <=0 || room.Status ==0 {
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "This room not found.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+	}
 
 	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET) 
 	t, err := ot.Token(c.FormValue("session"), nil)
 	if err != nil {
-			panic(err)
+		
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "cant not create token.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+
 	} 
 
 	var f interface{}
 	f = map[string]interface{}{ 
 		"token":  t,
-	} 
+	}
+	
+	
+	//insert to player if not exits. 
+	player := new(models.RoomPlayer) 
+	
+	basectl.Dao.Where(&models.RoomPlayer{UserId : userModel.ID , RoomId: room.ID  }).First(&player) 
+
+	player.RoomId = room.ID 
+	player.UserId = userModel.ID 
+	player.PlayerName = userModel.Fullname
+	player.Token  = string(*t)
+	player.Status = 1  // Ready join.  
+
+	if player.ID <=0 {
+		player.CreateRoomPlayer(basectl.Dao)   
+	}else{
+		basectl.Dao.Save(&player)
+	}
+	 
 	//write first player user. 
 	var fbData, _ = basectl.FbApp.Database(context.Background())
 	var refDB = fbData.NewRef("games") 
 	//log.Print("%+v" , refDB) 
 	if err3 := refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid).Set(context.Background(),
 		&models.FbRoomPlayer{
+			PlayerName: player.PlayerName,
 			Token:string(*t),
 			Speed:0,
 			Goal:0,
+			Status:player.Status,
 		}); err3 != nil {
 		log.Fatalln("Error setting value:", err3)
 	}  
@@ -354,6 +431,78 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
 	return c.JSON(http.StatusOK,f) 
  
 }
+
+//remove leave room  Player
+func (basectl *BaseController)LeaveRoom(c echo.Context) error{
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)   
+	fbuid := claims["fbuid"].(string)
+	userid := int(claims["id"].(float64)) 
+
+	userModel := new(models.User)   
+	userModel.ID = userid
+	err12 := userModel.FetchById(basectl.Dao) 
+
+	var f21 interface{}
+	if err12 != nil {
+		//panic(err)  
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "User account not found.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+	}
+
+	//find this room ... session.
+
+	room := new(models.Room)
+	room.Session = c.FormValue("session")
+	basectl.Dao.Where(&models.Room{Session : room.Session }).First(&room) 
+	if room.ID <=0 || room.Status ==0 {
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "This room not found.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+	}
+  
+	//insert to player if not exits. 
+	player := new(models.RoomPlayer) 
+	
+	basectl.Dao.Where(&models.RoomPlayer{UserId : userModel.ID , RoomId: room.ID  }).First(&player) 
+
+	if player.ID <=0 {
+		
+		f21 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Your account not exist in this room.",
+		}
+		return c.JSON(http.StatusBadRequest,f21) 
+
+	}else{
+		player.Status = 0 // Leave 
+		basectl.Dao.Save(&player)
+	} 
+	//write first player user. 
+	var fbData, _ = basectl.FbApp.Database(context.Background())
+	var refDB = fbData.NewRef("games") 
+	//log.Print("%+v" , refDB) 
+	if err3 := refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid).Set(context.Background(),
+		&models.FbRoomPlayer{
+			Status:player.Status,
+		}); err3 != nil {
+		log.Fatalln("Error setting value:", err3)
+	}  
+
+	f21 = map[string]interface{}{  
+		"player":player,
+	}
+
+	return c.JSON(http.StatusOK,f21) 
+ 
+}
+
 
 // api/practive/archivement
 func (basectl *BaseController)PractiveArchivement(c echo.Context) error{
@@ -423,7 +572,10 @@ func (basectl *BaseController)UpdateUser(c echo.Context) error{
 func (basectl *BaseController)ListRoom(c echo.Context) error{
 
 	var listroom []models.Room
-	basectl.Dao.Where(models.Room{Status:1}).Order("ID desc").Find(&listroom) //Limit(50).Find(&dices)
+	basectl.Dao.Where(models.Room{Status:1}).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
+	
+	//basectl.Dao.Model(&u).Related(&u.Balances)
+
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listroom,
