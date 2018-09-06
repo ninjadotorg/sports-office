@@ -287,6 +287,7 @@ func main() {
 	userapi.POST("/room/session/action", ctl.ActionSession)
 
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
+	userapi.POST("/room/session/leave", ctl.LeaveRoom)
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
 	//add Friends AddFriend  friendId
@@ -393,6 +394,7 @@ func migrateDatabase(db *gorm.DB) {
 	db.AutoMigrate(&models.Map{})  
 	db.AutoMigrate(&models.Friend{})  
 	db.AutoMigrate(&models.Profile{})  
+	db.AutoMigrate(&models.RoomPlayer{})  
 	// db.Create(&models.Map{Name:"Weston", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Weston_ntuxxLP0LeY5u023r6dM.png" })
 	// db.Create(&models.Map{Name:"Upper Bay",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Upper_Bay_yF0wp8xBqUWMsbzZuXbB.png" })
 	// db.Create(&models.Map{Name:"Slamon", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Slamon_uIoylyaC6TI3eCAuztH4.png" })
