@@ -26,8 +26,24 @@ type Room struct {
 	MapId	   int        `json:"mapId, omitempty" gorm:"not null"`  
 	Loop	   int        `json:"loop, omitempty" gorm:"not null"`  
 	Miles	   float64        `json:"miles, omitempty" gorm:"not null"`  
+	RoomPlayers  []RoomPlayer `gorm:"foreignkey:RoomId,association_foreignkey:ID"`
 
 }
+
+type RoomPlayer struct {
+	ID         int        `json:"id" gorm:"primary_key"`
+	RoomId   int    `json:"roomId, omitempty" gorm:"not null"`
+	UserId    int    `json:"userId, omitempty" gorm:"not null"`
+	PlayerName string `json:"playerName, omitempty" gorm:"not null; type:varchar(100)"` 
+	Token string `json:"token, omitempty" gorm:"not null; type:varchar(500)"`  
+	Status     int    `json:"status, omitempty" gorm:"not null"`  
+}
+
+// TableName set Room's table name to be `profiles`
+func (RoomPlayer) TableName() string {
+	return "roomplayers"
+}
+
 
 // TableName set Room's table name to be `profiles`
 func (Room) TableName() string {
@@ -82,6 +98,7 @@ func (u *Room) Create(db *gorm.DB) error {
 	return nil
 }
 
+
 // Save ...
 func (u *Room) Save(db *gorm.DB) error {
  
@@ -106,5 +123,22 @@ func (u *Room) Delete() error {
 		return errors.New("Could not find the Room")
 	}
 
+	return nil
+}
+
+
+//===============
+// Create ...
+func (u *RoomPlayer) CreateRoomPlayer(db *gorm.DB) error {
+	//db := config.GetDatabaseConnection()
+	// Validate record
+	if !db.NewRecord(u) { // => returns `true` as primary key is blank
+		return errors.New("New records can not have primary key id")
+	}
+
+	if err := db.Create(&u).Error; err != nil {
+		return errors.New("Could not create Room")
+	}
+	 
 	return nil
 }

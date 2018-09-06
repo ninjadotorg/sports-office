@@ -53,8 +53,10 @@ type FbRacingRoom struct {
 }
 
 type FbRoomPlayer struct { 
+	PlayerName  string  `json:"playerName"`
 	Token string  `json:"token"`
 	Speed float64 	`json:"speed"`
 	Goal  float64	`json:"goal"`
+	Status int 	`json:"status"` // 0 : leave, 1 : joined. 
 	Archivement int 	`json:"archivement"` // Ket qua, dung thu may : 1, 2, 3, 4, 5, 6, 7, 8, 9 , 10 ...
 }
