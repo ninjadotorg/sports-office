@@ -9,7 +9,8 @@ const TAG = 'RoomAction';
 export const ACTIONS = {
   GET_ALL_MAP: 'GET_ALL_MAP',
   GET_ALL_ROOM: 'GET_ALL_ROOM',
-  LEFT_ROOM: 'LEFT_ROOM'
+  LEFT_ROOM: 'LEFT_ROOM',
+  JOIN_ROOM: 'JOIN_ROOM'
 };
 
 export const fetchMap = ({ offset = 0, limit = 12 }) => async dispatch => {
@@ -20,7 +21,7 @@ export const fetchMap = ({ offset = 0, limit = 12 }) => async dispatch => {
     });
     console.log(TAG, ' - fetchMap - response ', response);
     if (!_.isEmpty(response)) {
-      response['list'] = response.list.map(item => {
+      response['list'] = response?.list?.map(item => {
         return new Map(item);
       });
     }
@@ -41,7 +42,7 @@ export const fetchRoom = ({ offset = 0, limit = 12 }) => async dispatch => {
     });
     console.log(TAG, ' - fetchRoom - response ', response);
     if (!_.isEmpty(response)) {
-      response['list'] = response.list.map(item => {
+      response['list'] = response?.list?.map(item => {
         return new Room(item);
       });
     }
@@ -72,6 +73,23 @@ export const leftRoom = ({ session = '' }) => async dispatch => {
   dispatch({ type: ACTIONS.LEFT_ROOM, payload: {} });
 };
 
+export const joinRoom = ({ session = '' }) => async dispatch => {
+  try {
+    if (session) {
+      let response = await ApiService.joinRoom({
+        session: session
+      });
+      console.log(TAG, ' - joinRoom - response ', response);
+      dispatch({ type: ACTIONS.JOIN_ROOM, payload: response });
+
+      return;
+    }
+  } catch (e) {
+    console.log(TAG, ' - joinRoom - error ', e);
+  }
+
+  dispatch({ type: ACTIONS.JOIN_ROOM, payload: {} });
+};
 // export const makeFriend = ({ friendId }) => async dispatch => {
 //   try {
 //     let response =

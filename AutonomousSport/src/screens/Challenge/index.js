@@ -11,6 +11,7 @@ import { TAG as TAGHOME } from '@/screens/Home';
 import { connect } from 'react-redux';
 import { fetchUser } from '@/actions/UserAction';
 import { leftRoom } from '@/actions/RoomAction';
+import TextStyle from '@/utils/TextStyle';
 export const TAG = 'ChallengeScreen';
 // const dataTest = {
 //   id: 1,
@@ -25,6 +26,7 @@ export const TAG = 'ChallengeScreen';
 //     'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTIxMGI3MDZhOTY0NTczNDFlMTEzODJmYTcwNTA1MjZiOTdlNmZmMjpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpNalF3TlRZMU9ESTFOSDVxVkc1TWNubHZjakF4YUU5SVkwMW1kQzl5YTNOcFRWUi1mZyZjcmVhdGVfdGltZT0xNTMyNDA1NjU4Jm5vbmNlPTk1MDI4NSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTMyNDkyMDU4',
 //   win: 0
 // };
+
 class ChallengeScreen extends BaseScreen {
   // static navigationOptions = {
   //   title: 'Challenge'
@@ -33,20 +35,32 @@ class ChallengeScreen extends BaseScreen {
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
     this.state = {
-      room: room
+      room: room,
+      user:{},
+      isLoading:false
     };
+   
   }
 
-  componentDidMount() {}
-
-  componentWillUpdate(nextProps) {
-    console.log(
-      `${TAG} - componentWillUpdate - nextProps = ${JSON.stringify(nextProps)} `
-    );
+  componentDidMount() {
+    this.props.getUser();
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+      console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
+      return {
+        user: nextProps.user,
+        isLoading:false
+      };
+    }
+    return null;
+  }
+
 
   renderMap = () => {
     const { room } = this.state;
+    
     return (
       <View style={styles.map}>
         <Image
@@ -60,25 +74,29 @@ class ChallengeScreen extends BaseScreen {
             bottom: 10
           }}
           title="Get ready"
-          buttonStyle={{
-            backgroundColor: 'green'
-          }}
+          buttonStyle={[styles.button,{backgroundColor:'#02BB4F'}]}
+          textStyle={[TextStyle.mediumText,{fontWeight:'bold'}]}
         />
       </View>
     );
+
   };
+
+  
+  
   onPressClose = () => {
     const {room} = this.state;
     this.props.leftRoom({session:room.session});
     this.replaceScreen(this.props.navigation, TAGHOME);
   };
+
   render() {
-    const { room } = this.state;
+    const { room,user } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
         <View style={{ alignItems: 'center' }}>
-          <BikerProfile room={room} />
+          <BikerProfile room={room} user={user} />
         </View>
 
         {icons.close({
@@ -99,7 +117,7 @@ ChallengeScreen.propTypes = {};
 ChallengeScreen.defaultProps = {};
 export default connect(
   state => ({
-    user: state.user,
+    user: state.user?.userInfo,
     closeRoom:state.room?.closeRoom
   }),
   { getUser: fetchUser,leftRoom }

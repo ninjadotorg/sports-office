@@ -118,7 +118,7 @@ const StackRouter = createStackNavigator(
   },
   {
     headerMode: 'screen',
-    initialRouteName: 'SignInScreen'
+    initialRouteName: 'ChallengeScreen'
   }
 );
 

@@ -1,12 +1,14 @@
 import { StyleSheet } from 'react-native';
+import { screenSize } from '@/utils/TextStyle';
 
+const widthVideo = screenSize.width / 4;
 const styles = StyleSheet.create({
   container: {
-    width: 100,
+    width: widthVideo,
     flex: 1,
     flexDirection: 'column'
   },
-  publisher: { height: 100 },
-  subcriber: { height: 100 }
+  publisher: { height: widthVideo },
+  subcriber: { height: widthVideo }
 });
 export default styles;

@@ -20,11 +20,7 @@ export const itemWidth = slideWidth + itemHorizontalMargin * 2;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     width: itemWidth,
-    // backgroundColor: 'green',
     height: '100%',
     paddingHorizontal: itemHorizontalMargin,
     paddingBottom: 10
@@ -35,6 +31,7 @@ const styles = StyleSheet.create({
   },
   containerItem: {
     flex: 1,
+    backgroundColor: 'black',
     flexDirection: 'column',
     borderColor: 'blue'
   },
@@ -53,6 +50,5 @@ const styles = StyleSheet.create({
     // borderTopLeftRadius: entryBorderRadius,
     // borderTopRightRadius: entryBorderRadius
   }
-  // image: { width: widthImage, height: heightImage }
 });
 export default styles;

@@ -1,10 +1,9 @@
 import { ACTIONS } from '@/actions/RoomAction';
 import _ from 'lodash';
 import LocalDatabase from '@/utils/LocalDatabase';
-import ApiService from '@/services/ApiService';
 
 const TAG = 'RoomReducer';
-const initialState = { mapList: {}, roomList: {}, leftRoom: {} };
+const initialState = { mapList: [], roomList: [], leftRoom: {}, joinRoom: {} };
 const RoomReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.GET_ALL_MAP: {
@@ -18,14 +17,15 @@ const RoomReducer = (state = initialState, action) => {
     case ACTIONS.GET_ALL_ROOM: {
       const payload = action.payload || {};
       console.log(TAG, ' RoomReducer-GET_ALL_ROOM payload = ', payload);
-      // if(!_.isEmpty(payload)){
-
-      // }
       return { ...state, roomList: payload };
     }
     case ACTIONS.LEFT_ROOM: {
       const payload = action.payload || {};
       return { ...state, leftRoom: payload };
+    }
+    case ACTIONS.JOIN_ROOM: {
+      const payload = action.payload || {};
+      return { ...state, joinRoom: payload };
     }
     // case ACTIONS.MAKE_FRIEND: {
     //   const payload = action.payload || {};

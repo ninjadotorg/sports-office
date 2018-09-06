@@ -88,6 +88,21 @@ export const icons = {
       name="ios-arrow-dropleft"
       type="ionicon"
     />
+  ),
+  fail: ({
+    containerStyle = {},
+    color = '#FFFFFF',
+    size = 25,
+    onPress = null
+  }) => (
+    <Icon
+      containerStyle={containerStyle}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="md-map"
+      type="ionicon"
+    />
   )
 };
 export default images;
