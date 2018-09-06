@@ -12,7 +12,6 @@ export const Config = {
       return '';
     } else {
       return ConfigReact.default.API_URL;
-      //'http://192.168.0.113:8081';
     }
   })(),
   OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || ''

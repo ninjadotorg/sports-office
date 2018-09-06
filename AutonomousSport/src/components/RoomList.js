@@ -14,7 +14,7 @@ import { compose } from 'redux';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
 import ItemRoom from '@/components/ItemRoom';
-import { fetchRoom } from '@/actions/RoomAction';
+import { fetchRoom, joinRoom } from '@/actions/RoomAction';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { screenSize } from '@/utils/TextStyle';
 
@@ -23,9 +23,7 @@ const wp = percentage => {
   const value = (percentage * screenSize.width) / 100;
   return Math.round(value);
 };
-const slideHeight = screenSize?.height * 0.36;
 
-const entryBorderRadius = 8;
 const slideWidth = wp(50);
 const itemHorizontalMargin = wp(2);
 
@@ -53,7 +51,8 @@ class RoomList extends Component {
     data: [],
     isFetching: false,
     refreshing: false,
-    itemSelected: 0
+    itemSelected: {},
+    joinRoom: undefined
   };
   componentDidMount() {
     this.props.fetchRoom({ offset: 0, limit: 100 });
@@ -77,15 +76,20 @@ class RoomList extends Component {
   //   return null;
   // }
   componentWillReceiveProps(nextProps) {
-    if (
-      JSON.stringify(nextProps?.roomList.list) !==
-      JSON.stringify(this.state.data)
-    ) {
+    const { data, joinRoom } = this.state;
+    if (JSON.stringify(nextProps?.roomList?.list) !== JSON.stringify(data)) {
       console.log(TAG, ' componentWillReceiveProps - room list ');
-      // this.fetchData();
+
       this.setState({
-        data: nextProps?.roomList.list
+        data: nextProps?.roomList?.list
       });
+    } else if (
+      nextProps?.joinRoomData['token'] &&
+      JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
+    ) {
+      const { itemSelected = {} } = this.state;
+      itemSelected['token'] = nextProps?.joinRoomData['token'];
+      this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
     }
   }
 
@@ -118,19 +122,6 @@ class RoomList extends Component {
   //   } catch (error) {}
   // };
 
-  // fetchData = async () => {
-  //   try {
-  //     console.log(TAG, ' - fetchData - begin ');
-  //     const roomList = await ApiService.getRoomList({ page: 1, page_size: 10 });
-  //     console.log(TAG, ' - fetchData - roomList ', roomList);
-  //     this.setState({
-  //       data: roomList
-  //     });
-  //   } catch (e) {
-  //     console.log(TAG, ' - fetchData - error ', e);
-  //   }
-  // };
-
   handleRefresh = () => {
     return this.state.refreshing;
   };
@@ -147,31 +138,30 @@ class RoomList extends Component {
   };
 
   renderItem = ({ item, index }, parallaxProps) => {
-    // const checked = String(this.state.itemSelected) === String(item.id);
-    // console.log(
-    //   TAG,
-    //   ' renderItem = ' + item.id + ' itemSelected = ',
-    //   this.state.itemSelected + ' checked = ' + checked
-    // );
     return (
       <ItemRoom
         key={item.id}
         onItemSelected={itemId => {
-          this.setState({
-            itemSelected: itemId
-          });
-          // console.log(TAG, ' renderItem = ' + itemId);
-          // this.itemSelected = itemId;
+          if (item?.session) {
+            // create token from session
+            this.setState(
+              {
+                itemSelected: item
+              },
+              () => {
+                this.props.joinRoom({ session: item.session });
+              }
+            );
+          }
         }}
         parallaxProps={parallaxProps}
-        // checked={checked}
         dataItem={item}
       />
     );
   };
 
   render() {
-    const { data, isFetching } = this.state;
+    const { data } = this.state;
     return (
       <View style={styles.container}>
         <Carousel
@@ -196,7 +186,10 @@ RoomList.defaultProps = {};
 export default compose(
   withNavigation,
   connect(
-    state => ({ roomList: state.room.roomList }),
-    { fetchRoom }
+    state => ({
+      roomList: state.room?.roomList,
+      joinRoomData: state.room?.joinRoom
+    }),
+    { fetchRoom, joinRoom }
   )
 )(RoomList);

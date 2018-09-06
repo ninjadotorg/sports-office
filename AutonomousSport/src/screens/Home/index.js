@@ -18,7 +18,6 @@ import { TAG as TAGFRIENDS } from '@/screens/Friends';
 import { TAG as TAGPROFILE } from '@/screens/Profile';
 import images from '@/assets';
 import { moderateScale,scale } from 'react-native-size-matters';
-import ViewUtil from '@/utils/ViewUtil';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import { fetchUser} from '@/actions/UserAction';

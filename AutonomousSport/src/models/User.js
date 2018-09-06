@@ -6,7 +6,8 @@ export default class User {
     this.token = userJson.token || '';
     this.photoUrl = userJson.photoUrl || '';
     this.profile = userJson.Profile || {};
-
+    this.fbtoken = userJson.fbtoken || '';
+    this.fbuid = userJson.fbuid || '';
     this.routeUnit = userJson.routeUnit || 'mile';
   }
 
@@ -32,6 +33,8 @@ export default class User {
       fullname: this.fullname,
       email: this.email,
       token: this.token,
+      fbtoken: this.fbtoken,
+      fbuid: this.fbuid,
       photoUrl: this.photoUrl,
       profile: this.profile,
       route: this.route

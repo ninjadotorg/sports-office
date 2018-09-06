@@ -15,7 +15,7 @@ const component1 = () => <Text>Hello</Text>
 const component2 = () => <Text>World</Text>
 const component3 = () => <Text>ButtonGroup</Text>
 
-const buttons = [{ element: component1 }, { element: component2 }, { element: component3 }]
+const buttons = [{ element: component1 }, { element: component2 }, { element: component3 }];
 export const DATA_MAP_LIST = [
   {
     title: 'Map 1',
@@ -58,7 +58,7 @@ export default class CreateRoomScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
-      mapList: DATA_MAP_LIST,
+      mapList: [],
       selectedIndex:0
     };
   }
@@ -109,7 +109,6 @@ export default class CreateRoomScreen extends BaseScreen {
             styles.selectedTextStyleButton
           ]}
           underlayColor="transparent"
-          // buttonStyle={{backgroundColor:'#181818'}}
           selectedButtonStyle={styles.selectedButtonStyle}
           containerStyle={styles.buttonGroup}
       />
