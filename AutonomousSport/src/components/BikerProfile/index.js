@@ -88,8 +88,6 @@ class BikerProfile extends Component {
       }
     };
 
-  
-    // console.log(TAG, ' contructor firebase url = ', this.pathKey);
   }
 
   get room(): Room {
@@ -97,6 +95,12 @@ class BikerProfile extends Component {
   }
 
   componentDidMount() {}
+
+  componentWillUnmount() {
+    console.log(TAG, ' componentWillUnmount ');
+    this.roomDataPrefference?.off('value');
+  }
+  
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
@@ -120,8 +124,6 @@ class BikerProfile extends Component {
     console.log(TAG, ' onListenerChanel = ', user?.fbuid);
     let data;
     if (!_.isEmpty(user)) {
-    //   firebase.database().ref(this.pathKey);
-    // this.roomDataPrefference = this.dataPrefference.child('players');
       this.roomDataPrefference.on('value', dataSnap => {
         data = dataSnap?.toJSON() || {};
         console.log(TAG, ' onListenerChanel ---- ', data);
@@ -148,7 +150,7 @@ class BikerProfile extends Component {
   render() {
     const { players = [] } = this.state;
     const playerMe = players?.find(item=>item.isMe === true);
-    console.log(TAG, ' render room = ', this.room?.toJSON());
+    // console.log(TAG, ' render room = ', this.room?.toJSON());
     return (
       <ScrollView style={styles.container}>
         <OTSession
@@ -176,7 +178,7 @@ class BikerProfile extends Component {
               }}
             >
               <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.playerName||'No Name'}</Text>
-              <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.speed||0}km</Text>
+              <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(playerMe?.speed||0)}m/h</Text>
               <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.goal||0}%</Text>
             </View>
           </View>

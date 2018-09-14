@@ -16,10 +16,12 @@ import { connect } from 'react-redux';
 import TextStyle,{screenSize} from '@/utils/TextStyle';
 import images, { icons } from '@/assets';
 import { TAG as TAGHOME } from '@/screens/Home';
+import { TAG as TAGSETUP } from '@/screens/Setup';
 import { fetchUser,signIn } from '@/actions/UserAction';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import { Icon,Button } from 'react-native-elements';
 import styles,{ color } from './styles';
+import { checkSaveDevice } from '@/actions/RaceAction';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
 
@@ -36,31 +38,76 @@ class SignInScreen extends BaseScreen {
       user: undefined,
       swap:false,
       error:'',
+      isSavedDevice:undefined,
       loading:false
     };
   }
 
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log(TAG, ' getDerivedStateFromProps - begin ');
+  //   if(nextProps.race && nextProps.race.isSavedDevice !== prevState?.isSavedDevice){
+  //     console.log(TAG, ' getDerivedStateFromProps - isSavedDevice = ', nextProps.race?.isSavedDevice);
+  //     return {
+  //       isSavedDevice: nextProps.race?.isSavedDevice
+  //     };
+  //   }else if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+  //     console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
+  //     return {
+  //       user: nextProps.user,
+  //       loading:false
+  //     };
+  //   }
+  //   return null;
+  // }
+
   componentDidMount() {
-    this.props.fetchUser();
+    // this.props.fetchUser();
+    this.props.checkSaveDevice();
   }
-  componentDidUpdate(prevProps,prevState){
-    const {user} = this.state;
-    if(JSON.stringify(prevProps?.user)!== JSON.stringify(user)){
-      // console.log(TAG, ' componentDidUpdate - user = ', user  + 'prevProps?.user =  ',prevProps?.user);
-      console.log(TAG, ' componentDidUpdate - prevProps?.user =  ',prevProps?.user);
-      this.receiveSignIn({isLogged:!_.isEmpty(user.userInfo) });
-    }
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
-      console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
-      return {
+  
+  
+  // componentDidUpdate(prevProps,prevState){
+  //   console.log(TAG, ' componentDidUpdate - begin');
+  //   const {user,isSavedDevice} = this.state;
+  //   console.log(TAG, ' componentDidUpdate - begin01 - ',prevProps);
+  //   console.log(TAG, ' componentDidUpdate - begin02 - ',prevState);
+  //   if(prevProps.race?.isSavedDevice !== isSavedDevice){
+  //     console.log(TAG, ' componentDidUpdate - isSavedDevice =  ',isSavedDevice);
+  //     if(isSavedDevice === true){
+  //       this.props.fetchUser();
+  //     }else{
+  //       this.replaceScreen(this.props.navigation,TAGSETUP);
+  //     }
+  //   }else if(JSON.stringify(prevProps?.user)!== JSON.stringify(user)){
+  //     console.log(TAG, ' componentDidUpdate - prevProps?.user =  ',prevProps?.user);
+  //     this.receiveSignIn({isLogged:!_.isEmpty(user?.userInfo) });
+  //   }
+  // }
+
+
+  componentWillReceiveProps(nextProps){
+    console.log(TAG, ' componentWillReceiveProps - begin');
+    const {user,isSavedDevice} = this.state;
+    if(nextProps.race&&nextProps.race?.isSavedDevice !== isSavedDevice){
+      console.log(TAG, ' componentWillReceiveProps - isSavedDevice =  ',isSavedDevice);
+      if(nextProps.race?.isSavedDevice === true){
+        this.setState({
+          isSavedDevice: nextProps.race.isSavedDevice
+        });
+        this.props.fetchUser();
+      }else{
+        this.replaceScreen(this.props.navigation,TAGSETUP);
+      }
+    }else if(JSON.stringify(nextProps?.user)!== JSON.stringify(user)){
+      console.log(TAG, ' componentWillReceiveProps - prevProps?.user =  ',nextProps?.user);
+      this.setState({
         user: nextProps.user,
         loading:false
-      };
+      });
+      this.receiveSignIn({isLogged:!_.isEmpty(nextProps.user?.userInfo) });
     }
-    return null;
   }
+  
   receiveSignIn = async ({isLogged=false,error=''}) =>{
     try {
       this.setState(
@@ -71,8 +118,8 @@ class SignInScreen extends BaseScreen {
         }
       );
       if(isLogged){
-        this.props.navigation.replace(TAGHOME);
-        // Util.resetRoute(this.props.navigation,TAGHOME);
+        this.replaceScreen(this.props.navigation,TAGHOME);
+      
       }
     } catch (error) {
       this.setState({
@@ -299,7 +346,9 @@ SignInScreen.propTypes = {};
 SignInScreen.defaultProps = {};
 export default connect(
   state => ({
-    user:state.user
+    user:state.user,
+    race:state.race
+    // isSavedDevice:state.race.isSavedDevice
   }),
-  {signIn:signIn,fetchUser}
+  {signIn:signIn,fetchUser,checkSaveDevice}
 )(SignInScreen);

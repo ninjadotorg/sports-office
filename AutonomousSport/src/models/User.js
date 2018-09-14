@@ -5,7 +5,7 @@ export default class User {
     this.email = userJson.email || '';
     this.token = userJson.token || '';
     this.photoUrl = userJson.photoUrl || '';
-    this.profile = userJson.Profile || {};
+    this.profile = userJson.Profile || userJson.profile || {};
     this.fbtoken = userJson.fbtoken || '';
     this.fbuid = userJson.fbuid || '';
     this.routeUnit = userJson.routeUnit || 'mile';

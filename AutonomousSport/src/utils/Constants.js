@@ -6,6 +6,17 @@ import * as ConfigReact from 'react-native-config';
 export default class Constants {
   static BACK_KEY = 'BACK';
 }
+
+export class STATE_BLUETOOTH {
+  static UNKNOWN = 'UNKNOWN';
+  static IDLE = 'IDLE';
+  static SCANNING = 'SCANNING';
+  static BLUETOOTH_OFF = 'BLUETOOTH_OFF';
+  static CONNECTING = 'CONNECTING';
+  static CONNECTED = 'CONNECTED';
+  static DISCONNECTING = 'DISCONNECTING';
+  static DISCONNECTED = 'DISCONNECTED';
+}
 export const Config = {
   API_URL: (() => {
     if (!__DEV__) {

@@ -9,24 +9,15 @@ import Room from '@/models/Room';
 import images, { icons } from '@/assets';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { connect } from 'react-redux';
-import { fetchUser } from '@/actions/UserAction';
+import { fetchUser,updateRacing } from '@/actions/UserAction';
 import { leftRoom } from '@/actions/RoomAction';
+import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle from '@/utils/TextStyle';
-export const TAG = 'ChallengeScreen';
-// const dataTest = {
-//   id: 1,
-//   userId: 1,
-//   createdAt: '2018-07-24T11:14:18+07:00',
-//   updatedAt: '2018-07-24T11:14:18+07:00',
-//   deletedAt: null,
-//   name: '',
-//   session:
-//     '1_MX40NjE1NDQyMn5-MTUzMjQwNTY1ODI1NH5qVG5McnlvcjAxaE9IY01mdC9ya3NpTVR-fg',
-//   token:
-//     'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTIxMGI3MDZhOTY0NTczNDFlMTEzODJmYTcwNTA1MjZiOTdlNmZmMjpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpNalF3TlRZMU9ESTFOSDVxVkc1TWNubHZjakF4YUU5SVkwMW1kQzl5YTNOcFRWUi1mZyZjcmVhdGVfdGltZT0xNTMyNDA1NjU4Jm5vbmNlPTk1MDI4NSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTMyNDkyMDU4',
-//   win: 0
-// };
+import {onClickView} from '@/utils/ViewUtil';
+import firebase from 'react-native-firebase';
+import {debounce} from 'lodash';
 
+export const TAG = 'ChallengeScreen';
 class ChallengeScreen extends BaseScreen {
   // static navigationOptions = {
   //   title: 'Challenge'
@@ -36,37 +27,123 @@ class ChallengeScreen extends BaseScreen {
     const room: Room = new Room(props.navigation?.state.params);
     this.state = {
       room: room,
-      user:{},
-      isLoading:false
+      user: {},
+      race: {},
+      distanceRun :0,
+      kcal:0,
+      isLoading: false,
+      isReady:false
     };
-   
+
+    this.pathKey = `games/race-rooms/${room?.session || ''}`;
+    this.dataPrefference = firebase.database().ref(this.pathKey);
+    
   }
 
-  componentDidMount() {
-    this.props.getUser();
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+  //     console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
+  //     return {
+  //       user: nextProps.user,
+  //       isLoading: false
+  //     };
+  //   } else if (
+  //     JSON.stringify(nextProps?.race) !== JSON.stringify(prevState.race)
+  //   ) {
+  //     console.log(TAG, ' getDerivedStateFromProps - race = ', nextProps?.race);
+  //     return {
+  //       race: nextProps.race
+  //     };
+  //   }
+  //   return null;
+  // }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
-      console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
-      return {
+  UNSAFE_componentWillReceiveProps(nextProps){
+    const {user,race,distanceRun = 0,room = {},isReady,kcal=0} = this.state;
+
+    if (JSON.stringify(nextProps?.user) !== JSON.stringify(user)) {
+      console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
+      this.setState({
         user: nextProps.user,
-        isLoading:false
-      };
+        isLoading: false
+      },()=>{
+        this.roomDataPrefference = this.dataPrefference.child('players').child(this.state.user.fbuid);
+        this.props.connectAndPrepare();
+      });
+      
+    } else if (
+      JSON.stringify(nextProps?.race) !== JSON.stringify(race)
+    ) {
+      console.log(TAG, ' componentWillReceiveProps race begin ');
+      const {race = {}} = nextProps;
+      const {data} = race;
+      console.log(TAG, ' componentWillReceiveProps race begin01 data = ',data);
+      if(isReady && this.roomDataPrefference){
+        const s = (distanceRun + data.distanceStreet)||0;
+        const sumKcal = (kcal + data.kcal)||0;
+        console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
+        this.setState({
+          race: race,
+          distanceRun:s,
+          kcal:sumKcal
+        });
+        // caculate goal
+        const goal = Math.round(s*100 / room?.miles) || 0;
+        console.log(TAG, ' componentWillReceiveProps02 - goal = ', goal);
+        this.roomDataPrefference.update({
+          speed:data.speed,
+          goal:goal,
+          kcal:sumKcal
+        });
+
+        // save local user
+        this.saveUserInfo({kcal:data.kcal||0,miles: data.distanceStreet});
+      }
     }
     return null;
   }
 
+  saveUserInfo = debounce(({kcal = 0,miles= 0})=>{
+    console.log(TAG, ' saveUserInfo begin ');
+    this.props.updateRacing({kcal,miles});    
+  },1000);
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (JSON.stringify(prevProps?.user) !== JSON.stringify(this.state.user)) {
+  //     console.log(TAG, ' componentDidUpdate - user = ', prevProps?.user);
+  //     this.roomDataPrefference = this.dataPrefference.child('players').child(this.state.user.fbuid);
+  //     this.props.connectAndPrepare();
+  //   }else if (JSON.stringify(prevProps?.race) !== JSON.stringify(this.state.race)) {
+  //      // caculate with value
+  //      const {race,isReady} = this.state;
+  //      const {data = {speed :0}} = race;
+  //      if(isReady && this.roomDataPrefference){
+  //       this.roomDataPrefference.update({
+  //         speed:data.speed
+  //       });
+  //      }
+      
+  //      console.log(TAG, ' componentDidUpdate - data = ',data);
+      
+  //   }
+    
+  // }
+  
+
+  componentDidMount() {
+    this.props.getUser(); 
+  }
 
   renderMap = () => {
-    const { room } = this.state;
-    
+    const { room,isReady } = this.state;
+
     return (
       <View style={styles.map}>
         <Image
           style={{ width: '100%', height: '100%', position: 'absolute' }}
           source={{ uri: room?.photo || '' }}
         />
+        {isReady?null:
         <Button
           containerViewStyle={{
             position: 'absolute',
@@ -74,24 +151,32 @@ class ChallengeScreen extends BaseScreen {
             bottom: 10
           }}
           title="Get ready"
-          buttonStyle={[styles.button,{backgroundColor:'#02BB4F'}]}
-          textStyle={[TextStyle.mediumText,{fontWeight:'bold'}]}
-        />
+          onPress={this.onPressReady}
+          buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
+          textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+        />}
       </View>
     );
-
   };
 
-  
-  
+  onPressReady = onClickView(()=>{
+    this.setState({isReady:true});
+  });
+
+  componentWillUnmount() {
+    console.log(TAG, ' componentWillUnmount ok');
+    this.props.disconnectBluetooth();
+
+  }
+
   onPressClose = () => {
-    const {room} = this.state;
-    this.props.leftRoom({session:room.session});
+    const { room } = this.state;
+    this.props.leftRoom({ session: room?.session });
     this.replaceScreen(this.props.navigation, TAGHOME);
   };
 
   render() {
-    const { room,user } = this.state;
+    const { room, user } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
@@ -118,7 +203,8 @@ ChallengeScreen.defaultProps = {};
 export default connect(
   state => ({
     user: state.user?.userInfo,
-    closeRoom:state.room?.closeRoom
+    closeRoom: state.room?.closeRoom,
+    race: state.race
   }),
-  { getUser: fetchUser,leftRoom }
+  { getUser: fetchUser,updateRacing, connectAndPrepare, leftRoom, disconnectBluetooth }
 )(ChallengeScreen);

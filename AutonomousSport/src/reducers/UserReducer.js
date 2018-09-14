@@ -36,6 +36,10 @@ const UserReducer = (state = initialState, action) => {
       }
       return { ...state, userInfo: payload };
     }
+    case ACTIONS.UPDATE_RACING: {
+      const payload = action.payload || {};
+      return { ...state, userInfo: payload };
+    }
 
     default:
       return state;
