@@ -1,5 +1,4 @@
 import { NavigationActions, StackActions } from 'react-navigation';
-import LocalDatabase from './LocalDatabase';
 
 const TAG = 'Util';
 export default class Util {
@@ -24,4 +23,11 @@ export default class Util {
 
     navigation.dispatch(resetAction);
   };
+
+  static excuteWithTimeout = (fn,timeSecond = 1)=>{
+    return  new Promise(resolve=>{
+      setTimeout(()=>resolve(fn),timeSecond*1000);
+    });
+  }
+  
 }

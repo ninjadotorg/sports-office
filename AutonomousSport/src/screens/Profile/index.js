@@ -8,14 +8,12 @@ import { TAG as TAGCREATE } from '@/screens/Create';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import { Button, Header } from 'react-native-elements';
 import TextStyle from '@/utils/TextStyle';
-// import ApiService from '@/services/ApiService';
-// import LocalDatabase from '@/utils/LocalDatabase';
-// import Util from '@/utils/Util';
+import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 import { fetchUser,updateName } from '@/actions/UserAction';
-import ViewUtil from '@/utils/ViewUtil';
+import Util from '@/utils/Util';
 import DashboardProfile from '@/components/DashboardProfile';
 import LocalDatabase from '@/utils/LocalDatabase';
-import Util from '@/utils/Util';
+import BleManager from 'react-native-ble-manager';
 
 export const TAG = 'ProfileScreen';
 
@@ -68,9 +66,18 @@ class ProfileScreen extends BaseScreen {
     }
     return null;
   }
-  onPressLogout = ()=>{
-    LocalDatabase.logout();
-    Util.resetRoute(this.props.navigation,TAGSIGNIN);
+
+  
+  onPressLogout = async ()=>{
+    await Util.excuteWithTimeout(async ()=>{
+      const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
+      console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
+      if (periBluetooth && periBluetooth.peripheral) {
+        await BleManager.disconnect(periBluetooth.peripheral);
+      }
+    },2);
+    await LocalDatabase.logout();
+    this.replaceScreen(this.props.navigation,TAGSIGNIN);
   }
 
   onPressSave = () => {

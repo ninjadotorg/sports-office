@@ -8,6 +8,7 @@ import {
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
+import {onClickView} from '@/utils/ViewUtil';
 import { FormLabel, FormInput, Button } from 'react-native-elements';
 
 import styles, { sliderWidth, itemWidth } from './styles';
@@ -47,16 +48,9 @@ class HomeScreen extends BaseScreen {
   }
   componentDidMount() {}
 
-  onPressCreateRoom = async () => {
+  onPressCreateRoom = onClickView(async () => {
     this.props.navigation.navigate(TAGCREATE);
-    // try {
-    //   const roomInfo:Room = await ApiService.createRoom();
-    //   console.log(TAG, ' onPressCreateRoom roomInFo ', roomInfo);
-    //   if (roomInfo) {
-    //     this.props.navigation.navigate(TAGCREATE, roomInfo.toJSON());
-    //   }
-    // } catch (error) {}
-  };
+  });
 
   onPressListFriends = ()=>{
     this.props.navigation.navigate(TAGFRIENDS);

@@ -24,14 +24,18 @@ import BleManager from 'react-native-ble-manager';
 import BaseScreen from '@/screens/BaseScreen';
 import styles from './styles';
 import images, { icons } from '@/assets';
+import _ from 'lodash';
 import TextStyle from '@/utils/TextStyle';
 import {TAG as TAGSIGNIN} from '@/screens/SignIn';
+import LocalDatabase from '@/utils/LocalDatabase';
+import PeripheralBluetooth from '@/models/PeripheralBluetooth';
+
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-const TAG = 'SetupScreen';
+export const TAG = 'SetupScreen';
 export default class SetupScreen extends BaseScreen {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       scanning: false,
@@ -39,9 +43,8 @@ export default class SetupScreen extends BaseScreen {
       refreshing: false,
       appState: ''
     };
-    
+    BleManager.start({ showAlert: true });
     this.handlerUpdate = null;
-    this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
     this.handleStopScan = this.handleStopScan.bind(this);
     this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(
       this
@@ -52,7 +55,6 @@ export default class SetupScreen extends BaseScreen {
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
 
-    BleManager.start({ showAlert: false });
 
     this.handlerDiscover = bleManagerEmitter.addListener(
       'BleManagerDiscoverPeripheral',
@@ -66,14 +68,14 @@ export default class SetupScreen extends BaseScreen {
       'BleManagerDisconnectPeripheral',
       this.handleDisconnectedPeripheral
     );
-    // this.handlerUpdate = bleManagerEmitter.addListener(
-    //   'BleManagerDidUpdateValueForCharacteristic',
-    //   this.handleUpdateValueForCharacteristic
-    // );
+    this.handlerUpdate = bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      this.handleUpdateValueForCharacteristic
+    );
 
-    this.checkPermission().then(result => {
-      console.log(TAG, ' componentDidMount permission = ', result);
-    });
+    // this.checkPermission().then(result => {
+    //   console.log(TAG, ' componentDidMount permission = ', result);
+    // });
 
     this.checkConditionForScan().then(result => {
       if (result) {
@@ -136,13 +138,27 @@ export default class SetupScreen extends BaseScreen {
   }
 
   componentWillUnmount() {
-    this.handlerDiscover.remove();
-    this.handlerStop.remove();
-    this.handlerDisconnect.remove();
+    console.log(TAG,' componentWillUnmount ');
+    clearTimeout(this.timeout);
+    if(this.peripheralBluetooth){
+    BleManager.stopNotification(
+      this.peripheralBluetooth.peripheral,
+      this.peripheralBluetooth.service,
+      this.peripheralBluetooth.characteristic
+    );
+  }
+    console.log(TAG,' componentWillUnmount01 ');
+    this.handlerDiscover?.remove();
+    console.log(TAG,' componentWillUnmount02 ');
+    this.handlerStop?.remove();
+    console.log(TAG,' componentWillUnmount03 ');
+    this.handlerDisconnect?.remove();
+    console.log(TAG,' componentWillUnmount04 ');
     this.handlerUpdate?.remove();
+    console.log(TAG,' componentWillUnmountend ');
   }
 
-  handleDisconnectedPeripheral(data) {
+  handleDisconnectedPeripheral = (data) =>{
     let peripherals = this.state.peripherals;
     let peripheral = peripherals.get(data.peripheral);
     if (peripheral) {
@@ -153,14 +169,16 @@ export default class SetupScreen extends BaseScreen {
     console.log('Disconnected from ' + data.peripheral);
   }
 
-  handleUpdateValueForCharacteristic = data => {
-    console.log('Received data from characteristic ', data);
+  handleUpdateValueForCharacteristic = async data => {
+    // console.log(' handleUpdateValueForCharacteristic Received  ', data.value);
     // let temp = bytesToString(data.value);
     // let a = temp + '';
     // let b = a.split(',')[1];
-    // console.log('Received data from characteristic ' + temp);
+    // console.log(TAG, `handleUpdateValueForCharacteristic 01 Recieved ${temp} for characteristic`);
+    // value, peripheral, characteristic, service 
+
     if(!_.isEmpty(data)){
-      this.props.navigation.navigate(TAGSIGNIN);
+      this.replaceScreen(this.props.navigation,TAGSIGNIN);
     }
   };
 
@@ -171,34 +189,18 @@ export default class SetupScreen extends BaseScreen {
 
   startScan = () => {
     if (!this.state.scanning) {
-      BleManager.scan([], 5, true).then(results => {
+      BleManager.scan([], 10, false).then(results => {
         console.log('Scanning...');
         this.setState({ scanning: true, peripherals: new Map() });
       });
     }
   };
-
-  //   retrieveConnected() {
-  //     BleManager.getConnectedPeripherals([]).then(results => {
-  //       if (results.length == 0) {
-  //         console.log('retrieveConnected No connected peripherals');
-  //       }
-  //       console.log(TAG, 'retrieveConnected ', results);
-  //       var peripherals = this.state.peripherals;
-  //       for (var i = 0; i < results.length; i++) {
-  //         var peripheral = results[i];
-  //         peripheral.connected = true;
-  //         peripherals.set(peripheral.id, peripheral);
-  //         this.setState({ peripherals });
-  //       }
-  //     });
-  //   }
-
   handleDiscoverPeripheral = peripheral => {
-    var peripherals = this.state.peripherals;
-    if (!peripherals.has(peripheral.id) && peripheral.name) {
-      //   console.log(TAG, ' handleDiscoverPeripheral ', peripheral);
-      peripherals.set(peripheral.id, peripheral);
+    console.log(TAG, ' handleDiscoverPeripheral begin');
+    let peripherals = this.state.peripherals;
+    if (!peripherals.has(peripheral.id) &&!_.isEmpty(peripheral) && peripheral.name) {
+      
+      peripherals?.set(peripheral.id, peripheral);
       this.setState({ peripherals });
     }
   };
@@ -239,22 +241,22 @@ export default class SetupScreen extends BaseScreen {
                 ' retrieveServices serviceUUID = ' +
                   serviceUUID +
                   ' bakeCharacteristicUUID =' +
-                  bakeCharacteristic?.uuid
+                  bakeCharacteristic
               );
-              //   var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
-
-              setTimeout(() => {
+              clearTimeout(this.timeout||0);
+              this.timeout = setTimeout(() => {
                 BleManager.startNotification(
                   id,
                   serviceUUID,
                   bakeCharacteristic
                 )
-                  .then(() => {
-                    console.log('Started notification on ' + id);
-                    this.handlerUpdate = bleManagerEmitter.addListener(
-                      'BleManagerDidUpdateValueForCharacteristic',
-                      this.handleUpdateValueForCharacteristic
-                    );
+                  .then(async () => {
+                    
+                    // save local database :serviceUUID,bakeCharacteristic,peripherals
+                    this.peripheralBluetooth = new PeripheralBluetooth(id,serviceUUID,bakeCharacteristic);
+                    await LocalDatabase.saveBluetooth(JSON.stringify(this.peripheralBluetooth.toJSON()));                    
+                    console.log('Started notification on end');
+                    
                   })
                   .catch(error => {
                     console.log('Notification error', error);
@@ -277,7 +279,6 @@ export default class SetupScreen extends BaseScreen {
         key={item.id}
         onPress={() =>{
             this.connect(item);
-            // this.props.navigation.navigate(TAGSIGNIN);
           }
         }>
         
