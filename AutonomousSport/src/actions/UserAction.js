@@ -77,3 +77,20 @@ export const updateRacing = ({ kcal = 0, miles = 0 }) => async dispatch => {
   }
   dispatch({ type: ACTIONS.UPDATE_RACING, payload: {} });
 };
+
+export const resetRacing = () => async dispatch => {
+  try {
+    let user: User = await LocalDatabase.getUserInfo();
+    if (user) {
+      user.Profile['kcal'] = 0;
+      user.Profile['miles'] = 0;
+      await LocalDatabase.saveUserInfo(JSON.stringify(user.toJSON()));
+    }
+    dispatch({ type: ACTIONS.UPDATE_RACING, payload: user?.toJSON() || {} });
+
+    return;
+  } catch (e) {
+    console.log(TAG, ' - updateRacing - error ', e);
+  }
+  dispatch({ type: ACTIONS.UPDATE_RACING, payload: {} });
+};

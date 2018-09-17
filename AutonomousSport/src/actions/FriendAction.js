@@ -1,6 +1,7 @@
 import ApiService from '@/services/ApiService';
 import LocalDatabase from '@/utils/LocalDatabase';
 import Util from '@/utils/Util';
+import _ from 'lodash';
 
 const TAG = 'FriendAction';
 export const ACTIONS = {
@@ -30,11 +31,17 @@ export const fetchAllFriend = ({
   limit = 12
 }) => async dispatch => {
   try {
-    const response = await ApiService.getAllFriend({
+    let response = await ApiService.getAllFriend({
       offset: offset,
       limit: limit
     });
     console.log(TAG, ' - fetchAllUser - response ', response);
+    if (!_.isEmpty(response)) {
+      response = response.list.map(item => {
+        item['is_maked_friend'] = true;
+        return item;
+      });
+    }
     dispatch({ type: ACTIONS.GET_ALL_FRIEND, payload: response });
     return;
   } catch (e) {

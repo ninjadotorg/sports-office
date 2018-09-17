@@ -100,7 +100,6 @@ class ChallengeScreen extends BaseScreen {
         this.saveUserInfo({kcal:data.kcal||0,miles: data.distanceStreet});
       }
     }
-    return null;
   }
 
   saveUserInfo = debounce(({kcal = 0,miles= 0})=>{

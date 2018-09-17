@@ -8,12 +8,10 @@ import {
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import {onClickView} from '@/utils/ViewUtil';
-import { FormLabel, FormInput, Button } from 'react-native-elements';
-
+import {  Button } from 'react-native-elements';
+import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import styles, { sliderWidth, itemWidth } from './styles';
 import TextStyle from '@/utils/TextStyle';
-import ApiService from '@/services/ApiService';
 import { TAG as TAGCREATE} from '@/screens/Create';
 import { TAG as TAGFRIENDS } from '@/screens/Friends';
 import { TAG as TAGPROFILE } from '@/screens/Profile';
@@ -21,7 +19,9 @@ import images from '@/assets';
 import { moderateScale,scale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
-import { fetchUser} from '@/actions/UserAction';
+import {debounce} from 'lodash';
+import { STATE_BLUETOOTH } from '@/utils/Constants';
+import { fetchUser,resetRacing,updateRacing} from '@/actions/UserAction';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = moderateScale(130);
@@ -35,33 +35,114 @@ class HomeScreen extends BaseScreen {
     super(props);
     this.state = {
       user: {},
+      race: {},
+      distanceRun :0,
+      kcal:0,
+      speed:0,
+      isLoading:false
     };
   }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
-      console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
-      return {
-        user: nextProps.user
-      };
-    }
-    return null;
-  }
-  componentDidMount() {}
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+  //     console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
+  //     return {
+  //       user: nextProps.user
+  //     };
+  //   }else if (JSON.stringify(nextProps?.race) !== JSON.stringify(prevState.race)) {
+  //     // caculate with value
+  //     const {race,kcal,distanceRun } = prevState;
+  //     const {data = {speed :0}} = race;
+  //     const s = (distanceRun + data.distanceStreet)||0;
+  //      const sumKcal = (kcal + data.kcal)||0;
+  //      console.log(TAG, ' getDerivedStateFromProps 01 - s = ', s);
+  //      return {
+  //        race: race,
+  //        distanceRun:s,
+  //        kcal:sumKcal
+  //      };
+  //   }
+  //   return null;
+  // }
 
-  onPressCreateRoom = onClickView(async () => {
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log(TAG, ' componentDidUpdate - begin------ ');
+  //   if (JSON.stringify(prevState?.user) !== JSON.stringify(this.state.user)) {
+  //     console.log(TAG, ' componentDidUpdate - user = ', prevProps?.user);
+  //     this.props.connectAndPrepare();
+  //   }else if (JSON.stringify(prevProps?.race) !== JSON.stringify(this.state.race)) {
+       
+  //      console.log(TAG, ' componentDidUpdate01 - data = ',prevProps?.race);
+  //   }
+    
+  // }
+
+  UNSAFE_componentWillReceiveProps(nextProps){
+    const {user,race,distanceRun = 0 ,kcal=0} = this.state;
+
+    if (JSON.stringify(nextProps?.user) !== JSON.stringify(user)) {
+      console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
+      this.setState({
+        user: nextProps.user,
+        isLoading: false
+      },()=>{
+        this.props.connectAndPrepare();
+      });
+      
+    } else if (
+      JSON.stringify(nextProps?.race) !== JSON.stringify(race)
+    ) {
+      console.log(TAG, ' componentWillReceiveProps race begin ');
+      const {race = {}} = nextProps;
+      const {data,isSavedDevice = false, state = STATE_BLUETOOTH.UNKNOW} = race;
+      console.log(TAG, ' componentWillReceiveProps race begin01 data = ',data);
+      if(isSavedDevice && state === STATE_BLUETOOTH.CONNECTED){
+        const s = (distanceRun + data.distanceStreet)||0;
+        const sumKcal = (kcal + data.kcal)||0;
+        console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
+        this.setState({
+          race: race,
+          distanceRun:s,
+          speed:data.speed||0,
+          kcal:sumKcal
+        });
+        // save local user
+        this.saveUserInfo({kcal:data.kcal||0,miles: data.distanceStreet});
+      }
+    }
+  }
+
+  saveUserInfo = debounce(({kcal = 0,miles= 0})=>{
+    console.log(TAG, ' saveUserInfo begin ');
+    this.props.updateRacing({kcal,miles});    
+  },1000);
+  componentDidMount() {
+    this.props.getUser();
+  }
+
+  componentWillUnmount() {
+    console.log(TAG, ' componentWillUnmount ok');
+    this.props.disconnectBluetooth();
+
+  }
+
+  onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGCREATE);
   });
 
-  onPressListFriends = ()=>{
-    this.props.navigation.navigate(TAGFRIENDS);
-  }
+  onPressReset = this.onClickView(async () => {
+    this.props.resetRacing();
+  });
 
-  onPressProfile = ()=>{
+  onPressListFriends = this.onClickView(()=>{
+    this.props.navigation.navigate(TAGFRIENDS);
+  });
+
+  onPressProfile = this.onClickView(()=>{
     this.props.navigation.navigate(TAGPROFILE);
-  }
+  });
 
   render() {
-    const { user,isLoading } = this.state;
+    const { user,speed } = this.state;
     const {userInfo = {}} = user ||{};
     return (
       <ImageBackground style={styles.container} source={images.image_start}>
@@ -77,20 +158,20 @@ class HomeScreen extends BaseScreen {
             </TouchableOpacity>
           </View>
           <View>
-            <DashboardProfile kcal={userInfo?.profile?.kcal||0} mile={userInfo?.profile?.miles||0}/>
+            <DashboardProfile kcal={Math.round((userInfo?.profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.profile?.miles||0)*1000)/1000}/>
           </View>
         </View>
         <View style={styles.containerCenter}>
           <Image source={images.image_velocity} style={{position:'absolute',width:sizeImageCenter,height:sizeImageCenter}} />
-          <Text style={[TextStyle.xxExtraText,{color:'white',fontWeight:'bold'}]}>0</Text>
-          <Text style={[TextStyle.mediumText,{color:'white'}]}>km/h</Text>
+          <Text style={[TextStyle.xxExtraText,{color:'white',fontWeight:'bold'}]}>{Math.round(speed)}</Text>
+          <Text style={[TextStyle.mediumText,{color:'white'}]}>mp/h</Text>
         </View>
         <View style={styles.containerBottom}>
           <Button
             title="Reset"
             textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
             buttonStyle={[styles.button]}
-            onPress={this.onPressCreateRoom}
+            onPress={this.onPressReset}
           />
           <Button
             title="Start Racing"
@@ -109,7 +190,8 @@ HomeScreen.propTypes = {};
 HomeScreen.defaultProps = {};
 export default connect(
   state => ({
-    user: state.user
+    user: state.user,
+    race: state.race
   }),
-  { getUser: fetchUser}
+  { getUser: fetchUser,resetRacing,connectAndPrepare , disconnectBluetooth,updateRacing}
 )(HomeScreen);

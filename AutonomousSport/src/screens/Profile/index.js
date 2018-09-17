@@ -68,7 +68,7 @@ class ProfileScreen extends BaseScreen {
   }
 
   
-  onPressLogout = async ()=>{
+  onPressLogout = this.onClickView(async ()=>{
     await Util.excuteWithTimeout(async ()=>{
       const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
       console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
@@ -78,9 +78,9 @@ class ProfileScreen extends BaseScreen {
     },2);
     await LocalDatabase.logout();
     this.replaceScreen(this.props.navigation,TAGSIGNIN);
-  }
+  });
 
-  onPressSave = () => {
+  onPressSave = this.onClickView(() => {
     const name = this.name._lastNativeText;
     if(name){
       this.setState({
@@ -88,7 +88,7 @@ class ProfileScreen extends BaseScreen {
       });
       this.props.updateName(name);
     }
-  };
+  });
   render() {
     const { user,isLoading } = this.state;
     const {userInfo = {}} = user ||{};
@@ -121,7 +121,7 @@ class ProfileScreen extends BaseScreen {
               {`Email: ${userInfo?.email || ''}`}
             </Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <DashboardProfile kcal={userInfo?.profile?.kcal||0} mile={userInfo?.profile?.miles||0} />
+              <DashboardProfile kcal={Math.round((userInfo?.profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.profile?.miles||0)*1000)/1000} />
             </View>
           </View>
           
