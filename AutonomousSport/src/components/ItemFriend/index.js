@@ -81,10 +81,12 @@ class ItemFriend extends PureComponent {
             marginRight: 0,
             alignSelf: 'center'
           }}
-          buttonStyle={{ height: verticalScale(18) }}
-          title="Friend"
+          buttonStyle={{ height: verticalScale(20) }}
+          title={dataItem?.is_maked_friend ? 'Friend' : 'Add'}
           onPress={() => {
-            this.props.makeFriend(dataItem?.id);
+            if (dataItem?.id) {
+              this.props.makeFriend(dataItem?.id);
+            }
           }}
           backgroundColor="#02BB4F"
           rightIcon={{ name: 'envira', type: 'font-awesome' }}

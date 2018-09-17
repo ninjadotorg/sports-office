@@ -42,8 +42,7 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     borderRadius: 7,
-    backgroundColor: 'transparent',
-    height: scaleSize(20)
+    backgroundColor: 'transparent'
   },
   selectedButtonStyle: {
     backgroundColor: '#02BB4F'

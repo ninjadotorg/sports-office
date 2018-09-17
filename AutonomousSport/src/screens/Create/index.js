@@ -11,43 +11,6 @@ import images, { icons } from '@/assets';
 import RoomList from '@/components/RoomList';
 
 export const TAG = 'CreateRoomScreen';
-const component1 = () => <Text>Hello</Text>
-const component2 = () => <Text>World</Text>
-const component3 = () => <Text>ButtonGroup</Text>
-
-const buttons = [{ element: component1 }, { element: component2 }, { element: component3 }];
-export const DATA_MAP_LIST = [
-  {
-    title: 'Map 1',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-    uri: 'https://i.imgur.com/UYiroysl.jpg'
-  },
-  {
-    title: 'Map 2',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    uri: 'https://i.imgur.com/UPrs1EWl.jpg'
-  },
-  {
-    title: 'Map 3',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-    uri: 'https://i.imgur.com/MABUbpDl.jpg'
-  },
-  {
-    title: 'Map 4',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-    uri: 'https://i.imgur.com/KZsmUi2l.jpg'
-  },
-  {
-    title: 'Map 5',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    uri: 'https://i.imgur.com/2nCt3Sbl.jpg'
-  },
-  {
-    title: 'Map 6',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    uri: 'https://i.imgur.com/lceHsT6l.jpg'
-  }
-];
 
 export default class CreateRoomScreen extends BaseScreen {
   static navigationOptions = navigation => {
@@ -65,16 +28,9 @@ export default class CreateRoomScreen extends BaseScreen {
 
   componentDidMount() {}
 
-  onPressCreateRoom = async () => {
+  onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGNEWROOM);
-    // try {
-    //   const roomInfo = await ApiService.createRoom();
-    //   console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
-    //   if (roomInfo) {
-        
-    //   }
-    // } catch (error) {}
-  };
+  });
   
   onPressBack = ()=>{
     this.props.navigation.goBack();
@@ -82,10 +38,10 @@ export default class CreateRoomScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <View style={styles.topBar}>
+      <TouchableOpacity style={styles.topBar}  onPress={this.onPressBack}>
         {icons.back({
           containerStyle: { marginHorizontal: 0 },
-          onPress: this.onPressBack
+         
         })}
         <Text
           style={[
@@ -113,7 +69,7 @@ export default class CreateRoomScreen extends BaseScreen {
           containerStyle={styles.buttonGroup}
       />
         
-      </View>
+      </TouchableOpacity>
     );
   };
   render() {

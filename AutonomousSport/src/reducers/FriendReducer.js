@@ -10,10 +10,6 @@ const FriendReducer = (state = initialState, action) => {
     case ACTIONS.GET_ALL_FRIEND:
     case ACTIONS.GET_ALL_USER: {
       const payload = action.payload || {};
-      // if (!_.isEmpty(payload)) {
-      //   console.log(TAG, ' FriendReducer-GET_USER payload = ', payload);
-      //   ApiService.token = payload.token;
-      // }
       console.log(TAG, ' FriendReducer-GET_ALL_USER payload = ', payload);
       return { ...state, friendList: payload };
     }

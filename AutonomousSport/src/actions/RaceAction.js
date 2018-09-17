@@ -35,7 +35,8 @@ export const connectionBluetoothChange = dispatch => {
       const round = value[2] * 255 + value[1];
       const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
       const rps = (round - roundPrevious) / timeHour;
-      const speed = rps * 0.68 * cycle;
+      let speed = rps * 0.68 * cycle;
+      speed = speed < 0 ? 0 : speed;
       const distanceRun = speed * timeHour;
       const kcaloriesBurned = (distanceRun * 1.609344 * weight * 1.036) / 1000;
       // calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
@@ -55,7 +56,10 @@ export const connectionBluetoothChange = dispatch => {
       });
     }
 
-    console.log(TAG, ` Recieved ${value} for characteristic ${characteristic}`);
+    console.log(
+      TAG,
+      ` connectionBluetoothChange Recieved ${value} for characteristic ${characteristic}`
+    );
   };
 };
 
