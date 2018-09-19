@@ -43,6 +43,7 @@ type UserView struct {
 	PhotoUrl   string `json:"photoUrl, omitempty" gorm:"type:varchar(100)"`
 	Profile  Profile   
 	ProfileID  int
+	IsMakeFriend  int `json:"is_maked_friend"`
 }
 
 

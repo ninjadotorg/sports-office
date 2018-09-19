@@ -18,6 +18,8 @@ type Friend struct {
 	UserId    int          `json:"userId, omitempty" gorm:"not null"` 
 	FriendId  int        `json:"friendId, omitempty" gorm:"not null"`  
 	InviteCode	  int  		`json:"inviteCode, omitempty" gorm:"not null"`  
+	
+	//Inivte status : 0 inviting , 1 accepted 
 	Status	  int  		`json:"status, omitempty" gorm:"not null"`  
 
 	CreatedAt *time.Time `json:"createdAt, omitempty"`
@@ -25,6 +27,12 @@ type Friend struct {
 	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
 
 }
+
+type IsFriend struct {
+	UserId int          `json:"userId"` 
+	FriendId  int        `json:"friendId"`  
+}
+
 
 // TableName set Room's table name to be `profiles`
 func (Friend) TableName() string {
