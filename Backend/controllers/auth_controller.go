@@ -4,7 +4,7 @@ import (
 	"time"
 	"fmt"
 	//"strings"
-	"log"
+	"log" 
 	"strconv"
 	"../models"
 	"../config"
@@ -635,9 +635,10 @@ func (basectl *BaseController)ListUser(c echo.Context) error{
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 	offset, _ := strconv.Atoi(c.QueryParam("offset"))
 
-	//"email LIKE ? OR fullname LIKE ?", "%jin%", "%jin%"
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)   
+	userid := int(claims["id"].(float64)) 
 	search := c.QueryParam("search")
-
 	if search != "" {
 		basectl.Dao.Model(&models.UserView{}).Where("email LIKE ? OR fullname LIKE ?", "%"+search+"%",  "%"+search+"%" ).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
 	}else{
@@ -645,7 +646,45 @@ func (basectl *BaseController)ListUser(c echo.Context) error{
 	}
 	if len(listuser) == limit {
 		offset= limit + offset
-	} 
+	}
+	
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)   
+	fmt.Println("usermodel: ", usermodel) 
+	// Get List Friends of user and friends id in list user. 
+	var lists []int
+    for _, us := range listuser {
+        lists = append(lists, us.ID)
+	}  
+	
+	//var listid = strings.Trim(strings.Replace(fmt.Sprint(lists), " ",  "," , -1), "[]")
+ 
+	//  
+	//db.Raw("SELECT name, age FROM users WHERE name = ?", 3).Scan(&result)
+	//basectl.Dao.Raw("select user_id, friend_id from users  left join friends on users.ID = friends.user_id where users.ID =7 and friend_id in (7,6,5,4) " ).Scan(&result)
+	
+	rows, _ := basectl.Dao.Raw("select friends.user_id, friends.friend_id from users left join friends on users.ID = friends.user_id   where users.ID =? and friend_id in (?)  ",userid, lists ).Rows() // (*sql.Rows, error)
+	defer rows.Close() 
+
+	for rows.Next() {
+		var tt  models.IsFriend
+		basectl.Dao.ScanRows(rows, &tt)
+		fmt.Println("friendsID %v ", tt)
+		//update status friends. 
+
+		for i := range listuser {
+			attr := &listuser[i]
+			attr.IsMakeFriend = 0
+			if attr.ID == tt.FriendId {
+					attr.IsMakeFriend = 1
+			}
+	   }
+
+	}
+
+
+	 
+	
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listuser,

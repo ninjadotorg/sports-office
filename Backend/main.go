@@ -291,6 +291,7 @@ func main() {
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
 	//add Friends AddFriend  friendId
+	userapi.GET("/user/list", ctl.ListUser)
 	userapi.POST("/friend/add", ctl.AddFriend) 
 	userapi.POST("/friend/del", ctl.RemoveFriend) 
 	userapi.GET("/friend/list", ctl.ListMyFriends) 
