@@ -640,7 +640,7 @@ func (basectl *BaseController)ListUser(c echo.Context) error{
 	userid := int(claims["id"].(float64)) 
 	search := c.QueryParam("search")
 	if search != "" {
-		basectl.Dao.Model(&models.UserView{}).Where("email LIKE ? OR fullname LIKE ?", "%"+search+"%",  "%"+search+"%" ).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
+		basectl.Dao.Model(&models.UserView{}).Where("ID != ? AND (email LIKE ? OR fullname LIKE ?)", userid , "%"+search+"%",  "%"+search+"%" ).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
 	}else{
 		basectl.Dao.Model(&models.UserView{}).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
 	}
