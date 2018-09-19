@@ -1,0 +1,5 @@
+# OSX
+#
+.DS_Store
+AutonomousSport/.env
+Backend/firebase.json
