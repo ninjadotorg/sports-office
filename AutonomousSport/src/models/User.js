@@ -8,6 +8,7 @@ export default class User {
     this.profile = userJson.Profile || userJson.profile || {};
     this.fbtoken = userJson.fbtoken || '';
     this.fbuid = userJson.fbuid || '';
+    this.is_maked_friend = Number(userJson.is_maked_friend) === 1 || false;
     this.routeUnit = userJson.routeUnit || 'mile';
   }
 
@@ -35,6 +36,7 @@ export default class User {
       token: this.token,
       fbtoken: this.fbtoken,
       fbuid: this.fbuid,
+      is_maked_friend: this.is_maked_friend,
       photoUrl: this.photoUrl,
       profile: this.profile,
       route: this.route

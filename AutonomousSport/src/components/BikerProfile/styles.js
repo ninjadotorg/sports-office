@@ -8,7 +8,21 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column'
   },
-  publisher: { height: widthVideo },
+  publisher: {
+    height: widthVideo,
+    width: widthVideo
+  },
+  publisherInfo: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    position: 'absolute',
+    bottom: 0,
+    alignItems: 'flex-end',
+    paddingVertical: 10,
+    backgroundColor: 'rgba(2,187,79,0.5)'
+  },
   subcriber: { height: widthVideo }
 });
 export default styles;
