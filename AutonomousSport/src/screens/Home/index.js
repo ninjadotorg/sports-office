@@ -19,9 +19,9 @@ import images from '@/assets';
 import { moderateScale,scale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
-import {debounce} from 'lodash';
+import _,{debounce} from 'lodash';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
-import { fetchUser,resetRacing,updateRacing} from '@/actions/UserAction';
+import { fetchUser,resetRacing,updateRacing,updatePractiseRacing} from '@/actions/UserAction';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = moderateScale(130);
@@ -77,7 +77,7 @@ class HomeScreen extends BaseScreen {
   // }
 
   UNSAFE_componentWillReceiveProps(nextProps){
-    const {user,race,distanceRun = 0 ,kcal=0} = this.state;
+    const {user,race,distanceRun = 0 ,kcal=0,isStarted} = this.state;
 
     if (JSON.stringify(nextProps?.user) !== JSON.stringify(user)) {
       console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
@@ -85,11 +85,14 @@ class HomeScreen extends BaseScreen {
         user: nextProps.user,
         isLoading: false
       },()=>{
-        this.props.connectAndPrepare();
+        if(_.isEmpty(race)|| race.state !== STATE_BLUETOOTH.CONNECTED){
+          console.log(TAG, ' componentWillReceiveProps - user1111');
+          this.props.connectAndPrepare();
+        }
+        
       });
       
-    } else if (
-      JSON.stringify(nextProps?.race) !== JSON.stringify(race)
+    } else if (isStarted&&JSON.stringify(nextProps?.race) !== JSON.stringify(race)
     ) {
       console.log(TAG, ' componentWillReceiveProps race begin ');
       const {race = {}} = nextProps;
@@ -113,24 +116,43 @@ class HomeScreen extends BaseScreen {
 
   saveUserInfo = debounce(({kcal = 0,miles= 0})=>{
     console.log(TAG, ' saveUserInfo begin ');
-    this.props.updateRacing({kcal,miles});    
+    this.props.updateRacing({kcal,miles});   
+    this.props.updatePractiseRacing({kcal,miles});
   },1000);
   componentDidMount() {
     this.props.getUser();
   }
 
-  componentWillUnmount() {
-    console.log(TAG, ' componentWillUnmount ok');
-    this.props.disconnectBluetooth();
+  // componentWillUnmount() {
+  //   console.log(TAG, ' componentWillUnmount ok----');
+  //   this.props.disconnectBluetooth();
 
-  }
+  // }
 
   onPressCreateRoom = this.onClickView(async () => {
+    
     this.props.navigation.navigate(TAGCREATE);
   });
 
   onPressReset = this.onClickView(async () => {
-    this.props.resetRacing();
+    const {isStarted} = this.state;
+    if(isStarted){
+      this.setState({
+        race: {},
+        distanceRun:0,
+        speed:0,
+        kcal:0,
+        isStarted:false
+      },()=>{
+        this.props.resetRacing();
+      });
+      
+    }else{
+      this.setState({
+        isStarted:true
+      });
+    }
+
   });
 
   onPressListFriends = this.onClickView(()=>{
@@ -142,8 +164,8 @@ class HomeScreen extends BaseScreen {
   });
 
   render() {
-    const { user,speed } = this.state;
-    const {userInfo = {}} = user ||{};
+    const { user,speed ,isStarted } = this.state;
+    const {userInfo = {},practiceInfo = {}} = user ||{};
     return (
       <ImageBackground style={styles.container} source={images.image_start}>
         <View style={styles.containerTop} >
@@ -158,7 +180,7 @@ class HomeScreen extends BaseScreen {
             </TouchableOpacity>
           </View>
           <View>
-            <DashboardProfile kcal={Math.round((userInfo?.profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.profile?.miles||0)*1000)/1000}/>
+            <DashboardProfile kcal={Math.round((practiceInfo?.kcal||0)*100)/100} mile={Math.round((practiceInfo?.miles||0)*1000)/1000}/>
           </View>
         </View>
         <View style={styles.containerCenter}>
@@ -168,7 +190,7 @@ class HomeScreen extends BaseScreen {
         </View>
         <View style={styles.containerBottom}>
           <Button
-            title="Reset"
+            title={isStarted?'Reset':'Practice'}
             textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
             buttonStyle={[styles.button]}
             onPress={this.onPressReset}
@@ -193,5 +215,5 @@ export default connect(
     user: state.user,
     race: state.race
   }),
-  { getUser: fetchUser,resetRacing,connectAndPrepare , disconnectBluetooth,updateRacing}
+  { getUser: fetchUser,updatePractiseRacing,resetRacing,connectAndPrepare , disconnectBluetooth,updateRacing}
 )(HomeScreen);

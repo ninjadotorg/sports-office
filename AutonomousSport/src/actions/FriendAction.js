@@ -35,17 +35,19 @@ export const fetchAllFriend = ({
       offset: offset,
       limit: limit
     });
-    console.log(TAG, ' - fetchAllUser - response ', response);
+
     if (!_.isEmpty(response)) {
-      response = response.list.map(item => {
-        item['is_maked_friend'] = true;
-        return item;
-      });
+      // const list = response.list.map(item => {
+      //   item['is_maked_friend'] = true;
+      //   return item;
+      // });
+      // response['list'] = list;
+      console.log(TAG, ' - fetchAllFriend - response ', response);
     }
     dispatch({ type: ACTIONS.GET_ALL_FRIEND, payload: response });
     return;
   } catch (e) {
-    console.log(TAG, ' - fetchAllUser - error ', e);
+    console.log(TAG, ' - fetchAllFriend - error ', e);
   }
 
   dispatch({ type: ACTIONS.GET_ALL_FRIEND, payload: {} });
@@ -53,14 +55,16 @@ export const fetchAllFriend = ({
 
 export const makeFriend = ({ friendId }) => async dispatch => {
   try {
-    let response =
-      (await ApiService.makeFriend({
-        friendId
-      })) || {};
-    response['id'] = friendId;
-    console.log(TAG, ' - makeFriend - response ', response);
-    dispatch({ type: ACTIONS.MAKE_FRIEND, payload: response });
-    return;
+    if (friendId > 0) {
+      let response =
+        (await ApiService.makeFriend({
+          friendId
+        })) || {};
+      response['id'] = friendId;
+      console.log(TAG, ' - makeFriend - response ', response);
+      dispatch({ type: ACTIONS.MAKE_FRIEND, payload: response });
+      return;
+    }
   } catch (e) {
     console.log(TAG, ' - makeFriend - error ', e);
   }

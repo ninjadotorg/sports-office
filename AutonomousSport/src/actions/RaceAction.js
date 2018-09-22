@@ -8,6 +8,8 @@ import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
+let receiveDataFromBluetooth = false;
 let handlerUpdate = null;
 let timestampPrevious = 0;
 let roundPrevious = 0;
@@ -56,10 +58,10 @@ export const connectionBluetoothChange = dispatch => {
       });
     }
 
-    console.log(
-      TAG,
-      ` connectionBluetoothChange Recieved ${value} for characteristic ${characteristic}`
-    );
+    // console.log(
+    //   TAG,
+    //   ` connectionBluetoothChange Recieved ${value} for characteristic ${characteristic}`
+    // );
   };
 };
 
@@ -73,7 +75,7 @@ export const connectAndPrepare = () => async dispatch => {
     }
   });
   const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
-  console.log(TAG, ' connectAndPrepare get data = ', periBluetooth);
+  // console.log(TAG, ' connectAndPrepare get data = ', periBluetooth);
   if (!periBluetooth) {
     dispatch({
       type: ACTIONS.CONNECT_BLUETOOTH,
@@ -95,36 +97,53 @@ export const connectAndPrepare = () => async dispatch => {
       data: {}
     }
   });
-  console.log(TAG, ' connectAndPrepare 01 ');
+
   await BleManager.start({ showAlert: false });
-  await BleManager.connect(periBluetooth.peripheral);
-  console.log(TAG, ' connectAndPrepare 02 ');
-  dispatch({
-    type: ACTIONS.CONNECT_BLUETOOTH,
-    payload: {
-      state: STATE_BLUETOOTH.CONNECTED,
-      data: {}
+  // const isConnected = await BleManager.isPeripheralConnected(
+  // periBluetooth.peripheral,
+  // [periBluetooth.service]
+  // );
+  console.log(TAG, ' connectAndPrepare 01 state-----');
+  if (!receiveDataFromBluetooth) {
+    await BleManager.connect(periBluetooth.peripheral);
+    console.log(TAG, ' connectAndPrepare 02 ');
+    dispatch({
+      type: ACTIONS.CONNECT_BLUETOOTH,
+      payload: {
+        state: STATE_BLUETOOTH.CONNECTED,
+        data: {}
+      }
+    });
+
+    console.log(TAG, ' connectAndPrepare 03 ');
+    await BleManager.retrieveServices(periBluetooth.peripheral);
+    console.log(TAG, ' connectAndPrepare 04 ');
+    await BleManager.startNotification(
+      periBluetooth.peripheral,
+      periBluetooth.service,
+      periBluetooth.characteristic
+    );
+    receiveDataFromBluetooth = true;
+    console.log(TAG, ' connectAndPrepare 05 ');
+    if (handlerUpdate) {
+      bleManagerEmitter.removeSubscription(handlerUpdate);
+      handlerUpdate.remove();
+      handlerUpdate = null;
     }
-  });
 
-  console.log(TAG, ' connectAndPrepare 03 ');
-  await BleManager.retrieveServices(periBluetooth.peripheral);
-  console.log(TAG, ' connectAndPrepare 04 ');
-  await BleManager.startNotification(
-    periBluetooth.peripheral,
-    periBluetooth.service,
-    periBluetooth.characteristic
-  );
-
-  console.log(TAG, ' connectAndPrepare 05 ');
-  if (handlerUpdate) {
-    bleManagerEmitter.removeSubscription(handlerUpdate);
-    handlerUpdate.remove();
+    handlerUpdate = bleManagerEmitter?.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      connectionBluetoothChange(dispatch)
+    );
+  } else {
+    dispatch({
+      type: ACTIONS.CONNECT_BLUETOOTH,
+      payload: {
+        state: STATE_BLUETOOTH.CONNECTED,
+        data: {}
+      }
+    });
   }
-  handlerUpdate = bleManagerEmitter?.addListener(
-    'BleManagerDidUpdateValueForCharacteristic',
-    connectionBluetoothChange(dispatch)
-  );
 };
 
 export const disconnectBluetooth = () => async dispatch => {
@@ -142,14 +161,19 @@ export const disconnectBluetooth = () => async dispatch => {
   if (handlerUpdate) {
     bleManagerEmitter.removeSubscription(handlerUpdate);
     handlerUpdate?.remove();
+    handlerUpdate = null;
   }
   if (periBluetooth && periBluetooth.peripheral) {
-    BleManager.stopNotification(
+    console.log(TAG, ' disconnectBluetooth stop-----');
+    // await BleManager.start({ showAlert: false });
+    receiveDataFromBluetooth = false;
+    await BleManager.stopNotification(
       periBluetooth.peripheral,
       periBluetooth.service,
       periBluetooth.characteristic
     );
   }
+  console.log(TAG, ' disconnectBluetooth end ');
   dispatch({
     type: ACTIONS.CONNECT_BLUETOOTH,
     payload: {

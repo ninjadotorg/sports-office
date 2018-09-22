@@ -6,6 +6,7 @@ import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 const TAG = 'LocalDatabase';
 const KEY_SAVE = {
   USER: 'USER',
+  PRACTICE: 'PRACTICE',
   BLUETOOTH: 'BLUETOOTH'
 };
 export default class LocalDatabase {
@@ -56,13 +57,31 @@ export default class LocalDatabase {
   }
 
   static async logout() {
-    await AsyncStorage.multiRemove([KEY_SAVE.USER, KEY_SAVE.BLUETOOTH]);
+    return await AsyncStorage.multiRemove([
+      KEY_SAVE.USER,
+      KEY_SAVE.BLUETOOTH,
+      KEY_SAVE.PRACTICE
+    ]);
   }
   static async getUserInfo(): User {
     const userJson = (await this.getValue(KEY_SAVE.USER)) || '';
     return _.isEmpty(userJson) ? null : new User(JSON.parse(userJson));
   }
 
+  static async getPractiseInfo(): {} {
+    const userJson = (await this.getValue(KEY_SAVE.PRACTICE)) || '';
+    return _.isEmpty(userJson) ? {} : JSON.parse(userJson);
+  }
+
+  static async savePractiseInfo(jsonUser = { kcal: 0, miles: 0 }): {} {
+    const oldUser = await this.getValue(KEY_SAVE.PRACTICE);
+    if (jsonUser !== oldUser) {
+      const data = { ...JSON.parse(oldUser), ...JSON.parse(jsonUser) };
+      await this.saveValue(KEY_SAVE.PRACTICE, JSON.stringify(data));
+      return data;
+    }
+    return {};
+  }
   static async getUserAccessToken(): String {
     try {
       const userData: User = await this.getUserInfo();

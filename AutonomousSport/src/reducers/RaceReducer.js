@@ -13,7 +13,7 @@ const RaceReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.CONNECT_BLUETOOTH: {
       const payload = action.payload || {};
-      console.log(TAG, ' RaceReducer-CONNECT_BLUETOOTH payload = ', payload);
+      // console.log(TAG, ' RaceReducer-CONNECT_BLUETOOTH payload = ', payload);
       return {
         ...state,
         state: payload?.state || STATE_BLUETOOTH.UNKNOWN,

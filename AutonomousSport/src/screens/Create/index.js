@@ -28,6 +28,11 @@ export default class CreateRoomScreen extends BaseScreen {
 
   componentDidMount() {}
 
+  updateIndex (selectedIndex) {
+    this.setState({selectedIndex});
+  }
+  
+
   onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGNEWROOM);
   });
@@ -38,23 +43,24 @@ export default class CreateRoomScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <TouchableOpacity style={styles.topBar}  onPress={this.onPressBack}>
-        {icons.back({
-          containerStyle: { marginHorizontal: 0 },
-         
-        })}
-        <Text
-          style={[
-            TextStyle.mediumText,
-            {
-              color: 'white',
-              textAlignVertical: 'center',
-              marginHorizontal: 10
-            }
-          ]}
-        >
-          Choose a race to start
-        </Text>
+      <View style={styles.topBar} >
+      <TouchableOpacity style={{flexDirection:'row'}} onPress={this.onPressBack}>
+          {icons.back({
+            containerStyle: { marginHorizontal: 0 }
+          })}
+          <Text
+            style={[
+              TextStyle.mediumText,
+              {
+                color: 'white',
+                textAlignVertical: 'center',
+                marginHorizontal: 10
+              }
+            ]}
+          >
+            Choose a race to start
+          </Text>
+        </TouchableOpacity>
         <ButtonGroup
           onPress={this.updateIndex}
           selectedIndex={selectedIndex}
@@ -69,7 +75,8 @@ export default class CreateRoomScreen extends BaseScreen {
           containerStyle={styles.buttonGroup}
       />
         
-      </TouchableOpacity>
+      
+      </View>
     );
   };
   render() {

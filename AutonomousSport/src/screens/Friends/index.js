@@ -19,7 +19,9 @@ import ViewUtil from '@/utils/ViewUtil';
 import ItemFriend from '@/components/ItemFriend';
 import { fetchAllUser,fetchAllFriend } from '@/actions/FriendAction';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 import User from '@/models/User';
+import Util from '@/utils/Util';
 const limitRow = 24;
 export const TAG = 'FriendsScreen';
 const buttons = ['Your Friends', 'All The World'];
@@ -42,31 +44,52 @@ class FriendsScreen extends BaseScreen {
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if(JSON.stringify(nextProps?.friends) !== JSON.stringify(prevState?.friends)){
-      console.log(TAG," getDerivedStateFromProps = ",nextProps?.friends);
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if(JSON.stringify(nextProps?.friends) !== JSON.stringify(prevState?.friends)){
+  //     console.log(TAG," getDerivedStateFromProps = ",nextProps?.friends);
       
-      const listFriends = nextProps?.friends?.list?.map(item => {
+  //     const listFriends = nextProps?.friends?.list?.map(item => {
+  //       return new User(item);
+  //     }) || [];
+  //     return {
+  //       friends:nextProps?.friends,
+  //       listFriends:listFriends,
+  //       offset:nextProps?.friends?.next?.offset||0,
+  //       limit:nextProps?.friends?.next?.limit||limitRow,
+  //       isLoading:false
+  //     };
+  //   };
+  //   return null;
+  // }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if(JSON.stringify(prevState?.friends) !== JSON.stringify(this.state?.friends)){
+  //     console.log(TAG," componentDidUpdate = ",prevProps?.friends);
+  //   }
+  // }
+  
+  componentWillReceiveProps(nextProps){
+    const {friends,listFriends = []} = this.state;
+    console.log(TAG,' componentWillReceiveProps begin = ');
+    if(!_.isEqualWith(nextProps?.friends,friends)){
+      console.log(TAG,' componentWillReceiveProps01 = length ',listFriends.length);
+      const listNew =  nextProps?.friends?.list||[];
+      let listSum = _.unionBy(listNew,friends.list,'id');
+      listSum = _.sortBy(listSum,'id').reverse();
+      console.log(TAG,' componentWillReceiveProps02 = length ',listSum[1]);
+      const listFriendsNew =   listSum.map(item => {
         return new User(item);
       }) || [];
-      return {
+      
+      this.setState({
         friends:nextProps?.friends,
-        listFriends:listFriends,
+        listFriends:listFriendsNew,
         offset:nextProps?.friends?.next?.offset||0,
         limit:nextProps?.friends?.next?.limit||limitRow,
         isLoading:false
-      };
+      });
     };
-    return null;
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    if(JSON.stringify(prevState?.friends) !== JSON.stringify(this.state?.friends)){
-     
-    }
-  }
-  
-  
 
   componentDidMount() {
     const {offset,limit} = this.state;
@@ -78,8 +101,9 @@ class FriendsScreen extends BaseScreen {
     if(selectedIndexItem !== selectedIndex){
       offset = 0;
       limit = limitRow;
-      this.setState({ selectedIndex:selectedIndexItem },()=>{
-        // selectedIndexItem ===0? this.props.fetchAllFriend({offset,limit}):this.props.fetchAllUser({offset,limit});
+      this.setState({ 
+        selectedIndex:selectedIndexItem,
+       },()=>{
         this.onRefreshData();
       });
     }
@@ -89,12 +113,14 @@ class FriendsScreen extends BaseScreen {
     console.log(TAG,' fetchData begin');
     selectedIndex ===0? this.props.fetchAllFriend({offset,limit}):this.props.fetchAllUser({offset,limit});
   }
-  onRefreshData = ()=>{
+  onRefreshData = this.onClickView(()=>{
     let {isLoading} = this.state;
     console.log(TAG,' onRefreshData begin');
     if(!isLoading){
       this.setState({
         offset:0,
+        friends:{},
+        listFriends:[],
         limit :limitRow,
         isLoading:true
       },()=>{
@@ -102,36 +128,37 @@ class FriendsScreen extends BaseScreen {
       });
       
     }
-  }
-  onLoadMore = ()=>{
+  });
+  onLoadMore = this.onClickView(()=>{
     console.log(TAG,' onLoadMore begin');
     let {isLoading,offset,limit} = this.state;
     if(!isLoading){
       this.fetchData({offset,limit});
     }
-  }
+  });
   onPressBack = () => {
     this.props.navigation.goBack();
   };
   renderLeftHeader = () => {
     return (
       <View style={styles.topBar}>
-        {icons.back({
-          containerStyle: { marginHorizontal: 0 },
-          onPress: this.onPressBack
-        })}
-        <Text
-          style={[
-            TextStyle.mediumText,
-            {
-              color: 'white',
-              textAlignVertical: 'center',
-              marginHorizontal: 10
-            }
-          ]}
-        >
-          Explore the world
-        </Text>
+        <TouchableOpacity style={{flexDirection:'row'}} onPress={this.onPressBack}>
+            {icons.back({
+              containerStyle: { marginHorizontal: 0 }
+            })}
+            <Text
+              style={[
+                TextStyle.mediumText,
+                {
+                  color: 'white',
+                  textAlignVertical: 'center',
+                  marginHorizontal: 10
+                }
+              ]}
+            >
+              Explore the world
+            </Text>
+          </TouchableOpacity>
         <SearchBar
           round
           icon={{ type: 'font-awesome', name: 'search' }}
@@ -151,7 +178,7 @@ class FriendsScreen extends BaseScreen {
 
   renderItem = ({item,index}) => {
     // console.log(TAG,' renderItem = ',item);
-    return <ItemFriend dataItem={item} />;
+    return <ItemFriend key={String(index)} dataItem={item} />;
   };
 
   renderTabButton = () => {
@@ -205,7 +232,7 @@ FriendsScreen.propTypes = {};
 FriendsScreen.defaultProps = {};
 export default connect(
   state => ({
-    friends:state.friend?.friendList
+    friends:state.friend.friendList,
   }),
   {fetchAllUser,fetchAllFriend}
 )(FriendsScreen);

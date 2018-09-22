@@ -8,13 +8,13 @@ import {
   Platform,
   ScrollView,
   TextInput,
+  Surface,
   KeyboardAvoidingView
 } from 'react-native';
 import _ from 'lodash';
 import BaseScreen from '@/screens/BaseScreen';
 import { connect } from 'react-redux';
 import TextStyle,{screenSize} from '@/utils/TextStyle';
-import images, { icons } from '@/assets';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { TAG as TAGSETUP } from '@/screens/Setup';
 import { fetchUser,signIn } from '@/actions/UserAction';
@@ -156,9 +156,9 @@ class SignInScreen extends BaseScreen {
     return (
       
       <KeyboardAvoidingView
-        style={[styles.containerStyle,{minHeight: (screenSize.width/3)}]}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : (screenSize.width/-6 + scale(20))}
-        contentContainerStyle={[{flex:1}]}
+        style={[styles.containerStyle,{minHeight: (screenSize.height/2)}]}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : (-screenSize.height/3 + scale(30))}
+        contentContainerStyle={[{flex:1,flexGrow:1},{minHeight: (screenSize.height/2)}]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
       >
       
@@ -170,10 +170,10 @@ class SignInScreen extends BaseScreen {
               
               <TextInput
                 underlineColorAndroid="transparent"
-                style={{flex:1}}
                 ref={(name) => {
                   this.name = name;
                 }}
+                disableFullscreenUI={true}
                 style={[TextStyle.normalText,styles.text,{flex:2}]}
                 placeholderTextColor={color.placeHolder}
                 placeholder="Alice Smith"
@@ -187,6 +187,7 @@ class SignInScreen extends BaseScreen {
               ref={(email) => {
                 this.email = email;
               }}
+              disableFullscreenUI={true}
               style={[TextStyle.normalText,styles.text,{flex:2}]}
               underlineColorAndroid="transparent"
               placeholder="john@smith.com"
@@ -203,6 +204,7 @@ class SignInScreen extends BaseScreen {
               ref={(password) => {
                 this.password = password;
               }}
+              disableFullscreenUI={true}
               style={[TextStyle.normalText,styles.text,{flex:2}]}
               underlineColorAndroid="transparent"
               secureTextEntry
@@ -289,10 +291,9 @@ class SignInScreen extends BaseScreen {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.scrollView}>
-      
+        
         <View style={styles.mainView}>
-          {this.renderSignInWithEmail()}    
-
+          {this.renderSignInWithEmail()}  
           <View
             style={[
               styles.socialBottomTextContainer,

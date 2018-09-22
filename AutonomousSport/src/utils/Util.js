@@ -24,10 +24,18 @@ export default class Util {
     navigation.dispatch(resetAction);
   };
 
-  static excuteWithTimeout = (fn,timeSecond = 1)=>{
-    return  new Promise(resolve=>{
-      setTimeout(()=>resolve(fn),timeSecond*1000);
+  static timeout = (fn, timeSecond = 1) => {
+    return new Promise(resolve => {
+      setTimeout(() => resolve(fn), timeSecond * 1000);
     });
-  }
-  
+  };
+
+  static excuteWithTimeout = (promise, ms = 1) => {
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        reject(new Error('timeout'));
+      }, ms * 1000);
+      promise.then(resolve, reject);
+    });
+  };
 }

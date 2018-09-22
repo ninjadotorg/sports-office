@@ -10,6 +10,7 @@ import { Button, Header } from 'react-native-elements';
 import TextStyle from '@/utils/TextStyle';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 import { fetchUser,updateName } from '@/actions/UserAction';
+import {disconnectBluetooth} from '@/actions/RaceAction';
 import Util from '@/utils/Util';
 import DashboardProfile from '@/components/DashboardProfile';
 import LocalDatabase from '@/utils/LocalDatabase';
@@ -69,15 +70,23 @@ class ProfileScreen extends BaseScreen {
 
   
   onPressLogout = this.onClickView(async ()=>{
-    await Util.excuteWithTimeout(async ()=>{
+    try {
       const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
-      console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
-      if (periBluetooth && periBluetooth.peripheral) {
-        await BleManager.disconnect(periBluetooth.peripheral);
-      }
-    },2);
-    await LocalDatabase.logout();
-    this.replaceScreen(this.props.navigation,TAGSIGNIN);
+      await Util.excuteWithTimeout(async ()=>{
+        console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
+        if (periBluetooth && periBluetooth.peripheral) {
+          await BleManager.start({ showAlert: false });
+          await this.props.disconnectBluetooth();
+          await BleManager.disconnect(periBluetooth.peripheral);
+        }
+      },5);  
+    } catch (error) {
+      
+    }finally{
+      await LocalDatabase.logout();
+      this.replaceScreen(this.props.navigation,TAGSIGNIN);
+    }
+
   });
 
   onPressSave = this.onClickView(() => {
@@ -174,5 +183,5 @@ export default connect(
   state => ({
     user: state.user
   }),
-  { getUser: fetchUser ,updateName}
+  { getUser: fetchUser ,updateName,disconnectBluetooth}
 )(ProfileScreen);
