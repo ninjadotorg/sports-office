@@ -2,6 +2,7 @@ import ApiService from '@/services/ApiService';
 import LocalDatabase from '@/utils/LocalDatabase';
 import User from '@/models/User';
 import Util from '@/utils/Util';
+import _ from 'lodash';
 
 const TAG = 'UserAction';
 export const ACTIONS = {
@@ -11,7 +12,9 @@ export const ACTIONS = {
   GET_USER: 'GET_USER',
   GET_USER_LOCAL: 'GET_USER',
   UPDATE_USER_NAME: 'UPDATE_USER_NAME',
-  UPDATE_RACING: 'UPDATE_RACING'
+  UPDATE_RACING: 'UPDATE_RACING',
+  RESET_RACING: 'RESET_RACING',
+  UPDATE_PRACTISE_RACING: 'UPDATE_PRACTISE_RACING'
 };
 
 export const setError = msg => ({ type: ACTIONS.AUTH_ERROR_SET, payload: msg });
@@ -53,6 +56,13 @@ export const updateName = (fullname = '') => async dispatch => {
   try {
     const response = await ApiService.updateName({ fullname: fullname });
     console.log(TAG, ' - updateName - response ', response);
+
+    let user: User = await LocalDatabase.getUserInfo();
+    if (!_.isEmpty(response) && user) {
+      response.user.Profile['kcal'] = user.Profile.kcal || 0;
+      response.user.Profile['miles'] = user.Profile.miles || 0;
+    }
+
     dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: response?.user || {} });
     return;
   } catch (e) {
@@ -78,19 +88,36 @@ export const updateRacing = ({ kcal = 0, miles = 0 }) => async dispatch => {
   dispatch({ type: ACTIONS.UPDATE_RACING, payload: {} });
 };
 
+export const updatePractiseRacing = ({
+  kcal = 0,
+  miles = 0
+}) => async dispatch => {
+  try {
+    let data = { kcal: kcal, miles: miles };
+    let practiceInfo = await LocalDatabase.getPractiseInfo();
+    if (practiceInfo) {
+      data['kcal'] = kcal + (practiceInfo['kcal'] || 0);
+      data['miles'] = miles + (practiceInfo['miles'] || 0);
+    }
+    await LocalDatabase.savePractiseInfo(JSON.stringify(data));
+    dispatch({ type: ACTIONS.UPDATE_PRACTISE_RACING, payload: data || {} });
+    return;
+  } catch (e) {
+    console.log(TAG, ' - updatePractiseRacing - error ', e);
+  }
+  dispatch({ type: ACTIONS.UPDATE_PRACTISE_RACING, payload: {} });
+};
+
 export const resetRacing = () => async dispatch => {
   try {
-    let user: User = await LocalDatabase.getUserInfo();
-    if (user) {
-      user.Profile['kcal'] = 0;
-      user.Profile['miles'] = 0;
-      await LocalDatabase.saveUserInfo(JSON.stringify(user.toJSON()));
-    }
-    dispatch({ type: ACTIONS.UPDATE_RACING, payload: user?.toJSON() || {} });
+    let data = { kcal: 0, miles: 0 };
+    await LocalDatabase.savePractiseInfo(JSON.stringify(data));
+
+    dispatch({ type: ACTIONS.RESET_RACING, payload: data || {} });
 
     return;
   } catch (e) {
-    console.log(TAG, ' - updateRacing - error ', e);
+    console.log(TAG, ' - resetRacing - error ', e);
   }
-  dispatch({ type: ACTIONS.UPDATE_RACING, payload: {} });
+  dispatch({ type: ACTIONS.RESET_RACING, payload: {} });
 };

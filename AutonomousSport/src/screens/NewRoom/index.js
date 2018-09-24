@@ -83,10 +83,9 @@ class NewRoomScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <View style={styles.topBar}>
+      <TouchableOpacity style={styles.topBar} onPress={this.onPressBack}>
         {icons.back({
-          containerStyle: { marginHorizontal: 0 },
-          onPress: this.onPressBack
+          containerStyle: { marginHorizontal: 0 }
         })}
         <Text
           style={[
@@ -100,7 +99,7 @@ class NewRoomScreen extends BaseScreen {
         >
           Choose map
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
   render() {
