@@ -9,6 +9,8 @@ import { Config } from '@/utils/Constants';
 import TextStyle, { scale } from '@/utils/TextStyle';
 import User from '@/models/User';
 import { makeFriend } from '@/actions/FriendAction';
+import { onClickView } from '@/utils/ViewUtil';
+import Util from '@/utils/Util';
 
 export const TAG = 'ItemFriend';
 
@@ -16,13 +18,50 @@ class ItemFriend extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      // data: props.data
+      isLoading: false,
+      dataItem: props.dataItem || {}
     };
   }
   componentDidMount() {}
 
-  render() {
+  onClickMakeFriend = onClickView(() => {
     const { dataItem } = this.props;
+
+    if (dataItem?.id && !dataItem['is_maked_friend']) {
+      this.setState({
+        isLoading: true
+      });
+      this.props.makeFriend({ friendId: dataItem?.id });
+    }
+  });
+
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log(TAG, ' getDerivedStateFromProps begin = ', nextProps.dataItem);
+  //   if (
+  //     JSON.stringify(nextProps.dataItem) !== JSON.stringify(prevState.dataItem)
+  //   ) {
+  //     return {
+  //       dataItem: nextProps.dataItem || {},
+  //       isLoading: false
+  //     };
+  //   }
+  //   return null;
+  // }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log(TAG, ' componentWillReceiveProps begin = ', nextProps.dataItem);
+    if (
+      JSON.stringify(nextProps.dataItem) !== JSON.stringify(this.state.dataItem)
+    ) {
+      this.setState({
+        dataItem: nextProps.dataItem || {},
+        isLoading: false
+      });
+    }
+  }
+
+  render() {
+    const { dataItem, isLoading } = this.state;
     return (
       <View style={styles.container}>
         <Avatar
@@ -75,6 +114,7 @@ class ItemFriend extends PureComponent {
           {`${dataItem.route} ${dataItem.textRouteUnit}`}
         </Text>
         <Button
+          loading={isLoading}
           rounded
           fontSize={12 * scale()}
           containerViewStyle={{
@@ -83,11 +123,7 @@ class ItemFriend extends PureComponent {
           }}
           buttonStyle={{ height: verticalScale(20) }}
           title={dataItem?.is_maked_friend ? 'Friend' : 'Add'}
-          onPress={() => {
-            if (dataItem?.id) {
-              this.props.makeFriend(dataItem?.id);
-            }
-          }}
+          onPress={this.onClickMakeFriend}
           backgroundColor="#02BB4F"
           rightIcon={{ name: 'envira', type: 'font-awesome' }}
         />

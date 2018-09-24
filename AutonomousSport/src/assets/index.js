@@ -9,7 +9,9 @@ const images = {
   image_start: require('@/assets/images/image_start.png'),
   image_velocity: require('@/assets/images/image_velocity.png'),
   ic_plus_down: require('@/assets/images/ic_plus_down.png'),
-  ic_plus_up: require('@/assets/images/ic_plus_up.png')
+  ic_plus_up: require('@/assets/images/ic_plus_up.png'),
+  mapVector: require('@/assets/images/map.svg'),
+  map: require('@/assets/images/map.jpg')
 };
 export const icons = {
   close: ({

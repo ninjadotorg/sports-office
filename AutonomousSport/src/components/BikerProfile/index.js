@@ -164,23 +164,14 @@ class BikerProfile extends Component {
             'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTE3YTNjMzE4OGE5OWYxM2FhMjZlYWU1OGEwZTE5ZmMxMmNiMDM4NzpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpOVFl5TVRBMk56STRObjVoY3pCclp6UnpZWGxvUTNFNFowTjBhRFpVTTBwR05UVi1mZyZjcmVhdGVfdGltZT0xNTM1NjIxMDY3Jm5vbmNlPTIzNDY4MyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTM1NzA3NDY3'
           }
         >
-          <View>
+          <View style={{backgroundColor:'red'}}>
             <OTPublisher style={styles.publisher} eventHandlers={this.publisherEventHandlers} />
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                position: 'absolute',
-                bottom: 0,
-                paddingVertical:10,
-                backgroundColor: 'rgba(2,187,79,0.5)'
-              }}
-            >
+            <View style={styles.publisherInfo}>
               <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.playerName||'No Name'}</Text>
               <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(playerMe?.speed||0)}m/h</Text>
               <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.goal||0}%</Text>
             </View>
+              
           </View>
           <View>
             <OTSubscriberCustom style={styles.subcriber} players={players} />

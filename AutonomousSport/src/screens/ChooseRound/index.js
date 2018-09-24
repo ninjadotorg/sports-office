@@ -23,10 +23,10 @@ class ChooseRoundScreen extends BaseScreen {
     const mapId = this.props.navigation.getParam('id')||-1;
     console.log(TAG," contructor mile = ", mile);
     this.state = {
-      valueRound:0,
+      valueRound:1,
       mile:mile,
       mapId:mapId,
-      sumMiles:0,
+      sumMiles:mile,
       error:'',
       isLoading:false
     };
@@ -73,10 +73,10 @@ class ChooseRoundScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <View style={styles.topBar}>
+      <TouchableOpacity style={styles.topBar} onPress={this.onPressBack}>
         {icons.back({
           containerStyle: { marginHorizontal: 0 },
-          onPress: this.onPressBack
+          
         })}
         <Text
           style={[
@@ -90,13 +90,13 @@ class ChooseRoundScreen extends BaseScreen {
         >
           Number of rounds
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
   onPress = (direct)=>{
     let {valueRound,mile = 0} = this.state;
     valueRound = valueRound + (direct*1);
-    valueRound = valueRound<0?0:(valueRound>10?10:valueRound);
+    valueRound = valueRound<=0?1:(valueRound>10?10:valueRound);
     this.setState({
       valueRound:valueRound,
       sumMiles:mile* valueRound

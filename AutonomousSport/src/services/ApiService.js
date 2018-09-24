@@ -5,7 +5,7 @@ import Util from '@/utils/Util';
 import _ from 'lodash';
 import Room from '@/models/Room';
 import LocalDatabase from '@/utils/LocalDatabase';
-
+const TIME_OUT_API = 8;
 const TAG = 'ApiService';
 export default class ApiService {
   static token = '';
@@ -68,53 +68,82 @@ export default class ApiService {
       try {
         const URL = ApiService.buildUrl(url, params);
         // console.log('URL build :', URL);
-        const res = await fetch(URL, {
-          method,
-          headers: {
-            Accept: 'application/json',
-            Authorization
-          }
-        });
-        const resJson = await res.json();
+        const res = await Util.excuteWithTimeout(
+          fetch(URL, {
+            method,
+            headers: {
+              Accept: 'application/json',
+              Authorization: Authorization
+            }
+          }),
+          TIME_OUT_API
+        );
+        const resJson = (await res?.json()) || {};
         console.log('Response data:', resJson);
         return resJson;
       } catch (error) {
-        console.error(error);
-        return error;
+        // console.error(error);
+        return {};
       }
     } else if (method === METHOD.POST) {
       try {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-            Authorization
-          },
-          body: this.buildFormData(params)
-        });
-        const resJson = await res.json();
+        const res = await Util.excuteWithTimeout(
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+              Authorization: Authorization
+            },
+            body: this.buildFormData(params)
+          }),
+          TIME_OUT_API
+        );
+        const resJson = (await res?.json()) || {};
+        // const res = await fetch(url, {
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'multipart/form-data',
+        //     Authorization
+        //   },
+        //   body: this.buildFormData(params)
+        // });
+        // const resJson = await res.json();
         console.log('Response data:', resJson);
         return resJson;
       } catch (error) {
-        console.error(error);
+        console.warn(error);
         return error;
       }
     } else if (method === METHOD.DELETE) {
       try {
         const URL = ApiService.buildUrl(url, params);
-        const res = await fetch(URL, {
-          method: 'delete',
-          credentials: 'include',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
-        const resJson = await res.json();
+        const res = await Util.excuteWithTimeout(
+          fetch(URL, {
+            method: 'delete',
+            credentials: 'include',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }),
+          TIME_OUT_API
+        );
+        const resJson = (await res?.json()) || {};
+
+        // const res = await fetch(URL, {
+        //   method: 'delete',
+        //   credentials: 'include',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'application/json'
+        //   }
+        // });
+        // const resJson = await res.json();
         return resJson;
       } catch (error) {
-        console.error(error);
+        console.warn(error);
         return error;
       }
     }
