@@ -48,7 +48,7 @@ type FbRacingRoom struct {
 	MapId 	int 	`json:"mapId"`
 	Loop 	int 	`json:"loop"`
 	Miles	float64 `json:"miles"`
-	Status  string	`json:"status"`
+	Status  int	`json:"status"`
 	Players []FbRoomPlayer  `json:"players"`
 }
 
@@ -59,4 +59,15 @@ type FbRoomPlayer struct {
 	Goal  float64	`json:"goal"`
 	Status int 	`json:"status"` // 0 : leave, 1 : joined. 
 	Archivement int 	`json:"archivement"` // Ket qua, dung thu may : 1, 2, 3, 4, 5, 6, 7, 8, 9 , 10 ...
+}
+
+type EventInvite struct{
+	Session string  `json:"session"`
+	Name  string  `json:"name"`
+	Photo  string  `json:"photo"`
+	Cover  string  `json:"cover"`
+	Loop 	int 	`json:"loop"`
+	Miles	float64 `json:"miles"`
+	Players int 	`json:"players"`
+	Inviter  string  `json:"inviter"`
 }
