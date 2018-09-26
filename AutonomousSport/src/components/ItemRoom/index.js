@@ -39,7 +39,7 @@ class ItemRoom extends PureComponent {
     const styleContainerItem = styles.containerItem;
     const { dataItem, parallaxProps } = this.props;
     // console.log(TAG, ' render dataItem = ', dataItem);
-    const uri = dataItem?.photo;
+    const uri = dataItem?.Map?.cover || dataItem?.photo;
     const source = uri ? { uri } : images.bike;
 
     return (

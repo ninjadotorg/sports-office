@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "convert-string": "^0.1.0",
-    "opentok-react-native": "^0.8.2",
+    "opentok-react-native": "0.8.3",
     "prop-types": "^15.6.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
@@ -30,6 +30,7 @@
     "react-native-config": "^0.11.5",
     "react-native-elements": "^0.19.1",
     "react-native-firebase": "^4.3.8",
+    "react-native-image-pan-zoom": "^2.1.9",
     "react-native-size-matters": "^0.1.2",
     "react-native-snap-carousel": "^3.7.2",
     "react-native-svg": "^7.0.3",

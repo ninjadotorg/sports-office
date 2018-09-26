@@ -7,10 +7,13 @@ export default class Room {
     this.deletedAt = roomJson?.deletedAt || null;
     this.name = roomJson?.name || '';
     this.photo = roomJson?.photo || '';
+    this.cover = roomJson?.cover || '';
     this.session = roomJson?.session || '';
     this.token = roomJson?.token || '';
     this.status = roomJson?.status || 0;
     this.loop = roomJson?.loop || 0;
+    this.RoomPlayers = roomJson?.RoomPlayers || [];
+    this.Map = roomJson?.Map || {};
     this.mapId = roomJson?.mapId || 0;
     this.miles = roomJson?.miles || 0;
   }
@@ -25,6 +28,9 @@ export default class Room {
       session: this.session,
       token: this.token,
       photo: this.photo,
+      cover: this.cover,
+      Map: this.Map,
+      RoomPlayers: this.RoomPlayers || [],
       status: this.status,
       loop: this.loop,
       mapId: this.mapId,

@@ -9,8 +9,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   publisher: {
+    height: widthVideo
+  },
+  parentViewInfo: {
+    width: widthVideo,
+    height: widthVideo
+  },
+  parentViewPublishView: {
+    width: widthVideo,
     height: widthVideo,
-    width: widthVideo
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 500000,
+    backgroundColor: 'transparent',
+    flex: 1,
+    flexDirection: 'column'
   },
   publisherInfo: {
     flex: 1,

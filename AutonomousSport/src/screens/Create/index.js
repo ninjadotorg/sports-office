@@ -22,29 +22,31 @@ export default class CreateRoomScreen extends BaseScreen {
     super(props);
     this.state = {
       mapList: [],
-      selectedIndex:0
+      selectedIndex: 0
     };
   }
 
   componentDidMount() {}
 
-  updateIndex (selectedIndex) {
-    this.setState({selectedIndex});
+  updateIndex(selectedIndex) {
+    this.setState({ selectedIndex });
   }
-  
 
   onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGNEWROOM);
   });
-  
-  onPressBack = ()=>{
+
+  onPressBack = () => {
     this.props.navigation.goBack();
-  }
+  };
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <View style={styles.topBar} >
-      <TouchableOpacity style={{flexDirection:'row'}} onPress={this.onPressBack}>
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={{ flexDirection: 'row' }}
+          onPress={this.onPressBack}
+        >
           {icons.back({
             containerStyle: { marginHorizontal: 0 }
           })}
@@ -64,7 +66,7 @@ export default class CreateRoomScreen extends BaseScreen {
         <ButtonGroup
           onPress={this.updateIndex}
           selectedIndex={selectedIndex}
-          buttons={['Level 1','Level 2','Level 3','Level 4']} 
+          buttons={['Level 1', 'Level 2', 'Level 3', 'Level 4']}
           textStyle={[TextStyle.normalText, styles.textStyleButton]}
           selectedTextStyle={[
             TextStyle.normalText,
@@ -73,31 +75,30 @@ export default class CreateRoomScreen extends BaseScreen {
           underlayColor="transparent"
           selectedButtonStyle={styles.selectedButtonStyle}
           containerStyle={styles.buttonGroup}
-      />
-        
-      
+        />
       </View>
     );
   };
   render() {
     return (
       <View style={styles.container}>
-        <Header backgroundColor="transparent">
-          {this.renderLeftHeader()}
-        </Header>
+        <Header backgroundColor="transparent">{this.renderLeftHeader()}</Header>
         <RoomList />
-        
+
         <View style={styles.containerBottom}>
           <Button
             title="Random"
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
+            textStyle={[
+              TextStyle.mediumText,
+              { fontWeight: 'bold', color: '#02BB4F' }
+            ]}
             buttonStyle={[styles.button]}
             onPress={this.onPressCreateRoom}
           />
           <Button
             title="New Racing"
-            buttonStyle={[styles.button,{backgroundColor:'#02BB4F'}]}
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold'}]}
+            buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
+            textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
             onPress={this.onPressCreateRoom}
           />
         </View>

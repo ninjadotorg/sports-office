@@ -5,6 +5,10 @@ import {
   moderateScale
 } from 'react-native-size-matters';
 
+export const sizeIconRacing = {
+  width: scaleSize(18),
+  height: scaleSize(18)
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
