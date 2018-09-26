@@ -15,51 +15,12 @@ import { fetchUser } from '@/actions/UserAction';
 
 export const TAG = 'NewRoomScreen';
 
-export const DATA_MAP_LIST = [
-  {
-    id:1,
-    title: 'Map 1',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-    uri: 'https://i.imgur.com/UYiroysl.jpg'
-  },
-  {
-    id:2,
-    title: 'Map 2',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    uri: 'https://i.imgur.com/UPrs1EWl.jpg'
-  },
-  {
-    id:3,
-    title: 'Map 3',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-    uri: 'https://i.imgur.com/MABUbpDl.jpg'
-  },
-  {
-    id:4,
-    title: 'Map 4',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-    uri: 'https://i.imgur.com/KZsmUi2l.jpg'
-  },
-  {
-    id:5,
-    title: 'Map 5',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    uri: 'https://i.imgur.com/2nCt3Sbl.jpg'
-  },
-  {
-    id:6,
-    title: 'Map 6',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    uri: 'https://i.imgur.com/lceHsT6l.jpg'
-  }
-];
-
 class NewRoomScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
-      mapList: DATA_MAP_LIST,
-      selectedIndex:0
+      mapList: [],
+      selectedIndex: 0
     };
   }
 
@@ -69,17 +30,21 @@ class NewRoomScreen extends BaseScreen {
 
   onPressCreateRoom = async () => {
     try {
-      const roomInfo = await ApiService.createRoom();
-      console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
+      const roomInfo = await ApiService.createRoom({
+        mapId: -1,
+        loop: 1,
+        miles: 0
+      });
+      console.log(TAG, ' onPressCreateRoom roomInFo ', roomInfo);
       if (roomInfo) {
         this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
       }
     } catch (error) {}
   };
-  
-  onPressBack = ()=>{
+
+  onPressBack = () => {
     this.props.navigation.goBack();
-  }
+  };
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
@@ -105,18 +70,19 @@ class NewRoomScreen extends BaseScreen {
   render() {
     return (
       <View style={styles.container}>
-        <Header backgroundColor="transparent">
-          {this.renderLeftHeader()}
-        </Header>
+        <Header backgroundColor="transparent">{this.renderLeftHeader()}</Header>
         <MapList />
-        <View style={styles.containerBottom}>
+        {/*<View style={styles.containerBottom}>
           <Button
             title="Next"
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
+            textStyle={[
+              TextStyle.mediumText,
+              { fontWeight: 'bold', color: '#02BB4F' }
+            ]}
             buttonStyle={[styles.button]}
             onPress={this.onPressCreateRoom}
           />
-        </View>
+        </View>*/}
       </View>
     );
   }

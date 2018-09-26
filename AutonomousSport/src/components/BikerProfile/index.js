@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,ScrollView } from 'react-native';
+import { View, Text,ScrollView,StyleSheet } from 'react-native';
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
 // import OTSubscriberViewCustom from '@/components/OTSubscriberViewCustom';
 // var OTSubscriberView = require('node_modules/opentok-react-native/src/views/OTSubscriberView');
@@ -12,6 +12,26 @@ import Player from '@/models/Player';
 import TextStyle from '@/utils/TextStyle';
 
 export const TAG = 'BikerProfile';
+class OTPublisherCustom extends OTPublisher{
+  constructor(props) {
+    super(props);
+  }
+  render(){
+    const {playerMe = {}} = this.props;
+    return (<View style={styles.parentViewInfo}>
+               {super.render()}
+              <View style={styles.parentViewPublishView}>
+                <View style={styles.publisherInfo}>
+                  <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.playerName||'No Name'}</Text>
+                  <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(playerMe?.speed||0)}m/h</Text>
+                  <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.goal||0}%</Text>
+                </View>    
+              </View>
+              
+            </View>
+            );
+  }
+}
 class OTSubscriberCustom extends OTSubscriber{
   constructor(props){
     super(props);
@@ -152,31 +172,22 @@ class BikerProfile extends Component {
     const playerMe = players?.find(item=>item.isMe === true);
     // console.log(TAG, ' render room = ', this.room?.toJSON());
     return (
-      <ScrollView style={styles.container}>
-        <OTSession
-          apiKey={Config.OPENTOK_API_KEY}
-          sessionId={
-            this.room?.session ||
-            '1_MX40NjE1NDQyMn5-MTUzNTYyMTA2NzI4Nn5hczBrZzRzYXloQ3E4Z0N0aDZUM0pGNTV-fg'
-          }
-          token={
-            this.room?.token ||
-            'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTE3YTNjMzE4OGE5OWYxM2FhMjZlYWU1OGEwZTE5ZmMxMmNiMDM4NzpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpOVFl5TVRBMk56STRObjVoY3pCclp6UnpZWGxvUTNFNFowTjBhRFpVTTBwR05UVi1mZyZjcmVhdGVfdGltZT0xNTM1NjIxMDY3Jm5vbmNlPTIzNDY4MyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTM1NzA3NDY3'
-          }
-        >
-          <View style={{backgroundColor:'red'}}>
-            <OTPublisher style={styles.publisher} eventHandlers={this.publisherEventHandlers} />
-            <View style={styles.publisherInfo}>
-              <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.playerName||'No Name'}</Text>
-              <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(playerMe?.speed||0)}m/h</Text>
-              <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.goal||0}%</Text>
+      <ScrollView style={styles.container} contentContainerStyle={{flex:1}}>  
+          <OTSession
+            apiKey={Config.OPENTOK_API_KEY}
+            sessionId={
+              this.room?.session ||
+              '1_MX40NjE1NDQyMn5-MTUzNTYyMTA2NzI4Nn5hczBrZzRzYXloQ3E4Z0N0aDZUM0pGNTV-fg'
+            }
+            token={
+              this.room?.token ||
+              'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9YTE3YTNjMzE4OGE5OWYxM2FhMjZlYWU1OGEwZTE5ZmMxMmNiMDM4NzpzZXNzaW9uX2lkPTFfTVg0ME5qRTFORFF5TW41LU1UVXpOVFl5TVRBMk56STRObjVoY3pCclp6UnpZWGxvUTNFNFowTjBhRFpVTTBwR05UVi1mZyZjcmVhdGVfdGltZT0xNTM1NjIxMDY3Jm5vbmNlPTIzNDY4MyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTM1NzA3NDY3'
+            }>
+              <OTPublisherCustom playerMe={playerMe} style={styles.publisher} eventHandlers={this.publisherEventHandlers} />
+            <View>
+              <OTSubscriberCustom style={styles.subcriber} players={players} />
             </View>
-              
-          </View>
-          <View>
-            <OTSubscriberCustom style={styles.subcriber} players={players} />
-          </View>
-        </OTSession>
+          </OTSession>
       </ScrollView>
     );
   }

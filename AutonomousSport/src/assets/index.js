@@ -18,7 +18,8 @@ export const icons = {
     containerStyle,
     color = 'rgba(192, 192, 192,0.5)',
     size = 25,
-    onPress = null
+    onPress = null,
+    iconStyle = {}
   }) => (
     <Icon
       containerStyle={[{ width: 30, height: 30 }, containerStyle]}
@@ -28,6 +29,7 @@ export const icons = {
       onPress={onPress}
       reverseColor="white"
       name="close"
+      iconStyle={iconStyle}
       type="evilicon"
     />
   ),

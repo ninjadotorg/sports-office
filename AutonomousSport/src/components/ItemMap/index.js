@@ -42,7 +42,7 @@ class ItemMap extends PureComponent {
       ? styles.containerItemsChecked
       : styles.containerItem;
     const { dataItem } = this.props;
-    const uri = dataItem?.photo || '';
+    const uri = dataItem?.cover || dataItem?.photo || '';
     return (
       <View style={styles.container}>
         <TouchableOpacity

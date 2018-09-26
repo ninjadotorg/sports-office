@@ -14,7 +14,7 @@ let handlerUpdate = null;
 let timestampPrevious = 0;
 let roundPrevious = 0;
 const TAG = 'RaceAction';
-const cycle = 1.0;
+const cycle = 0.3;
 const weight = 70;
 export const ACTIONS = {
   CONNECT_BLUETOOTH: 'CONNECT_BLUETOOTH',
@@ -29,18 +29,36 @@ export const checkSaveDevice = () => async dispatch => {
     }
   });
 };
+/**
+ * The RPM to Linear Velocity formular is : 
+ v = r × RPM × 0.10472
+
+Where:
+ v: Linear velocity, in m/s
+ r: Radius, in meter
+ RPM: Angular velocity, in RPM (Rounds per Minute)
+ */
 export const connectionBluetoothChange = dispatch => {
   return ({ value, peripheral, characteristic, service }) => {
     if (value && value.length > 4) {
       const timestamp = Math.floor(Date.now());
 
       const round = value[2] * 255 + value[1];
-      const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
-      const rps = (round - roundPrevious) / timeHour;
-      let speed = rps * 0.68 * cycle;
+      // const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
+      const timeHour = 1 / 3600;
+      const rps = round - (roundPrevious <= 0 ? round : roundPrevious);
+      const rph = rps * timeHour;
+      // let speed = rph * 0.68 * cycle;
+      // let speed = rph * 0.10472 * cycle;
+      let speed = cycle * 6.28 * 2.2369356 * rps;
       speed = speed < 0 ? 0 : speed;
+
       const distanceRun = speed * timeHour;
       const kcaloriesBurned = (distanceRun * 1.609344 * weight * 1.036) / 1000;
+      console.log(
+        TAG,
+        ` connectionBluetoothChange round = ${round} for distanceRun = ${distanceRun}`
+      );
       // calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
       const data = {
         speed: speed,
@@ -57,11 +75,6 @@ export const connectionBluetoothChange = dispatch => {
         }
       });
     }
-
-    // console.log(
-    //   TAG,
-    //   ` connectionBluetoothChange Recieved ${value} for characteristic ${characteristic}`
-    // );
   };
 };
 
@@ -165,7 +178,7 @@ export const disconnectBluetooth = () => async dispatch => {
   }
   if (periBluetooth && periBluetooth.peripheral) {
     console.log(TAG, ' disconnectBluetooth stop-----');
-    // await BleManager.start({ showAlert: false });
+    await BleManager.start({ showAlert: false });
     receiveDataFromBluetooth = false;
     await BleManager.stopNotification(
       periBluetooth.peripheral,
