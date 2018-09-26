@@ -23,12 +23,13 @@ type User struct {
 	CreatedAt *time.Time `json:"createdAt, omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
 	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
-	Fullname string `json:"fullname, omitempty" gorm:"not null; type:varchar(100)"` 
+	Fullname  string `json:"fullname, omitempty" gorm:"not null; type:varchar(100)"` 
 	Email     string `json:"email, omitempty" gorm:"type:varchar(100);unique;unique_index"`
-	Password string `json:"password, omitempty" gorm:"not null; type:varchar(100)"`  
+	Password  string `json:"password, omitempty" gorm:"not null; type:varchar(100)"`  
 	PhotoUrl  string `json:"photoUrl, omitempty" gorm:"type:varchar(100)"`
 	Profile  Profile 
 	ProfileID  int
+	Fbuid 	string `json:"fbuid, omitempty" gorm:"type:varchar(100)"`
 
 }
 

@@ -285,11 +285,15 @@ func main() {
 	//userapi.GET("/room/session/create", ctl.CreateSession)
 	userapi.POST("/room/session/create", ctl.CreateSession) 
 	userapi.POST("/room/session/action", ctl.ActionSession)
+	userapi.GET("/room/session/random", ctl.RandomJoinRoom)
 
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
 	userapi.POST("/room/session/leave", ctl.LeaveRoom)
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
+	//InvitePlayer
+	userapi.POST("/room/session/invite", ctl.InvitePlayer)
+
 	//add Friends AddFriend  friendId
 	userapi.GET("/user/list", ctl.ListUser)
 	userapi.POST("/friend/add", ctl.AddFriend) 
@@ -396,15 +400,5 @@ func migrateDatabase(db *gorm.DB) {
 	db.AutoMigrate(&models.Friend{})  
 	db.AutoMigrate(&models.Profile{})  
 	db.AutoMigrate(&models.RoomPlayer{})  
-	// db.Create(&models.Map{Name:"Weston", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Weston_ntuxxLP0LeY5u023r6dM.png" })
-	// db.Create(&models.Map{Name:"Upper Bay",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Upper_Bay_yF0wp8xBqUWMsbzZuXbB.png" })
-	// db.Create(&models.Map{Name:"Slamon", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Slamon_uIoylyaC6TI3eCAuztH4.png" })
-	// db.Create(&models.Map{Name:"Lakewood", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Lakewood_EyJn9zKE9mBNxue0m7Rp.png" })
-	// db.Create(&models.Map{Name:"Lake Suppoeri",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Lake_Suppoeri_Yzv5gEdRYTI885mVmkkq.png" })
-	// db.Create(&models.Map{Name:"Lake Pont", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Lake_Pont_y3A6fo1JMVs1vH0MZZW9.png" })
-	// db.Create(&models.Map{Name:"Gradnd Canyon",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Gradnd_canyon_ukVdWrN87Xx2hKacF2lP.png" })
-	// db.Create(&models.Map{Name:"Chiago", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/Chiago_gcfQ7CkOufkVj2Xrmx5L.png" })
-	// db.Create(&models.Map{Name:"Center Park",Status:1,  Photo:"https://storage.googleapis.com/oskar-ai/110/Center_Park_YV7YGwd8HKv0weW7tgQy.png" })
-	// db.Create(&models.Map{Name:"Calop Pumbo", Status:1, Photo:"https://storage.googleapis.com/oskar-ai/110/calop_pumbo_cKNc071ADymBnwq4IAbt.png" })
-
+ 
 }

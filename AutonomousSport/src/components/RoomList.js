@@ -52,7 +52,8 @@ class RoomList extends Component {
     isFetching: false,
     refreshing: false,
     itemSelected: {},
-    joinRoom: undefined
+    joinRoom: undefined,
+    levelFillter:{min:0,max:10},
   };
   componentDidMount() {
     this.props.fetchRoom({ offset: 0, limit: 100 });
@@ -91,6 +92,25 @@ class RoomList extends Component {
       itemSelected['token'] = nextProps?.joinRoomData['token'];
       this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
     }
+    console.log("levelIndex",nextProps?.levelIndex)
+
+    var levelf = {min:0,max:10};
+    if(nextProps?.levelIndex == 0){
+      levelf = {min:0,max:10};
+    }
+    if(nextProps?.levelIndex == 1){
+      levelf = {min:10,max:20};
+    }
+    if(nextProps?.levelIndex == 2){
+      levelf = {min:20,max:50};
+    }
+    if(nextProps?.levelIndex == 3){
+      levelf = {min:50,max:10000};
+    } 
+    this.setState({
+      levelFillter: levelf
+    });
+
   }
 
   // componentDidUpdate(prevProps, prevState) {
@@ -138,7 +158,8 @@ class RoomList extends Component {
   };
 
   renderItem = ({ item, index }, parallaxProps) => {
-    return (
+     
+    return ( 
       <ItemRoom
         key={item.id}
         onItemSelected={itemId => {
@@ -161,7 +182,10 @@ class RoomList extends Component {
   };
 
   render() {
-    const { data } = this.state;
+    const { data, levelFillter } = this.state;
+    //fillter data....levelFillter
+    const datal = data.filter(room => (room.miles <= levelFillter.max && room.miles >= levelFillter.min) ); 
+    console.log("levelIndex-rooms",datal);
     return (
       <View style={styles.container}>
         <Carousel
@@ -169,7 +193,7 @@ class RoomList extends Component {
             this._carousel = c;
           }}
           hasParallaxImages
-          data={data}
+          data={datal}
           renderItem={this.renderItem}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}

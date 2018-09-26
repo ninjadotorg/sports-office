@@ -20,13 +20,15 @@ type Room struct {
 	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
 	Name string `json:"name, omitempty" gorm:"not null; type:varchar(100)"` 
 	Photo string `json:"photo, omitempty" gorm:"not null; type:varchar(500)"` 
+	Cover string `json:"cover, omitempty" gorm:"not null; type:varchar(500)"` 
 	Session     string `json:"session, omitempty" gorm:"type:varchar(100);unique;unique_index"`
 	Token string `json:"token, omitempty" gorm:"not null; type:varchar(500)"`  
-	Status     int        `json:"status, omitempty" gorm:"not null"`  
+	Status     int        `json:"status, omitempty" gorm:"not null"`   // Status : 0: closed, 1 : new ready, 2 racing started
 	MapId	   int        `json:"mapId, omitempty" gorm:"not null"`  
 	Loop	   int        `json:"loop, omitempty" gorm:"not null"`  
 	Miles	   float64        `json:"miles, omitempty" gorm:"not null"`  
 	RoomPlayers  []RoomPlayer `gorm:"foreignkey:RoomId,association_foreignkey:ID"`
+	Map  	   Map `gorm:"foreignkey:MapId"`
 
 }
 
