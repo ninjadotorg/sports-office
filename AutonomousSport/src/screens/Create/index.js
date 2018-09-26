@@ -24,12 +24,17 @@ export default class CreateRoomScreen extends BaseScreen {
       mapList: [],
       selectedIndex: 0
     };
+
+    this.updateIndex = this.updateIndex.bind(this)
+    
   }
 
   componentDidMount() {}
 
-  updateIndex(selectedIndex) {
-    this.setState({ selectedIndex });
+  updateIndex (selectedIndex) {
+    this.setState({selectedIndex});
+    console.log("updateIndex-levelIndex",selectedIndex)
+
   }
 
   onPressCreateRoom = this.onClickView(async () => {
@@ -82,9 +87,11 @@ export default class CreateRoomScreen extends BaseScreen {
   render() {
     return (
       <View style={styles.container}>
-        <Header backgroundColor="transparent">{this.renderLeftHeader()}</Header>
-        <RoomList />
-
+        <Header backgroundColor="transparent">
+          {this.renderLeftHeader()}
+        </Header>
+        <RoomList levelIndex={this.state.selectedIndex}/>
+        
         <View style={styles.containerBottom}>
           <Button
             title="Random"
