@@ -24,12 +24,17 @@ export default class CreateRoomScreen extends BaseScreen {
       mapList: [],
       selectedIndex:0
     };
+
+    this.updateIndex = this.updateIndex.bind(this)
+    
   }
 
   componentDidMount() {}
 
   updateIndex (selectedIndex) {
     this.setState({selectedIndex});
+    console.log("updateIndex-levelIndex",selectedIndex)
+
   }
   
 
@@ -85,7 +90,7 @@ export default class CreateRoomScreen extends BaseScreen {
         <Header backgroundColor="transparent">
           {this.renderLeftHeader()}
         </Header>
-        <RoomList />
+        <RoomList levelIndex={this.state.selectedIndex}/>
         
         <View style={styles.containerBottom}>
           <Button
