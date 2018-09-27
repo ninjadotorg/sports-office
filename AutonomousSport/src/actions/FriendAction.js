@@ -10,11 +10,12 @@ export const ACTIONS = {
   MAKE_FRIEND: 'MAKE_FRIEND'
 };
 
-export const fetchAllUser = ({ offset = 0, limit = 12 }) => async dispatch => {
+export const fetchAllUser = ({ offset = 0, limit = 12, search='' }) => async dispatch => {
   try {
     const response = await ApiService.getAllUser({
       offset: offset,
-      limit: limit
+      limit: limit,
+      search: search,
     });
     console.log(TAG, ' - fetchAllUser - response ', response);
     dispatch({ type: ACTIONS.GET_ALL_USER, payload: response });
@@ -28,12 +29,14 @@ export const fetchAllUser = ({ offset = 0, limit = 12 }) => async dispatch => {
 
 export const fetchAllFriend = ({
   offset = 0,
-  limit = 12
+  limit = 12,
+  search=''
 }) => async dispatch => {
   try {
     let response = await ApiService.getAllFriend({
       offset: offset,
-      limit: limit
+      limit: limit,
+      search: search,
     });
 
     if (!_.isEmpty(response)) {

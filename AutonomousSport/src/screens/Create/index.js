@@ -7,12 +7,18 @@ import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
 import { TAG as TAGNEWROOM } from '@/screens/NewRoom';
+import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
+
 import images, { icons } from '@/assets';
 import RoomList from '@/components/RoomList';
 
+import { connect } from 'react-redux';
+import { fetchUser } from '@/actions/UserAction';
+
 export const TAG = 'CreateRoomScreen';
 
-export default class CreateRoomScreen extends BaseScreen {
+class CreateRoomScreen extends BaseScreen {
+
   static navigationOptions = navigation => {
     return {
       title: 'Create'
@@ -40,6 +46,30 @@ export default class CreateRoomScreen extends BaseScreen {
   onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGNEWROOM);
   });
+
+  onPressRandom = this.onClickView(async () => {
+    console.log(TAG, ' onPressRandomJoin 1 ');
+    try {
+      this.setState({
+        isLoading:true
+      });
+      
+      const roomInfo = await ApiService.joinRandomRoom({}); 
+      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);  
+
+      this.setState({
+        isLoading:false,
+      });
+      if (roomInfo) {   
+        //this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
+        this.props.navigation.navigate(TAGCHALLENGE, roomInfo);
+        //this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
+      }
+    } catch (error) {}
+ 
+
+ 
+  }); 
 
   onPressBack = () => {
     this.props.navigation.goBack();
@@ -84,14 +114,13 @@ export default class CreateRoomScreen extends BaseScreen {
       </View>
     );
   };
-  render() {
+  render(){
     return (
       <View style={styles.container}>
         <Header backgroundColor="transparent">
           {this.renderLeftHeader()}
         </Header>
-        <RoomList levelIndex={this.state.selectedIndex}/>
-        
+        <RoomList levelIndex={this.state.selectedIndex}/> 
         <View style={styles.containerBottom}>
           <Button
             title="Random"
@@ -100,7 +129,7 @@ export default class CreateRoomScreen extends BaseScreen {
               { fontWeight: 'bold', color: '#02BB4F' }
             ]}
             buttonStyle={[styles.button]}
-            onPress={this.onPressCreateRoom}
+            onPress={this.onPressRandom}
           />
           <Button
             title="New Racing"
@@ -113,7 +142,14 @@ export default class CreateRoomScreen extends BaseScreen {
     );
   }
 }
-
+ 
 CreateRoomScreen.propTypes = {};
 
 CreateRoomScreen.defaultProps = {};
+export default connect(
+  state => ({
+    user: state.user
+  }),
+  { getUser: fetchUser }
+)(CreateRoomScreen);
+

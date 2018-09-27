@@ -118,7 +118,7 @@ class ItemRoom extends PureComponent {
                   }
                 ]}
               >
-                {`${dataItem?.miles || '0'}`}
+                {`${dataItem?.RoomPlayers?.length || '0'}`}
               </Text>
             </View>
           </View>
