@@ -134,13 +134,15 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	} 
 	//check GetUser.
 	fbuser, err := client.GetUserByEmail(ctnx, user.Email)
+
+	//var passFB, _ = models.HashPassword(user.Password) 
+
 	if err != nil {
 		///create new user 
-		var passFB, _ = models.HashPassword(user.Password) 
 		params := (&auth.UserToCreate{}).
 		Email(user.Email).
 		EmailVerified(false). 
-		Password(passFB ).   
+		Password(user.Password ).   
 		Disabled(false)
 		fbuser2, err := client.CreateUser(ctnx, params)
 		if err != nil {
@@ -157,8 +159,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	user.Fbuid = fbuser.UID
 	basectl.Dao.Save(&user)     
 	
-	token2, _ := client.CustomToken(ctnx, fbuser.UID)  //fbToken
-
+	//token2, _ := client.CustomToken(ctnx, fbuser.UID)  //fbToken
 
 	token := jwt.New(jwt.SigningMethodHS256) 
 	// Set claims
@@ -171,11 +172,11 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	if err != nil {
 		return err
 	}  
-
+	 
 	var f interface{}
 	f = map[string]interface{}{
 		"token": t,
-		"fbtoken":token2,
+		"fbtoken":user.Password, //firebase password.
 		"id": user.ID,
 		"fbuid": fbuser.UID,
 		"email":  user.Email,
@@ -279,11 +280,11 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	player.Status = 1  // Ready join.  /
 	player.CreateRoomPlayer(basectl.Dao)  
 
-
-	var fbData, _ = basectl.FbApp.Database(context.Background())
+	var ctnx = context.Background()
+	var fbData, _ = basectl.FbApp.Database(ctnx)
 	var refDB = fbData.NewRef("games")  
 
-	if err2 := refDB.Child("race-rooms/"+ room.Session).Set(context.Background(), &models.FbRacingRoom{
+	if err2 := refDB.Child("race-rooms/"+ room.Session).Set(ctnx, &models.FbRacingRoom{
 		Session:room.Session,
 		MapId:room.MapId,
 		Loop:room.Loop,
@@ -296,7 +297,7 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	} 
 
 	//write first player user. 
-	if err3 := refDB.Child("race-rooms/"+ room.Session +"/players/"+ fbuid).Set(context.Background(), &models.FbRoomPlayer{
+	if err3 := refDB.Child("race-rooms/"+ room.Session +"/players/"+ fbuid).Set(ctnx, &models.FbRoomPlayer{
 		PlayerName: userModel.Fullname,
 		Token:room.Token,
 		Speed:0,
@@ -304,11 +305,10 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	} ); err3 != nil {
 		log.Fatalln("Error setting value:", err3)
 	} 
-
 	 
 	var f interface{}
 	f = map[string]interface{}{ 
-		"room": room,
+		"room": room, 
 	}   
 	return c.JSON(http.StatusOK,f) 
  
@@ -370,14 +370,7 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest,f21) 
 	}
 
-	var randRoom models.Room
-	//basectl.Dao.Where(models.Room{Status:1}).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom)
-
-	// get random 0 - n.
-	//rand.Seed(time.Now().UTC().UnixNano())
-
-	//rand.Intn(max - min) + min
-	//var index = rand.Intn(len(listroom ))
+	var randRoom models.Room 
 
 	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < 4 ORDER BY RAND() LIMIT 1").Scan(&randRoom)
 	 
@@ -439,10 +432,13 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 
 	var f interface{}
 
-	basectl.Dao.Model(&randRoom).Related(&randRoom.RoomPlayers)
+	//basectl.Dao.Model(&randRoom).Related(&randRoom.RoomPlayers)
+	var room models.Room 
+	basectl.Dao.Where(&models.Room{ ID: randRoom.ID }).Set("gorm:auto_preload", true).First(&room) 
 
-	f = map[string]interface{}{ 
-		"room": randRoom,
+	f = map[string]interface{}{  
+		"token": player.Token,
+		"room": room,
 	}
 
 	return c.JSON(http.StatusOK,f) 
@@ -862,12 +858,16 @@ func (basectl *BaseController)ListUser(c echo.Context) error{
 	}
 	
 	usermodel := new(models.User) 
-	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)   
-	fmt.Println("usermodel: ", usermodel) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)    
 	// Get List Friends of user and friends id in list user. 
+ 
 	var lists []int
-    for _, us := range listuser {
-        lists = append(lists, us.ID)
+    for i := range listuser {
+		attr := &listuser[i] 
+		attr.IsMakeFriend = false
+		lists = append(lists, attr.ID)
+			  
+
 	}  
 	 
 	rows, _ := basectl.Dao.Raw("select friends.user_id, friends.friend_id from users left join friends on users.ID = friends.user_id   where users.ID =? and friend_id in (?)  ",userid, lists ).Rows() // (*sql.Rows, error)
@@ -875,15 +875,14 @@ func (basectl *BaseController)ListUser(c echo.Context) error{
 
 	for rows.Next() {
 		var tt  models.IsFriend
-		basectl.Dao.ScanRows(rows, &tt)
-		fmt.Println("friendsID %v ", tt)
+		basectl.Dao.ScanRows(rows, &tt) 
 		//update status friends. 
 
 		for i := range listuser {
-			attr := &listuser[i]
-			attr.IsMakeFriend = 0
+			attr := &listuser[i] 
 			if attr.ID == tt.FriendId {
-					attr.IsMakeFriend = 1
+					attr.IsMakeFriend = true
+					 
 			}
 	   }
 
@@ -914,18 +913,51 @@ func (basectl *BaseController)ListMyFriends(c echo.Context) error{
 	claims := user.Claims.(jwt.MapClaims)   
 	userid := int(claims["id"].(float64)) 
 
-	var listuser []models.User  
+	var listuser []models.UserView  
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 	offset, _ := strconv.Atoi(c.QueryParam("offset"))
 
-	basectl.Dao.Table("users").Select("users.id, users.email, users.fullname").Joins("JOIN friends ON users.id = friends.friend_id").Where("friends.user_id = ?", userid ).Offset(offset).Limit(limit).Find(&listuser)
- 
-	//var next = ""  
-	fmt.Println("limit: ", limit) 
-	fmt.Println("data: ", len(listuser)) 
+	search := c.QueryParam("search")
+	if search != "" {
+		basectl.Dao.Model(&models.UserView{}).Joins("JOIN friends ON users.id = friends.friend_id").Where("friends.user_id = ? AND (email LIKE ? OR fullname LIKE ?)", userid , "%"+search+"%",  "%"+search+"%" ).Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
+		//basectl.Dao.Model(&models.UserView{}).Where("ID != ? AND (email LIKE ? OR fullname LIKE ?)", userid , "%"+search+"%",  "%"+search+"%" ).Order("ID desc").Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
+	}else{
+		basectl.Dao.Model(&models.UserView{}).Joins("JOIN friends ON users.id = friends.friend_id").Where("friends.user_id = ?", userid ).Offset(offset).Limit(limit).Set("gorm:auto_preload", true).Find(&listuser)
+		
+	}
+
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)   
+	 
+	// Get List Friends of user and friends id in list user. 
+	var lists []int
+
+    for i := range listuser {
+		attr := &listuser[i] 
+		attr.IsMakeFriend = false
+        lists = append(lists, attr.ID)
+	}  
+	 
+	rows, _ := basectl.Dao.Raw("select friends.user_id, friends.friend_id from users left join friends on users.ID = friends.user_id   where users.ID =? and friend_id in (?)  ",userid, lists ).Rows() // (*sql.Rows, error)
+	defer rows.Close() 
+
+	for rows.Next() {
+		var tt  models.IsFriend
+		basectl.Dao.ScanRows(rows, &tt)
+		 
+		//update status friends. 
+
+		for i := range listuser {
+			attr := &listuser[i] 
+			if attr.ID == tt.FriendId {
+					attr.IsMakeFriend = true 
+			}
+	   }
+
+	} 
 
 	if len(listuser) == limit {
-		//next =  "offset=" + strconv.Itoa(limit + offset) + "&limit=" +  c.QueryParam("limit")
 		offset = limit + offset
 	}
 	
