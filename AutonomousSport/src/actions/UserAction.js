@@ -3,6 +3,7 @@ import LocalDatabase from '@/utils/LocalDatabase';
 import User from '@/models/User';
 import Util from '@/utils/Util';
 import _ from 'lodash';
+import firebase from 'react-native-firebase';
 
 const TAG = 'UserAction';
 export const ACTIONS = {
@@ -10,6 +11,7 @@ export const ACTIONS = {
   AUTH_LOGOUT: 'AUTH_LOGOUT',
   AUTH_UPDATE: 'AUTH_UPDATE',
   GET_USER: 'GET_USER',
+  SIGNIN_WITH_FIREBASE: 'SIGNIN_WITH_FIREBASE',
   GET_USER_LOCAL: 'GET_USER',
   UPDATE_USER_NAME: 'UPDATE_USER_NAME',
   UPDATE_RACING: 'UPDATE_RACING',
@@ -42,6 +44,30 @@ export const signIn = ({
   } catch (e) {
     console.log(TAG, ' - signIn - error ', e);
   }
+};
+export const loginWithFirebase = ({
+  email = '',
+  password = ''
+}) => async dispatch => {
+  if (!_.isEmpty(email) && !_.isEmpty(password)) {
+    let userFirebase = firebase.auth().currentUser;
+    console.log(
+      TAG,
+      ' - loginWithFirebase - email ',
+      email,
+      ' - password = ',
+      password
+    );
+    if (_.isEmpty(userFirebase)) {
+      userFirebase = await firebase
+        .auth()
+        .signInAndRetrieveDataWithEmailAndPassword(email, password);
+    }
+    console.log(TAG, ' - loginWithFirebase - response ', userFirebase);
+    dispatch({ type: ACTIONS.SIGNIN_WITH_FIREBASE, payload: userFirebase });
+    return;
+  }
+  dispatch({ type: ACTIONS.SIGNIN_WITH_FIREBASE, payload: {} });
 };
 export const fetchUser = () => async dispatch => {
   const user = await LocalDatabase.getUserInfo();

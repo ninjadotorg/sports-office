@@ -1,5 +1,7 @@
+const TAG = 'Room';
 export default class Room {
   constructor(roomJson) {
+    console.log(TAG, ' constructor roomJson = ', roomJson);
     this.id = roomJson?.id || -1;
     this.userId = roomJson?.userId || 0;
     this.createdAt = roomJson?.createdAt || '';

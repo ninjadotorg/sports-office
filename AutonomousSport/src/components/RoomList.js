@@ -112,35 +112,6 @@ class RoomList extends Component {
     });
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log(
-  //     TAG,
-  //     ' componentDidUpdate - prevProps?.user =  ',
-  //     prevProps?.user,
-  //     ' user = ',
-  //     this.props.user
-  //   );
-  //   if (JSON.stringify(prevState?.user) !== JSON.stringify(this.state.user)) {
-  //     console.log(TAG, ' - componentDidUpdate - begin # ');
-  //     this.fetchData();
-  //   }
-  // }
-
-  // onPressItem = async (item: JSON) => {
-  //   try {
-  //     // console.log(TAG, ' - onPressItem - item ', item);
-  //     const response = await ApiService.joinRoom({
-  //       session: item?.session || ''
-  //     });
-  //     // console.log(TAG, ' - onPressItem - response ', response);
-  //     if (!_.isEmpty(response) && _.has(response, 'token')) {
-  //       console.log(TAG, ' - onPressItem - response111 ', response);
-  //       item['token'] = response['token'];
-  //       this.props.navigation?.navigate(TAGCHALLENGE, item);
-  //     }
-  //   } catch (error) {}
-  // };
-
   handleRefresh = () => {
     return this.state.refreshing;
   };
@@ -181,7 +152,6 @@ class RoomList extends Component {
 
   render() {
     const { data = [], levelFillter } = this.state;
-    //fillter data....levelFillter
     const datal =
       data?.filter(
         room => room.miles <= levelFillter.max && room.miles >= levelFillter.min

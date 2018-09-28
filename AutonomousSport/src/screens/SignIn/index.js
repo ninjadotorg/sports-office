@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import TextStyle,{screenSize} from '@/utils/TextStyle';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { TAG as TAGSETUP } from '@/screens/Setup';
-import { fetchUser,signIn } from '@/actions/UserAction';
+import { fetchUser,signIn,loginWithFirebase } from '@/actions/UserAction';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import { Icon,Button } from 'react-native-elements';
 import styles,{ color } from './styles';
@@ -99,12 +99,20 @@ class SignInScreen extends BaseScreen {
         this.replaceScreen(this.props.navigation,TAGSETUP);
       }
     }else if(JSON.stringify(nextProps?.user)!== JSON.stringify(user)){
-      console.log(TAG, ' componentWillReceiveProps - prevProps?.user =  ',nextProps?.user);
+      const userNext = nextProps?.user||{};
+      console.log(TAG, ' componentWillReceiveProps - prevProps?.user =  ',userNext);
+      const isLogged = !_.isEmpty(userNext.userInfo);
+      const isLoggedFirebase = !_.isEmpty(userNext.firebaseInfo);
       this.setState({
         user: nextProps.user,
         loading:false
       });
-      this.receiveSignIn({isLogged:!_.isEmpty(nextProps.user?.userInfo) });
+      
+      if(isLogged&&isLoggedFirebase){
+        this.receiveSignIn({isLogged:isLogged });
+      }else if(isLogged && !isLoggedFirebase){
+        this.props.loginWithFirebase({email:userNext.userInfo.email,password:userNext.userInfo.fbtoken});
+      }
     }
   }
   
@@ -349,7 +357,6 @@ export default connect(
   state => ({
     user:state.user,
     race:state.race
-    // isSavedDevice:state.race.isSavedDevice
   }),
-  {signIn:signIn,fetchUser,checkSaveDevice}
+  {signIn:signIn,loginWithFirebase,fetchUser,checkSaveDevice}
 )(SignInScreen);

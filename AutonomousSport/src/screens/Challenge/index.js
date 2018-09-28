@@ -23,6 +23,7 @@ import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
+import Player from '@/models/Player';
 
 
 const listPoint = [
@@ -157,6 +158,7 @@ const listPoint = [
 
 export const TAG = 'ChallengeScreen';
 const heightMap = screenSize.height;
+const colors = ['red','blue','yellow','green'];
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -173,6 +175,8 @@ class ChallengeScreen extends BaseScreen {
         y: pointStart.y,
         x: pointStart.x
       },
+      playersColor:{},
+      players:[],
       currentPositionIndex: 0,
       race: {},
       distanceRun: 0,
@@ -183,15 +187,25 @@ class ChallengeScreen extends BaseScreen {
     
     this.pathKey = `games/race-rooms/${room?.session || ''}`;
     this.dataPrefference = firebase.database().ref(this.pathKey);
+    this.roomDataPrefference = this.dataPrefference.child('players');
   }
 
+  onStreamCreated =(streamId)=>{
+    const {user} = this.state;
+    // push stream Id on firebase
+    if(!_.isEmpty(streamId)&& !_.isEmpty(user)){
+      this.dataPrefference.child('players')?.child(user.fbuid).update({streamId: streamId});
+      this.onListenerChanel();
+    }
+  }
+  onStreamDestroyed =(streamId)=>{
+    this.roomDataPrefference?.off('value');
+  }
   getCurrentPoint = (currentPositionIndex = 0) => {
     let x,y = 0;
     try {
       const pointStart: [] = listPoint[currentPositionIndex].split(',');
       console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
-      // x = (Number(pointStart[0])-sizeIconRacing.width/2) * this.scaleSize;
-      // y = (Number(pointStart[1])-sizeIconRacing.height/2) * this.scaleSize;
       x = (Number(pointStart[0])) * this.scaleSize -sizeIconRacing.width/2;
       y = (Number(pointStart[1])) * this.scaleSize -sizeIconRacing.height/2;
     } catch (error) {
@@ -225,7 +239,7 @@ class ChallengeScreen extends BaseScreen {
         () => {
           if (_.isEmpty(race) || race.state !== STATE_BLUETOOTH.CONNECTED) {
             console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
-            this.roomDataPrefference = this.dataPrefference
+            this.playerMeDataPrefference = this.dataPrefference
               .child('players')
               .child(this.state.user.fbuid);
             this.props.connectAndPrepare();
@@ -237,7 +251,7 @@ class ChallengeScreen extends BaseScreen {
       const { race = {} } = nextProps;
       const { data } = race;
       console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
-      if (isReady && this.roomDataPrefference) {
+      if (isReady && this.playerMeDataPrefference) {
         const s = distanceRun + data.distanceStreet || 0;
         const sumKcal = kcal + data.kcal || 0;
         // caculate goal
@@ -265,7 +279,7 @@ class ChallengeScreen extends BaseScreen {
           ' - indexPosition = ',
           indexPosition,' sumKcal = ',sumKcal
         );
-        this.roomDataPrefference.update({
+        this.playerMeDataPrefference.update({
           speed: data.speed,
           goal: goal,
           kcal: sumKcal
@@ -283,26 +297,72 @@ class ChallengeScreen extends BaseScreen {
     this.props.updateRacing({ kcal, miles });
   }, 1000);
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (JSON.stringify(prevProps?.user) !== JSON.stringify(this.state.user)) {
-  //     console.log(TAG, ' componentDidUpdate - user = ', prevProps?.user);
-  //     this.roomDataPrefference = this.dataPrefference.child('players').child(this.state.user.fbuid);
-  //     this.props.connectAndPrepare();
-  //   }else if (JSON.stringify(prevProps?.race) !== JSON.stringify(this.state.race)) {
-  //      // caculate with value
-  //      const {race,isReady} = this.state;
-  //      const {data = {speed :0}} = race;
-  //      if(isReady && this.roomDataPrefference){
-  //       this.roomDataPrefference.update({
-  //         speed:data.speed
-  //       });
-  //      }
+  onListenerChanel = () => {
+    const { user } = this.state;
+    console.log(TAG, ' onListenerChanel = ', user?.fbuid);
+    
+    if (!_.isEmpty(user)) {
+      let data;
+      let value = '';
+      let arr = [];
+      let player;
+      let playersColor = {};
+      this.roomDataPrefference.on('value', dataSnap => {
+        data = dataSnap?.toJSON() || {};
+        console.log(TAG, ' onListenerChanel ---- ', data);
+        
+        let index = 0;
+        Object.keys(data).forEach(key => {
+          value = data[key];
 
-  //      console.log(TAG, ' componentDidUpdate - data = ',data);
+          console.log(TAG, ' updateDataFromOtherPlayer -', value);
+          if (!_.isEmpty(value)) {
+            value['fbuid'] = key;
+            value['isMe'] = key === user?.fbuid;
+            player = new Player(value);
+            playersColor[key] = colors[index];
+            arr.push(player);
+            index++;
+          }
+        });
 
-  //   }
+        this.setState({
+          players: arr,
+          playersColor:playersColor
+        });
+      });
+    }
+  };
 
-  // }
+  renderPlayersMarker = ()=>{
+    const {players = [],playersColor = {}} = this.state;
+    let indexPosition;
+    let pos = {};
+    const markers =  players.map(player => {
+      if (!_.isEmpty(player) && !player.isMe) {
+        indexPosition = Math.floor((listPoint.length * player.goal) / 100);
+        pos =this.getCurrentPoint(indexPosition);
+        // return this.renderMarkerPlayers(this.getCurrentPoint(indexPosition));
+        return icons.close({
+          color: playersColor[player.fbuid] ||'red',
+          size: sizeIconRacing.width,
+          iconStyle:{
+            margin:0
+          },
+          containerStyle: {
+            paddingVertical:0,
+            paddingHorizontal:0,
+            width: sizeIconRacing.width,
+            height: sizeIconRacing.height,
+            position: 'absolute',
+            top: pos.y ,
+            left: pos.x
+          }
+        });
+      }
+    });
+    return markers;
+  }
 
   componentDidMount() {
     this.props.getUser();
@@ -326,6 +386,7 @@ class ChallengeScreen extends BaseScreen {
               resizeMode="contain"
               source={uriPhoto}>
                 {this.renderMarker()}
+                {this.renderPlayersMarker()}
             </ImageBackground>
         </ImageZoom>
         
@@ -346,6 +407,28 @@ class ChallengeScreen extends BaseScreen {
       </View>
     );
   };
+
+  // renderMarkerPlayers = (pos = {}) => {
+  //   if(!_.isEmpty(pos)){
+  //     return icons.close({
+  //       color: 'red',
+  //       size: sizeIconRacing.width,
+  //       iconStyle:{
+  //         margin:0
+  //       },
+  //       containerStyle: {
+  //         paddingVertical:0,
+  //         paddingHorizontal:0,
+  //         width: sizeIconRacing.width,
+  //         height: sizeIconRacing.height,
+  //         position: 'absolute',
+  //         top: pos.y ,
+  //         left: pos.x
+  //       }
+  //     });
+  //   }
+  //   return null;
+  // };
 
   renderMarker = () => {
     const { pos } = this.state;
@@ -374,6 +457,7 @@ class ChallengeScreen extends BaseScreen {
   componentWillUnmount() {
     console.log(TAG, ' componentWillUnmount ok');
     // this.props.disconnectBluetooth();
+    this.roomDataPrefference?.off('value');
   }
 
   onPressClose = this.onClickView(async () => {
@@ -383,12 +467,12 @@ class ChallengeScreen extends BaseScreen {
   });
 
   render() {
-    const { room, user } = this.state;
+    const { room, user,players=[] } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
         <View style={{ alignItems: 'center' }}>
-          <BikerProfile room={room} user={user} />
+          <BikerProfile onStreamCreated={this.onStreamCreated} onStreamDestroyed={this.onStreamDestroyed} room={room} user={user} players={players} />
         </View>
 
         {icons.close({

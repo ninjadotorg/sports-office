@@ -19,7 +19,7 @@ class OTPublisherCustom extends OTPublisher{
   render(){
     const {playerMe = {}} = this.props;
     return (<View style={styles.parentViewInfo}>
-               {super.render()}
+              {super.render()}
               <View style={styles.parentViewPublishView}>
                 <View style={styles.publisherInfo}>
                   <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.playerName||'No Name'}</Text>
@@ -86,28 +86,22 @@ class BikerProfile extends Component {
       user: {},
       players: []
     };
-    this.pathKey = `games/race-rooms/${this.room?.session || '1_MX40NjE1NDQyMn5-MTUzNTYyMTA2NzI4Nn5hczBrZzRzYXloQ3E4Z0N0aDZUM0pGNTV-fg'}`;
-    this.dataPrefference = firebase.database().ref(this.pathKey);
-    this.roomDataPrefference = this.dataPrefference.child('players');
 
     this.publisherEventHandlers = {
       streamCreated: event => {
-        const {user} = this.state;
         console.log(TAG,'Publisher stream created!', event);
 
         // push stream Id on firebase
-        if(!_.isEmpty(event) && event.streamId&& !_.isEmpty(user)){
-          this.roomDataPrefference?.child(user.fbuid).update({streamId: event.streamId});
-          this.roomDataPrefference = firebase.database().ref(this.pathKey).child('players');
-          this.onListenerChanel();
+        if(!_.isEmpty(event) && event.streamId){
+          this.props.onStreamCreated(event.streamId);
         }
 
       },
       streamDestroyed: event => {
         console.log(TAG,'Publisher stream destroyed!', event);
+        this.props.onStreamDestroyed(event?.streamId||'');
       }
     };
-
   }
 
   get room(): Room {
@@ -116,17 +110,16 @@ class BikerProfile extends Component {
 
   componentDidMount() {}
 
-  componentWillUnmount() {
-    console.log(TAG, ' componentWillUnmount ');
-    this.roomDataPrefference?.off('value');
-  }
-  
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
       console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
       return {
         user: nextProps.user
+      };
+    }else if(!_.isEqual(nextProps?.players,prevState.players)){
+      return {
+        players: nextProps.players
       };
     }
     return null;
@@ -135,42 +128,13 @@ class BikerProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (JSON.stringify(prevProps?.user) !== JSON.stringify(this.state.user)) {
       console.log(TAG, ' componentDidUpdate - user = ', prevProps?.user);
-      // this.onListenerChanel();
     }
   }
-
-  onListenerChanel = () => {
-    const { user } = this.state;
-    console.log(TAG, ' onListenerChanel = ', user?.fbuid);
-    let data;
-    if (!_.isEmpty(user)) {
-      this.roomDataPrefference.on('value', dataSnap => {
-        data = dataSnap?.toJSON() || {};
-        console.log(TAG, ' onListenerChanel ---- ', data);
-        let value = '';
-        let arr = [];
-        Object.keys(data).forEach(key => {
-          value = data[key];
-
-          console.log(TAG, ' updateDataFromOtherPlayer -', value);
-          if (!_.isEmpty(value)) {
-            value['fbuid'] = key;
-            value['isMe'] = key === user?.fbuid;
-            arr.push(new Player(value));
-          }
-        });
-
-        this.setState({
-          players: arr
-        });
-      });
-    }
-  };
 
   render() {
     const { players = [] } = this.state;
     const playerMe = players?.find(item=>item.isMe === true);
-    // console.log(TAG, ' render room = ', this.room?.toJSON());
+    console.log(TAG, ' render players = ',players );
     return (
       <ScrollView style={styles.container} contentContainerStyle={{flex:1}}>  
           <OTSession
