@@ -40,8 +40,11 @@ class FriendsScreen extends BaseScreen {
       limit:limitRow,
       friends:{},
       isLoading:false,
-      listFriends:[]
+      listFriends:[],
+      search:'',
     };
+
+     
   }
 
   // static getDerivedStateFromProps(nextProps, prevState) {
@@ -108,13 +111,38 @@ class FriendsScreen extends BaseScreen {
       });
     }
   };
-  fetchData = ({offset,limit})=>{
+
+  handleQueryChange = search =>{
+    
+    this.setState(state => ({ ...state, search: search || "" }));
+    let {isLoading,offset,limit} = this.state;
+    if(!isLoading){
+       offset = 0;
+       this.fetchData({offset,limit,search});
+    }
+  };
+   
+ 
+  handleSearchCancel = () => this.handleQueryChange("");
+  handleSearchClear = () => this.handleQueryChange("");
+
+  // searchdata(text){
+  //   this.setState({search:text});
+  //   console.log(TAG,' searchdata begin',text);
+
+  //   let {isLoading,offset,limit} = this.state;
+  //   if(!isLoading){
+  //     this.fetchData({offset,limit,text});
+  //   }
+  // }
+
+  fetchData = ({offset,limit, search })=>{
     let {selectedIndex} = this.state;
     console.log(TAG,' fetchData begin');
-    selectedIndex ===0? this.props.fetchAllFriend({offset,limit}):this.props.fetchAllUser({offset,limit});
+    selectedIndex ===0? this.props.fetchAllFriend({offset,limit,search}):this.props.fetchAllUser({offset,limit,search});
   }
   onRefreshData = this.onClickView(()=>{
-    let {isLoading} = this.state;
+    let {isLoading,search} = this.state;
     console.log(TAG,' onRefreshData begin');
     if(!isLoading){
       this.setState({
@@ -124,16 +152,16 @@ class FriendsScreen extends BaseScreen {
         limit :limitRow,
         isLoading:true
       },()=>{
-        this.fetchData({offset:0,limitRow});
+        this.fetchData({offset:0,limitRow,search});
       });
       
     }
   });
   onLoadMore = this.onClickView(()=>{
     console.log(TAG,' onLoadMore begin');
-    let {isLoading,offset,limit} = this.state;
+    let {isLoading,offset,limit,search} = this.state;
     if(!isLoading){
-      this.fetchData({offset,limit});
+      this.fetchData({offset,limit,search});
     }
   });
   onPressBack = () => {
@@ -161,6 +189,10 @@ class FriendsScreen extends BaseScreen {
           </TouchableOpacity>
         <SearchBar
           round
+          onChangeText={this.handleQueryChange}
+          onCancel={this.handleSearchCancel}
+          onClear={this.handleSearchClear}
+          value={this.state.search}
           icon={{ type: 'font-awesome', name: 'search' }}
           containerStyle={{
             borderBottomColor: 'transparent',
