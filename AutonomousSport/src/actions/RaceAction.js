@@ -47,7 +47,7 @@ export const connectionBluetoothChange = dispatch => {
       // const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
       const timeHour = 1 / 3600;
       const rps = round - (roundPrevious <= 0 ? round : roundPrevious);
-      const rph = rps * timeHour;
+      // const rph = rps * timeHour;
       // let speed = rph * 0.68 * cycle;
       // let speed = rph * 0.10472 * cycle;
       let speed = cycle * 6.28 * 2.2369356 * rps;

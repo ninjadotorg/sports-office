@@ -4,7 +4,7 @@ import LocalDatabase from '@/utils/LocalDatabase';
 import ApiService from '@/services/ApiService';
 
 const TAG = 'UserReceducer';
-const initialState = { userInfo: {}, practiceInfo: {} };
+const initialState = { userInfo: {}, practiceInfo: {}, firebaseInfo: {} };
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.AUTH_LOGIN: {
@@ -43,6 +43,10 @@ const UserReducer = (state = initialState, action) => {
     case ACTIONS.UPDATE_RACING: {
       const payload = action.payload || {};
       return { ...state, userInfo: payload };
+    }
+    case ACTIONS.SIGNIN_WITH_FIREBASE: {
+      const payload = action.payload || {};
+      return { ...state, firebaseInfo: payload };
     }
     case ACTIONS.RESET_RACING: {
       const payload = action.payload || {};
