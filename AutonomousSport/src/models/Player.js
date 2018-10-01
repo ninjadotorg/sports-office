@@ -10,13 +10,13 @@ export default class Player extends User {
     this.archivement = userJson.archivement || 0;
     this.streamId = userJson.streamId || 0;
     this.isMe = userJson.isMe || false;
-    console.log(
-      TAG,
-      ' contructor streamId = ',
-      this.streamId,
-      ' playerName = ',
-      this.playerName
-    );
+    // console.log(
+    //   TAG,
+    //   ' contructor streamId = ',
+    //   this.streamId,
+    //   ' playerName = ',
+    //   this.playerName
+    // );
   }
 
   toJSON() {
@@ -25,6 +25,7 @@ export default class Player extends User {
       speed: this.speed,
       streamId: this.streamId,
       goal: this.goal,
+      isMe: this.isMe,
       archivement: this.archivement
     };
   }

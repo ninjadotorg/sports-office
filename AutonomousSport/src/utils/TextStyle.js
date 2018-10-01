@@ -1,9 +1,15 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { COLOR } from '@/utils/Constants';
 
+const STATUSBAR_HEIGHT = StatusBar.currentHeight || 20;
 export const screenWidth = Dimensions.get('window').width;
-export const screenSize = Dimensions.get('window');
+export const screenSize = {
+  width: Dimensions.get('window').width,
+  height: Dimensions.get('window').height - STATUSBAR_HEIGHT
+};
+
+// export const screenSize = Dimensions.get('window');
 export const fontSizer = () => {
   return scale() * 12;
 };

@@ -73,6 +73,8 @@ class MapList extends Component {
     return ViewUtil.loadingComponent();
   };
 
+  
+
   renderHeader = () => {
     return null;
   };

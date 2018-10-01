@@ -19,6 +19,19 @@ export default class Room {
     this.mapId = roomJson?.mapId || 0;
     this.miles = roomJson?.miles || 0;
   }
+
+  getPathOfMap = (): [] => {
+    const json = JSON.parse(this.Map?.datapoints);
+    return json['points'] || [];
+  };
+
+  getMapSize = (): { width: 0, height: 0 } => {
+    const map = this.Map || { width: 0, height: 0 };
+    return {
+      width: map.width,
+      height: map.height
+    };
+  };
   toJSON() {
     return {
       id: this.id,

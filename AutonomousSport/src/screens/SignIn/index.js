@@ -96,7 +96,8 @@ class SignInScreen extends BaseScreen {
         });
         this.props.fetchUser();
       }else{
-        this.replaceScreen(this.props.navigation,TAGSETUP);
+        // this.replaceScreen(this.props.navigation,TAGSETUP);
+        this.receiveSignIn({isLogged:true });
       }
     }else if(JSON.stringify(nextProps?.user)!== JSON.stringify(user)){
       const userNext = nextProps?.user||{};

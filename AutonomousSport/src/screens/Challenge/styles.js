@@ -17,11 +17,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   map: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: 'grey'
+    backgroundColor: 'white'
   },
   button: {
     borderRadius: 25,
