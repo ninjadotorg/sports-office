@@ -101,7 +101,6 @@ class ProfileScreen extends BaseScreen {
   render() {
     const { user,isLoading } = this.state;
     const {userInfo = {}} = user ||{};
-    // console.log(TAG,' render fullname =',userInfo.fullname);
     return (
       <ScrollView contentContainerStyle={{flex:1,flexGrow: 1}} style={{flexGrow: 1,flex:1}}>
         <View style={styles.container}>

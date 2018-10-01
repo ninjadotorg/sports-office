@@ -21,7 +21,7 @@ class ChooseRoundScreen extends BaseScreen {
     super(props);
     const mile = this.props.navigation.getParam('miles')||0;
     const mapId = this.props.navigation.getParam('id')||-1;
-    console.log(TAG," contructor mile = ", mile);
+    console.log(TAG," contructor mapID = ", mapId);
     this.state = {
       valueRound:1,
       mile:mile,
@@ -44,7 +44,7 @@ class ChooseRoundScreen extends BaseScreen {
       const {valueRound,mapId,sumMiles} = this.state;
       if(sumMiles>0){
       const roomInfo = await ApiService.createRoom({
-        mapId,
+        mapId:mapId,
         loop:valueRound,
         miles:sumMiles
       });

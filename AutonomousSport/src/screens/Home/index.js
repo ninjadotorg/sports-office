@@ -82,15 +82,16 @@ class HomeScreen extends BaseScreen {
 
   // }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     const { user, race, distanceRun = 0, kcal = 0, isStarted } = this.state;
-
+    console.log(TAG, ' componentWillReceiveProps - begin ');
     if (JSON.stringify(nextProps?.user) !== JSON.stringify(user)) {
       console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
       this.setState(
         {
           user: nextProps.user,
-          isLoading: false
+          isLoading: false,
+          race: nextProps.race
         },
         () => {
           const { race } = this.state;
@@ -102,7 +103,7 @@ class HomeScreen extends BaseScreen {
       );
     } else if (
       isStarted &&
-      JSON.stringify(nextProps?.race) !== JSON.stringify(race)
+      JSON.stringify(nextProps?.race) !== JSON.stringify(this.state.race)
     ) {
       console.log(TAG, ' componentWillReceiveProps race begin ');
       const { race = {} } = nextProps;
@@ -125,6 +126,7 @@ class HomeScreen extends BaseScreen {
         // save local user
         this.saveUserInfo({ kcal: data.kcal || 0, miles: data.distanceStreet });
       }
+      console.log(TAG, ' componentWillReceiveProps - end');
     }
   }
 
@@ -179,6 +181,7 @@ class HomeScreen extends BaseScreen {
 
   render() {
     const { user, speed, isStarted } = this.state;
+
     const { userInfo = {}, practiceInfo = {} } = user || {};
     return (
       <ImageBackground style={styles.container} source={images.image_start}>

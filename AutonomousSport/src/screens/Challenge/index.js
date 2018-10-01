@@ -9,7 +9,7 @@ import {
 import BaseScreen from '@/screens/BaseScreen';
 
 import { Button } from 'react-native-elements';
-import styles,{sizeIconRacing} from './styles';
+import styles,{sizeIconRacing,setMapInfo} from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
@@ -25,137 +25,6 @@ import { STATE_BLUETOOTH } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 
-
-const listPoint = [
-  '1309,837',
-  '1265,843',
-  '1224,843',
-  '1183,840',
-  '1155,843',
-  '1114,840',
-  '1076,840',
-  '1035,840',
-  '1004,840',
-  '975,843',
-  '931,843',
-  '897,846',
-  '862,840',
-  '821,846',
-  '786,849',
-  '755,849',
-  '727,849',
-  '705,856',
-  '670,862',
-  '638,868',
-  '601,865',
-  '572,856',
-  '544,852',
-  '519,846',
-  '491,840',
-  '459,843',
-  '409,840',
-  '377,843',
-  '352,846',
-  '311,846',
-  '273,843',
-  '248,830',
-  '217,818',
-  '201,799',
-  '179,774',
-  '169,742',
-  '166,705',
-  '166,673',
-  '163,648',
-  '163,626',
-  '166,598',
-  '166,563',
-  '166,525',
-  '163,497',
-  '163,468',
-  '160,450',
-  '147,431',
-  '129,406',
-  '113,380',
-  '107,355',
-  '103,330',
-  '116,308',
-  '144,289',
-  '179,289',
-  '198,295',
-  '210,308',
-  '223,330',
-  '232,352',
-  '242,377',
-  '251,409',
-  '283,421',
-  '327,431',
-  '365,431',
-  '402,431',
-  '440,431',
-  '475,437',
-  '513,434',
-  '557,434',
-  '591,431',
-  '635,431',
-  '679,434',
-  '723,428',
-  '761,424',
-  '802,424',
-  '821,424',
-  '843,440',
-  '865,456',
-  '906,459',
-  '963,462',
-  '1000,462',
-  '1038,465',
-  '1089,462',
-  '1123,465',
-  '1158,462',
-  '1189,456',
-  '1230,443',
-  '1259,431',
-  '1306,428',
-  '1359,428',
-  '1416,424',
-  '1473,428',
-  '1510,428',
-  '1542,424',
-  '1570,421',
-  '1595,421',
-  '1614,424',
-  '1636,428',
-  '1655,443',
-  '1671,462',
-  '1693,481',
-  '1709,491',
-  '1731,497',
-  '1768,500',
-  '1784,516',
-  '1794,535',
-  '1800,553',
-  '1803,591',
-  '1806,635',
-  '1806,657',
-  '1803,683',
-  '1803,711',
-  '1803,736',
-  '1797,777',
-  '1790,808',
-  '1772,824',
-  '1737,843',
-  '1709,846',
-  '1652,852',
-  '1605,846',
-  '1564,849',
-  '1529,849',
-  '1491,846',
-  '1460,840',
-  '1416,843',
-  '1391,840',
-  '1362,843',
-  '1331,843'
-];
-
 export const TAG = 'ChallengeScreen';
 const heightMap = screenSize.height;
 const colors = ['red','blue','yellow','green'];
@@ -163,11 +32,13 @@ class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
-    const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
+    // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
+    const { width = 0, height = 1 } = room?.getMapSize()||{};
     this.ratios = width / height || 1;
     this.scaleSize = heightMap / height;
+    this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
-    
+    this.widthMap = heightMap * this.ratios;
     this.state = {
       room: room,
       user: {},
@@ -204,10 +75,10 @@ class ChallengeScreen extends BaseScreen {
   getCurrentPoint = (currentPositionIndex = 0) => {
     let x,y = 0;
     try {
-      const pointStart: [] = listPoint[currentPositionIndex].split(',');
+      const pointStart: [] = this.listPoint[currentPositionIndex];
       console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
-      x = (Number(pointStart[0])) * this.scaleSize -sizeIconRacing.width/2;
-      y = (Number(pointStart[1])) * this.scaleSize -sizeIconRacing.height/2;
+      x = (Number(pointStart[0])) * this.scaleSize -sizeIconRacing.width;
+      y = (Number(pointStart[1])) * this.scaleSize -sizeIconRacing.height;
     } catch (error) {
       
     }
@@ -234,10 +105,11 @@ class ChallengeScreen extends BaseScreen {
       this.setState(
         {
           user: nextProps.user,
-          isLoading: false
+          isLoading: false,
+          race:nextProps.race
         },
         () => {
-          if (_.isEmpty(race) || race.state !== STATE_BLUETOOTH.CONNECTED) {
+          if (_.isEmpty(this.state.race) || race.state !== STATE_BLUETOOTH.CONNECTED) {
             console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
             this.playerMeDataPrefference = this.dataPrefference
               .child('players')
@@ -246,19 +118,20 @@ class ChallengeScreen extends BaseScreen {
           }
         }
       );
-    } else if (JSON.stringify(nextProps?.race) !== JSON.stringify(race)) {
+    }
+    if (JSON.stringify(nextProps?.race) !== JSON.stringify(this.state.race)) {
       console.log(TAG, ' componentWillReceiveProps race begin ');
       const { race = {} } = nextProps;
       const { data } = race;
       console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
       if (isReady && this.playerMeDataPrefference) {
-        const s = distanceRun + data.distanceStreet || 0;
-        const sumKcal = kcal + data.kcal || 0;
+        const s = distanceRun + (data.distanceStreet || 0);
+        const sumKcal = kcal + (data.kcal || 0);
         // caculate goal
         const goal = Math.round((s * 100) / room?.miles) || 0;
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
 
-        const indexPosition = Math.floor((listPoint.length * goal) / 100);
+        const indexPosition = Math.floor((this.listPoint.length * goal) / 100);
 
         const nextPoint = this.getCurrentPoint(indexPosition);
         this.setState({
@@ -288,6 +161,7 @@ class ChallengeScreen extends BaseScreen {
         // save local user
         this.saveUserInfo({ kcal: data.kcal || 0, miles: data.distanceStreet });
       }
+      console.log(TAG, ' componentWillReceiveProps end ---- ');
     }
   }
 
@@ -302,24 +176,22 @@ class ChallengeScreen extends BaseScreen {
     console.log(TAG, ' onListenerChanel = ', user?.fbuid);
     
     if (!_.isEmpty(user)) {
-      let data;
-      let value = '';
-      let arr = [];
-      let player;
-      let playersColor = {};
+      
       this.roomDataPrefference.on('value', dataSnap => {
-        data = dataSnap?.toJSON() || {};
+        const data = dataSnap?.toJSON() || {};
+        let arr = [];
+        let playersColor = {};
         console.log(TAG, ' onListenerChanel ---- ', data);
         
         let index = 0;
         Object.keys(data).forEach(key => {
-          value = data[key];
+          const value = data[key];
 
           console.log(TAG, ' updateDataFromOtherPlayer -', value);
           if (!_.isEmpty(value)) {
             value['fbuid'] = key;
             value['isMe'] = key === user?.fbuid;
-            player = new Player(value);
+            const player = new Player(value);
             playersColor[key] = colors[index];
             arr.push(player);
             index++;
@@ -340,8 +212,8 @@ class ChallengeScreen extends BaseScreen {
     let pos = {};
     const markers =  players.map(player => {
       if (!_.isEmpty(player) && !player.isMe) {
-        indexPosition = Math.floor((listPoint.length * player.goal) / 100);
-        pos =this.getCurrentPoint(indexPosition);
+        indexPosition = Math.floor((this.listPoint.length * player.goal) / 100);
+        pos = this.getCurrentPoint(indexPosition);
         // return this.renderMarkerPlayers(this.getCurrentPoint(indexPosition));
         return icons.close({
           color: playersColor[player.fbuid] ||'red',
@@ -370,19 +242,19 @@ class ChallengeScreen extends BaseScreen {
 
   renderMap = () => {
     const { room, isReady } = this.state;
-    const uriPhoto = images.map || { uri: room?.photo || '' };
-    const t = heightMap * this.ratios;
+    const uriPhoto =  { uri: room?.photo || '' } || images.map;
+    
     return (
       <View style={styles.map}>
         <ImageZoom 
-          cropWidth={t}
+          cropWidth={this.widthMap}
           cropHeight={heightMap}
-          imageWidth={t}
+          imageWidth={this.widthMap}
           minScale={1}
           maxScale={2}
           imageHeight={heightMap}>
             <ImageBackground
-              style={{ width: t, height: heightMap }}
+              style={{ width: this.widthMap, height: heightMap }}
               resizeMode="contain"
               source={uriPhoto}>
                 {this.renderMarker()}
