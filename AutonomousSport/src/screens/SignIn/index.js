@@ -17,16 +17,16 @@ import { connect } from 'react-redux';
 import TextStyle,{screenSize} from '@/utils/TextStyle';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { TAG as TAGSETUP } from '@/screens/Setup';
-import { fetchUser,signIn,loginWithFirebase } from '@/actions/UserAction';
+import { fetchUser,signIn,forGotPass, loginWithFirebase } from '@/actions/UserAction';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import { Icon,Button } from 'react-native-elements';
 import styles,{ color } from './styles';
 import { checkSaveDevice } from '@/actions/RaceAction';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
+import ApiService from '@/services/ApiService';
 
-
-export const TAG = 'SignInScreen';
+export const TAG = 'SignInScreen'; 
 
 class SignInScreen extends BaseScreen {
   static navigationOptions = {
@@ -36,10 +36,16 @@ class SignInScreen extends BaseScreen {
     super(props);
     this.state = {
       user: undefined,
-      swap:false,
+      swap:"signin", 
       error:'',
       isSavedDevice:undefined,
-      loading:false
+      loading:false,
+      texts:{ 
+        "signin":{"button":"Sign In","bottomText":"Don't have an account ? ", "bottonBtn":"Sign Up"},
+        "signup":{"button":"Sign Up","bottomText":"Already have an account ? ", "bottonBtn":"Sign In" },
+        "forgot":{"button":"Forgot Password","bottomText":"Already have an account ? ", "bottonBtn":"Sign Up"}
+       },
+
     };
   }
 
@@ -136,31 +142,64 @@ class SignInScreen extends BaseScreen {
       });
     }
   }
-  swap = onClickView(()=>{
-    const {swap} = this.state;
+  changeFuncti = onClickView((data)=>{
+    //const {swap} = this.state;
+    // this.setState({
+    //   swap:type
+    //});
     this.setState({
-      swap:!swap
-    });
+       swap: data =="signin" ? "signup" : "signin",
+    })
+    
   });
-  onPressSignIn = onClickView(() => {
+
+  
+  onPressForgot = onClickView(()=>{
+     
+    this.setState({
+      swap:"forgot"
+    });
+
+  } );
+
+  onPressSignIn =  onClickView(async () => {
     console.log(TAG,' onPressSignIn ');
     const email = this.email?._lastNativeText||'';
     const password = this.password?._lastNativeText||'';
     const name = this.name?._lastNativeText|| '';
-    if (email && password) {
-      if(Util.isEmailValid(email)){
-        this.setState({ loading:true });
-        this.props.signIn({email,password,name});
+
+    console.log(TAG, ' - forGotPass - begin ', this.state.swap); 
+    if(this.state.swap =="forgot"){
+      if(Util.isEmailValid(email)){ 
+          this.setState({ loading:true });
+          
+          //this.props.forGotPass({email});
+          let response = await ApiService.forGotPass({ email });
+          console.log(response);
+          this.setState({ loading:false });
+
       }else{
         this.setState({ error:'Email is not correct!!' }); 
       }
-    } else {
-      this.setState({ error:'Please input your email,password' });
-    }
+    }else{
+
+        if (email && password) {
+          if(Util.isEmailValid(email)){
+            this.setState({ loading:true });
+            this.props.signIn({email,password,name});
+          }else{
+            this.setState({ error:'Email is not correct!!' }); 
+          }
+        } else {
+          this.setState({ error:'Please input your email,password' });
+        }
+      }
+
   });
   renderSignInWithEmail = ()=>{
-    const { error, loading,swap } = this.state;
-    const textForButton = swap ? 'Sign Up' : 'Sign In';
+    const { error, loading,swap, texts } = this.state;
+    //const textForButton = texts[swap] //swap ? 'Sign Up' : 'Sign In';
+   
     return (
       
       <KeyboardAvoidingView
@@ -170,9 +209,9 @@ class SignInScreen extends BaseScreen {
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
       >
       
-        <Text style={[TextStyle.extraText,styles.text,styles.textLogo]}>{textForButton}</Text>
+        <Text style={[TextStyle.extraText,styles.text,styles.textLogo]}>{texts[swap].button}</Text>
         <View style={styles.inputContainerStyle}>
-          {swap ? (
+          {swap =="signup" ? ( 
             <View style={styles.containerInput}>
               <Text style={[TextStyle.normalText,styles.textLabel]}>Name</Text>
               
@@ -203,6 +242,7 @@ class SignInScreen extends BaseScreen {
               keyboardType="email-address"
             />
           </View>
+          {swap !="forgot" ? ( 
           <View style={styles.containerInput}>
             <Text style={[TextStyle.normalText,styles.textLabel]}>Password</Text>
             <TextInput
@@ -218,6 +258,7 @@ class SignInScreen extends BaseScreen {
               secureTextEntry
             />
           </View>
+          ) : null }
         </View>
 
         {!error ? null : (
@@ -235,7 +276,7 @@ class SignInScreen extends BaseScreen {
         <Button
           loading={loading}
           buttonStyle={styles.buttonStyle}
-          title={textForButton}
+          title={texts[swap]["button"]}
           textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
           onPress={this.onPressSignIn}
         />
@@ -243,6 +284,8 @@ class SignInScreen extends BaseScreen {
       </KeyboardAvoidingView>
     );
   }
+ 
+
   // render
   renderLoginSocial() {
     return (
@@ -293,7 +336,7 @@ class SignInScreen extends BaseScreen {
     );
   }
   render() {
-    const { swap } = this.state;
+    const { swap,texts } = this.state;
     return (
      
       <ScrollView
@@ -314,20 +357,19 @@ class SignInScreen extends BaseScreen {
                 styles.textButton,
                 styles.socialBottomText
               ]}
-            >
-              {swap ? 'Already have an account ? ' : 'Don\'t have an account ? '} 
-
+            > 
+              { swap !="forgot" ? texts[swap].bottomText : texts["signin"].bottomText }  
             </Text>
             <View style={styles.linkContainer}>
               <Text
                 style={[TextStyle.smallText, styles.textButton, styles.link]}
-                onPress={this.swap}
+                onPress={()=>this.changeFuncti(swap) }
               >
-                {swap ? 'Sign In' : 'Sign Up'}
+                {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].button}
               </Text>
             </View>
           </View>
-          {swap ? null : (
+          {swap =="forgot" ? null : (
             <View
               style={[
                 styles.socialBottomTextContainer,
@@ -340,7 +382,7 @@ class SignInScreen extends BaseScreen {
                 onPress={this.onPressForgot}
                 style={[TextStyle.smallText, styles.textButton, styles.link]}
               >
-                Forgot password?
+              Forgot password?
               </Text>
             </View>
           )}
@@ -358,5 +400,5 @@ export default connect(
     user:state.user,
     race:state.race
   }),
-  {signIn:signIn,loginWithFirebase,fetchUser,checkSaveDevice}
+  {signIn:signIn, forGotPass:forGotPass, loginWithFirebase,fetchUser,checkSaveDevice}
 )(SignInScreen);

@@ -26,7 +26,8 @@ var MIN_WITHDRAW_BTC = 0.0001
 var MIN_WITHDRAW_ETH = 0.005
 
 var OPENTOK_SCRET = os.Getenv("OPENTOK_SCRET")  
-var OPENTOK_API_KEY,_ = strconv.Atoi( os.Getenv("OPENTOK_API_KEY")  )  
+var OPENTOK_API_KEY,_ = strconv.Atoi( os.Getenv("OPENTOK_API_KEY")  )
+var SENDGRID_API_KEY = os.Getenv("SENDGRID_API_KEY")  
 var gormConn *gorm.DB
 
 func GetDatabaseConnection() *gorm.DB {
