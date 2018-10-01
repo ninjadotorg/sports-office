@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"../models"
 	"../config"
+	"../services"
 	"net/http"
 	"github.com/labstack/echo" 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -103,6 +104,69 @@ func (basectl *BaseController)Signup(c echo.Context) error{
 
 }
 
+
+//fSendNewPasswordConfirmEmail
+func (basectl *BaseController)ConfirmEmailPass(c echo.Context) error{
+
+	var f interface{}
+	user := new(models.User)  
+	user.Email = c.QueryParam("email") 
+	user.Password = c.QueryParam("txhash") 
+	basectl.Dao.Where(&models.User{Email:user.Email, Password: user.Password }).Find(&user)
+
+	if user.ID !=0  { 
+
+		password := services.String(6)
+
+		user.Password, _ = models.HashPassword(password )  
+		basectl.Dao.Save(&user)
+
+		services.SendNewPasswordConfirmEmail(user.Fullname, user.Email, password)
+		//send_request_password
+		f = map[string]interface{}{  
+			"message":"ok",
+		}
+		return c.JSON(http.StatusOK,f) 
+
+	}
+	
+	f = map[string]interface{}{ 
+		"email": user.Email , 
+		"message":"User not found",
+	}
+	return c.JSON(http.StatusInternalServerError,f) 
+
+
+ }
+
+ //forgot-pass
+ func (basectl *BaseController)ForgotPass(c echo.Context) error{
+
+	var f interface{}
+	user := new(models.User)  
+	user.Email = c.FormValue("email") 
+	basectl.Dao.Where(&models.User{Email:user.Email}).Find(&user)
+	fmt.Println("user %v",user)
+	if user.ID !=0 {
+		
+		services.SendRequestConfirmEmail(user.Fullname, user.Email, user.Password)
+		//send_request_password
+		f = map[string]interface{}{  
+			"message":"ok",
+		}
+		return c.JSON(http.StatusOK,f) 
+
+	}
+	
+	f = map[string]interface{}{ 
+		"email": user.Email , 
+		"message":"User not found",
+	}
+	return c.JSON(http.StatusInternalServerError,f) 
+
+
+ }
+ //auth
 func (basectl *BaseController)Auth(c echo.Context) error{
 
 	//secretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
@@ -118,6 +182,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		user = new(models.User)  
 		user.Email = c.FormValue("email")
 		user.Password, _ = models.HashPassword(c.FormValue("password"))  
+
 		user.Create(basectl.Dao) 
 	}else{
 		
@@ -239,7 +304,7 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 	room.Status = 1
 	room.UserId = userid
 	
-	MapId,_ := strconv.Atoi(c.FormValue("mapid") )  
+	MapId,_ := strconv.Atoi(c.FormValue("mapId") )  
 	Loop,_ := strconv.Atoi(c.FormValue("loop") )  
 	Miles,_ := strconv.ParseFloat(c.FormValue("miles") , 64) 
 	var NameRoom =  c.FormValue("name") 
@@ -306,6 +371,9 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		log.Fatalln("Error setting value:", err3)
 	} 
 	 
+ 
+	basectl.Dao.Where(&models.Room{ ID: room.ID }).Set("gorm:auto_preload", true).First(&room) 
+
 	var f interface{}
 	f = map[string]interface{}{ 
 		"room": room, 

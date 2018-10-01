@@ -34,6 +34,7 @@ class CreateRoomScreen extends BaseScreen {
     this.updateIndex = this.updateIndex.bind(this)
     
   }
+  
 
   componentDidMount() {}
 
