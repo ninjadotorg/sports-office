@@ -149,6 +149,15 @@ export default class ApiService {
     }
   }
 
+  
+  static async forGotPass({ email = '' }) {
+    const url = Api.FORGOT_PASS;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      email, 
+    });
+    return response;
+  }
+
   static async signIn({ email = '', password = '', name }) {
     const url = Api.SIGN_IN;
     const response = await ApiService.getURL(METHOD.POST, url, {

@@ -7,6 +7,7 @@ import firebase from 'react-native-firebase';
 
 const TAG = 'UserAction';
 export const ACTIONS = {
+  AUTH_FORGOT: 'AUTH_FORGOT',
   AUTH_LOGIN: 'AUTH_LOGIN',
   AUTH_LOGOUT: 'AUTH_LOGOUT',
   AUTH_UPDATE: 'AUTH_UPDATE',
@@ -29,6 +30,7 @@ export const receiveLogin = data => ({
 export const logout = () => ({ type: ACTIONS.AUTH_LOGOUT });
 export const login = () => ({ type: ACTIONS.AUTH_LOGIN });
 export const userLocal = () => ({ type: ACTIONS.GET_USER_LOCAL });
+
 export const signIn = ({
   email = '',
   password = '',
@@ -45,6 +47,23 @@ export const signIn = ({
     console.log(TAG, ' - signIn - error ', e);
   }
 };
+
+export const forGotPass = ({
+  email = ''
+}) => async dispatch => {
+  try {
+    console.log(TAG, ' - forGotPass - begin ');
+    let response = await ApiService.signIn({ email, password, name });
+    console.log(TAG, ' - forGotPass - response ', response) || {};
+    response = response && response['id'] ? response : {};
+    dispatch({ type: ACTIONS.AUTH_FORGOT, payload: response });
+    return;
+  } catch (e) {
+    console.log(TAG, ' - forGotPass - error ', e);
+  }
+};
+
+
 export const loginWithFirebase = ({
   email = '',
   password = ''
