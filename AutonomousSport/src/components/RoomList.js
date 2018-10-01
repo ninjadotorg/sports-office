@@ -156,6 +156,12 @@ class RoomList extends Component {
       data?.filter(
         room => room.miles <= levelFillter.max && room.miles >= levelFillter.min
       ) || [];
+
+      datal.sort(function (a, b) {
+        return b.id - a.id;
+      });
+
+  
     console.log('levelIndex-rooms', datal);
     return (
       <View style={styles.container}>
