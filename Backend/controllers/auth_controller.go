@@ -440,7 +440,7 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 
 	var randRoom models.Room 
 
-	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < 4 ORDER BY RAND() LIMIT 1").Scan(&randRoom)
+	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY RAND() LIMIT 1").Scan(&randRoom)
 	 
 	if randRoom.Session == "" {
 		
@@ -516,6 +516,10 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 // CloseSession
 func (basectl *BaseController)CloseSession(c echo.Context) error{
 
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)    
+	userid := int(claims["id"].(float64)) 
+
 	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET) 
 	
 	archive, _ := ot.ArchiveStart(c.FormValue("session"), nil)
@@ -524,16 +528,26 @@ func (basectl *BaseController)CloseSession(c echo.Context) error{
 		ot.ArchiveStop(archive.ID)  
 	}  
 	var room models.Room
+	var f interface{}
 	//room := new(models.Room) 
 	basectl.Dao.Where(&models.Room{Session: c.FormValue("session")  }).First(&room) 
-	room.Status =0
-	basectl.Dao.Save(&room)     
-	fmt.Println("data room: ",room)  
-	var f interface{}
-	f = map[string]interface{}{ 
-		"archive": room.ID,
+	if room.UserId == userid {
+		room.Status =0
+		basectl.Dao.Save(&room)     
+		fmt.Println("data room: ",room)  
+		
+		f = map[string]interface{}{ 
+			"status":1,
+			"archive": room.ID,
+		}
+		return c.JSON(http.StatusOK,f) 
+	}else{
+		f = map[string]interface{}{ 
+			"status":0,
+			"You dont have permission to close this room.",
+		}
+		return c.JSON(http.StatusOK,f) 
 	}
-	return c.JSON(http.StatusOK,f) 
  
 }
 
@@ -565,7 +579,7 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
 	room.Session = c.FormValue("session")
 	basectl.Dao.Where(&models.Room{Session: room.Session  }).Set("gorm:auto_preload", true).First(&room) 
 
-	if room.ID <=0 || room.Status !=1 || len(room.RoomPlayers) ==4 {
+	if room.ID <=0 || room.Status !=1 || len(room.RoomPlayers) >= config.MAX_PLAYER_IN_ROOM_INT {
 		f21 = map[string]interface{}{ 
 			"status" : 0,
 			"message": "This room not found.",

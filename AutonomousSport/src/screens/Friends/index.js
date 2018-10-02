@@ -34,6 +34,9 @@ class FriendsScreen extends BaseScreen {
   constructor(props) {
     super(props);
     
+    const roomInfo = JSON.parse( this.props.navigation.getParam('roomInfo')||"" );
+    console.log(TAG, "inviteMode",roomInfo);
+
     this.state = {
       selectedIndex: 0,
       offset:0,
@@ -42,6 +45,8 @@ class FriendsScreen extends BaseScreen {
       isLoading:false,
       listFriends:[],
       search:'',
+      inviteMode:false,
+      roomInfo:roomInfo,
     };
 
      
@@ -74,6 +79,7 @@ class FriendsScreen extends BaseScreen {
   componentWillReceiveProps(nextProps){
     const {friends,listFriends = []} = this.state;
     console.log(TAG,' componentWillReceiveProps begin = ');
+    
     if(!_.isEqualWith(nextProps?.friends,friends)){
       console.log(TAG,' componentWillReceiveProps01 = length ',listFriends.length);
       const listNew =  nextProps?.friends?.list||[];
