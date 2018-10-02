@@ -102,8 +102,9 @@ class HomeScreen extends BaseScreen {
         }
       );
     } else if (
-      isStarted &&
-      JSON.stringify(nextProps?.race) !== JSON.stringify(this.state.race)
+      _.isEmpty(this.state.race) ||
+      (isStarted &&
+        JSON.stringify(nextProps?.race) !== JSON.stringify(this.state.race))
     ) {
       console.log(TAG, ' componentWillReceiveProps race begin ');
       const { race = {} } = nextProps;
