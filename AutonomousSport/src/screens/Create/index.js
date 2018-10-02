@@ -18,7 +18,6 @@ import { fetchUser } from '@/actions/UserAction';
 export const TAG = 'CreateRoomScreen';
 
 class CreateRoomScreen extends BaseScreen {
-
   static navigationOptions = navigation => {
     return {
       title: 'Create'
@@ -31,17 +30,14 @@ class CreateRoomScreen extends BaseScreen {
       selectedIndex: 0
     };
 
-    this.updateIndex = this.updateIndex.bind(this)
-    
+    this.updateIndex = this.updateIndex.bind(this);
   }
-  
 
   componentDidMount() {}
 
-  updateIndex (selectedIndex) {
-    this.setState({selectedIndex});
-    console.log("updateIndex-levelIndex",selectedIndex)
-
+  updateIndex(selectedIndex) {
+    this.setState({ selectedIndex });
+    console.log('updateIndex-levelIndex', selectedIndex);
   }
 
   onPressCreateRoom = this.onClickView(async () => {
@@ -52,25 +48,25 @@ class CreateRoomScreen extends BaseScreen {
     console.log(TAG, ' onPressRandomJoin 1 ');
     try {
       this.setState({
-        isLoading:true
+        isLoading: true
       });
-      
-      const roomInfo = await ApiService.joinRandomRoom({}); 
-      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);  
 
-      this.setState({
-        isLoading:false,
-      });
-      if (roomInfo) {   
-        //this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
-        this.props.navigation.navigate(TAGCHALLENGE, roomInfo);
-        //this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
+      const roomInfo = await ApiService.joinRandomRoom({});
+      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);
+      if (roomInfo) {
+        this.replaceScreen(
+          this.props.navigation,
+          TAGCHALLENGE,
+          roomInfo.toJSON()
+        );
       }
-    } catch (error) {}
- 
-
- 
-  }); 
+    } catch (error) {
+    } finally {
+      this.setState({
+        isLoading: false
+      });
+    }
+  });
 
   onPressBack = () => {
     this.props.navigation.goBack();
@@ -115,13 +111,11 @@ class CreateRoomScreen extends BaseScreen {
       </View>
     );
   };
-  render(){
+  render() {
     return (
       <View style={styles.container}>
-        <Header backgroundColor="transparent">
-          {this.renderLeftHeader()}
-        </Header>
-        <RoomList levelIndex={this.state.selectedIndex}/> 
+        <Header backgroundColor="transparent">{this.renderLeftHeader()}</Header>
+        <RoomList levelIndex={this.state.selectedIndex} />
         <View style={styles.containerBottom}>
           <Button
             title="Random"
@@ -143,7 +137,7 @@ class CreateRoomScreen extends BaseScreen {
     );
   }
 }
- 
+
 CreateRoomScreen.propTypes = {};
 
 CreateRoomScreen.defaultProps = {};
@@ -153,4 +147,3 @@ export default connect(
   }),
   { getUser: fetchUser }
 )(CreateRoomScreen);
-

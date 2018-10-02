@@ -85,7 +85,10 @@ class HomeScreen extends BaseScreen {
   componentWillReceiveProps(nextProps) {
     const { user, race, distanceRun = 0, kcal = 0, isStarted } = this.state;
     console.log(TAG, ' componentWillReceiveProps - begin ');
-    if (JSON.stringify(nextProps?.user) !== JSON.stringify(user)) {
+    if (
+      _.isEmpty(user) &&
+      JSON.stringify(nextProps?.user) !== JSON.stringify(user)
+    ) {
       console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
       this.setState(
         {
@@ -118,6 +121,7 @@ class HomeScreen extends BaseScreen {
         const sumKcal = kcal + data.kcal || 0;
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
         this.setState({
+          user: nextProps.user,
           race: race,
           distanceRun: s,
           speed: data.speed || 0,
@@ -203,8 +207,16 @@ class HomeScreen extends BaseScreen {
           </View>
           <View>
             <DashboardProfile
-              kcal={Math.round((practiceInfo?.kcal || 0) * 100) / 100}
-              mile={Math.round((practiceInfo?.miles || 0) * 1000) / 1000}
+              kcal={
+                Math.round(
+                  (practiceInfo?.kcal || userInfo?.profile?.kcal || 0) * 100
+                ) / 100
+              }
+              mile={
+                Math.round(
+                  (practiceInfo?.miles || userInfo?.profile?.miles || 0) * 1000
+                ) / 1000
+              }
             />
           </View>
         </View>

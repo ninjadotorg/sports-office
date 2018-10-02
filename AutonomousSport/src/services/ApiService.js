@@ -5,6 +5,7 @@ import Util from '@/utils/Util';
 import _ from 'lodash';
 import Room from '@/models/Room';
 import LocalDatabase from '@/utils/LocalDatabase';
+
 const TIME_OUT_API = 8;
 const TAG = 'ApiService';
 export default class ApiService {
@@ -149,11 +150,10 @@ export default class ApiService {
     }
   }
 
-  
   static async forGotPass({ email = '' }) {
     const url = Api.FORGOT_PASS;
     const response = await ApiService.getURL(METHOD.POST, url, {
-      email, 
+      email
     });
     return response;
   }
@@ -222,7 +222,7 @@ export default class ApiService {
     // return listRoom;
   }
 
-  static async getAllUser({ offset = 0, limit = 12, search='' }) {
+  static async getAllUser({ offset = 0, limit = 12, search = '' }) {
     const url = Api.GET_ALL_USER;
     const response = await ApiService.getURL(METHOD.GET, url, {
       offset,
@@ -233,14 +233,14 @@ export default class ApiService {
     return response || {};
   }
 
-  static async getAllFriend({ offset = 0, limit = 12, search='' }) {
+  static async getAllFriend({ offset = 0, limit = 12, search = '' }) {
     const url = Api.GET_ALL_FRIEND;
     const response = await ApiService.getURL(METHOD.GET, url, {
       offset,
       limit,
       search
     });
-     
+
     return response || {};
   }
 
@@ -260,16 +260,16 @@ export default class ApiService {
     return response;
   }
 
-
-  static async joinRandomRoom({ session = '' }) {
+  static async joinRandomRoom({}) {
     const url = Api.JOIN_RANDOM_ROOM; //api/room/session/random
-    const response = await ApiService.getURL(METHOD.GET, url, {
-      session: session
-    });
-    console.log(TAG, ' - joinRandomRoom = ', response);
-    return response;
-  }
+    // const response = await ApiService.getURL(METHOD.GET, url, {
+    //   session: session
+    // });
+    const response = await ApiService.getURL(METHOD.GET, url, {});
 
+    console.log(TAG, ' - joinRandomRoom = ', response);
+    return !_.isEmpty(response) ? new Room(response?.room) : null;
+  }
 
   static async makeFriend({ friendId = -1 }) {
     const url = Api.MAKE_FRIEND;
