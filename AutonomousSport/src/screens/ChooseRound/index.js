@@ -36,7 +36,7 @@ class ChooseRoundScreen extends BaseScreen {
     this.props.getUser();
   }
 
-  onPressCreateRoom = async () => {
+  onPressCreateRoom = this.onClickView(async () => {
     try {
       this.setState({
         isLoading:true
@@ -65,7 +65,7 @@ class ChooseRoundScreen extends BaseScreen {
         isLoading:false
       });
     }
-  };
+  });
   
   onPressBack = ()=>{
     this.props.navigation.goBack();
