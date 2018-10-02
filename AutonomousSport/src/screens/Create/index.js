@@ -59,8 +59,6 @@ class CreateRoomScreen extends BaseScreen {
           TAGCHALLENGE,
           roomInfo.toJSON()
         );
-        // this.props.navigation.navigate(TAGCHALLENGE, roomInfo);
-        //this.props.navigation.navigate(TAGCHALLENGE, roomInfo.toJSON());
       }
     } catch (error) {
     } finally {
