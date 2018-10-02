@@ -5,6 +5,7 @@ import * as ConfigReact from 'react-native-config';
 
 export default class Constants {
   static BACK_KEY = 'BACK';
+  static MIN_SIZE_VIDEO = 150;
 }
 
 export class STATE_BLUETOOTH {

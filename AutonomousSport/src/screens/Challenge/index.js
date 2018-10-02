@@ -24,9 +24,10 @@ import _, { debounce } from 'lodash';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
+import Util from '@/utils/Util';
 
 export const TAG = 'ChallengeScreen';
-const heightMap = screenSize.height;
+let heightMap = screenSize.height;
 const colors = ['red','blue','yellow','green'];
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
@@ -34,11 +35,13 @@ class ChallengeScreen extends BaseScreen {
     const room: Room = new Room(props.navigation?.state.params);
     // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
     const { width = 0, height = 1 } = room?.getMapSize()||{};
-    this.ratios = width / height || 1;
-    this.scaleSize = heightMap / height;
+    const sizeMap = Util.calculateMapSize({widthReal:width,heightReal:height});
+    this.ratios = sizeMap.ratios;
+    this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
-    this.widthMap = heightMap * this.ratios;
+    this.widthMap = sizeMap.width;
+    heightMap = sizeMap.height;
     this.state = {
       room: room,
       user: {},
@@ -248,7 +251,7 @@ class ChallengeScreen extends BaseScreen {
       <View style={styles.map}>
         <ImageZoom 
           cropWidth={this.widthMap}
-          cropHeight={heightMap}
+          cropHeight={screenSize.height}
           imageWidth={this.widthMap}
           minScale={1}
           maxScale={2}

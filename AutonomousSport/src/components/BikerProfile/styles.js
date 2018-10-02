@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { screenSize } from '@/utils/TextStyle';
+import Util from '@/utils/Util';
 
 const TAG = 'BikerProfileStyle';
 // let widthMap = 0,
@@ -23,10 +24,15 @@ const TAG = 'BikerProfileStyle';
 // };
 export default class StyleBikeProfile {
   constructor({ width, height }) {
+    const sizeMap = Util.calculateMapSize({
+      widthReal: width,
+      heightReal: height
+    });
     this.widthMap = width;
     this.heightMap = height;
-    this.ratios = this.widthMap / this.heightMap;
-    this.widthVideo = screenSize.width - screenSize.height * this.ratios;
+
+    this.ratios = sizeMap.ratios;
+    this.widthVideo = screenSize.width - sizeMap.width;
     console.log(
       TAG,
       ' setMapInfo = ',
