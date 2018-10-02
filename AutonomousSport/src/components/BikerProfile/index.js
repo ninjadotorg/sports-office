@@ -86,7 +86,7 @@ class OTSubscriberCustom extends OTSubscriber{
           }}
         >
           <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.playerName||'No Name'}</Text>
-          <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.speed||0}km</Text>
+          <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.speed||0}ml</Text>
           <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.goal||0}%</Text>
         </View>
       </View>);
@@ -190,18 +190,17 @@ class BikerProfile extends Component {
     const playerMe = players?.find(item=>item.isMe === true);
     // console.log(TAG, ' render playerMe = ',playerMe );
     return (
-      <ScrollView style={[this.styles.container,{backgroundColor:'red',height:'100%'}]} contentContainerStyle={{flex:1,flexGrow:1}}>  
+      <ScrollView style={[this.styles.container,{height:'100%'}]} contentContainerStyle={{flex:1,flexGrow:1}}>  
           <OTSession
             apiKey={Config.OPENTOK_API_KEY}
             sessionId={
-              this.room?.session ||
-              '1_MX40NjE1NDQyMn5-MTUzNTYyMTA2NzI4Nn5hczBrZzRzYXloQ3E4Z0N0aDZUM0pGNTV-fg'
+              this.room?.session ||''
             }
             token={
               this.room?.token || ''
             }>
               <OTPublisherCustom styles={this.styles} playerMe={playerMe} style={ this.styles.publisher} eventHandlers={this.publisherEventHandlers} />
-            <View style={{flex:1,backgroundColor:'yellow',marginTop:30}}>
+            <View>
               <OTSubscriberCustom styles={this.styles} style={this.styles.subcriber} players={players} />
             </View>
           </OTSession>

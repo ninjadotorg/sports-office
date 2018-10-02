@@ -1,4 +1,6 @@
 import { NavigationActions, StackActions } from 'react-navigation';
+import { screenSize } from '@/utils/TextStyle';
+import Constants from '@/utils/Constants';
 
 const TAG = 'Util';
 export default class Util {
@@ -37,5 +39,24 @@ export default class Util {
       }, ms * 1000);
       promise.then(resolve, reject);
     });
+  };
+
+  static calculateMapSize = ({ widthReal, heightReal }): {} => {
+    let heightMap = screenSize.height;
+    const ratios = widthReal / (heightReal || 1);
+
+    let widthMap = heightMap * ratios;
+
+    if (screenSize.width - widthMap < Constants.MIN_SIZE_VIDEO) {
+      widthMap = screenSize.width - Constants.MIN_SIZE_VIDEO;
+      heightMap = widthMap / ratios;
+    }
+    let scaleSize = heightMap / heightReal;
+    return {
+      width: widthMap,
+      height: heightMap,
+      ratios: ratios,
+      scaleSize: scaleSize
+    };
   };
 }
