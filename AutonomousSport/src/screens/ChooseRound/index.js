@@ -102,7 +102,7 @@ class ChooseRoundScreen extends BaseScreen {
     });
   }
   render() {
-    const {valueRound,mile=0,sumMiles = 0,isLoading = false} = this.state;
+    const {valueRound,sumMiles = 0,isLoading = false} = this.state;
     
     return (
       <View style={styles.container}>

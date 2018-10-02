@@ -60,20 +60,22 @@ class OTSubscriberCustom extends OTSubscriber{
   constructor(props){
     super(props);
     this.state = {
-      players: props.players || [],
       streams:props.streams ||[]
-    }
+    };
   }
-  
-
   render() {
-    const { streams = [],players = []} = this.state;
-    const {styles}  = this.props;
+    const { streams = []} = this.state;
+    
+    const {styles,players = []}  = this.props;
+    // console.log(TAG," render players length  = ",players.length);
     let player = null;
     // const length = streams?.length||0;
     const childrenWithStreams = streams?.map((streamId) => {
        // get player to show info
-       console.log(TAG," render streamId = ",streamId);
+      // player = players.find(item=>{
+      //   console.log(TAG," render streamId = ",streamId , " item = ",item.streamId);
+      //   return item.streamId === streamId;
+      // });
       player = players.find(item=>item.streamId === streamId);
       return (<View key={streamId} style={[styles.subcriber,{flex:1,flexDirection:'column',justifyContent:'flex-end' }]}>
         <View
@@ -86,7 +88,7 @@ class OTSubscriberCustom extends OTSubscriber{
           }}
         >
           <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.playerName||'No Name'}</Text>
-          <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.speed||0}ml</Text>
+          <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(player?.speed||0)}ml/h</Text>
           <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.goal||0}%</Text>
         </View>
       </View>);
@@ -144,27 +146,27 @@ class BikerProfile extends Component {
     return _(x).xorWith(y, _.isEqual).isEmpty();
   };
   
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
-      console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
-      return {
-        user: nextProps.user
-      };
-    }else if(!_.isEqual(nextProps?.players,prevState.players)){
-      console.log(TAG, ' getDerivedStateFromProps - have player');
-      return {
-        players: nextProps.players
-      };
-    }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (JSON.stringify(nextProps?.user) !== JSON.stringify(prevState.user)) {
+  //     console.log(TAG, ' getDerivedStateFromProps - user = ', nextProps?.user);
+  //     return {
+  //       user: nextProps.user
+  //     };
+  //   }else if(!_.isEqual(nextProps?.players,prevState.players)){
+  //     console.log(TAG, ' getDerivedStateFromProps - have player');
+  //     return {
+  //       players: nextProps.players
+  //     };
+  //   }
     // if(!BikerProfile.isArrayEqual(nextProps?.players,prevState.players)){
     //   console.log(TAG, ' getDerivedStateFromProps - have player');
     //   return {
     //     players: nextProps.players
     //   };
     // }
-    console.log(TAG, ' getDerivedStateFromProps - have player',nextProps.players);
-    return null;
-  }
+    // console.log(TAG, ' getDerivedStateFromProps - have player',nextProps.players);
+    // return null;
+  // }
 
   // componentDidUpdate(prevProps, prevState) {
   //   if (JSON.stringify(prevProps?.user) !== JSON.stringify(this.state.user)) {
@@ -172,18 +174,18 @@ class BikerProfile extends Component {
   //   }
   // }
 
-  // componentWillReceiveProps(nextProps){
-    // if(!BikerProfile.isArrayEqual(nextProps?.players,this.state.players)){
-    //   console.log(TAG, ' componentWillReceiveProps - have player');
-    //   this.setState({
-    //     players: nextProps.players
-    //   });
-    // }
-  //   console.log(TAG, ' componentWillReceiveProps - have player = ',nextProps.players);
-  //   this.setState({
-  //     players: nextProps.players
-  //   });
-  // }
+  componentWillReceiveProps(nextProps){
+    if(!BikerProfile.isArrayEqual(nextProps?.players,this.state.players)){
+      console.log(TAG, ' componentWillReceiveProps - have player --- ',nextProps.players );
+      this.setState({
+        players: nextProps.players
+      });
+    }
+    // console.log(TAG, ' componentWillReceiveProps - have player = ',nextProps.players);
+    // this.setState({
+    //   players: nextProps.players
+    // });
+  }
 
   render() {
     const { players = [] } = this.state;

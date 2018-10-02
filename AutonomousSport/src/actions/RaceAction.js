@@ -38,42 +38,61 @@ Where:
  r: Radius, in meter
  RPM: Angular velocity, in RPM (Rounds per Minute)
  */
+const timeHour = 1 / 3600;
+let speed = 0;
 export const connectionBluetoothChange = dispatch => {
   return ({ value, peripheral, characteristic, service }) => {
     if (value && value.length > 4) {
-      const timestamp = Math.floor(Date.now());
+      // const timestamp = Math.floor(Date.now());
 
       const round = value[2] * 255 + value[1];
-      // const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
-      const timeHour = 1 / 3600;
-      const rps = round - (roundPrevious <= 0 ? round : roundPrevious);
-      // const rph = rps * timeHour;
-      // let speed = rph * 0.68 * cycle;
-      // let speed = rph * 0.10472 * cycle;
-      let speed = cycle * 6.28 * 2.2369356 * rps;
-      speed = speed < 0 ? 0 : speed;
+      if (round !== roundPrevious) {
+        // const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
 
-      const distanceRun = speed * timeHour;
-      const kcaloriesBurned = (distanceRun * 1.609344 * weight * 1.036) / 1000;
-      console.log(
-        TAG,
-        ` connectionBluetoothChange round = ${round} for distanceRun = ${distanceRun}`
-      );
-      // calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
-      const data = {
-        speed: speed,
-        distanceStreet: distanceRun,
-        kcal: kcaloriesBurned
-      };
-      roundPrevious = round;
-      timestampPrevious = timestamp;
-      dispatch({
-        type: ACTIONS.CONNECT_BLUETOOTH,
-        payload: {
-          state: STATE_BLUETOOTH.CONNECTED,
-          data: data
-        }
-      });
+        const rps = round - (roundPrevious <= 0 ? round : roundPrevious);
+        // const rph = rps * timeHour;
+        // let speed = rph * 0.68 * cycle;
+        // let speed = rph * 0.10472 * cycle;
+        speed = cycle * 6.28 * 2.2369356 * rps;
+        speed = speed < 0 ? 0 : speed;
+
+        const distanceRun = speed * timeHour;
+        const kcaloriesBurned =
+          (distanceRun * 1.609344 * weight * 1.036) / 1000;
+        console.log(
+          TAG,
+          ` connectionBluetoothChange round = ${round} for distanceRun = ${distanceRun}`
+        );
+        // calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
+        const data = {
+          speed: speed,
+          distanceStreet: distanceRun,
+          kcal: kcaloriesBurned
+        };
+        roundPrevious = round;
+        // timestampPrevious = timestamp;
+
+        dispatch({
+          type: ACTIONS.CONNECT_BLUETOOTH,
+          payload: {
+            state: STATE_BLUETOOTH.CONNECTED,
+            data: data
+          }
+        });
+      } else if (speed != 0) {
+        speed = 0;
+        dispatch({
+          type: ACTIONS.CONNECT_BLUETOOTH,
+          payload: {
+            state: STATE_BLUETOOTH.CONNECTED,
+            data: {
+              speed: 0,
+              distanceStreet: 0,
+              kcal: 0
+            }
+          }
+        });
+      }
     }
   };
 };
