@@ -49,7 +49,7 @@ class OTPublisherCustom extends OTPublisher{
               <View style={styles.parentViewPublishView}>
                 <View style={styles.publisherInfo}>
                   <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.playerName||'No Name'}</Text>
-                  <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(playerMe?.speed||0)}ml/h</Text>
+                  <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(playerMe?.speed||0)}mi/h</Text>
                   <Text style={[TextStyle.normalText,{color:'white'}]}>{playerMe?.goal||0}%</Text>
                 </View>    
               </View>
@@ -88,7 +88,7 @@ class OTSubscriberCustom extends OTSubscriber{
           }}
         >
           <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.playerName||'No Name'}</Text>
-          <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(player?.speed||0)}ml/h</Text>
+          <Text style={[TextStyle.normalText,{color:'white'}]}>{Math.round(player?.speed||0)}mi/h</Text>
           <Text style={[TextStyle.normalText,{color:'white'}]}>{player?.goal||0}%</Text>
         </View>
       </View>);
