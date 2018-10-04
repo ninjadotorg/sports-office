@@ -10,14 +10,14 @@ import { GameLoop } from "react-native-game-engine";
 import BaseScreen from '@/screens/BaseScreen';
 
 import { Button } from 'react-native-elements';
-import styles,{sizeIconRacing,setMapInfo} from './styles';
+import styles,{sizeIconRacing} from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
-import { leftRoom } from '@/actions/RoomAction';
+import { leftRoom,startRacing } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
 import firebase from 'react-native-firebase';
@@ -141,8 +141,8 @@ class ChallengeScreen extends BaseScreen {
         const indexPosition = Math.ceil((this.listPoint.length * goalPercentNumber) / 100);
         currentPositionIndex = indexPosition;
         this.setState({
+          isLoading:false,
           race: race,
-          // currentPositionIndex: indexPosition,
           distanceRun: s,
           kcal: sumKcal
         });
@@ -186,6 +186,7 @@ class ChallengeScreen extends BaseScreen {
         console.log(TAG, ' onListenerChanel ---- ', data);
         
         let index = 0;
+        let isGetReady = false;
         Object.keys(data).forEach(key => {
           const value = data[key];
 
@@ -193,6 +194,7 @@ class ChallengeScreen extends BaseScreen {
           if (!_.isEmpty(value)) {
             value['fbuid'] = key;
             value['isMe'] = key === user?.fbuid;
+            isGetReady = value["status"] === 2 || isGetReady;            
             const player = new Player(value);
             playersColor[key] = colors[index];
             arr.push(player);
@@ -201,6 +203,7 @@ class ChallengeScreen extends BaseScreen {
         });
 
         this.setState({
+          isReady:isGetReady||this.state.isReady,
           players: arr,
           playersColor:playersColor
         });
@@ -277,7 +280,7 @@ class ChallengeScreen extends BaseScreen {
 
   };
   renderMap = () => {
-    const { room, isReady, playersMarker=[]} = this.state;
+    const { user, room, isReady, playersMarker=[],isLoading = false} = this.state;
     const uriPhoto =  { uri: room?.photo || '' } || images.map;
     
     return (
@@ -301,8 +304,9 @@ class ChallengeScreen extends BaseScreen {
         </ImageZoom>
         
 
-        {isReady ? null : (
+        {isReady || user?.id!== room.userId ? null : (
           <Button
+            loading={isLoading}
             containerViewStyle={{
               position: 'absolute',
               width: 300,
@@ -338,8 +342,13 @@ class ChallengeScreen extends BaseScreen {
     });
   };
 
-  onPressReady = this.onClickView(() => {
-    this.setState({ isReady: true });
+  onPressReady = this.onClickView(async () => {
+    const {room} = this.state;
+    if(room &&room.session){
+      this.setState({ isLoading: true });
+      await this.props.startRacing({session:room.session});
+      this.setState({ isLoading: false });
+    }
   });
 
   componentWillUnmount() {
@@ -383,6 +392,7 @@ export default connect(
   state => ({
     user: state.user?.userInfo,
     closeRoom: state.room?.closeRoom,
+    isReady: state.room?.isReady,
     race: state.race
   }),
   {
@@ -390,6 +400,7 @@ export default connect(
     updateRacing,
     connectAndPrepare,
     leftRoom,
+    startRacing,
     disconnectBluetooth
   }
 )(ChallengeScreen);
