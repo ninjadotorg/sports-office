@@ -3,15 +3,18 @@ import _ from 'lodash';
 import LocalDatabase from '@/utils/LocalDatabase';
 
 const TAG = 'RoomReducer';
-const initialState = { mapList: [], roomList: [], leftRoom: {}, joinRoom: {} };
+const initialState = {
+  mapList: [],
+  roomList: [],
+  leftRoom: {},
+  joinRoom: {},
+  isReady: false
+};
 const RoomReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.GET_ALL_MAP: {
       const payload = action.payload || {};
       console.log(TAG, ' RoomReducer-GET_ALL_MAP payload = ', payload);
-      // if(!_.isEmpty(payload)){
-
-      // }
       return { ...state, mapList: payload };
     }
     case ACTIONS.GET_ALL_ROOM: {
@@ -26,6 +29,11 @@ const RoomReducer = (state = initialState, action) => {
     case ACTIONS.JOIN_ROOM: {
       const payload = action.payload || {};
       return { ...state, joinRoom: payload };
+    }
+    case ACTIONS.START_RACING: {
+      const payload = action.payload || {};
+      const status = payload?.status || 0;
+      return { ...state, isReady: String(status) === '2' };
     }
     // case ACTIONS.MAKE_FRIEND: {
     //   const payload = action.payload || {};
