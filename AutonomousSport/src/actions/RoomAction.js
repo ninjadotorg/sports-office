@@ -10,7 +10,8 @@ export const ACTIONS = {
   GET_ALL_MAP: 'GET_ALL_MAP',
   GET_ALL_ROOM: 'GET_ALL_ROOM',
   LEFT_ROOM: 'LEFT_ROOM',
-  JOIN_ROOM: 'JOIN_ROOM'
+  JOIN_ROOM: 'JOIN_ROOM',
+  START_RACING: 'START_RACING'
 };
 
 export const fetchMap = ({ offset = 0, limit = 12 }) => async dispatch => {
@@ -90,19 +91,18 @@ export const joinRoom = ({ session = '' }) => async dispatch => {
 
   dispatch({ type: ACTIONS.JOIN_ROOM, payload: {} });
 };
-// export const makeFriend = ({ friendId }) => async dispatch => {
-//   try {
-//     let response =
-//       (await ApiService.makeFriend({
-//         friendId
-//       })) || {};
-//     response['id'] = friendId;
-//     console.log(TAG, ' - makeFriend - response ', response);
-//     dispatch({ type: ACTIONS.MAKE_FRIEND, payload: response });
-//     return;
-//   } catch (e) {
-//     console.log(TAG, ' - makeFriend - error ', e);
-//   }
+export const startRacing = ({ session }) => async dispatch => {
+  try {
+    let response: Room =
+      (await ApiService.startRacing({
+        session
+      })) || undefined;
 
-//   dispatch({ type: ACTIONS.MAKE_FRIEND, payload: {} });
-// };
+    dispatch({ type: ACTIONS.START_RACING, payload: response?.toJSON() || {} });
+    return;
+  } catch (e) {
+    console.log(TAG, ' - startRacing - error ', e);
+  }
+
+  dispatch({ type: ACTIONS.START_RACING, payload: {} });
+};
