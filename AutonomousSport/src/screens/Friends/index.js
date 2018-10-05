@@ -17,6 +17,9 @@ import images, { icons } from '@/assets';
 import { moderateScale, scale } from 'react-native-size-matters';
 import ViewUtil from '@/utils/ViewUtil';
 import ItemFriend from '@/components/ItemFriend';
+
+import { TAG as CHALLENGENAME } from '@/screens/ChallengeName';
+
 import { fetchAllUser,fetchAllFriend } from '@/actions/FriendAction';
 import {connect} from 'react-redux';
 import _ from 'lodash';
@@ -25,6 +28,10 @@ import Util from '@/utils/Util';
 const limitRow = 24;
 export const TAG = 'FriendsScreen';
 const buttons = ['Your Friends', 'All The World'];
+const ivitesbuttons = ['Skip', 'Next'];
+
+
+
 class FriendsScreen extends BaseScreen {
   static navigationOptions = navigation => {
     return {
@@ -34,14 +41,21 @@ class FriendsScreen extends BaseScreen {
   constructor(props) {
     super(props);
     
+    const roomInfo = this.props.navigation.getParam('roomInfo') || null ; // JSON.parse( this.props.navigation.getParam('roomInfo')||"" );
+    console.log(TAG, "inviteMode",roomInfo);
+
     this.state = {
       selectedIndex: 0,
+      selectedNextIndex:1,
       offset:0,
       limit:limitRow,
       friends:{},
       isLoading:false,
       listFriends:[],
+      listFriendsIvite:[],
       search:'',
+      inviteMode: roomInfo == null ? false : true,
+      roomInfo:roomInfo,
     };
 
      
@@ -74,6 +88,7 @@ class FriendsScreen extends BaseScreen {
   componentWillReceiveProps(nextProps){
     const {friends,listFriends = []} = this.state;
     console.log(TAG,' componentWillReceiveProps begin = ');
+    
     if(!_.isEqualWith(nextProps?.friends,friends)){
       console.log(TAG,' componentWillReceiveProps01 = length ',listFriends.length);
       const listNew =  nextProps?.friends?.list||[];
@@ -111,6 +126,26 @@ class FriendsScreen extends BaseScreen {
       });
     }
   };
+
+  updateNextIndex = selectedNextIndexItem => {
+
+    let {selectedNextIndex,offset,limit} = this.state;
+    if(selectedNextIndexItem !== selectedNextIndex){
+      this.setState({ 
+        selectedNextIndex:selectedNextIndexItem,
+       });
+    }
+
+    if(selectedNextIndexItem == 1){
+
+      this.replaceScreen(this.props.navigation,CHALLENGENAME, {"roomInfo":this.state.roomInfo});
+
+    }
+
+
+
+  };
+
 
   handleQueryChange = search =>{
     
@@ -208,11 +243,36 @@ class FriendsScreen extends BaseScreen {
     );
   };
 
+  getIdInviteFriend=(friendId)=>{
+     console.log("select friendId",friendId);
+  }
+ 
+
   renderItem = ({item,index}) => {
     // console.log(TAG,' renderItem = ',item);
-    return <ItemFriend key={String(index)} dataItem={item} />;
+    return <ItemFriend key={String(index)} dataItem={item} inviteMode={this.state.inviteMode} selectIdfn={this.getIdInviteFriend}/>;
   };
 
+
+  renderbottomButton= () =>{
+
+    const { selectedNextIndex , inviteMode} = this.state;
+    return (
+      <ButtonGroup
+        onPress={this.updateNextIndex}
+        selectedIndex={selectedNextIndex}
+        buttons={ivitesbuttons}
+        textStyle={[TextStyle.normalText, styles.textStyleButton]}
+        selectedTextStyle={[
+          TextStyle.normalText,
+          styles.selectedTextStyleButton
+        ]}
+        selectedButtonStyle={styles.selectedButtonStyle}
+        containerStyle={styles.buttonGroup}
+      /> 
+    );
+
+  }
   renderTabButton = () => {
     // const buttons = [{ element: component1 }, { element: component2 }];
     
@@ -233,12 +293,13 @@ class FriendsScreen extends BaseScreen {
     );
   };
   render() {
-    const {listFriends,isLoading} = this.state;
+    const {listFriends,isLoading, inviteMode} = this.state;
     return (
       <ImageBackground style={styles.container}>
         <Header backgroundColor="transparent">
           {this.renderLeftHeader()}
         </Header>
+
         <View style={styles.containerTop}>
           {this.renderTabButton()}
         </View>
@@ -251,8 +312,12 @@ class FriendsScreen extends BaseScreen {
           data={listFriends}
           onEndReachedThreshold={0.5}
           onEndReached={this.onLoadMore}
-          renderItem={this.renderItem}
-        />
+          renderItem={ this.renderItem  }
+        /> 
+        {inviteMode ? 
+          <View style={styles.containerTop}>
+            {this.renderbottomButton()}
+          </View> : null}
         
       </ImageBackground>
     );

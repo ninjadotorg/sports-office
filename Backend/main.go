@@ -287,12 +287,15 @@ func main() {
 	//userapi.GET("/room/session/create", ctl.CreateSession)
 	userapi.POST("/room/session/create", ctl.CreateSession) 
 	userapi.POST("/room/session/action", ctl.ActionSession)
+	userapi.POST("/room/session/finish", ctl.ActionFinish)
 	userapi.GET("/room/session/random", ctl.RandomJoinRoom)
 
 	userapi.POST("/room/session/create-token", ctl.CreateToken)
 	userapi.POST("/room/session/leave", ctl.LeaveRoom)
 	userapi.POST("/room/session/close", ctl.CloseSession)
 	
+	userapi.POST("/room/session/update", ctl.ActionUpdateRoom)
+
 	//InvitePlayer
 	userapi.POST("/room/session/invite", ctl.InvitePlayer)
 
@@ -350,7 +353,7 @@ func main() {
 	go manager.start() 
 	g.GET("/ws", socketHandlerCenter) 
 
-	e.Start(":8082")
+	e.Start(":8081")
 }
 
 //https://github.com/smallnest/C1000K-Servers

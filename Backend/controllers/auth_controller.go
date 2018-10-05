@@ -4,7 +4,7 @@ import (
 	"time"
 	"fmt"
 	//"math/rand"
-	//"strings"
+	"strings"
 	"log" 
 	"strconv"
 	"../models"
@@ -172,7 +172,9 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	//secretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
 	user := new(models.User)  
 	user.Email = c.FormValue("email")
-	user.Fullname = c.FormValue("fullname")
+	user.Fullname = c.FormValue("fullname") 
+
+	
 	//user.Password, _ = models.HashPassword(c.FormValue("password"))  
 	user.FetchByUsername(basectl.Dao)
 	 
@@ -182,6 +184,11 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		user = new(models.User)  
 		user.Email = c.FormValue("email")
 		user.Password, _ = models.HashPassword(c.FormValue("password"))  
+
+		detectUsername := strings.Split(user.Email, "@")
+		if c.FormValue("fullname") == ""{
+			user.Fullname =  detectUsername[0]  
+		}
 
 		user.Create(basectl.Dao) 
 	}else{
@@ -382,17 +389,72 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
  
 }
 
+//ActionUpdateRoom
+func (basectl *BaseController)ActionUpdateRoom(c echo.Context) error{
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64)) 
+ 
+	var room models.Room
+	//room := new(models.Room) 
+	basectl.Dao.Where(&models.Room{Session: c.FormValue("session")  }).Set("gorm:auto_preload", true).First(&room) 
+
+	if userid != room.UserId {
+
+		var f interface{}
+		f = map[string]interface{}{ 
+			"message": "You dont have permission to do it.",
+			"status" : 0,
+			"room":nil, 
+		}
+		return c.JSON(http.StatusOK,f) 
+
+	}
+	room.Name = c.FormValue("name")
+ 	basectl.Dao.Save(&room)     
+	
+	var fbData, _ = basectl.FbApp.Database(context.Background())
+	var refDB = fbData.NewRef("games")  
+
+	hopperRef := refDB.Child("race-rooms/"+ room.Session)
+	if err := hopperRef.Update(context.Background(), map[string]interface{}{
+			"Name": room.Name,
+	}); err != nil {
+			log.Fatalln("Error updating child:", err)
+	}
+ 
+	
+	var f interface{}
+	f = map[string]interface{}{ 
+		"room": room,
+	}
+	return c.JSON(http.StatusOK,f) 
+
+}
 
 //ActionSession START / FINISH
 func (basectl *BaseController)ActionSession(c echo.Context) error{
 
-	//ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET)  
-	// update session vao database la status = 2.
-	// update firebase status room : 2.
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64)) 
+	fbuid := claims["fbuid"].(string) 
 
 	var room models.Room
 	//room := new(models.Room) 
 	basectl.Dao.Where(&models.Room{Session: c.FormValue("session")  }).Set("gorm:auto_preload", true).First(&room) 
+	if userid != room.UserId {
+
+		var f interface{}
+		f = map[string]interface{}{ 
+			"message": "You dont have permission to do it.",
+			"status" : 0,
+			"room":nil, 
+		}
+		return c.JSON(http.StatusOK,f) 
+
+	}
 	room.Status = 2 // RACING STARTED
  	basectl.Dao.Save(&room)     
 	
@@ -406,7 +468,16 @@ func (basectl *BaseController)ActionSession(c echo.Context) error{
 			log.Fatalln("Error updating child:", err)
 	}
 
-	 
+
+	//write first player user. 
+	userUpdater := refDB.Child("race-rooms/"+ room.Session +"/players/"+ fbuid) 
+
+	if err := userUpdater.Update(context.Background(), map[string]interface{}{
+			"status": 2,
+	}); err != nil {
+			log.Fatalln("Error updating child:", err)
+	} 
+	
 	var f interface{}
 	f = map[string]interface{}{ 
 		"room": room,
@@ -414,6 +485,48 @@ func (basectl *BaseController)ActionSession(c echo.Context) error{
 	return c.JSON(http.StatusOK,f) 
 
 }
+
+//ActionSession  FINISH
+func (basectl *BaseController)ActionFinish(c echo.Context) error{
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)   
+	fbuid := claims["fbuid"].(string) 
+
+	var room models.Room
+	//room := new(models.Room) 
+	basectl.Dao.Where(&models.Room{Session: c.FormValue("session")  }).Set("gorm:auto_preload", true).First(&room) 
+	room.Status = 3 // RACING FINISHED
+	 basectl.Dao.Save(&room)      
+	 
+	var fbData, _ = basectl.FbApp.Database(context.Background())
+	var refDB = fbData.NewRef("games")  
+
+	hopperRef := refDB.Child("race-rooms/"+ room.Session)
+	if err := hopperRef.Update(context.Background(), map[string]interface{}{
+			"status": 3,
+	}); err != nil {
+			log.Fatalln("Error updating child:", err)
+	}
+
+
+	//write first player user. 
+	userUpdater := refDB.Child("race-rooms/"+ room.Session +"/players/"+ fbuid) 
+
+	if err := userUpdater.Update(context.Background(), map[string]interface{}{
+			"status": 3,
+	}); err != nil {
+			log.Fatalln("Error updating child:", err)
+	} 
+	
+	var f interface{}
+	f = map[string]interface{}{ 
+		"room": room,
+	}
+	return c.JSON(http.StatusOK,f) 
+
+}
+
 
 //Action random join room.
 func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
@@ -440,7 +553,7 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 
 	var randRoom models.Room 
 
-	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < 4 ORDER BY RAND() LIMIT 1").Scan(&randRoom)
+	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY RAND() LIMIT 1").Scan(&randRoom)
 	 
 	if randRoom.Session == "" {
 		
@@ -516,6 +629,10 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 // CloseSession
 func (basectl *BaseController)CloseSession(c echo.Context) error{
 
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)    
+	userid := int(claims["id"].(float64)) 
+
 	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET) 
 	
 	archive, _ := ot.ArchiveStart(c.FormValue("session"), nil)
@@ -524,17 +641,27 @@ func (basectl *BaseController)CloseSession(c echo.Context) error{
 		ot.ArchiveStop(archive.ID)  
 	}  
 	var room models.Room
+	var f interface{}
 	//room := new(models.Room) 
 	basectl.Dao.Where(&models.Room{Session: c.FormValue("session")  }).First(&room) 
-	room.Status =0
-	basectl.Dao.Save(&room)     
-	fmt.Println("data room: ",room)  
-	var f interface{}
+	if room.UserId == userid {
+		room.Status =0
+		basectl.Dao.Save(&room)     
+		fmt.Println("data room: ",room)  
+		
+		f = map[string]interface{}{ 
+			"status":1,
+			"archive": room.ID,
+		}
+		return c.JSON(http.StatusOK,f) 
+
+	} 
 	f = map[string]interface{}{ 
-		"archive": room.ID,
+		"status":0,
+		"message":"You dont have permission to close this room.",
 	}
 	return c.JSON(http.StatusOK,f) 
- 
+	 
 }
 
 //generation opentokcode. 
@@ -565,7 +692,7 @@ func (basectl *BaseController)CreateToken(c echo.Context) error{
 	room.Session = c.FormValue("session")
 	basectl.Dao.Where(&models.Room{Session: room.Session  }).Set("gorm:auto_preload", true).First(&room) 
 
-	if room.ID <=0 || room.Status !=1 || len(room.RoomPlayers) ==4 {
+	if room.ID <=0 || room.Status !=1 || len(room.RoomPlayers) >= config.MAX_PLAYER_IN_ROOM_INT {
 		f21 = map[string]interface{}{ 
 			"status" : 0,
 			"message": "This room not found.",
@@ -763,13 +890,13 @@ func (basectl *BaseController)LeaveRoom(c echo.Context) error{
 	} 
 	//write first player user. 
 	var fbData, _ = basectl.FbApp.Database(context.Background())
-	var refDB = fbData.NewRef("games") 
+	var refDB = fbData.NewRef("games")///race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid) 
 	//log.Print("%+v" , refDB) 
-	if err3 := refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid).Set(context.Background(),
-		&models.FbRoomPlayer{
-			Status:player.Status,
-		}); err3 != nil {
-		log.Fatalln("Error setting value:", err3)
+	//var adaRef = refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid)
+	//fbData.remove()
+
+	if err3 := refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid).Set(context.Background(), nil); err3 != nil {
+		log.Fatalln("Error setting value:", err3) 
 	}  
 
 	f21 = map[string]interface{}{  

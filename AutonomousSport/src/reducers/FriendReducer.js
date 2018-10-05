@@ -2,7 +2,7 @@ import { ACTIONS } from '@/actions/FriendAction';
 import _ from 'lodash';
 
 const TAG = 'FriendReducer';
-const initialState = { friendList: {} };
+const initialState = { friendList: {}, invitedlist:[] };
 const FriendReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.GET_ALL_FRIEND:
@@ -10,6 +10,26 @@ const FriendReducer = (state = initialState, action) => {
       const payload = action.payload || {};
 
       console.log(TAG, ' FriendReducer-GET_ALL_USER payload = ', payload);
+
+      let list = _.cloneDeep(state.invitedlist); //invitedlist.push({ "id" : list[index].id });
+      //let list = friendList? || []; 
+      console.log(TAG, ' FriendReducer-GET_ALL_USER list = ', list); 
+
+      if (!_.isEmpty(payload.list) &&  !_.isEmpty(list)) {          
+        payload.list.forEach(function(element, index, array) { 
+          const index2 = list.findIndex(item => item.id === element.id);
+          //array[index]['is_add_invited'] = list[index2]['is_add_invited']
+          //list[index]['is_add_invited'] 
+          //console.log(TAG, ' FriendReducer-GET_ALL_USER element = ', element);
+          if(index2 >=0)
+            array[index]['is_add_invited'] =  true;//list[index2]['is_add_invited'];
+
+        }); 
+
+        console.log(TAG, ' FriendReducer-GET_ALL_USER payload.list = ', payload.list);
+
+      }
+
       return { ...state, friendList: payload };
     }
     case ACTIONS.MAKE_FRIEND: {
@@ -26,7 +46,7 @@ const FriendReducer = (state = initialState, action) => {
         if (id && !_.isEmpty(list)) {
           const index = list.findIndex(item => item.id === id);
           if (index >= 0) {
-            list[index]['is_maked_friend'] = true;
+            list[index]['is_maked_friend'] = true; 
           }
           // console.log(
           //   TAG,
@@ -41,6 +61,46 @@ const FriendReducer = (state = initialState, action) => {
       console.log(TAG, ' FriendReducer-MAKE_FRIEND payload = ', payload);
       return state;
     }
+
+    case ACTIONS.MAKE_INVITE: {
+      const payload = action.payload || {};
+
+      // if (!_.isEmpty(payload) && String(payload?.success) === '1') {
+      //   console.log(
+      //     TAG,
+      //     ' FriendReducer-MAKE_INVITE success payload = ',
+      //     payload
+      //   );
+        
+        const { id , invited} = payload;
+        let friendList = _.cloneDeep(state.friendList);
+        let invitedlist = _.cloneDeep(state.invitedlist);
+ 
+        let list = friendList?.list || [];
+        if (id && !_.isEmpty(list)) {
+          const index = list.findIndex(item => item.id === id);
+          const index2 = invitedlist.findIndex(item => item.id === id);
+          if (index >= 0) {
+            list[index]['is_add_invited'] = true;
+            if(index2 < 0){ 
+              invitedlist.push({ "id" : list[index].id });
+            }
+            if( index2 >=0 && invited ){
+              invitedlist.splice(index2, 1); 
+              list[index]['is_add_invited'] = false;
+            }
+            
+          } 
+
+          console.log(TAG,  ' FriendReducer-MAKE_INVITE success payload = ',friendList);
+          return { ...state, friendList: friendList, invitedlist:invitedlist };
+        }
+
+     // }
+      console.log(TAG, ' FriendReducer-MAKE_INVITE payload = ', payload);
+      return state;
+    }
+
 
     default:
       return state;
