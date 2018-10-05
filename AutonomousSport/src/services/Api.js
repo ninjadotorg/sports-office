@@ -17,7 +17,6 @@ export default class Api {
   static MAKE_FRIEND = `${Config.API_URL}/api/friend/add`;
   static JOIN_RANDOM_ROOM = `${Config.API_URL}/api/room/session/random`; 
   static ROOM_INVITE = `${Config.API_URL}/api/room/session/invite`; 
-  static ROOM_UPDATE_NAME = `${Config.API_URL}/api/room/session/update`; 
-
- 
+  static ROOM_UPDATE_NAME = `${Config.API_URL}/api/room/session/update`;  
+  static START_RACING = `${Config.API_URL}/api/room/session/action`; 
 }

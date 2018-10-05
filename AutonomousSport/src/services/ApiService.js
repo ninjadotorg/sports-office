@@ -251,7 +251,7 @@ export default class ApiService {
     return response || {};
   }
 
-  static async joinRoom({ session = '' }) {
+  static async joinRoom({ session = '' }): {} {
     const url = Api.JOIN_ROOM;
     const response = await ApiService.getURL(METHOD.POST, url, {
       session: session
@@ -260,8 +260,8 @@ export default class ApiService {
     return response;
   }
 
-  static async joinRandomRoom({}) {
-    const url = Api.JOIN_RANDOM_ROOM; //api/room/session/random
+  static async joinRandomRoom({}): Room {
+    const url = Api.JOIN_RANDOM_ROOM;
     // const response = await ApiService.getURL(METHOD.GET, url, {
     //   session: session
     // });
@@ -271,8 +271,28 @@ export default class ApiService {
     return !_.isEmpty(response) ? new Room(response?.room) : null;
   }
 
-  
- //ROOM_INVITE
+  static async startRacing({ session }): Room {
+    const url = Api.START_RACING;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      session: session
+    });
+
+    console.log(TAG, ' - startRacing = ', response);
+    return !_.isEmpty(response) && !_.isEmpty(response?.room)
+      ? new Room(response?.room)
+      : null;
+  }
+
+  static async makeFriend({ friendId = -1 }) {
+    const url = Api.MAKE_FRIEND;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      friendId: friendId
+    });
+    console.log(TAG, ' - makeFriend = ', response);
+    return response;
+  }
+
+  //ROOM_INVITE
   static async sendInviteRoom({ userid = -1 , session ="" }) {
     const url = Api.ROOM_INVITE;
     const response = await ApiService.getURL(METHOD.POST, url, {
@@ -291,15 +311,6 @@ export default class ApiService {
       session:session
     });
     console.log(TAG, ' - onPressInviteChangeName = ', response);
-    return response;
-  }
-
-  static async makeFriend({ friendId = -1 }) {
-    const url = Api.MAKE_FRIEND;
-    const response = await ApiService.getURL(METHOD.POST, url, {
-      friendId: friendId
-    });
-    console.log(TAG, ' - makeFriend = ', response);
     return response;
   }
 
