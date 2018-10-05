@@ -7,7 +7,8 @@ const TAG = 'FriendAction';
 export const ACTIONS = {
   GET_ALL_USER: 'GET_ALL_USER',
   GET_ALL_FRIEND: 'GET_ALL_FRIEND',
-  MAKE_FRIEND: 'MAKE_FRIEND'
+  MAKE_FRIEND: 'MAKE_FRIEND',
+  MAKE_INVITE:'MAKE_INVITE',
 };
 
 export const fetchAllUser = ({ offset = 0, limit = 12, search='' }) => async dispatch => {
@@ -74,3 +75,19 @@ export const makeFriend = ({ friendId }) => async dispatch => {
 
   dispatch({ type: ACTIONS.MAKE_FRIEND, payload: {} });
 };
+
+
+export const makeInvited = ({ friendId, invited }) => async dispatch => {
+  try {
+    if (friendId > 0) { 
+      var response = {"invited":invited, "id":friendId}; 
+      dispatch({ type: ACTIONS.MAKE_INVITE, payload: response });
+      return;
+    }
+  } catch (e) {
+    console.log(TAG, ' - makInvite - error ', e);
+  }
+
+  dispatch({ type: ACTIONS.MAKE_INVITE, payload: {} });
+};
+
