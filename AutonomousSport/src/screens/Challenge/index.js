@@ -3,11 +3,12 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
+  ScrollView,
   ImageBackground
 } from 'react-native';
 import { GameLoop } from "react-native-game-engine";
 import BaseScreen from '@/screens/BaseScreen';
+import PopupDialog from 'react-native-popup-dialog';
 
 import { Button } from 'react-native-elements';
 import styles,{sizeIconRacing} from './styles';
@@ -60,6 +61,7 @@ class ChallengeScreen extends BaseScreen {
       distanceRun: 0,
       kcal: 0,
       isLoading: false,
+      isFinished: false,
       isReady: false
     };
     
@@ -187,6 +189,7 @@ class ChallengeScreen extends BaseScreen {
         
         let index = 0;
         let isGetReady = false;
+        let isFinished = false;
         Object.keys(data).forEach(key => {
           const value = data[key];
 
@@ -198,15 +201,21 @@ class ChallengeScreen extends BaseScreen {
             const player = new Player(value);
             playersColor[key] = colors[index];
             arr.push(player);
+            isFinished = player.goal>=100 || isFinished;
             index++;
+
           }
         });
 
         this.setState({
+          isFinished:isFinished,
           isReady:isGetReady||this.state.isReady,
           players: arr,
           playersColor:playersColor
         });
+        if(isFinished){
+          this.finishedRacing();
+        }
       });
     }
   };
@@ -279,6 +288,100 @@ class ChallengeScreen extends BaseScreen {
     }
 
   };
+  finishedRacing = ()=>{
+   
+    this.roomDataPrefference?.off('value');
+    // call api finish
+
+    // show dialog
+    this.popupDialog.show();
+  }
+
+  renderDashBoardAchivement = () => {
+    // const players = [
+    //   { playerName: 'HienTon', goal: 27 },
+    //   { playerName: 'HIEn', goal: 27 },
+    //   { playerName: 'HTOn', goal: 27 },
+    //   { playerName: 'HTOn', goal: 22 },
+    //   { playerName: 'HTon', goal: 25 }
+    // ];
+
+    const {players=[]} = this.state;
+    // sort list player
+    return (
+      <ImageBackground
+        width="100%"
+        height="100%"
+        style={{ width: '100%', height: '100%', flex: 1 }}
+        resizeMode="stretch"
+        source={images.back_score}
+      >
+        <View style={{ flex: 1, paddingVertical: 10, paddingHorizontal: 20 }}>
+          <Text
+            style={[
+              TextStyle.mediumText,
+              {
+                textAlign: 'center',
+                color: 'white',
+                fontWeight: "600",
+                textAlignVertical: 'center'
+              }
+            ]}
+          >
+            You are all finished!
+          </Text>
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <View style={{ flex: 1 }}>
+              {players.sort((a,b)=>a.goal>b.goal).map(player => {
+                return (
+                  <View style={{ flexDirection: 'row', marginVertical: 2 }}>
+                    <Image source={images.ic_gold} />
+                    <View style={{ justifyContent: 'center', marginLeft: 10 }}>
+                      <Text
+                        style={[
+                          TextStyle.mediumText,
+                          {
+                            color: 'white',
+                            textAlignVertical: 'center'
+                          }
+                        ]}
+                      >
+                        {player.playerName || 'No Name'}
+                      </Text>
+                      <Text
+                        style={[
+                          TextStyle.normalText,
+                          { color: 'white', textAlignVertical: 'center' }
+                        ]}
+                      >
+                        {Number(player.goal) >= 100
+                          ? 'To Finish'
+                          : Number(player.goal)}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </ScrollView>
+          <Button
+            title="OK"
+            onPress={this.onPressFinish}
+            buttonStyle={[styles.button, { backgroundColor: '#02BB4F',width:'30%',alignSelf:'center' }]}
+            textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+          />
+        </View>
+      </ImageBackground>
+    );
+  };
+
+  onPressFinish = this.onClickView(()=>{
+    this.replaceScreen(this.props.navigation,TAGHOME);
+  });
+
   renderMap = () => {
     const { user, room, isReady, playersMarker=[],isLoading = false} = this.state;
     const uriPhoto =  { uri: room?.photo || '' } || images.map;
@@ -380,6 +483,14 @@ class ChallengeScreen extends BaseScreen {
             left: 10
           }
         })}
+        <PopupDialog
+          width="70%"
+          height="90%"
+          hasOverlay
+          dismissOnTouchOutside={false}
+          ref={(popupDialog) => { this.popupDialog = popupDialog; }}>
+          {this.renderDashBoardAchivement()}  
+        </PopupDialog>
       </View>
     );
   }
