@@ -3,7 +3,7 @@ export default class Room {
   constructor(roomJson) {
     console.log(TAG, ' constructor roomJson = ', roomJson);
     this.id = roomJson?.id || -1;
-    this.userId = roomJson?.userId || 0;
+    this.userId = roomJson?.userId || 0; // is mentor
     this.createdAt = roomJson?.createdAt || '';
     this.updatedAt = roomJson?.updatedAt || '';
     this.deletedAt = roomJson?.deletedAt || null;

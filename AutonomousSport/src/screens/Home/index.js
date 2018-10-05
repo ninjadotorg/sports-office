@@ -235,9 +235,9 @@ class HomeScreen extends BaseScreen {
               { color: 'white', fontWeight: 'bold' }
             ]}
           >
-            {Math.round(speed)}
+            {Math.ceil(speed)}
           </Text>
-          <Text style={[TextStyle.mediumText, { color: 'white' }]}>mp/h</Text>
+          <Text style={[TextStyle.mediumText, { color: 'white' }]}>mi/h</Text>
         </View>
         <View style={styles.containerBottom}>
           <Button

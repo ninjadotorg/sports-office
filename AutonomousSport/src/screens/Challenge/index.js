@@ -6,17 +6,18 @@ import {
   TouchableOpacity,
   ImageBackground
 } from 'react-native';
+import { GameLoop } from "react-native-game-engine";
 import BaseScreen from '@/screens/BaseScreen';
 
 import { Button } from 'react-native-elements';
-import styles,{sizeIconRacing,setMapInfo} from './styles';
+import styles,{sizeIconRacing} from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
-import { leftRoom } from '@/actions/RoomAction';
+import { leftRoom,startRacing } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
 import firebase from 'react-native-firebase';
@@ -29,6 +30,9 @@ import Util from '@/utils/Util';
 export const TAG = 'ChallengeScreen';
 let heightMap = screenSize.height;
 const colors = ['red','blue','yellow','green'];
+let lastIndexPosition = 0;
+let currentPositionIndex = 0;
+let listLastIndexPosition = {};
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -51,7 +55,7 @@ class ChallengeScreen extends BaseScreen {
       },
       playersColor:{},
       players:[],
-      currentPositionIndex: 0,
+      playersMarker:[],
       race: {},
       distanceRun: 0,
       kcal: 0,
@@ -79,7 +83,7 @@ class ChallengeScreen extends BaseScreen {
     let x,y = 0;
     try {
       const pointStart: [] = this.listPoint[currentPositionIndex];
-      console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
+      // console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
       x = (Number(pointStart[0])) * this.scaleSize -sizeIconRacing.width;
       y = (Number(pointStart[1])) * this.scaleSize -sizeIconRacing.height;
     } catch (error) {
@@ -99,7 +103,6 @@ class ChallengeScreen extends BaseScreen {
       room = {},
       pos,
       isReady,
-      currentPositionIndex,
       kcal = 0
     } = this.state;
 
@@ -131,21 +134,17 @@ class ChallengeScreen extends BaseScreen {
         const s = distanceRun + (data.distanceStreet || 0);
         const sumKcal = kcal + (data.kcal || 0);
         // caculate goal
-        const goal = Math.round((s * 100) / room?.miles) || 0;
+        const goalPercentNumber = (s * 100 / room?.miles) || 0;
+        const goal = Math.ceil(goalPercentNumber) || 0;
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
 
-        const indexPosition = Math.floor((this.listPoint.length * goal) / 100);
-
-        const nextPoint = this.getCurrentPoint(indexPosition);
+        const indexPosition = Math.ceil((this.listPoint.length * goalPercentNumber) / 100);
+        currentPositionIndex = indexPosition;
         this.setState({
+          isLoading:false,
           race: race,
-          currentPositionIndex: indexPosition,
           distanceRun: s,
-          kcal: sumKcal,
-          pos: {
-            x: nextPoint.x,
-            y: nextPoint.y
-          }
+          kcal: sumKcal
         });
 
         console.log(
@@ -176,7 +175,7 @@ class ChallengeScreen extends BaseScreen {
 
   onListenerChanel = () => {
     const { user } = this.state;
-    console.log(TAG, ' onListenerChanel = ', user?.fbuid);
+    // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
     
     if (!_.isEmpty(user)) {
       
@@ -187,13 +186,15 @@ class ChallengeScreen extends BaseScreen {
         console.log(TAG, ' onListenerChanel ---- ', data);
         
         let index = 0;
+        let isGetReady = false;
         Object.keys(data).forEach(key => {
           const value = data[key];
 
-          console.log(TAG, ' updateDataFromOtherPlayer -', value);
+          // console.log(TAG, ' updateDataFromOtherPlayer -', value);
           if (!_.isEmpty(value)) {
             value['fbuid'] = key;
             value['isMe'] = key === user?.fbuid;
+            isGetReady = value["status"] === 2 || isGetReady;            
             const player = new Player(value);
             playersColor[key] = colors[index];
             arr.push(player);
@@ -202,6 +203,7 @@ class ChallengeScreen extends BaseScreen {
         });
 
         this.setState({
+          isReady:isGetReady||this.state.isReady,
           players: arr,
           playersColor:playersColor
         });
@@ -209,46 +211,80 @@ class ChallengeScreen extends BaseScreen {
     }
   };
 
-  renderPlayersMarker = ()=>{
-    const {players = [],playersColor = {}} = this.state;
-    let indexPosition;
-    let pos = {};
-    const markers =  players.map(player => {
-      if (!_.isEmpty(player) && !player.isMe) {
-        indexPosition = Math.floor((this.listPoint.length * player.goal) / 100);
-        pos = this.getCurrentPoint(indexPosition);
-        // return this.renderMarkerPlayers(this.getCurrentPoint(indexPosition));
-        return icons.close({
-          color: playersColor[player.fbuid] ||'red',
-          size: sizeIconRacing.width,
-          iconStyle:{
-            margin:0
-          },
-          containerStyle: {
-            paddingVertical:0,
-            paddingHorizontal:0,
-            width: sizeIconRacing.width,
-            height: sizeIconRacing.height,
-            position: 'absolute',
-            top: pos.y ,
-            left: pos.x
-          }
-        });
+  createMarkerWithPosition= (pos={x:0,y:0},color = 'red')=>{
+    return icons.close({
+      color: color,
+      size: sizeIconRacing.width,
+      iconStyle:{
+        margin:0
+      },
+      containerStyle: {
+        paddingVertical:0,
+        paddingHorizontal:0,
+        width: sizeIconRacing.width,
+        height: sizeIconRacing.height,
+        position: 'absolute',
+        top: pos.y ,
+        left: pos.x
       }
     });
-    return markers;
   }
 
   componentDidMount() {
     this.props.getUser();
   }
+  updateHandler = ({ touches, screen, time }) => {
+    if(lastIndexPosition < currentPositionIndex){
+      const nextPoint = this.getCurrentPoint(Math.ceil(lastIndexPosition));
+      if(nextPoint!== currentPositionIndex){
+        this.setState({
+          pos:{
+            x:nextPoint.x,
+            y:nextPoint.y
+          }
+        });
+        lastIndexPosition += (currentPositionIndex - lastIndexPosition)*time.delta/1000;
+      }else{
+        lastIndexPosition = currentPositionIndex;
+      }
+      
+    }
 
+    // update position list player
+    const {players = []} = this.state;
+    let indexPosition;
+    let lastIndex = 0;
+    let nextPoint = {};
+    let isHaveChange = false;
+    const markers =  players.map(player => {
+      if (!_.isEmpty(player) && !player.isMe) {
+        indexPosition = Math.ceil((this.listPoint.length * player.goal) / 100);
+        lastIndex  = listLastIndexPosition[player.fbuid]||0;
+        if(lastIndex <indexPosition){
+          isHaveChange = true;
+          lastIndex += (indexPosition - lastIndex)*time.delta/1000;
+        }else{
+          lastIndex = indexPosition;
+        };
+        listLastIndexPosition[player.fbuid] = lastIndex;
+        nextPoint = this.getCurrentPoint(Math.ceil(lastIndex));
+        return this.createMarkerWithPosition(nextPoint);
+      }
+    });
+
+    if(isHaveChange){
+      this.setState({
+        playersMarker:markers
+      });     
+    }
+
+  };
   renderMap = () => {
-    const { room, isReady } = this.state;
+    const { user, room, isReady, playersMarker=[],isLoading = false} = this.state;
     const uriPhoto =  { uri: room?.photo || '' } || images.map;
     
     return (
-      <View style={styles.map}>
+      <GameLoop style={styles.map} onUpdate={this.updateHandler} >
         <ImageZoom 
           cropWidth={this.widthMap}
           cropHeight={screenSize.height}
@@ -261,13 +297,16 @@ class ChallengeScreen extends BaseScreen {
               resizeMode="contain"
               source={uriPhoto}>
                 {this.renderMarker()}
-                {this.renderPlayersMarker()}
+                {
+                  playersMarker
+                }
             </ImageBackground>
         </ImageZoom>
         
 
-        {isReady ? null : (
+        {isReady || user?.id!== room.userId ? null : (
           <Button
+            loading={isLoading}
             containerViewStyle={{
               position: 'absolute',
               width: 300,
@@ -279,31 +318,9 @@ class ChallengeScreen extends BaseScreen {
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
           />
         )}
-      </View>
+      </GameLoop>
     );
   };
-
-  // renderMarkerPlayers = (pos = {}) => {
-  //   if(!_.isEmpty(pos)){
-  //     return icons.close({
-  //       color: 'red',
-  //       size: sizeIconRacing.width,
-  //       iconStyle:{
-  //         margin:0
-  //       },
-  //       containerStyle: {
-  //         paddingVertical:0,
-  //         paddingHorizontal:0,
-  //         width: sizeIconRacing.width,
-  //         height: sizeIconRacing.height,
-  //         position: 'absolute',
-  //         top: pos.y ,
-  //         left: pos.x
-  //       }
-  //     });
-  //   }
-  //   return null;
-  // };
 
   renderMarker = () => {
     const { pos } = this.state;
@@ -325,8 +342,13 @@ class ChallengeScreen extends BaseScreen {
     });
   };
 
-  onPressReady = this.onClickView(() => {
-    this.setState({ isReady: true });
+  onPressReady = this.onClickView(async () => {
+    const {room} = this.state;
+    if(room &&room.session){
+      this.setState({ isLoading: true });
+      await this.props.startRacing({session:room.session});
+      this.setState({ isLoading: false });
+    }
   });
 
   componentWillUnmount() {
@@ -370,6 +392,7 @@ export default connect(
   state => ({
     user: state.user?.userInfo,
     closeRoom: state.room?.closeRoom,
+    isReady: state.room?.isReady,
     race: state.race
   }),
   {
@@ -377,6 +400,7 @@ export default connect(
     updateRacing,
     connectAndPrepare,
     leftRoom,
+    startRacing,
     disconnectBluetooth
   }
 )(ChallengeScreen);
