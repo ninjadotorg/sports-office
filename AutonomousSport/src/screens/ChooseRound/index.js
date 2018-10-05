@@ -7,6 +7,8 @@ import styles, { sliderWidth, itemWidth } from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
+import { TAG as INVITEFRIENDS } from '@/screens/Friends';
+
 import images, { icons } from '@/assets';
 import { moderateScale } from 'react-native-size-matters';
 import { connect } from 'react-redux';
@@ -52,7 +54,8 @@ class ChooseRoundScreen extends BaseScreen {
       console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
       if (roomInfo) {
         console.log(TAG,' onPressCreateRoom roomInFo ');
-        this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
+        // this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
+        this.replaceScreen(this.props.navigation,INVITEFRIENDS,{"roomInfo":roomInfo.toJSON()});
       }
     }else{
       this.setState({

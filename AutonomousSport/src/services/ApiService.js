@@ -291,4 +291,27 @@ export default class ApiService {
     console.log(TAG, ' - makeFriend = ', response);
     return response;
   }
+
+  //ROOM_INVITE
+  static async sendInviteRoom({ userid = -1 , session ="" }) {
+    const url = Api.ROOM_INVITE;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      userid: userid,
+      session:session
+    });
+    console.log(TAG, ' - onPressInviteChangeName = ', response);
+    return response;
+  }
+
+  //ROOM_UPDATE_NAME
+  static async sendUpdateRoomName({ name ="" , session ="" }) {
+    const url = Api.ROOM_UPDATE_NAME;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      name: name,
+      session:session
+    });
+    console.log(TAG, ' - onPressInviteChangeName = ', response);
+    return response;
+  }
+
 }

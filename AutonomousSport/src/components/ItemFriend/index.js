@@ -8,7 +8,7 @@ import styles from './styles';
 import { Config } from '@/utils/Constants';
 import TextStyle, { scale } from '@/utils/TextStyle';
 import User from '@/models/User';
-import { makeFriend } from '@/actions/FriendAction';
+import { makeFriend,makeInvited } from '@/actions/FriendAction';
 import { onClickView } from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
 
@@ -17,9 +17,11 @@ export const TAG = 'ItemFriend';
 class ItemFriend extends PureComponent {
   constructor(props) {
     super(props);
+    var dataItem = props.dataItem || {}
+    //dataItem['is_add_invited'] = false;
     this.state = {
       isLoading: false,
-      dataItem: props.dataItem || {}
+      dataItem:dataItem,
     };
   }
   componentDidMount() {}
@@ -27,12 +29,30 @@ class ItemFriend extends PureComponent {
   onClickMakeFriend = onClickView(() => {
     const { dataItem } = this.props;
 
+    console.log("invited onClickMakeFriend", dataItem);
+
+    if (this.props.inviteMode == false){
+
     if (dataItem?.id && !dataItem['is_maked_friend']) {
       this.setState({
         isLoading: true
-      });
-      this.props.makeFriend({ friendId: dataItem?.id });
+      }); 
+      this.props.makeFriend({ friendId: dataItem?.id }); 
     }
+  }else{
+      this.props.selectIdfn(dataItem?.id); 
+       
+      this.props.makeInvited({ friendId: dataItem?.id, invited: dataItem?.is_add_invited }); 
+
+
+      this.setState({
+        dataItem: dataItem,
+      }); 
+
+      
+
+  }
+
   });
 
   // static getDerivedStateFromProps(nextProps, prevState) {
@@ -62,6 +82,7 @@ class ItemFriend extends PureComponent {
 
   render() {
     const { dataItem, isLoading } = this.state;
+    console.log("invited", dataItem);
     return (
       <View style={styles.container}>
         <Avatar
@@ -113,20 +134,39 @@ class ItemFriend extends PureComponent {
         >
           {`${dataItem.route} ${dataItem.textRouteUnit}`}
         </Text>
-        <Button
-          loading={isLoading}
-          rounded
-          fontSize={12 * scale()}
-          containerViewStyle={{
-            marginRight: 0,
-            alignSelf: 'center'
-          }}
-          buttonStyle={{ height: verticalScale(20) }}
-          title={dataItem?.is_maked_friend ? 'Friend' : 'Add'}
-          onPress={this.onClickMakeFriend}
-          backgroundColor="#02BB4F"
-          rightIcon={{ name: 'envira', type: 'font-awesome' }}
-        />
+        
+        {this.props.inviteMode ? 
+            <Button
+            loading={isLoading}
+            rounded
+            fontSize={12 * scale()}
+            containerViewStyle={{
+              marginRight: 0,
+              alignSelf: 'center'
+            }}
+            buttonStyle={{ height: verticalScale(20) }}
+            title={ this.state.dataItem?.is_add_invited ?  'invited' :  'invite' }
+            onPress={this.onClickMakeFriend}
+            backgroundColor="#02BB4F"
+            rightIcon={{ name: 'envira', type: 'font-awesome' }}
+            />  
+        :
+            <Button
+              loading={isLoading}
+              rounded
+              fontSize={12 * scale()}
+              containerViewStyle={{
+                marginRight: 0,
+                alignSelf: 'center'
+              }}
+              buttonStyle={{ height: verticalScale(20) }}
+              title={ dataItem?.is_maked_friend ?  'Friend' :  'Add' }
+              onPress={this.onClickMakeFriend}
+              backgroundColor="#02BB4F"
+              rightIcon={{ name: 'envira', type: 'font-awesome' }}
+            />
+        } 
+
       </View>
     );
   }
@@ -140,5 +180,5 @@ ItemFriend.defaultProps = {};
 
 export default connect(
   state => ({}),
-  { makeFriend }
+  { makeFriend,makeInvited }
 )(ItemFriend);
