@@ -55,7 +55,7 @@ class ChooseRoundScreen extends BaseScreen {
       if (roomInfo) {
         console.log(TAG,' onPressCreateRoom roomInFo ');
         // this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
-        this.replaceScreen(this.props.navigation,INVITEFRIENDS,roomInfo.toJSON());
+        this.replaceScreen(this.props.navigation,INVITEFRIENDS,{"roomInfo":roomInfo.toJSON()});
       }
     }else{
       this.setState({

@@ -271,6 +271,29 @@ export default class ApiService {
     return !_.isEmpty(response) ? new Room(response?.room) : null;
   }
 
+  
+ //ROOM_INVITE
+  static async sendInviteRoom({ userid = -1 , session ="" }) {
+    const url = Api.ROOM_INVITE;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      userid: userid,
+      session:session
+    });
+    console.log(TAG, ' - onPressInviteChangeName = ', response);
+    return response;
+  }
+
+  //ROOM_UPDATE_NAME
+  static async sendUpdateRoomName({ name ="" , session ="" }) {
+    const url = Api.ROOM_UPDATE_NAME;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      name: name,
+      session:session
+    });
+    console.log(TAG, ' - onPressInviteChangeName = ', response);
+    return response;
+  }
+
   static async makeFriend({ friendId = -1 }) {
     const url = Api.MAKE_FRIEND;
     const response = await ApiService.getURL(METHOD.POST, url, {
@@ -279,4 +302,5 @@ export default class ApiService {
     console.log(TAG, ' - makeFriend = ', response);
     return response;
   }
+
 }
