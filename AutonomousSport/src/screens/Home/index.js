@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ScrollView,
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
@@ -20,6 +21,7 @@ import { moderateScale, scale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
+import PopupDialog from 'react-native-popup-dialog';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
 import {
   fetchUser,
@@ -139,6 +141,7 @@ class HomeScreen extends BaseScreen {
     this.props.updateRacing({ kcal, miles });
     this.props.updatePractiseRacing({ kcal, miles });
   }, 1000);
+  
   componentDidMount() {
     this.props.getUser();
   }
@@ -174,6 +177,7 @@ class HomeScreen extends BaseScreen {
       });
     }
   });
+
 
   onPressListFriends = this.onClickView(() => {
     this.props.navigation.navigate(TAGFRIENDS);
@@ -256,6 +260,7 @@ class HomeScreen extends BaseScreen {
             onPress={this.onPressCreateRoom}
           />
         </View>
+        
       </ImageBackground>
     );
   }

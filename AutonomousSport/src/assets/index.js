@@ -4,6 +4,10 @@ import { Icon } from 'react-native-elements';
 const images = {
   map_list: [require('@/assets/images/map_01.png')],
   logo: require('@/assets/images/logo.png'),
+  ic_gold: require('@/assets/images/ic_gold.png'),
+  // ic_bronze: require('@/assets/images/ic_bronze.png'),
+  // ic_silver: require('@/assets/images/ic_silver.png'),
+  back_score: require('@/assets/images/back_score.png'),
   bike: require('@/assets/images/bike.png'),
   user: require('@/assets/images/ic_user.png'),
   image_start: require('@/assets/images/image_start.png'),

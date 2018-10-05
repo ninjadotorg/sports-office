@@ -32,6 +32,7 @@
     "react-native-firebase": "^4.3.8",
     "react-native-game-engine": "^0.10.1",
     "react-native-image-pan-zoom": "^2.1.9",
+    "react-native-popup-dialog": "^0.15.1",
     "react-native-size-matters": "^0.1.2",
     "react-native-snap-carousel": "^3.7.2",
     "react-native-svg": "^7.0.3",

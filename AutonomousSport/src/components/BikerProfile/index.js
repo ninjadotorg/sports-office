@@ -192,7 +192,7 @@ class BikerProfile extends Component {
     const playerMe = players?.find(item=>item.isMe === true);
     // console.log(TAG, ' render playerMe = ',playerMe );
     return (
-      <ScrollView style={[this.styles.container,{height:'100%'}]} contentContainerStyle={{flex:1,flexGrow:1}}>  
+      <ScrollView style={[this.styles.container,{height:'100%'}]} contentContainerStyle={{flexGrow:1}}>  
           <OTSession
             apiKey={Config.OPENTOK_API_KEY}
             sessionId={
