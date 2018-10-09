@@ -9,7 +9,7 @@ import {
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import { Header, SearchBar, ButtonGroup } from 'react-native-elements';
+import { Header, SearchBar,Button, ButtonGroup } from 'react-native-elements';
 import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
@@ -19,6 +19,7 @@ import ViewUtil from '@/utils/ViewUtil';
 import ItemFriend from '@/components/ItemFriend';
 
 import { TAG as CHALLENGENAME } from '@/screens/ChallengeName';
+import { TAG as TAGHOME } from '@/screens/Home';
 
 import { fetchAllUser,fetchAllFriend } from '@/actions/FriendAction';
 import {connect} from 'react-redux';
@@ -127,6 +128,12 @@ class FriendsScreen extends BaseScreen {
     }
   };
 
+  onPressNextGo = this.onClickView( () => {
+
+    this.replaceScreen(this.props.navigation,CHALLENGENAME, {"roomInfo":this.state.roomInfo});
+
+  });
+
   updateNextIndex = selectedNextIndexItem => {
 
     let {selectedNextIndex,offset,limit} = this.state;
@@ -201,6 +208,10 @@ class FriendsScreen extends BaseScreen {
   });
   onPressBack = () => {
     this.props.navigation.goBack();
+    if(this.state.inviteMode){
+      this.props.leftRoom({ session: this.state.roomInfo?.session });
+      this.replaceScreen(this.props.navigation, TAGHOME);
+    }
   };
   renderLeftHeader = () => {
     return (
@@ -219,7 +230,7 @@ class FriendsScreen extends BaseScreen {
                 }
               ]}
             >
-              Explore the world
+            {this.state.inviteMode ? "Invite avaliable people to join your race" : "Explore the world"} 
             </Text>
           </TouchableOpacity>
         <SearchBar
@@ -256,20 +267,37 @@ class FriendsScreen extends BaseScreen {
 
   renderbottomButton= () =>{
 
-    const { selectedNextIndex , inviteMode} = this.state;
+    const { selectedNextIndex , isLoading, inviteMode} = this.state;
+    //const {listFriends,isLoading, inviteMode} = this.state;
     return (
-      <ButtonGroup
-        onPress={this.updateNextIndex}
-        selectedIndex={selectedNextIndex}
-        buttons={ivitesbuttons}
-        textStyle={[TextStyle.normalText, styles.textStyleButton]}
-        selectedTextStyle={[
-          TextStyle.normalText,
-          styles.selectedTextStyleButton
-        ]}
-        selectedButtonStyle={styles.selectedButtonStyle}
-        containerStyle={styles.buttonGroup}
-      /> 
+      // <ButtonGroup
+      //   onPress={this.updateNextIndex}
+      //   selectedIndex={selectedNextIndex}
+      //   buttons={ivitesbuttons}
+      //   textStyle={[TextStyle.normalText, styles.textStyleButton]}
+      //   selectedTextStyle={[
+      //     TextStyle.normalText,
+      //     styles.selectedTextStyleButton
+      //   ]}
+      //   selectedButtonStyle={styles.selectedButtonStyle}
+      //   containerStyle={styles.buttonGroup}
+      // /> 
+
+      <View style={styles.containerBottom}>
+        <Button 
+            title="Skip"
+            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
+            buttonStyle={[styles.button]}
+            onPress={this.onPressNextGo}
+          />
+          <Button 
+            title="Next"
+            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
+            buttonStyle={[styles.button]}
+            onPress={this.onPressNextGo}
+          />
+        </View>
+
     );
 
   }
