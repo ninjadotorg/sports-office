@@ -32,11 +32,11 @@ export default class Util {
     });
   };
 
-  static excuteWithTimeout = (promise, ms = 1) => {
+  static excuteWithTimeout = (promise, timeSecond = 1) => {
     return new Promise(function(resolve, reject) {
       setTimeout(function() {
         reject(new Error('timeout'));
-      }, ms * 1000);
+      }, timeSecond * 1000);
       promise.then(resolve, reject);
     });
   };
