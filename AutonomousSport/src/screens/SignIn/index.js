@@ -383,7 +383,7 @@ class SignInScreen extends BaseScreen {
                 onPress={this.onPressForgot}
                 style={[TextStyle.smallText, styles.textButton, styles.link]}
               >
-              Forgot password?
+               Forgot password?
               </Text>
             </View>
           )}

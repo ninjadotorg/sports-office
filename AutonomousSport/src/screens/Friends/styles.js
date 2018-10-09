@@ -11,6 +11,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#181818'
   },
+  containerImg: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
   topBar: {
     alignSelf: 'center',
     flexDirection: 'row'
@@ -54,6 +61,14 @@ const styles = StyleSheet.create({
     borderColor: '#02BB4F',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
+  },
+  image: { 
+    resizeMode: 'cover',
+    borderRadius: Platform.OS === 'ios' ? 8 : 0,
+    alignItems: 'center',
+    justifyContent:'center',
+    // borderTopLeftRadius: entryBorderRadius,
+    // borderTopRightRadius: entryBorderRadius
   }
 });
 
