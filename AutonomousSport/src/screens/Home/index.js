@@ -141,9 +141,10 @@ class HomeScreen extends BaseScreen {
     this.props.updateRacing({ kcal, miles });
     this.props.updatePractiseRacing({ kcal, miles });
   }, 1000);
-  
+
   componentDidMount() {
     this.props.getUser();
+    // this.showDialogInvite(true);
   }
 
   // componentWillUnmount() {
@@ -177,7 +178,6 @@ class HomeScreen extends BaseScreen {
       });
     }
   });
-
 
   onPressListFriends = this.onClickView(() => {
     this.props.navigation.navigate(TAGFRIENDS);
@@ -260,7 +260,7 @@ class HomeScreen extends BaseScreen {
             onPress={this.onPressCreateRoom}
           />
         </View>
-        
+        {this.initDialogInvite()}
       </ImageBackground>
     );
   }
