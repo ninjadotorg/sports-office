@@ -46,6 +46,14 @@ const styles = StyleSheet.create({
   },
   selectedButtonStyle: {
     backgroundColor: '#02BB4F'
+  },
+  button: {
+    borderRadius: 25,
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+    borderColor: '#02BB4F',
+    minWidth: scaleSize(100),
+    paddingHorizontal: scaleSize(20)
   }
 });
 

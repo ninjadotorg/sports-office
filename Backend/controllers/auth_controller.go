@@ -887,13 +887,11 @@ func (basectl *BaseController)LeaveRoom(c echo.Context) error{
 	}else{
 		player.Status = 0 // Leave 
 		basectl.Dao.Save(&player)
+		basectl.Dao.Delete(&models.RoomPlayer{ID: player.ID});
 	} 
 	//write first player user. 
 	var fbData, _ = basectl.FbApp.Database(context.Background())
-	var refDB = fbData.NewRef("games")///race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid) 
-	//log.Print("%+v" , refDB) 
-	//var adaRef = refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid)
-	//fbData.remove()
+	var refDB = fbData.NewRef("games")
 
 	if err3 := refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid).Set(context.Background(), nil); err3 != nil {
 		log.Fatalln("Error setting value:", err3) 
