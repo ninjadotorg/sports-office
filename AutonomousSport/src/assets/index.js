@@ -15,7 +15,8 @@ const images = {
   ic_plus_down: require('@/assets/images/ic_plus_down.png'),
   ic_plus_up: require('@/assets/images/ic_plus_up.png'),
   mapVector: require('@/assets/images/map.svg'),
-  map: require('@/assets/images/map.jpg')
+  map: require('@/assets/images/map.jpg'),
+  ic_no_friend_list: require('@/assets/images/icons8addusergroup.png')
 };
 export const icons = {
   close: ({
