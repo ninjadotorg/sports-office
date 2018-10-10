@@ -54,7 +54,7 @@ export const connectionBluetoothChange = dispatch => {
         // let speed = rph * 0.68 * cycle;
         // let speed = rph * 0.10472 * cycle;
         // todo HienTon : add 100 to test
-        // speed = cycle * 6.28 * 2.2369356 * (rps + 100);
+        // speed = cycle * 6.28 * 2.2369356 * (rps + 200);
         speed = cycle * 6.28 * 2.2369356 * rps;
         speed = speed < 0 ? 0 : speed;
 
