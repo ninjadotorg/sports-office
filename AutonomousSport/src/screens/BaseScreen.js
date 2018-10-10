@@ -14,7 +14,11 @@ import {
 import images from '@/assets';
 import { connect } from 'react-redux';
 import { fetchUser,signIn,forGotPass, loginWithFirebase } from '@/actions/UserAction';
-
+import Api from '@/services/Api';
+import METHOD from '@/services/Method';
+import ApiService from '@/services/ApiService';
+import Room from '@/models/Room';
+//import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 
 
 export const TAG = 'BaseScreen';
@@ -37,7 +41,10 @@ class BaseScreen extends Component {
     super(props);
     this.onClickView = onClickView;
 
-   
+    this.state={
+      roomInfo:null,
+      playername:"",
+    };
     
   }
    
@@ -51,10 +58,19 @@ class BaseScreen extends Component {
     onPressDecline = ()=>{
         this.showDialogInvite(false);
     },
-    onPressJoinNow = ()=>{
+    onPressJoinNow = async()=>{
       //this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo);
       //call to APIs get infor....
-      
+        console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
+        const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
+        // const url = Api.JOIN_ROOM;
+        // const response = await ApiService.getURL(METHOD.POST, url, {
+        //   session: this.state.roomInfo.session
+        // });
+        console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
+        this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
+
+
     }
   ) => {
 
@@ -63,9 +79,14 @@ class BaseScreen extends Component {
     console.log("BaseScreen fbuid",fbuid);
     if(fbuid !=""){
         this.dataPrefference = firebase.database().ref("users/"+fbuid);
-        this.dataPrefference.on('value', dataSnap => {
-            if(dataSnap.val() ){
-              console.log("BaseScreen dataPrefference",dataSnap);
+        this.dataPrefference.on('value', dataSnap => {  
+            const data = dataSnap.val();
+
+            if( data ){
+             
+              const room = new Room(data.room);
+              console.log("BaseScreen room cover", room.Map.cover); 
+              this.setState({roomInfo: room, playername:data.inviter }); 
               this.dataPrefference.remove();
               this.showDialogInvite(true);
             }
@@ -83,9 +104,10 @@ class BaseScreen extends Component {
         }}
       >
         <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', flex: 1, padding: 20 }}>
-            <Image style={{ alignSelf: 'center' }} source={images.ic_gold} />
+          <View style={{ flexDirection: 'row', flex: 1, padding: 20 }}> 
             <View style={{ flex: 1 }}>
+            <Image style={[{ width:100, height:100, resizeMode:  'cover' }]} source={{uri:this.state.roomInfo?.Map?.cover }}    
+             />
               <Text
                 style={[
                   TextStyle.mediumText,
@@ -95,9 +117,12 @@ class BaseScreen extends Component {
                     textAlignVertical: 'center'
                   }
                 ]}
-              >
-                Eva Canada invited you to join his race in Central Park (124
-                Miles)
+              > 
+                <Text style={{fontWeight: "bold"}}>  {this.state.playername }</Text>
+                <Text> invited you to join his race in </Text>
+                <Text style={{fontWeight: "bold"}}>{this.state.roomInfo?.Map?.name }</Text>
+                <Text> ({ this.state.roomInfo?.miles} Miles)</Text>
+              
               </Text>
               <View
                 style={{ flexDirection: 'row', justifyContent: 'space-around' }}
