@@ -183,12 +183,13 @@ export default class ApiService {
     });
     return response;
   }
-  static async createRoom({ mapId = -1, loop = 1, miles = 0 }): Room {
+  static async createRoom({ mapId = -1, loop = 1, miles = 0, name="" }): Room {
     const url = Api.CREATE_ROOM;
     const response = await ApiService.getURL(METHOD.POST, url, {
       mapId,
       loop,
-      miles
+      miles,
+      name
     });
     return !_.isEmpty(response) ? new Room(response?.room) : null;
   }
