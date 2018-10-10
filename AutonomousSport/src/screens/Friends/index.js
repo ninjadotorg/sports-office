@@ -270,18 +270,7 @@ class FriendsScreen extends BaseScreen {
     const { selectedNextIndex , isLoading, inviteMode} = this.state;
     //const {listFriends,isLoading, inviteMode} = this.state;
     return (
-      // <ButtonGroup
-      //   onPress={this.updateNextIndex}
-      //   selectedIndex={selectedNextIndex}
-      //   buttons={ivitesbuttons}
-      //   textStyle={[TextStyle.normalText, styles.textStyleButton]}
-      //   selectedTextStyle={[
-      //     TextStyle.normalText,
-      //     styles.selectedTextStyleButton
-      //   ]}
-      //   selectedButtonStyle={styles.selectedButtonStyle}
-      //   containerStyle={styles.buttonGroup}
-      // /> 
+       
 
       <View style={styles.containerBottom}>
         <Button 
@@ -321,7 +310,7 @@ class FriendsScreen extends BaseScreen {
     );
   };
   render() {
-    const {listFriends,isLoading, inviteMode} = this.state;
+    const {selectedIndex, listFriends,isLoading, inviteMode} = this.state;
     return (
       <ImageBackground style={styles.container}>
         <Header backgroundColor="transparent">
@@ -331,17 +320,30 @@ class FriendsScreen extends BaseScreen {
         <View style={styles.containerTop}>
           {this.renderTabButton()}
         </View>
-        
-        <FlatList
-          keyExtractor={item=>String(item.id)}
-          style={styles.list}
-          refreshing={isLoading}
-          onRefresh={this.onRefreshData}
-          data={listFriends}
-          onEndReachedThreshold={0.5}
-          onEndReached={this.onLoadMore}
-          renderItem={ this.renderItem  }
-        /> 
+        {listFriends.length == 0  && selectedIndex ===0 ?  
+          <View style={styles.containerImg}>
+              <Image
+                  source={images.ic_no_friend_list}   
+                  style={[styles.image, { resizeMode:  'cover' }]} 
+              />
+              <Text 
+                style={[TextStyle.smallText, TextStyle.buttonText]}
+              >
+              You have no friends
+              </Text>
+          </View>
+        : 
+            <FlatList
+              keyExtractor={item=>String(item.id)}
+              style={styles.list}
+              refreshing={isLoading}
+              onRefresh={this.onRefreshData}
+              data={listFriends}
+              onEndReachedThreshold={0.5}
+              onEndReached={this.onLoadMore}
+              renderItem={ this.renderItem  }
+            /> 
+        }
         {inviteMode ? 
           <View style={styles.containerTop}>
             {this.renderbottomButton()}
