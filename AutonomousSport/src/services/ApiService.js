@@ -204,6 +204,17 @@ export default class ApiService {
     return {};
   }
 
+  static async finishedRoom({ session = '' }) {
+    if (session) {
+      const url = Api.FINISH_ROOM;
+      const response = await ApiService.getURL(METHOD.POST, url, {
+        session: session
+      });
+      return response;
+    }
+    return {};
+  }
+
   static async getRoomList({ page = 1, page_size = 10 }) {
     // if (__DEV__) {
     //   return ;
@@ -293,25 +304,24 @@ export default class ApiService {
   }
 
   //ROOM_INVITE
-  static async sendInviteRoom({ userid = -1 , session ="" }) {
+  static async sendInviteRoom({ userid = -1, session = '' }) {
     const url = Api.ROOM_INVITE;
     const response = await ApiService.getURL(METHOD.POST, url, {
       userid: userid,
-      session:session
+      session: session
     });
     console.log(TAG, ' - onPressInviteChangeName = ', response);
     return response;
   }
 
   //ROOM_UPDATE_NAME
-  static async sendUpdateRoomName({ name ="" , session ="" }) {
+  static async sendUpdateRoomName({ name = '', session = '' }) {
     const url = Api.ROOM_UPDATE_NAME;
     const response = await ApiService.getURL(METHOD.POST, url, {
       name: name,
-      session:session
+      session: session
     });
     console.log(TAG, ' - onPressInviteChangeName = ', response);
     return response;
   }
-
 }
