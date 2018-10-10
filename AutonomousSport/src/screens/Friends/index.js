@@ -42,8 +42,14 @@ class FriendsScreen extends BaseScreen {
   constructor(props) {
     super(props);
     
-    const roomInfo = this.props.navigation.getParam('roomInfo') || null ; // JSON.parse( this.props.navigation.getParam('roomInfo')||"" );
-    console.log(TAG, "inviteMode",roomInfo);
+    const roomInfo = this.props.navigation.getParam('roomInfo') || null ;  
+    const invitem = this.props.navigation.getParam('invitemode') || false ; 
+     
+    const sumMiles = this.props.navigation.getParam('miles')||0;
+    const mapId = this.props.navigation.getParam('mapId')||-1;
+    const loop = this.props.navigation.getParam('loop')||1;
+
+
 
     this.state = {
       selectedIndex: 0,
@@ -55,8 +61,13 @@ class FriendsScreen extends BaseScreen {
       listFriends:[],
       listFriendsIvite:[],
       search:'',
-      inviteMode: roomInfo == null ? false : true,
+      inviteMode: invitem,
       roomInfo:roomInfo,
+      
+      sumMiles:sumMiles,
+      mapId:mapId,
+      loop:loop,
+
     };
 
      
@@ -130,28 +141,15 @@ class FriendsScreen extends BaseScreen {
 
   onPressNextGo = this.onClickView( () => {
 
-    this.replaceScreen(this.props.navigation,CHALLENGENAME, {"roomInfo":this.state.roomInfo});
+    ///this.replaceScreen(this.props.navigation,CHALLENGENAME, {"roomInfo":this.state.roomInfo});
+    //this.props.navigation.navigate(CHALLENGENAME,{"roomInfo":this.state.roomInfo});
+    const {loop,mapId,sumMiles} = this.state;  
+
+    this.props.navigation.navigate(CHALLENGENAME,{"invitemode":true, "mapId":mapId,"loop":loop,"miles":sumMiles});
+
 
   });
-
-  updateNextIndex = selectedNextIndexItem => {
-
-    let {selectedNextIndex,offset,limit} = this.state;
-    if(selectedNextIndexItem !== selectedNextIndex){
-      this.setState({ 
-        selectedNextIndex:selectedNextIndexItem,
-       });
-    }
-
-    if(selectedNextIndexItem == 1){
-
-      this.replaceScreen(this.props.navigation,CHALLENGENAME, {"roomInfo":this.state.roomInfo});
-
-    }
-
-
-
-  };
+ 
 
 
   handleQueryChange = search =>{
@@ -208,10 +206,10 @@ class FriendsScreen extends BaseScreen {
   });
   onPressBack = () => {
     this.props.navigation.goBack();
-    if(this.state.inviteMode){
-      this.props.leftRoom({ session: this.state.roomInfo?.session });
-      this.replaceScreen(this.props.navigation, TAGHOME);
-    }
+    // if(this.state.inviteMode){
+    //   this.props.leftRoom({ session: this.state.roomInfo?.session });
+    //   this.replaceScreen(this.props.navigation, TAGHOME);
+    // }
   };
   renderLeftHeader = () => {
     return (
@@ -349,6 +347,7 @@ class FriendsScreen extends BaseScreen {
             {this.renderbottomButton()}
           </View> : null}
         
+        {this.initDialogInvite()}
       </ImageBackground>
     );
   }

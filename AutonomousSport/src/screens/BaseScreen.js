@@ -52,6 +52,8 @@ class BaseScreen extends Component {
         this.showDialogInvite(false);
     },
     onPressJoinNow = ()=>{
+      //this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo);
+      //call to APIs get infor....
       
     }
   ) => {

@@ -169,6 +169,7 @@ class ProfileScreen extends BaseScreen {
               Log out
             </Text>
           </View>
+          {this.initDialogInvite()}
         </View>
       </ScrollView>
     );

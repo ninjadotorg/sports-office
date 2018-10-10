@@ -30,7 +30,8 @@ class ChooseRoundScreen extends BaseScreen {
       mapId:mapId,
       sumMiles:mile,
       error:'',
-      isLoading:false
+      isLoading:false,
+      roomInfo:null,
     };
   }
 
@@ -39,6 +40,17 @@ class ChooseRoundScreen extends BaseScreen {
   }
 
   onPressCreateRoom = this.onClickView(async () => {
+    
+    // if( this.state.roomInfo !=null ){
+    //   this.props.navigation.navigate(INVITEFRIENDS,{"roomInfo":this.state.roomInfo.toJSON()});
+    //   return;
+    // }
+    const {valueRound,mapId,sumMiles} = this.state;
+     
+
+    this.props.navigation.navigate(INVITEFRIENDS,{"invitemode":true, "mapId":mapId,"loop":valueRound,"miles":sumMiles});
+    return;
+
     try {
       this.setState({
         isLoading:true
@@ -50,12 +62,18 @@ class ChooseRoundScreen extends BaseScreen {
         loop:valueRound,
         miles:sumMiles
       });
-    
+      
+      this.setState({
+        roomInfo:roomInfo
+      });
+
       console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
       if (roomInfo) {
         console.log(TAG,' onPressCreateRoom roomInFo ');
         // this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
-        this.replaceScreen(this.props.navigation,INVITEFRIENDS,{"roomInfo":roomInfo.toJSON()});
+        //this.replaceScreen(this.props.navigation,INVITEFRIENDS,{"roomInfo":roomInfo.toJSON()});
+        this.props.navigation.navigate(INVITEFRIENDS,{"roomInfo":roomInfo.toJSON()});
+
       }
     }else{
       this.setState({
@@ -150,6 +168,7 @@ class ChooseRoundScreen extends BaseScreen {
             onPress={this.onPressCreateRoom}
           />
         </View>
+        {this.initDialogInvite()}
       </View>
     );
   }

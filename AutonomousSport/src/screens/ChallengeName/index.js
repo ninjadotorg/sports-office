@@ -24,20 +24,19 @@ const sizeImageCenter = moderateScale(130);
 class ChallengeNameScreen extends BaseScreen {
   constructor(props) {
     super(props);
-    const mile = this.props.navigation.getParam('miles')||0;
-    const roomInfo = this.props.navigation.getParam('roomInfo') || null ; 
-    //const friendList = this.props.navigation.getParam('friendList') || null ; 
-    console.log(TAG," ChallengeNameScreen roomInfo = ", roomInfo);
-    const mapId = this.props.navigation.getParam('id')||-1;
+    const sumMiles = this.props.navigation.getParam('miles')||0;
+    const mapId = this.props.navigation.getParam('mapId')||-1;
+    const loop = this.props.navigation.getParam('loop')||1;
+    
     console.log(TAG," contructor mapID = ", mapId);
     this.state = {
       valueRound:1,
-      mile:mile,
+      sumMiles:sumMiles,
       mapId:mapId,
-      sumMiles:mile,
+      loop:loop, 
       error:'',
       isLoading:false,
-      roomInfo:roomInfo,
+      roomInfo:null,
     };
   }
 
@@ -45,45 +44,56 @@ class ChallengeNameScreen extends BaseScreen {
      
   }
  
-  onPressCreateRoom = this.onClickView( () => {
+  onPressCreateRoom = this.onClickView( async () => {
     try {
       this.setState({
         isLoading:true
       });
-      const {roomInfo} = this.state;
-      if(roomInfo == null){
-        return;
-      }
-      console.log("onPressInviteChangeName roomInfo", roomInfo); 
-      var session  =  roomInfo.session ;//"1_MX40NjE1NDQyMn5-MTUzNzc4NjAxNzA2OX4xTkV2aU9pVnZITFFQTzhxSS9sdWZaVGp-fg";// this.state.roomInfo.session;
-      var list = this.props.invitedlist;
-      //var list =[{"id":109}, {"id":110}];
+      
+      const {valueRound,mapId,sumMiles} = this.state;
+      var listfriend = this.props.invitedlist;
 
-      //
-      try {
-          const name = this.name._lastNativeText;
-          if(name !=""){
-            ApiService.sendUpdateRoomName({ name:name , session:session });  
-           }
-        } catch (error) {  
+      const roomInfo = await ApiService.createRoom({
+        mapId:mapId,
+        loop:valueRound,
+        miles:sumMiles,
+        name: this.name._lastNativeText
+      }); 
+      
+      this.setState({
+        roomInfo:roomInfo
+      });
 
-        }  
-        
-      if(list.length >0){
+      console.log(TAG,' onPressCreateRoom roomInFo ' , roomInfo);
+      // if (roomInfo) {  
+      //     console.log("onPressInviteChangeName roomInfo", roomInfo); 
+      //     var session  =  roomInfo.session ;  
+      //     try {
+              
+      //         if(name !=""){
+      //           ApiService.sendUpdateRoomName({ name:name , session:session });  
+      //         }
+      //       } catch (error) {  
+
+      //       }
+      // }   
+
+      if(listfriend.length >0){
          
-         for(var i=0; i < list.length; i++){
-          console.log("onPressInviteChangeName invited",list[i], session); 
+         for(var i=0; i < listfriend.length; i++){
+          console.log("onPressInviteChangeName invited",listfriend[i], roomInfo.session); 
           try {
-            ApiService.sendInviteRoom({ userid: list[i].id, session:session });  
+            ApiService.sendInviteRoom({ userid: listfriend[i].id, session:roomInfo.session });  
           } catch (error) {  
           } 
         } 
       } 
-      //this.state.roomInfo
-      this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo);
-      //this.replaceScreen(this.props.navigation,TAGCHALLENGE,{"roomInfo": roomInfo.toJSON() } );
-        //this.replaceScreen(this.props.navigation,INVITEFRIENDS,{"roomInfo":roomInfo.toJSON()});
-      //} 
+      this.setState({
+        isLoading:false
+      });
+       
+      this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo.toJSON());
+      //this.replaceScreen(this.props.navigation,TAGCHALLENGE,{"roomInfo": roomInfo.toJSON() } );   
     } catch (error) {
        console.log("onPressInviteChangeName error",error); 
     }finally{
@@ -94,11 +104,11 @@ class ChallengeNameScreen extends BaseScreen {
     }
   });
   
-  onPressBack = ()=>{
-    
-    const { roomInfo } = this.state;
-    this.props.leftRoom({ session: roomInfo?.session });
-    this.replaceScreen(this.props.navigation, TAGHOME);
+  onPressBack = ()=>{ 
+    // const { roomInfo } = this.state;
+    // this.props.leftRoom({ session: roomInfo?.session });
+    // this.replaceScreen(this.props.navigation, TAGHOME);
+    this.props.navigation.goBack();
   }
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
@@ -123,15 +133,7 @@ class ChallengeNameScreen extends BaseScreen {
       </TouchableOpacity>
     );
   };
-  onPress = (direct)=>{
-    let {valueRound,mile = 0} = this.state;
-    valueRound = valueRound + (direct*1);
-    valueRound = valueRound<=0?1:(valueRound>10?10:valueRound);
-    this.setState({
-      valueRound:valueRound,
-      sumMiles:mile* valueRound
-    });
-  }
+   
   render() {
     const {valueRound,sumMiles = 0,isLoading = false} = this.state;
     
