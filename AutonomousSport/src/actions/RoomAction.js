@@ -10,6 +10,7 @@ export const ACTIONS = {
   GET_ALL_MAP: 'GET_ALL_MAP',
   GET_ALL_ROOM: 'GET_ALL_ROOM',
   LEFT_ROOM: 'LEFT_ROOM',
+  FINISHED_ROOM: 'FINISHED_ROOM',
   JOIN_ROOM: 'JOIN_ROOM',
   START_RACING: 'START_RACING'
 };
@@ -72,6 +73,24 @@ export const leftRoom = ({ session = '' }) => async dispatch => {
   }
 
   dispatch({ type: ACTIONS.LEFT_ROOM, payload: {} });
+};
+
+export const finishedRoom = ({ session = '' }) => async dispatch => {
+  try {
+    if (session) {
+      let response = await ApiService.finishedRoom({
+        session: session
+      });
+      console.log(TAG, ' - finishedRoom - response ', response);
+      dispatch({ type: ACTIONS.FINISHED_ROOM, payload: response });
+
+      return;
+    }
+  } catch (e) {
+    console.log(TAG, ' - finishedRoom - error ', e);
+  }
+
+  dispatch({ type: ACTIONS.FINISHED_ROOM, payload: {} });
 };
 
 export const joinRoom = ({ session = '' }) => async dispatch => {

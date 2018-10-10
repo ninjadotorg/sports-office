@@ -18,7 +18,7 @@ import images, { icons } from '@/assets';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
-import { leftRoom,startRacing } from '@/actions/RoomAction';
+import { leftRoom,startRacing,finishedRoom } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
 import firebase from 'react-native-firebase';
@@ -27,10 +27,11 @@ import { STATE_BLUETOOTH } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
+import ViewUtil from '@/utils/ViewUtil';
 
 export const TAG = 'ChallengeScreen';
 let heightMap = screenSize.height;
-const colors = ['red','blue','yellow','green'];
+const colors = ['purple','blue','yellow','green'];
 let lastIndexPosition = 0;
 let currentPositionIndex = 0;
 let listLastIndexPosition = {};
@@ -61,6 +62,7 @@ class ChallengeScreen extends BaseScreen {
       distanceRun: 0,
       kcal: 0,
       isLoading: false,
+      isLoadingAllScreen: false,
       isFinished: false,
       isReady: false
     };
@@ -84,10 +86,10 @@ class ChallengeScreen extends BaseScreen {
   getCurrentPoint = (currentPositionIndex = 0) => {
     let x,y = 0;
     try {
-      const pointStart: [] = this.listPoint[currentPositionIndex];
+      const pointStart: [] = this.listPoint[currentPositionIndex || 0];
       // console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
-      x = (Number(pointStart[0])) * this.scaleSize -sizeIconRacing.width;
-      y = (Number(pointStart[1])) * this.scaleSize -sizeIconRacing.height;
+      x = (Number(pointStart[0])) * this.scaleSize - sizeIconRacing.width;
+      y = (Number(pointStart[1])) * this.scaleSize - sizeIconRacing.height;
     } catch (error) {
       
     }
@@ -104,6 +106,7 @@ class ChallengeScreen extends BaseScreen {
       distanceRun = 0,
       room = {},
       pos,
+      isFinished,
       isReady,
       kcal = 0
     } = this.state;
@@ -132,7 +135,7 @@ class ChallengeScreen extends BaseScreen {
       const { race = {} } = nextProps;
       const { data } = race;
       console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
-      if (isReady && this.playerMeDataPrefference) {
+      if (isReady && !isFinished && this.playerMeDataPrefference) {
         const s = distanceRun + (data.distanceStreet || 0);
         const sumKcal = kcal + (data.kcal || 0);
         // caculate goal
@@ -141,8 +144,10 @@ class ChallengeScreen extends BaseScreen {
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
 
         const indexPosition = Math.ceil((this.listPoint.length * goalPercentNumber) / 100);
+        const isFinished = goal>=100;
         currentPositionIndex = indexPosition;
         this.setState({
+          isFinished:isFinished,
           isLoading:false,
           race: race,
           distanceRun: s,
@@ -164,6 +169,11 @@ class ChallengeScreen extends BaseScreen {
 
         // save local user
         this.saveUserInfo({ kcal: data.kcal || 0, miles: data.distanceStreet });
+
+        // call api when goal :100
+        if(isFinished){
+          this.props.finishedRoom({session:room.session});
+        }
       }
       console.log(TAG, ' componentWillReceiveProps end ---- ');
     }
@@ -197,7 +207,7 @@ class ChallengeScreen extends BaseScreen {
           if (!_.isEmpty(value)) {
             value['fbuid'] = key;
             value['isMe'] = key === user?.fbuid;
-            isGetReady = value["status"] === 2 || isGetReady;            
+            isGetReady = value['status'] === 2 || isGetReady;            
             const player = new Player(value);
             playersColor[key] = colors[index];
             arr.push(player);
@@ -260,7 +270,7 @@ class ChallengeScreen extends BaseScreen {
     }
 
     // update position list player
-    const {players = []} = this.state;
+    const {players = [],playersColor = {}} = this.state;
     let indexPosition;
     let lastIndex = 0;
     let nextPoint = {};
@@ -275,9 +285,9 @@ class ChallengeScreen extends BaseScreen {
         }else{
           lastIndex = indexPosition;
         };
-        listLastIndexPosition[player.fbuid] = lastIndex;
+        listLastIndexPosition[player.fbuid] = lastIndex||0;
         nextPoint = this.getCurrentPoint(Math.ceil(lastIndex));
-        return this.createMarkerWithPosition(nextPoint);
+        return this.createMarkerWithPosition(nextPoint,playersColor[player.fbuid]);
       }
     });
 
@@ -288,14 +298,11 @@ class ChallengeScreen extends BaseScreen {
     }
 
   };
-  finishedRacing = ()=>{
-   
+  finishedRacing = this.onClickView(()=>{
     this.roomDataPrefference?.off('value');
-    // call api finish
-
     // show dialog
     this.popupDialog.show();
-  }
+  });
 
   renderDashBoardAchivement = () => {
     // const players = [
@@ -461,13 +468,25 @@ class ChallengeScreen extends BaseScreen {
   }
 
   onPressClose = this.onClickView(async () => {
-    const { room } = this.state;
-    this.props.leftRoom({ session: room?.session });
-    this.replaceScreen(this.props.navigation, TAGHOME);
+    try {
+      const { room } = this.state;
+      this.showLoadingAllScreen = true;
+      await Util.excuteWithTimeout(this.props.leftRoom({ session: room?.session }),4);
+      this.replaceScreen(this.props.navigation, TAGHOME);  
+    } catch (error) {
+      this.showLoadingAllScreen = false;
+    }finally{
+      
+    }
+    
   });
 
+  set showLoadingAllScreen(isShow){
+    this.setState({isLoadingAllScreen:isShow});
+  }
+
   render() {
-    const { room, user,players=[] } = this.state;
+    const { room, user,players=[],isLoadingAllScreen = false } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
@@ -483,6 +502,7 @@ class ChallengeScreen extends BaseScreen {
             left: 10
           }
         })}
+        {ViewUtil.CustomProgressBar({visible:isLoadingAllScreen})}
         <PopupDialog
           width="70%"
           height="90%"
@@ -509,6 +529,7 @@ export default connect(
   {
     getUser: fetchUser,
     updateRacing,
+    finishedRoom,
     connectAndPrepare,
     leftRoom,
     startRacing,

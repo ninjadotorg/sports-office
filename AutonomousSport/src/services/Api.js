@@ -13,10 +13,11 @@ export default class Api {
   static GET_ALL_MAP = `${Config.API_URL}/api/map/list`;
   static CREATE_ROOM = `${Config.API_URL}/api/room/session/create`;
   static LEFT_ROOM = `${Config.API_URL}/api/room/session/leave`;
+  static FINISH_ROOM = `${Config.API_URL}/api/room/session/finish`;
   static JOIN_ROOM = `${Config.API_URL}/api/room/session/create-token`;
   static MAKE_FRIEND = `${Config.API_URL}/api/friend/add`;
-  static JOIN_RANDOM_ROOM = `${Config.API_URL}/api/room/session/random`; 
-  static ROOM_INVITE = `${Config.API_URL}/api/room/session/invite`; 
-  static ROOM_UPDATE_NAME = `${Config.API_URL}/api/room/session/update`;  
-  static START_RACING = `${Config.API_URL}/api/room/session/action`; 
+  static JOIN_RANDOM_ROOM = `${Config.API_URL}/api/room/session/random`;
+  static ROOM_INVITE = `${Config.API_URL}/api/room/session/invite`;
+  static ROOM_UPDATE_NAME = `${Config.API_URL}/api/room/session/update`;
+  static START_RACING = `${Config.API_URL}/api/room/session/action`;
 }
