@@ -12,6 +12,10 @@ import {
   verticalScale
 } from 'react-native-size-matters';
 import images from '@/assets';
+import { connect } from 'react-redux';
+import { fetchUser,signIn,forGotPass, loginWithFirebase } from '@/actions/UserAction';
+
+
 
 export const TAG = 'BaseScreen';
 const styles = StyleSheet.create({
@@ -32,16 +36,40 @@ class BaseScreen extends Component {
   constructor(props) {
     super(props);
     this.onClickView = onClickView;
+
+   
+    
   }
+   
 
   onPressBack = () => {
     this.props.navigation.goBack();
   };
 
-  initDialogInvite = (
-    onPressDecline = undefined,
-    onPressJoinNow = undefined
+  
+  initDialogInvite = (  
+    onPressDecline = ()=>{
+        this.showDialogInvite(false);
+    },
+    onPressJoinNow = ()=>{
+      
+    }
   ) => {
+
+    
+    const fbuid = this.props.user?.userInfo?.fbuid || "";
+    console.log("BaseScreen fbuid",fbuid);
+    if(fbuid !=""){
+        this.dataPrefference = firebase.database().ref("users/"+fbuid);
+        this.dataPrefference.on('value', dataSnap => {
+            if(dataSnap.val() ){
+              console.log("BaseScreen dataPrefference",dataSnap);
+              this.dataPrefference.remove();
+              this.showDialogInvite(true);
+            }
+        });
+    } 
+
     return (
       <PopupDialog
         width="70%"
@@ -113,7 +141,7 @@ class BaseScreen extends Component {
     }
   };
 
-  get firebase() {
+  get firebase() { 
     return firebase;
   }
 
@@ -126,3 +154,4 @@ BaseScreen.propTypes = {};
 
 BaseScreen.defaultProps = {};
 export default BaseScreen;
+ 

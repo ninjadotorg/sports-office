@@ -4,8 +4,11 @@ import {
   StyleSheet,
   FlatList,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform,
+  Image
 } from 'react-native';
+ 
 import _ from 'lodash';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
@@ -40,7 +43,22 @@ const styles = StyleSheet.create({
   },
   item: {
     paddingVertical: 10
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: 'cover',
+    borderRadius: Platform.OS === 'ios' ? 8 : 0
+    // borderTopLeftRadius: entryBorderRadius,
+    // borderTopRightRadius: entryBorderRadius
+  },
+  imageContainer: {
+    height: '100%',
+    marginBottom: Platform.OS === 'ios' ? 0 : -1,
+    // borderTopLeftRadius: entryBorderRadius,
+    // borderTopRightRadius: entryBorderRadius,
+    borderRadius: 8
   }
+
 });
 class RoomList extends Component {
   constructor(props) {
@@ -165,6 +183,7 @@ class RoomList extends Component {
     console.log('levelIndex-rooms', datal);
     return (
       <View style={styles.container}>
+      {datal.length > 0 ? 
         <Carousel
           ref={c => {
             this._carousel = c;
@@ -176,6 +195,12 @@ class RoomList extends Component {
           itemWidth={itemWidth}
           loop
         />
+        : 
+        <Image
+            source={{uri: "https://images.pexels.com/photos/53040/pexels-photo-53040.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}}   
+            style={[styles.image, { resizeMode:  'cover' }]} 
+         />
+        }
       </View>
     );
   }
