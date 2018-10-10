@@ -133,6 +133,7 @@ class CreateRoomScreen extends BaseScreen {
             onPress={this.onPressCreateRoom}
           />
         </View>
+        {this.initDialogInvite()}
       </View>
     );
   }
