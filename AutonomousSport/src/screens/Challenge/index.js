@@ -461,30 +461,30 @@ class ChallengeScreen extends BaseScreen {
 
   renderMarker = () => {
     const { pos } = this.state;
-    // return (<Image source={images.ic_racer1} 
-    //     style={{
-    //       backgroundColor:'transparent',
-    //       position: 'absolute',
-    //       top: pos.y ,
-    //       left: pos.x,
-    //       width:sizeIconRacing.width,
-    //       height:sizeIconRacing.height,
-    //       transform:[{rotate:`${pos.rotate}rad`}]
-    //     }}
-    // />);
+    return (<Image source={images.ic_racer1} 
+        style={{
+          backgroundColor:'transparent',
+          position: 'absolute',
+          top: pos.y ,
+          left: pos.x,
+          width:sizeIconRacing.width,
+          height:sizeIconRacing.height,
+          transform:[{rotate:`${pos.rotate}rad`}]
+        }}
+    />);
 
 
-    return icons.markerPlayer({
-      color: 'red',
-      size: sizeIconRacing.width,
-      containerStyle: {
-        paddingVertical:0,
-        paddingHorizontal:0,
-        position: 'absolute',
-        top: pos.y ,
-        left: pos.x
-      }
-    });
+    // return icons.markerPlayer({
+    //   color: 'red',
+    //   size: sizeIconRacing.width,
+    //   containerStyle: {
+    //     paddingVertical:0,
+    //     paddingHorizontal:0,
+    //     position: 'absolute',
+    //     top: pos.y ,
+    //     left: pos.x
+    //   }
+    // });
   };
 
   onPressReady = this.onClickView(async () => {
