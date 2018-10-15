@@ -6,8 +6,8 @@ import {
 } from 'react-native-size-matters';
 
 export const sizeIconRacing = {
-  width: 15,
-  height: 15
+  width: scaleSize(30),
+  height: scaleSize(30)
 };
 const styles = StyleSheet.create({
   container: {
