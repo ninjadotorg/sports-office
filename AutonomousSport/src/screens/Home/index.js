@@ -144,7 +144,7 @@ class HomeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    //this.showDialogInvite(true);
+    // this.showDialogInvite(true);
   }
 
   // componentWillUnmount() {
