@@ -82,20 +82,41 @@ export default class SetupScreen extends BaseScreen {
   checkPermission = async () => {
     if (Platform.OS === 'android' && Platform.Version >= 23) {
       let result = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
       );
-      if (result) {
+  
+      let result2 = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+
+      let result3 = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+      );
+ 
+      
+       
+
+      if (result && result2 & result3 ) {
         console.log('Permission is OK');
         return Promise.resolve(1);
       } else {
+
         result = await PermissionsAndroid.requestPermission(
           PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
-        );
-        if (result) {
-          console.log('User accept');
+        );  
+        result2 = await PermissionsAndroid.requestPermission(
+          PermissionsAndroid.PERMISSIONS.CAMERA
+        );   
+
+        result3 = await PermissionsAndroid.requestPermission(
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+        );  
+
+        if (result && result2 & result3 ) {
+          console.log('Permission User accept');
           return Promise.resolve(1);
         } else {
-          console.log('User refuse');
+          console.log('Permission User refuse');
           return Promise.resolve(0);
         }
       }
