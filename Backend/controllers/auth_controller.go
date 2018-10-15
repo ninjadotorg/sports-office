@@ -553,7 +553,7 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 
 	var randRoom models.Room 
 
-	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY RAND() LIMIT 1").Scan(&randRoom)
+	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.status = 1 and rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY RAND() LIMIT 1").Scan(&randRoom)
 	 
 	if randRoom.Session == "" {
 		
@@ -664,7 +664,7 @@ func (basectl *BaseController)CloseSession(c echo.Context) error{
 	 
 }
 
-//generation opentokcode. 
+//generation opentokcode.  JoinRoom
 func (basectl *BaseController)CreateToken(c echo.Context) error{
 
 	user := c.Get("user").(*jwt.Token)
@@ -883,12 +883,10 @@ func (basectl *BaseController)LeaveRoom(c echo.Context) error{
 	}
   
 	//insert to player if not exits. 
-	player := new(models.RoomPlayer) 
-	
+	player := new(models.RoomPlayer)  
 	basectl.Dao.Where(&models.RoomPlayer{UserId : userModel.ID , RoomId: room.ID  }).First(&player) 
 
-	if player.ID <=0 {
-		
+	if player.ID <=0 { 
 		f21 = map[string]interface{}{ 
 			"status" : 0,
 			"message": "Your account not exist in this room.",
