@@ -35,6 +35,8 @@ const colors = ['purple','blue','yellow','green'];
 let lastIndexPosition = 0;
 let currentPositionIndex = 0;
 let listLastIndexPosition = {};
+const limitToRotate = (20+90) * (Math.PI/180);
+
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -46,6 +48,14 @@ class ChallengeScreen extends BaseScreen {
     this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
+   
+    const angle = this.getAngleWithCurrentPoint(0) ;
+
+    // const pRotatedX = futurePoint.x + (pointStart.x - futurePoint.x) * Math.cos(angle) - (pointStart.y - futurePoint.y) * Math.sin(angle);
+    // const pRotatedY = futurePoint.y + (pointStart.x - futurePoint.x) * Math.sin(angle) + (pointStart.y - futurePoint.y) * Math.cos(angle);
+    // const translateX = pRotatedX - pointStart.x;
+    // const translateY = pRotatedY - pointStart.y;
+
     this.widthMap = sizeMap.width;
     heightMap = sizeMap.height;
     this.state = {
@@ -53,7 +63,8 @@ class ChallengeScreen extends BaseScreen {
       user: {},
       pos: {
         y: pointStart.y,
-        x: pointStart.x
+        x: pointStart.x,
+        rotate:angle
       },
       playersColor:{},
       players:[],
@@ -88,8 +99,8 @@ class ChallengeScreen extends BaseScreen {
     try {
       const pointStart: [] = this.listPoint[currentPositionIndex || 0];
       // console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
-      x = (Number(pointStart[0])) * this.scaleSize - sizeIconRacing.width;
-      y = (Number(pointStart[1])) * this.scaleSize - sizeIconRacing.height;
+      x = (Number(pointStart[0])) * this.scaleSize - sizeIconRacing.width/2;
+      y = (Number(pointStart[1])) * this.scaleSize - sizeIconRacing.height/2;
     } catch (error) {
       
     }
@@ -98,6 +109,15 @@ class ChallengeScreen extends BaseScreen {
     }; 
     
   };
+
+  getAngleWithCurrentPoint = (currentPositionIndex = 0)=>{
+    currentPositionIndex =  (currentPositionIndex % this.listPoint.length) || 0;
+    const nextIndex = ((currentPositionIndex+1) % this.listPoint.length) || 1;
+    const pointStart = this.getCurrentPoint(currentPositionIndex);
+    const futurePoint = this.getCurrentPoint(nextIndex);
+    return Math.atan2(futurePoint.y - pointStart.y, futurePoint.x - pointStart.x) + Math.PI/2;
+    // return Math.atan2(futurePoint.y - pointStart.y, futurePoint.x - pointStart.x); 
+  }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const {
@@ -231,7 +251,8 @@ class ChallengeScreen extends BaseScreen {
   };
 
   createMarkerWithPosition= (pos={x:0,y:0},color = 'red')=>{
-    return icons.close({
+    
+    return icons.markerPlayer({
       color: color,
       size: sizeIconRacing.width,
       iconStyle:{
@@ -240,8 +261,6 @@ class ChallengeScreen extends BaseScreen {
       containerStyle: {
         paddingVertical:0,
         paddingHorizontal:0,
-        width: sizeIconRacing.width,
-        height: sizeIconRacing.height,
         position: 'absolute',
         top: pos.y ,
         left: pos.x
@@ -253,13 +272,21 @@ class ChallengeScreen extends BaseScreen {
     this.props.getUser();
   }
   updateHandler = ({ touches, screen, time }) => {
+    
     if(lastIndexPosition < currentPositionIndex){
-      const nextPoint = this.getCurrentPoint(Math.ceil(lastIndexPosition));
-      if(nextPoint!== currentPositionIndex){
+      const {pos} = this.state;
+      const tempIndex = Math.ceil(lastIndexPosition);
+      const nextPoint = this.getCurrentPoint(tempIndex);
+      
+      if(tempIndex!== currentPositionIndex){
+        let angle = this.getAngleWithCurrentPoint(tempIndex);
+        angle = (Math.abs(angle - pos.rotate)<limitToRotate)? pos.rotate:angle; 
+        console.log(TAG," updateHandler nextPoint Player = ",angle); 
         this.setState({
           pos:{
             x:nextPoint.x,
-            y:nextPoint.y
+            y:nextPoint.y,
+            rotate:angle
           }
         });
         lastIndexPosition += (currentPositionIndex - lastIndexPosition)*time.delta/1000;
@@ -434,17 +461,25 @@ class ChallengeScreen extends BaseScreen {
 
   renderMarker = () => {
     const { pos } = this.state;
-    return icons.close({
+    // return (<Image source={images.ic_racer1} 
+    //     style={{
+    //       backgroundColor:'transparent',
+    //       position: 'absolute',
+    //       top: pos.y ,
+    //       left: pos.x,
+    //       width:sizeIconRacing.width,
+    //       height:sizeIconRacing.height,
+    //       transform:[{rotate:`${pos.rotate}rad`}]
+    //     }}
+    // />);
+
+
+    return icons.markerPlayer({
       color: 'red',
       size: sizeIconRacing.width,
-      iconStyle:{
-        margin:0
-      },
       containerStyle: {
         paddingVertical:0,
         paddingHorizontal:0,
-        width: sizeIconRacing.width,
-        height: sizeIconRacing.height,
         position: 'absolute',
         top: pos.y ,
         left: pos.x
