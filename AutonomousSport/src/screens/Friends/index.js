@@ -63,7 +63,7 @@ class FriendsScreen extends BaseScreen {
       search:'',
       inviteMode: invitem,
       roomInfo:roomInfo,
-      
+      checkinvitebtn:false,
       sumMiles:sumMiles,
       mapId:mapId,
       loop:loop,
@@ -190,7 +190,8 @@ class FriendsScreen extends BaseScreen {
         friends:{},
         listFriends:[],
         limit :limitRow,
-        isLoading:true
+        isLoading:true,
+
       },()=>{
         this.fetchData({offset:0,limitRow,search});
       });
@@ -228,7 +229,7 @@ class FriendsScreen extends BaseScreen {
                 }
               ]}
             >
-            {this.state.inviteMode ? "Invite avaliable people to join your race" : "Explore the world"} 
+            {this.state.inviteMode ? "Invite people" : "Explore the world"} 
             </Text>
           </TouchableOpacity>
         <SearchBar
@@ -254,6 +255,7 @@ class FriendsScreen extends BaseScreen {
 
   getIdInviteFriend=(friendId)=>{
      console.log("select friendId",friendId);
+     this.setState({ listFriendsIvite:true});
   }
  
 
@@ -278,7 +280,8 @@ class FriendsScreen extends BaseScreen {
             onPress={this.onPressNextGo}
           />
           <Button 
-            title="Next"
+            title="Invite"
+            disabled={this.state.listFriendsIvite}
             textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
             buttonStyle={[styles.button]}
             onPress={this.onPressNextGo}
