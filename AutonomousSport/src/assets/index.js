@@ -16,6 +16,7 @@ const images = {
   ic_plus_up: require('@/assets/images/ic_plus_up.png'),
   mapVector: require('@/assets/images/map.svg'),
   map: require('@/assets/images/map.jpg'),
+  ic_racer1: require('@/assets/images/ic_racer1.png'),
   ic_no_friend_list: require('@/assets/images/icons8addusergroup.png')
 };
 export const icons = {
@@ -36,6 +37,32 @@ export const icons = {
       name="close"
       iconStyle={iconStyle}
       type="evilicon"
+    />
+  ),
+  markerPlayer: ({
+    containerStyle,
+    color = 'rgba(192, 192, 192,0.5)',
+    size = 25,
+    onPress = null,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[
+        {
+          elevation: 1,
+          textShadowColor: 'red',
+          shadowOpacity: 1,
+          shadowRadius: 10,
+          textShadowOffset: { width: 10, height: 5 }
+        },
+        containerStyle
+      ]}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="controller-record"
+      iconStyle={iconStyle}
+      type="entypo"
     />
   ),
   bluetooth: ({
