@@ -810,19 +810,30 @@ func (basectl *BaseController)InvitePlayer(c echo.Context) error{
 	var fbData, _ = basectl.FbApp.Database(context.Background())
 	var refDB = fbData.NewRef("users") 
 	//log.Print("%+v" , refDB)  
-	if err3 := refDB.Child(userInvited.Fbuid).Set(context.Background(),
-		&models.EventInvite {
-			Session : room.Session,
-			Name    : room.Name,
-			Photo   : room.Map.Photo,
-			Cover   : room.Map.MapGrap,  
-			Loop 	: room.Loop,  
-			Miles	: room.Miles,  
-			Players : len(room.RoomPlayers),
-			Inviter :userModel.Fullname,
-		}); err3 != nil {
+	// if err3 := refDB.Child(userInvited.Fbuid).Set(context.Background(),
+	// 	&models.EventInvite {
+	// 		Session : room.Session,
+	// 		Name    : room.Name,
+	// 		Photo   : room.Map.Photo,
+	// 		Cover   : room.Map.MapGrap,  
+	// 		Loop 	: room.Loop,  
+	// 		Miles	: room.Miles,  
+	// 		Players : len(room.RoomPlayers),
+	// 		Inviter :userModel.Fullname,
+	// 	}
+	// 	); err3 != nil {
+	// 	log.Fatalln("Error setting value:", err3)
+	// }
+	
+	if err3 := refDB.Child(userInvited.Fbuid).Set(context.Background(),	
+			map[string]interface{}{  
+				"room": room,
+				"inviter" :userModel.Fullname,
+			}, 
+		); err3 != nil {
 		log.Fatalln("Error setting value:", err3)
-	}  
+	}
+
 
 	f21 = map[string]interface{}{  
 		"room": room,
