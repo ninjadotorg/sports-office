@@ -73,8 +73,6 @@ class MapList extends Component {
     return ViewUtil.loadingComponent();
   };
 
-  
-
   renderHeader = () => {
     return null;
   };
@@ -110,9 +108,9 @@ class MapList extends Component {
         <FlatList
           horizontal
           style={[styles.list, {}]}
-          removeClippedSubviews={false}
           ListHeaderComponent={this.renderHeader}
           data={data}
+          initialNumToRender={5}
           keyExtractor={item => String(item.id)}
           renderItem={this.renderItem}
           onEndReachedThreshold={0.7}
