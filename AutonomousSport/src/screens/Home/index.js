@@ -144,7 +144,8 @@ class HomeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    // this.showDialogInvite(true);
+    //this.showDialogInvite(true);
+    this.onPressReset();
   }
 
   // componentWillUnmount() {
@@ -166,7 +167,7 @@ class HomeScreen extends BaseScreen {
           distanceRun: 0,
           speed: 0,
           kcal: 0,
-          isStarted: false
+          isStarted: true
         },
         () => {
           this.props.resetRacing();
