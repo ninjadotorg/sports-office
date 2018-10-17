@@ -251,21 +251,31 @@ class ChallengeScreen extends BaseScreen {
   };
 
   createMarkerWithPosition= (pos={x:0,y:0},color = 'red')=>{
-    
-    return icons.markerPlayer({
-      color: color,
-      size: sizeIconRacing.width,
-      iconStyle:{
-        margin:0
-      },
-      containerStyle: {
-        paddingVertical:0,
-        paddingHorizontal:0,
+    return (<View style={{
+        padding:10,
+        backgroundColor:color,
+        borderRadius:sizeIconRacing.width/2,
+        width:sizeIconRacing.width,
+        height:sizeIconRacing.width,
         position: 'absolute',
         top: pos.y ,
         left: pos.x
-      }
-    });
+    }}/>);
+    
+    // return icons.markerPlayer({
+    //   color: color,
+    //   size: sizeIconRacing.width,
+    //   iconStyle:{
+    //     margin:0
+    //   },
+    //   containerStyle: {
+    //     paddingVertical:0,
+    //     paddingHorizontal:0,
+    //     position: 'absolute',
+    //     top: pos.y ,
+    //     left: pos.x
+    //   }
+    // });
   }
 
   componentDidMount() {
@@ -462,6 +472,7 @@ class ChallengeScreen extends BaseScreen {
   renderMarker = () => {
     const { pos } = this.state;
     return (<Image source={images.ic_racer1} 
+        resizeMode='center'
         style={{
           backgroundColor:'transparent',
           position: 'absolute',
