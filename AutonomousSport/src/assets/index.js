@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from 'react-native-elements';
 
 const images = {
-  map_list: [require('@/assets/images/map_01.png')],
+  // map_list: [require('@/assets/images/map_01.png')],
   logo: require('@/assets/images/logo.png'),
   ic_gold: require('@/assets/images/ic_gold.png'),
   // ic_bronze: require('@/assets/images/ic_bronze.png'),
@@ -14,8 +14,8 @@ const images = {
   image_velocity: require('@/assets/images/image_velocity.png'),
   ic_plus_down: require('@/assets/images/ic_plus_down.png'),
   ic_plus_up: require('@/assets/images/ic_plus_up.png'),
-  mapVector: require('@/assets/images/map.svg'),
-  map: require('@/assets/images/map.jpg'),
+  // mapVector: require('@/assets/images/map.svg'),
+  // map: require('@/assets/images/map.jpg'),
   ic_racer1: require('@/assets/images/ic_racer1.png'),
   ic_no_friend_list: require('@/assets/images/icons8addusergroup.png')
 };
