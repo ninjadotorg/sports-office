@@ -21,6 +21,7 @@ const sizeImageCenter = moderateScale(130);
 class ChooseRoundScreen extends BaseScreen {
   constructor(props) {
     super(props);
+   
     const mile = this.props.navigation.getParam('miles')||0;
     const mapId = this.props.navigation.getParam('id')||-1;
     console.log(TAG," contructor mapID = ", mapId);
