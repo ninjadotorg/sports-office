@@ -33,14 +33,16 @@ const ViewUtil = {
       </View>
     </Modal>
   ),
-  ImageView: (props: Image.props) => {
+  ImageView: (props: Image.props, childsView = null) => {
     const ImageView = createImageProgress(FastImage);
     return (
       <ImageView
         resizeMode={FastImage.resizeMode.cover}
         source={{ priority: FastImage.priority.normal }}
         {...props}
-      />
+      >
+        {childsView}
+      </ImageView>
     );
   },
   loadingComponent: (color = 'white') => (
