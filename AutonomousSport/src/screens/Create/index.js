@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import { SearchBar, Button, Header, ButtonGroup } from 'react-native-elements';
-
+import { Button, Header, ButtonGroup } from 'react-native-elements';
+import { TAG as TAGHOME } from '@/screens/Home';
 import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
@@ -69,7 +69,8 @@ class CreateRoomScreen extends BaseScreen {
   });
 
   onPressBack = () => {
-    this.props.navigation.goBack();
+    this.replaceScreen(this.props.navigation, TAGHOME);
+    // this.props.navigation.goBack();
   };
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
