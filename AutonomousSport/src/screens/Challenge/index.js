@@ -9,13 +9,13 @@ import {
 import { GameLoop } from "react-native-game-engine";
 import BaseScreen from '@/screens/BaseScreen';
 import PopupDialog from 'react-native-popup-dialog';
-
+import { TAG as TAGCREATE } from '@/screens/Create';
 import { Button } from 'react-native-elements';
 import styles,{sizeIconRacing} from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
-import { TAG as TAGHOME } from '@/screens/Home';
+
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
 import { leftRoom,startRacing,finishedRoom } from '@/actions/RoomAction';
@@ -48,14 +48,7 @@ class ChallengeScreen extends BaseScreen {
     this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
-   
     const angle = this.getAngleWithCurrentPoint(0) ;
-
-    // const pRotatedX = futurePoint.x + (pointStart.x - futurePoint.x) * Math.cos(angle) - (pointStart.y - futurePoint.y) * Math.sin(angle);
-    // const pRotatedY = futurePoint.y + (pointStart.x - futurePoint.x) * Math.sin(angle) + (pointStart.y - futurePoint.y) * Math.cos(angle);
-    // const translateX = pRotatedX - pointStart.x;
-    // const translateY = pRotatedY - pointStart.y;
-
     this.widthMap = sizeMap.width;
     heightMap = sizeMap.height;
     this.state = {
@@ -429,7 +422,7 @@ class ChallengeScreen extends BaseScreen {
   renderMap = () => {
     const { user, room, isReady, playersMarker=[],isLoading = false} = this.state;
     const uriPhoto =  { uri: room?.photo || '' } || images.map;
-    
+    const markersView = this.renderMarker();
     return (
       <GameLoop style={styles.map} onUpdate={this.updateHandler} >
         <ImageZoom 
@@ -439,15 +432,14 @@ class ChallengeScreen extends BaseScreen {
           minScale={1}
           maxScale={2}
           imageHeight={heightMap}>
-            <ImageBackground
-              style={{ width: this.widthMap, height: heightMap }}
-              resizeMode="contain"
-              source={uriPhoto}>
-                {this.renderMarker()}
-                {
-                  playersMarker
-                }
-            </ImageBackground>
+          {ViewUtil.ImageView({
+            style:{ width: this.widthMap, height: heightMap },
+              resizeMode:"contain",
+              source:uriPhoto
+          },[
+            markersView,playersMarker
+          ])}
+            
         </ImageZoom>
         
 
@@ -484,7 +476,6 @@ class ChallengeScreen extends BaseScreen {
         }}
     />);
 
-
     // return icons.markerPlayer({
     //   color: 'red',
     //   size: sizeIconRacing.width,
@@ -518,11 +509,11 @@ class ChallengeScreen extends BaseScreen {
       const { room } = this.state;
       this.showLoadingAllScreen = true;
       await Util.excuteWithTimeout(this.props.leftRoom({ session: room?.session }),4);
-      this.replaceScreen(this.props.navigation, TAGHOME);  
+      
     } catch (error) {
       this.showLoadingAllScreen = false;
     }finally{
-      
+      this.replaceScreen(this.props.navigation, TAGCREATE);
     }
     
   });
