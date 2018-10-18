@@ -8,7 +8,7 @@ import {
   Platform,
   Image
 } from 'react-native';
- 
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import ApiService from '@/services/ApiService';
@@ -58,21 +58,23 @@ const styles = StyleSheet.create({
     // borderTopRightRadius: entryBorderRadius,
     borderRadius: 8
   }
-
 });
 class RoomList extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      user: {},
+      data: [],
+      dataFilter: [],
+      isFetching: false,
+      refreshing: false,
+      itemSelected: {},
+      joinRoom: undefined,
+      levelFillter: { min: 0, max: 10 }
+    };
   }
-  state = {
-    user: {},
-    data: [],
-    isFetching: false,
-    refreshing: false,
-    itemSelected: {},
-    joinRoom: undefined,
-    levelFillter: { min: 0, max: 10 }
-  };
+
   componentDidMount() {
     this.props.fetchRoom({ offset: 0, limit: 100 });
   }
@@ -95,13 +97,12 @@ class RoomList extends Component {
   //   return null;
   // }
   componentWillReceiveProps(nextProps) {
-    const { data, joinRoom } = this.state;
-    if (JSON.stringify(nextProps?.roomList?.list) !== JSON.stringify(data)) {
+    const { data, joinRoom, levelFillter } = this.state;
+    const newData = nextProps?.roomList?.list;
+    if (JSON.stringify(newData) !== JSON.stringify(data)) {
       console.log(TAG, ' componentWillReceiveProps - room list ');
 
-      this.setState({
-        data: nextProps?.roomList?.list
-      });
+      this.updateListRoom(newData, nextProps.levelIndex);
     } else if (
       nextProps?.joinRoomData['token'] &&
       JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
@@ -110,25 +111,45 @@ class RoomList extends Component {
       itemSelected['token'] = nextProps?.joinRoomData['token'];
       this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
     }
-    console.log('levelIndex', nextProps?.levelIndex);
 
-    var levelf = { min: 0, max: 10 };
-    if (nextProps?.levelIndex == 0) {
+    if (
+      nextProps?.levelIndex &&
+      nextProps?.levelIndex !== this.props.levelIndex
+    ) {
+      console.log(TAG, ' levelIndex ', nextProps?.levelIndex);
+      this.updateListRoom(newData, nextProps.levelIndex);
+    }
+  }
+
+  updateListRoom = (data = [], levelIndex = 0) => {
+    let levelf = { min: 0, max: 10 };
+    if (levelIndex == 0) {
       levelf = { min: 0, max: 10 };
     }
-    if (nextProps?.levelIndex == 1) {
+    if (levelIndex == 1) {
       levelf = { min: 10, max: 20 };
     }
-    if (nextProps?.levelIndex == 2) {
+    if (levelIndex == 2) {
       levelf = { min: 20, max: 50 };
     }
-    if (nextProps?.levelIndex == 3) {
+    if (levelIndex == 3) {
       levelf = { min: 50, max: 10000 };
     }
-    this.setState({
-      levelFillter: levelf
+
+    const datal =
+      data?.filter(
+        room => room.miles <= levelf.max && room.miles >= levelf.min
+      ) || [];
+
+    datal.sort(function(a, b) {
+      return b.id - a.id;
     });
-  }
+    this.setState({
+      data: data,
+      levelFillter: levelf,
+      dataFilter: datal
+    });
+  };
 
   handleRefresh = () => {
     return this.state.refreshing;
@@ -169,46 +190,43 @@ class RoomList extends Component {
   };
 
   render() {
-    const { data = [], levelFillter } = this.state;
-    const datal =
-      data?.filter(
-        room => room.miles <= levelFillter.max && room.miles >= levelFillter.min
-      ) || [];
-
-      datal.sort(function (a, b) {
-        return b.id - a.id;
-      });
-
-  
-    console.log('levelIndex-rooms', datal);
+    const { dataFilter = [] } = this.state;
+    // console.log('levelIndex-rooms', dataFilter);
     return (
       <View style={styles.container}>
-      {datal.length > 0 ? 
-        <Carousel
-          ref={c => {
-            this._carousel = c;
-          }}
-          hasParallaxImages
-          data={datal}
-          renderItem={this.renderItem}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
-          loop
-        />
-        : 
-        <Image
-            source={{uri: "https://images.pexels.com/photos/53040/pexels-photo-53040.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}}   
-            style={[styles.image, { resizeMode:  'cover' }]} 
-         />
-        }
+        {dataFilter?.length > 0 ? (
+          <Carousel
+            ref={c => {
+              this._carousel = c;
+            }}
+            hasParallaxImages
+            data={dataFilter}
+            renderItem={this.renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+            loop
+          />
+        ) : (
+          <Image
+            source={{
+              uri:
+                'https://images.pexels.com/photos/53040/pexels-photo-53040.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+            }}
+            style={[styles.image, { resizeMode: 'cover' }]}
+          />
+        )}
       </View>
     );
   }
 }
 
-RoomList.propTypes = {};
+RoomList.propTypes = {
+  levelIndex: PropTypes.number.isRequired
+};
 
-RoomList.defaultProps = {};
+RoomList.defaultProps = {
+  levelIndex: -1
+};
 export default compose(
   withNavigation,
   connect(
