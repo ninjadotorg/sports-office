@@ -300,7 +300,7 @@ class ChallengeScreen extends BaseScreen {
     }
 
     // update position list player
-    const {players = [],playersColor = {}} = this.state;
+    const {players = [],playersColor = {},playersMarker = []} = this.state;
     let indexPosition;
     let lastIndex = 0;
     let nextPoint = {};
@@ -321,7 +321,7 @@ class ChallengeScreen extends BaseScreen {
       }
     });
 
-    if(isHaveChange){
+    if(isHaveChange || playersMarker?.length!== markers?.length){
       this.setState({
         playersMarker:markers
       });     
@@ -420,7 +420,7 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderMap = () => {
-    const { user, room, isReady, playersMarker=[],isLoading = false} = this.state;
+    const { user, room, isReady, playersMarker=[],isLoading = false,players = []} = this.state;
     const uriPhoto =  { uri: room?.photo || '' } || images.map;
     const markersView = this.renderMarker();
     return (
@@ -443,7 +443,7 @@ class ChallengeScreen extends BaseScreen {
         </ImageZoom>
         
 
-        {isReady || user?.id!== room.userId ? null : (
+        {isReady || user?.id!== room.userId || playersMarker?.length<=1 ? null : (
           <Button
             loading={isLoading}
             containerViewStyle={{
