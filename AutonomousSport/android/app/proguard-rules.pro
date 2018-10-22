@@ -16,3 +16,5 @@
 #   public *;
 #}
 -keep class com.autonomoussport.BuildConfig { *; }
+-keep public class com.dylanvann.fastimage.* {*;}
+-keep public class com.dylanvann.fastimage.** {*;}

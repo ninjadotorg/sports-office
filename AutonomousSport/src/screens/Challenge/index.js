@@ -9,13 +9,13 @@ import {
 import { GameLoop } from "react-native-game-engine";
 import BaseScreen from '@/screens/BaseScreen';
 import PopupDialog from 'react-native-popup-dialog';
-
+import { TAG as TAGCREATE } from '@/screens/Create';
 import { Button } from 'react-native-elements';
 import styles,{sizeIconRacing} from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
-import { TAG as TAGHOME } from '@/screens/Home';
+
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
 import { leftRoom,startRacing,finishedRoom } from '@/actions/RoomAction';
@@ -48,14 +48,7 @@ class ChallengeScreen extends BaseScreen {
     this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
-   
     const angle = this.getAngleWithCurrentPoint(0) ;
-
-    // const pRotatedX = futurePoint.x + (pointStart.x - futurePoint.x) * Math.cos(angle) - (pointStart.y - futurePoint.y) * Math.sin(angle);
-    // const pRotatedY = futurePoint.y + (pointStart.x - futurePoint.x) * Math.sin(angle) + (pointStart.y - futurePoint.y) * Math.cos(angle);
-    // const translateX = pRotatedX - pointStart.x;
-    // const translateY = pRotatedY - pointStart.y;
-
     this.widthMap = sizeMap.width;
     heightMap = sizeMap.height;
     this.state = {
@@ -251,21 +244,31 @@ class ChallengeScreen extends BaseScreen {
   };
 
   createMarkerWithPosition= (pos={x:0,y:0},color = 'red')=>{
-    
-    return icons.markerPlayer({
-      color: color,
-      size: sizeIconRacing.width,
-      iconStyle:{
-        margin:0
-      },
-      containerStyle: {
-        paddingVertical:0,
-        paddingHorizontal:0,
+    return (<View style={{
+        padding:10,
+        backgroundColor:color,
+        borderRadius:sizeIconRacing.width/2,
+        width:sizeIconRacing.width,
+        height:sizeIconRacing.width,
         position: 'absolute',
         top: pos.y ,
         left: pos.x
-      }
-    });
+    }}/>);
+    
+    // return icons.markerPlayer({
+    //   color: color,
+    //   size: sizeIconRacing.width,
+    //   iconStyle:{
+    //     margin:0
+    //   },
+    //   containerStyle: {
+    //     paddingVertical:0,
+    //     paddingHorizontal:0,
+    //     position: 'absolute',
+    //     top: pos.y ,
+    //     left: pos.x
+    //   }
+    // });
   }
 
   componentDidMount() {
@@ -297,7 +300,7 @@ class ChallengeScreen extends BaseScreen {
     }
 
     // update position list player
-    const {players = [],playersColor = {}} = this.state;
+    const {players = [],playersColor = {},playersMarker = []} = this.state;
     let indexPosition;
     let lastIndex = 0;
     let nextPoint = {};
@@ -318,7 +321,7 @@ class ChallengeScreen extends BaseScreen {
       }
     });
 
-    if(isHaveChange){
+    if(isHaveChange || playersMarker?.length!== markers?.length){
       this.setState({
         playersMarker:markers
       });     
@@ -417,9 +420,9 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderMap = () => {
-    const { user, room, isReady, playersMarker=[],isLoading = false} = this.state;
+    const { user, room, isReady, playersMarker=[],isLoading = false,players = []} = this.state;
     const uriPhoto =  { uri: room?.photo || '' } || images.map;
-    
+    const markersView = this.renderMarker();
     return (
       <GameLoop style={styles.map} onUpdate={this.updateHandler} >
         <ImageZoom 
@@ -429,19 +432,18 @@ class ChallengeScreen extends BaseScreen {
           minScale={1}
           maxScale={2}
           imageHeight={heightMap}>
-            <ImageBackground
-              style={{ width: this.widthMap, height: heightMap }}
-              resizeMode="contain"
-              source={uriPhoto}>
-                {this.renderMarker()}
-                {
-                  playersMarker
-                }
-            </ImageBackground>
+          {ViewUtil.ImageView({
+            style:{ width: this.widthMap, height: heightMap },
+              resizeMode:"contain",
+              source:uriPhoto
+          },[
+            markersView,playersMarker
+          ])}
+            
         </ImageZoom>
         
 
-        {isReady || user?.id!== room.userId ? null : (
+        {isReady || user?.id!== room.userId || playersMarker?.length<=1 ? null : (
           <Button
             loading={isLoading}
             containerViewStyle={{
@@ -461,30 +463,30 @@ class ChallengeScreen extends BaseScreen {
 
   renderMarker = () => {
     const { pos } = this.state;
-    // return (<Image source={images.ic_racer1} 
-    //     style={{
-    //       backgroundColor:'transparent',
-    //       position: 'absolute',
-    //       top: pos.y ,
-    //       left: pos.x,
-    //       width:sizeIconRacing.width,
-    //       height:sizeIconRacing.height,
-    //       transform:[{rotate:`${pos.rotate}rad`}]
-    //     }}
-    // />);
+    return (<Image source={images.ic_racer1} 
+        resizeMode='center'
+        style={{
+          backgroundColor:'transparent',
+          position: 'absolute',
+          top: pos.y ,
+          left: pos.x,
+          width:sizeIconRacing.width,
+          height:sizeIconRacing.height,
+          transform:[{rotate:`${pos.rotate}rad`}]
+        }}
+    />);
 
-
-    return icons.markerPlayer({
-      color: 'red',
-      size: sizeIconRacing.width,
-      containerStyle: {
-        paddingVertical:0,
-        paddingHorizontal:0,
-        position: 'absolute',
-        top: pos.y ,
-        left: pos.x
-      }
-    });
+    // return icons.markerPlayer({
+    //   color: 'red',
+    //   size: sizeIconRacing.width,
+    //   containerStyle: {
+    //     paddingVertical:0,
+    //     paddingHorizontal:0,
+    //     position: 'absolute',
+    //     top: pos.y ,
+    //     left: pos.x
+    //   }
+    // });
   };
 
   onPressReady = this.onClickView(async () => {
@@ -507,11 +509,11 @@ class ChallengeScreen extends BaseScreen {
       const { room } = this.state;
       this.showLoadingAllScreen = true;
       await Util.excuteWithTimeout(this.props.leftRoom({ session: room?.session }),4);
-      this.replaceScreen(this.props.navigation, TAGHOME);  
+      
     } catch (error) {
       this.showLoadingAllScreen = false;
     }finally{
-      
+      this.replaceScreen(this.props.navigation, TAGCREATE);
     }
     
   });
