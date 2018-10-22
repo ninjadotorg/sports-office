@@ -40,7 +40,15 @@ export const color = {
   }
 };
 
+//backgroundColor: '#232339'
+
 const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    flexDirection: 'row',  
+  },
+
   text: {
     color: 'white'
   },
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     flexGrow: 1,
-    backgroundColor: '#1D1D26',
+    backgroundColor: 'transparent',
     paddingHorizontal: scaleSize(120)
   },
   mainView: { flex: 1, alignContent: 'center', backgroundColor: 'transparent' },
@@ -122,6 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: moderateScale(10),
     backgroundColor: 'transparent',
+    //backgroundColor:'#232339',
     justifyContent: 'center'
   },
   imgContainerStyle: {

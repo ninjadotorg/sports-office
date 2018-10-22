@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     padding: 10,
-    backgroundColor: '#181818'
+    backgroundColor: 'transparent'
   },
   scroll: {
     flex: 1,

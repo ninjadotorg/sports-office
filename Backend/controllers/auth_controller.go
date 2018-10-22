@@ -295,7 +295,9 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest,f21) 
 	}
 
+	
 	t, err := ot.Token(s.ID, nil)
+	
 	if err != nil {
 			//panic(err)
 			f21 = map[string]interface{}{ 
@@ -873,7 +875,10 @@ func (basectl *BaseController)LeaveRoom(c echo.Context) error{
 
 	room := new(models.Room)
 	room.Session = c.FormValue("session")
-	basectl.Dao.Where(&models.Room{Session : room.Session }).First(&room) 
+	
+	//basectl.Dao.Where(&models.Room{Session : room.Session }).First(&room) 
+	basectl.Dao.Where(&models.Room{Session: room.Session  }).Set("gorm:auto_preload", true).First(&room) 
+
 	if room.ID <=0 || room.Status ==0 {
 		f21 = map[string]interface{}{ 
 			"status" : 0,
@@ -894,17 +899,29 @@ func (basectl *BaseController)LeaveRoom(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest,f21) 
 
 	}else{
+		
 		player.Status = 0 // Leave 
 		basectl.Dao.Save(&player)
 		basectl.Dao.Delete(&models.RoomPlayer{ID: player.ID});
+	
 	} 
 	//write first player user. 
 	var fbData, _ = basectl.FbApp.Database(context.Background())
 	var refDB = fbData.NewRef("games")
 
-	if err3 := refDB.Child("race-rooms/"+ c.FormValue("session") +"/players/"+ fbuid).Set(context.Background(), nil); err3 != nil {
-		log.Fatalln("Error setting value:", err3) 
-	}  
+	refDB.Child("race-rooms/"+  room.Session +"/players/"+ fbuid).Set(context.Background(), nil) 
+ 
+
+	basectl.Dao.Where(&models.Room{Session: room.Session  }).Set("gorm:auto_preload", true).First(&room) 
+ 
+	if len(room.RoomPlayers) ==0 {
+		room.Status = 3 // Leave 
+		basectl.Dao.Save(&room)
+
+		refDB.Child("race-rooms/"+ room.Session ).Set(context.Background(), nil) 
+
+	}
+
 
 	f21 = map[string]interface{}{  
 		"player":player,
@@ -984,9 +1001,9 @@ func (basectl *BaseController)ListRoom(c echo.Context) error{
 
 	var listroom []models.Room
 	basectl.Dao.Where(models.Room{Status:1}).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
-	
+	//.Where("name = ?", "jinzhu").
+	//basectl.Dao.Raw("select rooms.* , count(roomplayers.room_id) as Ncoi from rooms , roomplayers where rooms.status = 1 and rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING Ncoi >= 1 AND Ncoi < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY ID desc ").Set("gorm:auto_preload", true).Scan(&listroom)
 	//basectl.Dao.Model(&u).Related(&u.Balances)
-
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listroom,

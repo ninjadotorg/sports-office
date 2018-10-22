@@ -13,6 +13,7 @@ import {
   Image,
   AppState,
   Alert,
+  ImageBackground,
   Dimensions
 } from 'react-native';
 
@@ -354,7 +355,7 @@ export default class SetupScreen extends BaseScreen {
     console.log(TAG, ' renderItem = ', item);
     return (
       <TouchableOpacity
-        style={[styles.row, { backgroundColor: 'transparent' }]}
+        style={[styles.row, { backgroundColor: 'transparent' ,marginTop:5}]}
         key={item.id}
         onPress={this.onClickView(async () => {
           console.log(TAG, ' onPressItemConnect = begin ');
@@ -364,13 +365,22 @@ export default class SetupScreen extends BaseScreen {
           this.startScan();
         })}
       >
+        <Image
+            source={images.ic_bluetooth}
+            style={[{
+              width: 20,
+              height: 27,
+              marginTop:8 
+            }]}
+          />
         <Text
           style={[
-            TextStyle.mediumText,
+            TextStyle.normalText,
             {
               textAlign: 'center',
               color: '#FFFFFF',
-              padding: 10
+              padding: 10,
+              marginLeft:20
             }
           ]}
         >
@@ -396,21 +406,21 @@ export default class SetupScreen extends BaseScreen {
   render() {
     const { isLoading } = this.state;
     return (
-      <View style={styles.container}>
+      <ImageBackground style={styles.container} source={images.backgroundx}> 
+      <View style={[styles.container,{paddingLeft:40 }]}>
         <Image
           source={images.logo}
-          style={{ width: 40, height: 40, margin: 10 }}
+          style={{ width: 58, height: 58, margin: 10,marginTop:30  }}
         />
-        <View style={styles.containerRight}>
-          <Text style={[TextStyle.mediumText, styles.textLabel]}>
+        <View style={[styles.containerRight,{marginLeft:20, marginTop:10} ]}>
+          <Text style={[TextStyle.extraText, styles.textLabel,{marginLeft:10,marginTop:10}]}>
             Autonomous
           </Text>
-          <Text style={[TextStyle.normalText, styles.textLabel2]}>
-            Welcome to Autonomous Bike. Please connect the app to the Bike via
-            Bluetooth.
+          <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:10}]}>
+            Welcome to <Text style={{fontWeight: "bold"}}>Autonomous Bike</Text>. Please connect the app to<Text style={{fontWeight: "bold"}}> the Bike via Bluetooth</Text>.
           </Text>
-          <Text style={[TextStyle.normalText, styles.textLabel2]}>
-            Select Autonomous Bike below:
+          <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:50}]}>
+            Select <Text style={{fontWeight: "bold"}}>Autonomous Bike</Text> below:
           </Text>
           {isLoading ? (
             ViewUtil.CustomProgressBar({ visible: true })
@@ -425,17 +435,19 @@ export default class SetupScreen extends BaseScreen {
             />
           )}
           <Image
-            source={images.bike}
-            style={{
-              width: 120,
-              height: 120,
+            source={images.bike2}
+            style={[{
+              width: 739,
+              height: 479,
               bottom: 0,
               right: 0,
               position: 'absolute'
-            }}
+            }]}
           />
         </View>
       </View>
+            
+      </ImageBackground>
     );
   }
 }
