@@ -9,6 +9,7 @@ import {
   ScrollView,
   TextInput,
   Surface,
+  ImageBackground,
   KeyboardAvoidingView
 } from 'react-native';
 import _ from 'lodash';
@@ -25,6 +26,7 @@ import { checkSaveDevice } from '@/actions/RaceAction';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
 import ApiService from '@/services/ApiService';
+import images, { icons } from '@/assets';
 
 export const TAG = 'SignInScreen'; 
 
@@ -41,10 +43,12 @@ class SignInScreen extends BaseScreen {
       isSavedDevice:undefined,
       loading:false,
       texts:{ 
-        "signin":{"button":"Sign In","bottomText":"Don't have an account ? ", "bottonBtn":"Sign Up"},
-        "signup":{"button":"Sign Up","bottomText":"Already have an account ? ", "bottonBtn":"Sign In" },
-        "forgot":{"button":"Forgot Password","bottomText":"Already have an account ? ", "bottonBtn":"Sign Up"}
+        "signin":{"button":"Sign In","bottomText":"DON'T HAVE AN ACCOUNT ? ", "bottonBtn":"SIGN UP"},
+        "signup":{"button":"Sign Up","bottomText":"ALREADY HAVE AN ACCOUNT ? ", "bottonBtn":"SIGN IN" },
+        "forgot":{"button":"Forgot Password","bottomText":"ALREADY HAVE AN ACCOUNT ? ", "bottonBtn":"SIGN IN"}
        },
+       eye: images.ic_eye,
+       secureTextEntry: true,
 
     };
   }
@@ -150,10 +154,23 @@ class SignInScreen extends BaseScreen {
     //});
     this.setState({
        swap: data =="signin" ? "signup" : "signin",
+       error:'',
+       secureTextEntry:true,
     })
     
   });
 
+  onPressEye = onClickView(()=>{
+    let y = this.state.eye;
+    y = (y == images.ic_eye ? images.ic_eye_flash : images.ic_eye );
+
+    console.log(TAG,' onPressEye ',y);
+    this.setState({
+      eye:  y,
+      secureTextEntry:  (y == images.ic_eye ? true : false ),
+    });
+
+  })
   
   onPressForgot = onClickView(()=>{
      
@@ -192,15 +209,14 @@ class SignInScreen extends BaseScreen {
             this.setState({ error:'Email is not correct!!' }); 
           }
         } else {
-          this.setState({ error:'Please input your email,password' });
+          this.setState({ error:'Please input your email, password' });
         }
       }
 
   });
   renderSignInWithEmail = ()=>{
     const { error, loading,swap, texts } = this.state;
-    //const textForButton = texts[swap] //swap ? 'Sign Up' : 'Sign In';
-   
+    
     return (
       
       <KeyboardAvoidingView
@@ -208,12 +224,10 @@ class SignInScreen extends BaseScreen {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : (-screenSize.height/3 + scale(30))}
         contentContainerStyle={[{flex:1,flexGrow:1},{minHeight: (screenSize.height/2)}]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
-      >
-      
-        <Text style={[TextStyle.extraText,styles.text,styles.textLogo]}>{texts[swap].button}</Text>
-        <View style={styles.inputContainerStyle}>
+      > 
+        <View style={[styles.inputContainerStyle]}>
           {swap =="signup" ? ( 
-            <View style={styles.containerInput}>
+            <View style={[styles.containerInput, {marginBottom:10 }]}>
               <Text style={[TextStyle.normalText,styles.textLabel]}>Name</Text>
               
               <TextInput
@@ -229,7 +243,7 @@ class SignInScreen extends BaseScreen {
           </View>
             
           ) : null}
-          <View style={styles.containerInput}>
+          <View style={[styles.containerInput, {marginBottom:10 }]}>
             <Text style={[TextStyle.normalText,styles.textLabel]}>Email</Text>
             <TextInput
               ref={(email) => {
@@ -244,7 +258,7 @@ class SignInScreen extends BaseScreen {
             />
           </View>
           {swap !="forgot" ? ( 
-          <View style={styles.containerInput}>
+          <View style={[styles.containerInput, {marginBottom:10 }]}>
             <Text style={[TextStyle.normalText,styles.textLabel]}>Password</Text>
             <TextInput
               placeholder="******"
@@ -256,32 +270,52 @@ class SignInScreen extends BaseScreen {
               disableFullscreenUI={true}
               style={[TextStyle.normalText,styles.text,{flex:2}]}
               underlineColorAndroid="transparent"
-              secureTextEntry
+              secureTextEntry = {this.state.secureTextEntry}
             />
           </View>
-          ) : null }
-        </View>
+          ) : null } 
 
-        {!error ? null : (
-          <Text
-            style={[
-              TextStyle.normalText,
-              styles.errorItem,
-              styles.marginBottom10
-            ]}
-          >
-            {error}
-          </Text>
-        )}
+            <View style={{flexDirection: 'row'}}>
+                <View style={{flex:1, alignItems: 'center'}}>
+                    {!error ? null : (
+                    <Text
+                      style={[
+                        TextStyle.normalText,
+                        styles.errorItem,
+                        styles.marginBottom10,
+                        {textAlign:'left'  }
+                      ]}
+                    >
+                      {error}
+                    </Text>
+                  )}
 
-        <Button
-          loading={loading}
-          buttonStyle={styles.buttonStyle}
-          title={texts[swap]["button"]}
-          textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
-          onPress={this.onPressSignIn}
-        />
-        
+                </View>
+                <View style={{position:'absolute', right:0  }}> 
+                     
+                  {swap !="signup" ? null :
+
+                    <TouchableOpacity  onPress={this.onPressEye} style={[styles.buttonStyle, {position:'absolute', right:2, 
+                           marginTop:-70, backgroundColor:'transparent', width:48}]}>
+                                    <Image source={this.state.eye}  /> 
+                    </TouchableOpacity>
+
+                     
+                  }
+                      {swap =="forgot" ? null : (
+                      <Text
+                      onPress={this.onPressForgot}
+                        style={[TextStyle.normalText,  
+                        {textAlign:'right', color:'#02BB4F'}]} 
+                      >
+                        Forgot password?
+                      </Text> 
+                    )}  
+                </View>
+            </View> 
+
+
+        </View> 
       </KeyboardAvoidingView>
     );
   }
@@ -337,58 +371,56 @@ class SignInScreen extends BaseScreen {
     );
   }
   render() {
-    const { swap,texts } = this.state;
+    const { swap,texts,loading } = this.state;
     return (
-     
+      <ImageBackground style={styles.container} source={images.backgroundx}> 
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.scrollView}>
-        
+        contentContainerStyle={styles.scrollView}> 
         <View style={styles.mainView}>
+        <Text style={[TextStyle.extraText,styles.text,styles.textLogo, {marginTop: 110 }] }>{texts[swap].button}</Text>
           {this.renderSignInWithEmail()}  
-          <View
-            style={[
-              styles.socialBottomTextContainer,
-              styles.linkContainerMargin
-            ]}
-          >
-            <Text
-              style={[
-                TextStyle.smallText,
-                styles.textButton,
-                styles.socialBottomText
-              ]}
-            > 
-              { swap !="forgot" ? texts[swap].bottomText : texts["signin"].bottomText }  
-            </Text>
-            <View style={styles.linkContainer}>
-              <Text
-                style={[TextStyle.smallText, styles.textButton, styles.link]}
-                onPress={()=>this.changeFuncti(swap) }
-              >
-                {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].button}
-              </Text>
-            </View>
-          </View>
-          {swap =="forgot" ? null : (
-            <View
+
+           <View
               style={[
                 styles.socialBottomTextContainer,
-                styles.linkContainerMargin,
-                styles.linkContainer,
+                styles.linkContainerMargin, 
+                styles.endScreenText
+              ]}
+            >
+             <Button
+                loading={loading}
+                buttonStyle={[styles.buttonStyle, {marginBottom:80}]}
+                title={texts[swap]["button"]}
+                textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
+                containerViewStyle={{width: '100%', marginLeft: 0, marginRight: 0}}
+                onPress={this.onPressSignIn}
+              />
+              </View>
+           <View
+              style={[
+                styles.socialBottomTextContainer,
+                styles.linkContainerMargin, 
                 styles.endScreenText
               ]}
             >
               <Text
-                onPress={this.onPressForgot}
-                style={[TextStyle.smallText, styles.textButton, styles.link]}
-              >
-               Forgot password?
+                style={[TextStyle.smallText, styles.textButton, {color:'#91919c'}]}
+              >  {  swap !="forgot"  ? texts[swap].bottomText : texts["signin"].bottomText}
               </Text>
-            </View>
-          )}
+
+              <Text
+                style={[TextStyle.smallText, styles.textButton, styles.link]}
+                onPress={()=>this.changeFuncti(swap) }
+              >  {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].bottonBtn}
+              </Text>
+          </View>
+            
         </View>
+       
       </ScrollView>
+              
+      </ImageBackground>
     );
   }
 }
