@@ -3,14 +3,14 @@ import { Icon } from 'react-native-elements';
 
 const images = {
   backgroundx: require('@/assets/images/bg.png'),
-  map_list: [require('@/assets/images/map_01.png')],
+  // map_list: [require('@/assets/images/map_01.png')],
   logo: require('@/assets/images/logo.png'),
   ic_gold: require('@/assets/images/ic_gold.png'),
   // ic_bronze: require('@/assets/images/ic_bronze.png'),
   // ic_silver: require('@/assets/images/ic_silver.png'),
   back_score: require('@/assets/images/back_score.png'),
-  bike: require('@/assets/images/bike.png'), 
-  bike2: require('@/assets/images/bike2.png'), 
+  bike: require('@/assets/images/bike.png'),
+  bike2: require('@/assets/images/bike2.png'),
   user: require('@/assets/images/ic_user.png'),
   image_start: require('@/assets/images/image_start.png'),
   image_velocity: require('@/assets/images/image_velocity.png'),
@@ -18,15 +18,13 @@ const images = {
   ic_plus_up: require('@/assets/images/ic_plus_up.png'),
   ic_bluetooth: require('@/assets/images/buletooth.png'),
   ic_eye_flash: require('@/assets/images/eye_slash.png'),
-  ic_eye: require('@/assets/images/eye.png'), 
-  mapVector: require('@/assets/images/map.svg'),
-  map: require('@/assets/images/map.jpg'),
+  ic_eye: require('@/assets/images/eye.png'),
+  // mapVector: require('@/assets/images/map.svg'),
+  // map: require('@/assets/images/map.jpg'),
   ic_racer1: require('@/assets/images/ic_racer1.png'),
   ic_no_friend_list: require('@/assets/images/icons8addusergroup.png'),
   ic_backtop: require('@/assets/images/ic_back.png'),
   ic_check: require('@/assets/images/check.png')
-
-
 };
 export const icons = {
   close: ({
