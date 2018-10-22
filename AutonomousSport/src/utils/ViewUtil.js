@@ -1,7 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, View, Text, Modal } from 'react-native';
+import { ActivityIndicator, View, Text, Modal, Image } from 'react-native';
 import { debounce } from 'lodash';
 import TextStyle, { scale } from '@/utils/TextStyle';
+import { createImageProgress } from 'react-native-image-progress';
+import FastImage from 'react-native-fast-image';
 
 const TAG = 'ViewUtil';
 export const onClickView = funcOnView => {
@@ -31,6 +33,18 @@ const ViewUtil = {
       </View>
     </Modal>
   ),
+  ImageView: (props: Image.props, childsView = null) => {
+    const ImageView = createImageProgress(FastImage);
+    return (
+      <ImageView
+        resizeMode={FastImage.resizeMode.cover}
+        source={{ priority: FastImage.priority.normal }}
+        {...props}
+      >
+        {childsView}
+      </ImageView>
+    );
+  },
   loadingComponent: (color = 'white') => (
     <ActivityIndicator animating size="small" color={color} />
   ),

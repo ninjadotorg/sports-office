@@ -1,20 +1,21 @@
 import React, { Component, PureComponent } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Avatar, Button } from 'react-native-elements';
-import { verticalScale } from 'react-native-size-matters';
+import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { Config } from '@/utils/Constants';
 import TextStyle, { scale } from '@/utils/TextStyle';
 import User from '@/models/User';
 import { icons } from '@/assets';
 import Map from '@/models/Map';
+import ViewUtil from '@/utils/ViewUtil';
 
 export const TAG = 'ItemMap';
 class ItemMap extends PureComponent {
   constructor(props) {
     super(props);
+
     this.state = {
       data: props.data,
       checked: undefined
@@ -51,7 +52,14 @@ class ItemMap extends PureComponent {
             this.props.onItemSelected(dataItem.id);
           }}
         >
-          <Image source={{ uri: uri }} style={styles.image} />
+          {ViewUtil.ImageView({
+            style: styles.image,
+            source: {
+              uri: uri
+            },
+            resizeMode: FastImage.resizeMode.cover
+          })}
+
           <View
             style={{
               flex: 1,

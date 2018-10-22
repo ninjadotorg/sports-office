@@ -1,18 +1,23 @@
 {
-  presets: ['react-native', '@babel/preset-flow'],
-  plugins: [
+  "presets": ["react-native", "@babel/preset-flow"],
+  "plugins": [
     [
-      'module-resolver',
+      "module-resolver",
       {
-        root: ['./src'],
-        cwd: 'babelrc',
-        alias: {
-          '@': './src/'
+        "root": ["./src"],
+        "cwd": "babelrc",
+        "alias": {
+          "@": "./src/"
         },
-        extensions: ['.js', '.jsx']
+        "extensions": [".js", ".jsx"]
       }
     ]
   ],
-  retainLines: true,
-  sourceMaps: true
+  "env": {
+    "production": {
+      "plugins": ["transform-remove-console"]
+    }
+  },
+  "retainLines": true,
+  "sourceMaps": true
 }
