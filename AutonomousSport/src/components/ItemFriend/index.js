@@ -84,21 +84,23 @@ class ItemFriend extends PureComponent {
     const { dataItem, isLoading } = this.state;
     console.log("invited", dataItem);
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,
+      {paddingTop:14, paddingBottom:14, paddingRight:verticalScale(0),paddingLeft:0, marginLeft:0, borderBottomWidth:1, borderBottomColor:'#333333'}]}>
         <Avatar
-          small
+          medium
           rounded
           overlayContainerStyle={{
             backgroundColor: 'rgba(255,255,255,0.2)',
             borderWidth: 1,
-            borderColor: 'white'
+            borderColor: 'white', 
+            
           }}
           icon={{ type: 'font-awesome', name: 'user', color: 'white' }}
           onPress={() => console.log('Works!')}
           activeOpacity={0.2}
-          containerStyle={{ alignSelf: 'center' }}
+          containerStyle={{ alignSelf: 'center', marginLeft:0 }}
         />
-        <View style={{ marginHorizontal: 10, flex: 1 }}>
+        <View style={{ marginHorizontal: 10, flex: 1, marginLeft: verticalScale(20) }}>
           <Text
             style={[
               TextStyle.mediumText,
@@ -115,7 +117,8 @@ class ItemFriend extends PureComponent {
               TextStyle.normalText,
               {
                 color: 'rgba(255,255,255,0.5)',
-                textAlignVertical: 'center'
+                textAlignVertical: 'center',
+                paddingTop:2
               }
             ]}
           >
@@ -128,7 +131,8 @@ class ItemFriend extends PureComponent {
             {
               color: 'white',
               fontWeight: 'bold',
-              textAlignVertical: 'center'
+              textAlignVertical: 'center',
+              marginRight:verticalScale(24)
             }
           ]}
         >
@@ -137,33 +141,32 @@ class ItemFriend extends PureComponent {
         
         {this.props.inviteMode ? 
             <Button
-            loading={isLoading}
             rounded
             fontSize={12 * scale()}
             containerViewStyle={{
               marginRight: 0,
               alignSelf: 'center'
-            }}
-            buttonStyle={{ height: verticalScale(20) }}
-            title={ this.state.dataItem?.is_add_invited ?  'invited' :  'invite' }
+            }}  
+            buttonStyle={{ height: verticalScale(24),width: verticalScale(80)  , borderWidth:1, borderColor: dataItem?.is_add_invited ? '#333333' :"transparent" }}
+            title={ this.state.dataItem?.is_add_invited ?  'Invited' :  'Invite' }
             onPress={this.onClickMakeFriend}
-            backgroundColor="#02BB4F"
-            rightIcon={{ name: 'envira', type: 'font-awesome' }}
+            backgroundColor={dataItem?.is_add_invited ? 'transparent' :'#02BB4F'}  
+            rightIcon={ dataItem?.is_add_invited ? { name: 'ios-checkmark', type: 'ionicon' } : null }
+
             />  
         :
             <Button
-              loading={isLoading}
               rounded
               fontSize={12 * scale()}
               containerViewStyle={{
                 marginRight: 0,
                 alignSelf: 'center'
               }}
-              buttonStyle={{ height: verticalScale(20) }}
-              title={ dataItem?.is_maked_friend ?  'Friend' :  'Add' }
+              buttonStyle={{ height: verticalScale(24),width: verticalScale(80)  , borderWidth:1, borderColor: dataItem?.is_maked_friend ? '#333333' :"transparent" }}
+              title={ dataItem?.is_maked_friend ?  'Friend' :  'Add Friend' }
               onPress={this.onClickMakeFriend}
-              backgroundColor="#02BB4F"
-              rightIcon={{ name: 'envira', type: 'font-awesome' }}
+              backgroundColor={dataItem?.is_maked_friend ? 'transparent' :'#02BB4F'}  
+              rightIcon={ dataItem?.is_maked_friend ? { name: 'ios-checkmark', type: 'ionicon' } : null }
             />
         } 
 
