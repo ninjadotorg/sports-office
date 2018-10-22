@@ -48,9 +48,7 @@ export const signIn = ({
   }
 };
 
-export const forGotPass = ({
-  email = ''
-}) => async dispatch => {
+export const forGotPass = ({ email = '' }) => async dispatch => {
   try {
     console.log(TAG, ' - forGotPass - begin ');
     let response = await ApiService.signIn({ email, password, name });
@@ -62,7 +60,6 @@ export const forGotPass = ({
     console.log(TAG, ' - forGotPass - error ', e);
   }
 };
-
 
 export const loginWithFirebase = ({
   email = '',
@@ -90,8 +87,13 @@ export const loginWithFirebase = ({
 };
 export const fetchUser = () => async dispatch => {
   const user = await LocalDatabase.getUserInfo();
+  let practiceInfo = await LocalDatabase.getPractiseInfo();
   if (user) {
-    dispatch({ type: ACTIONS.GET_USER, payload: user.toJSON() });
+    dispatch({
+      type: ACTIONS.GET_USER,
+      payload: user.toJSON(),
+      payloadPracticeInfo: practiceInfo
+    });
     return;
   } else {
   }
