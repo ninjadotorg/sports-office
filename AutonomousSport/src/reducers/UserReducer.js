@@ -6,8 +6,7 @@ import ApiService from '@/services/ApiService';
 const TAG = 'UserReceducer';
 const initialState = { userInfo: {}, practiceInfo: {}, firebaseInfo: {} };
 const UserReducer = (state = initialState, action) => {
-  switch (action.type) { 
-
+  switch (action.type) {
     case ACTIONS.AUTH_LOGIN: {
       const payload = action.payload || {};
       if (!_.isEmpty(payload)) {
@@ -22,11 +21,12 @@ const UserReducer = (state = initialState, action) => {
     }
     case ACTIONS.GET_USER: {
       const payload = action.payload || {};
+      const practiceInfo = action.payloadPracticeInfo || {};
       if (!_.isEmpty(payload)) {
         console.log(TAG, ' UserReducer-GET_USER payload = ', payload);
         ApiService.token = payload.token;
       }
-      return { ...state, userInfo: payload };
+      return { ...state, userInfo: payload, practiceInfo: practiceInfo };
     }
     case ACTIONS.UPDATE_USER_NAME: {
       const payload = action.payload || {};

@@ -46,6 +46,7 @@ class HomeScreen extends BaseScreen {
       race: {},
       distanceRun: 0,
       kcal: 0,
+      isStarted: true,
       speed: 0,
       isLoading: false
     };
@@ -160,6 +161,7 @@ class HomeScreen extends BaseScreen {
 
   onPressReset = this.onClickView(async () => {
     const { isStarted } = this.state;
+    console.log(TAG, ' onPressReset isStarted = ', isStarted);
     if (isStarted) {
       this.setState(
         {
@@ -214,12 +216,12 @@ class HomeScreen extends BaseScreen {
             <DashboardProfile
               kcal={
                 Math.round(
-                  (practiceInfo?.kcal || userInfo?.profile?.kcal || 0) * 100
+                  (practiceInfo?.kcal || 0) * 100
                 ) / 100
               }
               mile={
                 Math.round(
-                  (practiceInfo?.miles || userInfo?.profile?.miles || 0) * 1000
+                  (practiceInfo?.miles || 0) * 1000
                 ) / 1000
               }
             />
