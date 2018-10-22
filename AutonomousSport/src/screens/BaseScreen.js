@@ -11,6 +11,7 @@ import {
   scale as scaleSize,
   verticalScale
 } from 'react-native-size-matters';
+import _ from 'lodash';
 import images from '@/assets';
 import { connect } from 'react-redux';
 import { fetchUser,signIn,forGotPass, loginWithFirebase } from '@/actions/UserAction';
@@ -30,10 +31,14 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 25,
     borderWidth: 1,
+    width: '35%',
+    height: verticalScale(50),
     backgroundColor: 'transparent',
-    borderColor: '#02BB4F',
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+    borderColor: '#21c364',
+    marginRight:0,
+    marginLeft:0,
+    // minWidth: scaleSize(100),
+    // paddingHorizontal: scaleSize(18)
   }
 });
 class BaseScreen extends Component {
@@ -74,10 +79,9 @@ class BaseScreen extends Component {
     }
   ) => {
 
-    
     const fbuid = this.props.user?.userInfo?.fbuid || "";
     console.log("BaseScreen fbuid",fbuid);
-    if(fbuid !=""){
+    if(!_.isEmpty(fbuid)){
         this.dataPrefference = firebase.database().ref("users/"+fbuid);
         this.dataPrefference.on('value', dataSnap => {  
             const data = dataSnap.val();
@@ -92,49 +96,57 @@ class BaseScreen extends Component {
             }
         });
     } 
-
+    const uri = 'https://storage.googleapis.com/oskar-ai/1/HongKong_nNYONeB1BpzY331lNoD9.jpg' || this.state.roomInfo?.Map?.cover;
     return (
       <PopupDialog
-        width="70%"
-        height="70%"
+        width="80%"
+        height="60%"
         hasOverlay
         dismissOnTouchOutside={false}
         ref={popupDialog => {
           this.popupInviteDialog = popupDialog;
         }}
       >
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', flex: 1, padding: 20 }}> 
-            <View style={{ flex: 1 }}>
-            <Image style={[{ width:100, height:100, resizeMode:  'cover' }]} source={{uri:this.state.roomInfo?.Map?.cover }}    
-             />
+        <View style={{ flex: 1 ,flexDirection: 'row', padding: 20}}>
+          <Image style={[{ width:'40%', height:'100%', resizeMode:  'cover' }]} source={{uri:uri }} />
+          <View style={{ flexDirection: 'column', flex: 1 }}> 
+           
               <Text
                 style={[
                   TextStyle.mediumText,
                   {
+                    lineHeight:35,
                     color: 'black',
                     flex: 1,
-                    textAlignVertical: 'center'
+                    paddingHorizontal: 10
                   }
                 ]}
               > 
-                <Text style={{fontWeight: "bold"}}>  {this.state.playername }</Text>
-                <Text> invited you to join his race in </Text>
-                <Text style={{fontWeight: "bold"}}>{this.state.roomInfo?.Map?.name }</Text>
-                <Text> ({ this.state.roomInfo?.miles} Miles)</Text>
+                <Text style={[
+                  TextStyle.mediumText,
+                  { fontWeight: 'bold' }
+                ]}>  {this.state.playername }</Text>
+                <Text style={[
+                  TextStyle.mediumText,
+                  { }
+                ]}> invited you to join his race in </Text>
+                <Text style={[
+                  TextStyle.mediumText,
+                  { fontWeight: 'bold', color: 'black' }
+                ]}> {`${this.state.roomInfo?.Map?.name || ''} (${this.state.roomInfo?.miles||'0'} Miles)`}</Text>
               
               </Text>
               <View
-                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+                style={{flexDirection: 'row',justifyContent: 'flex-end'}}
               >
                 <Button
                   title="Decline"
+                  buttonStyle={{ backgroundColor:'transparent'}}
                   onPress={onPressDecline}
-                  buttonStyle={[
+                  containerViewStyle={[
                     styles.button,
                     {
-                      borderWidth: 0,
-                      alignSelf: 'center'
+                      borderWidth:0
                     }
                   ]}
                   textStyle={[
@@ -145,18 +157,19 @@ class BaseScreen extends Component {
                 <Button
                   title="Join now"
                   onPress={onPressJoinNow}
-                  buttonStyle={[
+                  buttonStyle={{backgroundColor:'transparent'}}
+                  containerViewStyle={[
                     styles.button,
                     {
-                      backgroundColor: '#02BB4F',
-                      alignSelf: 'center'
+                     
+                      backgroundColor: '#21c364'
                     }
                   ]}
-                  textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+                  textStyle={[TextStyle.mediumText, { fontWeight: 'bold' ,textAlign:'center'}]}
                 />
               </View>
             </View>
-          </View>
+
         </View>
       </PopupDialog>
     );
