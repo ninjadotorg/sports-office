@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 
   topBar: {
     alignSelf: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row', 
   },
   containerTop: {
     padding: moderateScale(10),
@@ -48,14 +48,24 @@ const styles = StyleSheet.create({
     color: '#F6F6F6'
   },
   buttonGroup: {
-    borderRadius: 7,
+    borderColor:'#02BB4F',
+    borderRadius: 32,
     backgroundColor: 'transparent'
   },
   selectedButtonStyle: {
-    backgroundColor: '#02BB4F'
+    backgroundColor: '#02BB4F',
+    borderColor:'#02BB4F',
+  },
+  button2: {
+    borderRadius: 32,
+    borderWidth: 1,
+    backgroundColor: '#02BB4F',
+    borderColor: '#02BB4F',
+    minWidth: scaleSize(100),
+    paddingHorizontal: scaleSize(20)
   },
   button: {
-    borderRadius: 25,
+    borderRadius: 32,
     borderWidth: 1,
     backgroundColor: 'transparent',
     borderColor: '#02BB4F',

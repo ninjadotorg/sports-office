@@ -14,18 +14,19 @@ import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
 import images, { icons } from '@/assets';
-import { moderateScale, scale } from 'react-native-size-matters';
+import { verticalScale, moderateScale, scale } from 'react-native-size-matters';
 import ViewUtil from '@/utils/ViewUtil';
 import ItemFriend from '@/components/ItemFriend';
 
 import { TAG as CHALLENGENAME } from '@/screens/ChallengeName';
 import { TAG as TAGHOME } from '@/screens/Home';
-
+ 
 import { fetchAllUser,fetchAllFriend } from '@/actions/FriendAction';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import User from '@/models/User';
 import Util from '@/utils/Util';
+import { updateName } from '@/actions/UserAction';
 const limitRow = 24;
 export const TAG = 'FriendsScreen';
 const buttons = ['Your Friends', 'All The World'];
@@ -63,7 +64,7 @@ class FriendsScreen extends BaseScreen {
       search:'',
       inviteMode: invitem,
       roomInfo:roomInfo,
-      checkinvitebtn:false,
+      checkinvitebtn:true,
       sumMiles:sumMiles,
       mapId:mapId,
       loop:loop,
@@ -214,18 +215,17 @@ class FriendsScreen extends BaseScreen {
   };
   renderLeftHeader = () => {
     return (
-      <View style={styles.topBar}>
+      <View style={[styles.topBar]}>
         <TouchableOpacity style={{flexDirection:'row'}} onPress={this.onPressBack}>
-            {icons.back({
-              containerStyle: { marginHorizontal: 0 }
-            })}
+            <Image source={images.ic_backtop}  style={{width:32, height:32, marginTop:12 }}/>
             <Text
               style={[
                 TextStyle.mediumText,
                 {
                   color: 'white',
                   textAlignVertical: 'center',
-                  marginHorizontal: 10
+                  marginHorizontal: 10,
+                  marginLeft:20,
                 }
               ]}
             >
@@ -239,15 +239,19 @@ class FriendsScreen extends BaseScreen {
           onClear={this.handleSearchClear}
           value={this.state.search}
           icon={{ type: 'font-awesome', name: 'search' }}
+          noIcon={true}
           containerStyle={{
+            marginLeft:200,
             borderBottomColor: 'transparent',
             borderTopColor: 'transparent',
             shadowColor: 'white',
             backgroundColor: 'transparent',
             flex: 1,
-            borderWidth: 0
+            borderWidth: 0,
+            borderRadius:32, 
           }}
           placeholder="Find friend by email or name"
+          inputStyle={{paddingLeft:20, paddingTop:14, height: 42, borderRadius:32}}
         />
       </View>
     );
@@ -255,35 +259,31 @@ class FriendsScreen extends BaseScreen {
 
   getIdInviteFriend=(friendId)=>{
      console.log("select friendId",friendId);
-     this.setState({ listFriendsIvite:true});
+     this.setState({ checkinvitebtn:false});
   }
  
 
   renderItem = ({item,index}) => {
-    // console.log(TAG,' renderItem = ',item);
     return <ItemFriend key={String(index)} dataItem={item} inviteMode={this.state.inviteMode} selectIdfn={this.getIdInviteFriend}/>;
   };
 
 
   renderbottomButton= () =>{
-
-    const { selectedNextIndex , isLoading, inviteMode} = this.state;
-    //const {listFriends,isLoading, inviteMode} = this.state;
-    return (
-       
+ 
+    return ( 
 
       <View style={styles.containerBottom}>
         <Button 
-            title="Skip"
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
+            title="Skip sending invitation"
+            textStyle={[TextStyle.mediumText,{ fontWeight:'bold', color:'#02BB4F',backgroundColor: 'transparent'}]}
             buttonStyle={[styles.button]}
             onPress={this.onPressNextGo}
           />
           <Button 
-            title="Invite"
-            disabled={this.state.listFriendsIvite}
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
-            buttonStyle={[styles.button]}
+            title="Send invitation and start"
+            disabled={this.state.checkinvitebtn}
+            textStyle={[TextStyle.mediumText,{fontWeight:'bold'}]}
+            buttonStyle={[styles.button2]}
             onPress={this.onPressNextGo}
           />
         </View>
@@ -292,8 +292,7 @@ class FriendsScreen extends BaseScreen {
 
   }
   renderTabButton = () => {
-    // const buttons = [{ element: component1 }, { element: component2 }];
-    
+     
     const { selectedIndex } = this.state;
     return (
       <ButtonGroup
@@ -306,23 +305,28 @@ class FriendsScreen extends BaseScreen {
           styles.selectedTextStyleButton
         ]}
         selectedButtonStyle={styles.selectedButtonStyle}
-        containerStyle={styles.buttonGroup}
+        containerStyle={styles.buttonGroup} 
       />
     );
   };
   render() {
+
     const {selectedIndex, listFriends,isLoading, inviteMode} = this.state;
+
+    console.log("friendscreen", selectedIndex, listFriends,isLoading, inviteMode);
+
     return (
-      <ImageBackground style={styles.container}>
-        <Header backgroundColor="transparent">
+      <ImageBackground style={[styles.container, {paddingRight:40 }]}>
+        <Header backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0,paddingTop:40}}>
           {this.renderLeftHeader()}
         </Header>
 
-        <View style={styles.containerTop}>
-          {this.renderTabButton()}
+        <View style={[styles.containerTop,{marginLeft:40}]}>
+          {this.renderTabButton()} 
         </View>
         {listFriends.length == 0  && selectedIndex ===0 ?  
-          <View style={styles.containerImg}>
+          <View style={[styles.containerImg,{marginLeft:verticalScale(40), marginRight:verticalScale(10)}]}> 
+
               <Image
                   source={images.ic_no_friend_list}   
                   style={[styles.image, { resizeMode:  'cover' }]} 
@@ -336,7 +340,7 @@ class FriendsScreen extends BaseScreen {
         : 
             <FlatList
               keyExtractor={item=>String(item.id)}
-              style={styles.list}
+              style={[styles.list,{ marginLeft:verticalScale(44), paddingLeft:0, marginRight:verticalScale(10), paddingRight:0}]}
               refreshing={isLoading}
               onRefresh={this.onRefreshData}
               data={listFriends}
@@ -346,11 +350,10 @@ class FriendsScreen extends BaseScreen {
             /> 
         }
         {inviteMode ? 
-          <View style={styles.containerTop}>
+          <View style={[styles.containerTop,{marginLeft:40}]}>
             {this.renderbottomButton()}
-          </View> : null}
-        
-        {this.initDialogInvite()}
+          </View> : this.initDialogInvite()}
+         
       </ImageBackground>
     );
   }
