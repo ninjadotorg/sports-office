@@ -1,7 +1,10 @@
 import React from 'react';
 import { ActivityIndicator, View, Text, Modal, Image } from 'react-native';
+import RadialGradient from 'react-native-radial-gradient';
 import { debounce } from 'lodash';
-import TextStyle, { scale } from '@/utils/TextStyle';
+import { verticalScale, scale } from 'react-native-size-matters';
+import TextStyle, { screenSize } from '@/utils/TextStyle';
+import images from '@/assets';
 import { createImageProgress } from 'react-native-image-progress';
 import FastImage from 'react-native-fast-image';
 
@@ -27,8 +30,56 @@ const ViewUtil = {
         <View
           style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}
         >
-          <Text style={{ fontSize: 20, fontWeight: '200' }}>Loading</Text>
+          <Text style={[TextStyle.mediumText, { fontWeight: '200' }]}>
+            Loading
+          </Text>
           <ActivityIndicator size="large" />
+        </View>
+      </View>
+    </Modal>
+  ),
+  SplashScreen: ({ visible }) => (
+    <Modal onRequestClose={() => null} visible={visible}>
+      <View
+        style={{
+          backgroundColor: 'black',
+          flexDirection: 'column',
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <RadialGradient
+          // colors={['#a4a6a6', 'black']}
+          colors={['#ffffff', '#232339']}
+          radius={screenSize.height}
+          style={{
+            opacity: 0.4,
+            flex: 1,
+            width: '100%',
+            height: '100%',
+            position: 'absolute'
+          }}
+        />
+        <View
+          style={{ backgroundColor: 'transparent', flexDirection: 'column' }}
+        >
+          <Image
+            source={images.logo}
+            style={{ alignSelf: 'center', width: 58, height: 58 }}
+          />
+          <Text
+            style={[
+              TextStyle.extraText,
+              {
+                color: 'white',
+                letterSpacing: verticalScale(12),
+                marginTop: verticalScale(30)
+              }
+            ]}
+          >
+            AUTONOMOUS BIKE
+          </Text>
         </View>
       </View>
     </Modal>

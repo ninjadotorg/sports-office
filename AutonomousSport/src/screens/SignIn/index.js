@@ -41,6 +41,7 @@ class SignInScreen extends BaseScreen {
       swap:"signin", 
       error:'',
       isSavedDevice:undefined,
+      isCheckingRegular:true,
       loading:false,
       texts:{ 
         "signin":{"button":"Sign In","bottomText":"DON'T HAVE AN ACCOUNT ? ", "bottonBtn":"SIGN UP"},
@@ -102,12 +103,12 @@ class SignInScreen extends BaseScreen {
       console.log(TAG, ' componentWillReceiveProps - isSavedDevice =  ',isSavedDevice);
       if(nextProps.race?.isSavedDevice === true){
         this.setState({
-          isSavedDevice: nextProps.race.isSavedDevice
+          isSavedDevice: nextProps.race.isSavedDevice,
+          isCheckingRegular:true
         });
         this.props.fetchUser();
       }else{
         this.replaceScreen(this.props.navigation,TAGSETUP);
-        // this.receiveSignIn({isLogged:true });
       }
     }else if(JSON.stringify(nextProps?.user)!== JSON.stringify(user)){
       const userNext = nextProps?.user||{};
@@ -122,6 +123,7 @@ class SignInScreen extends BaseScreen {
       if(isLogged&&isLoggedFirebase){
         this.receiveSignIn({isLogged:isLogged });
       }else if(isLogged && !isLoggedFirebase){
+        
         this.props.loginWithFirebase({email:userNext.userInfo.email,password:userNext.userInfo.fbtoken});
       }
     }
@@ -138,7 +140,12 @@ class SignInScreen extends BaseScreen {
       );
       if(isLogged){
         this.replaceScreen(this.props.navigation,TAGHOME);
-      
+      }else{
+        this.setState(
+          {
+            isCheckingRegular:false
+          }
+        );
       }
     } catch (error) {
       this.setState({
@@ -371,54 +378,55 @@ class SignInScreen extends BaseScreen {
     );
   }
   render() {
-    const { swap,texts,loading } = this.state;
+    const { swap,texts,loading ,isCheckingRegular} = this.state;
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}> 
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.scrollView}> 
-        <View style={styles.mainView}>
-        <Text style={[TextStyle.extraText,styles.text,styles.textLogo, {marginTop: 110 }] }>{texts[swap].button}</Text>
-          {this.renderSignInWithEmail()}  
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.scrollView}> 
+          {ViewUtil.SplashScreen({visible:isCheckingRegular})}
+          <View style={styles.mainView}>
+          <Text style={[TextStyle.extraText,styles.text,styles.textLogo, {marginTop: 110 }] }>{texts[swap].button}</Text>
+            {this.renderSignInWithEmail()}  
 
-           <View
-              style={[
-                styles.socialBottomTextContainer,
-                styles.linkContainerMargin, 
-                styles.endScreenText
-              ]}
-            >
-             <Button
-                loading={loading}
-                buttonStyle={[styles.buttonStyle, {marginBottom:80}]}
-                title={texts[swap]["button"]}
-                textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
-                containerViewStyle={{width: '100%', marginLeft: 0, marginRight: 0}}
-                onPress={this.onPressSignIn}
-              />
-              </View>
-           <View
-              style={[
-                styles.socialBottomTextContainer,
-                styles.linkContainerMargin, 
-                styles.endScreenText
-              ]}
-            >
-              <Text
-                style={[TextStyle.smallText, styles.textButton, {color:'#91919c'}]}
-              >  {  swap !="forgot"  ? texts[swap].bottomText : texts["signin"].bottomText}
-              </Text>
+            <View
+                style={[
+                  styles.socialBottomTextContainer,
+                  styles.linkContainerMargin, 
+                  styles.endScreenText
+                ]}
+              >
+              <Button
+                  loading={loading}
+                  buttonStyle={[styles.buttonStyle, {marginBottom:80}]}
+                  title={texts[swap]["button"]}
+                  textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
+                  containerViewStyle={{width: '100%', marginLeft: 0, marginRight: 0}}
+                  onPress={this.onPressSignIn}
+                />
+                </View>
+            <View
+                style={[
+                  styles.socialBottomTextContainer,
+                  styles.linkContainerMargin, 
+                  styles.endScreenText
+                ]}
+              >
+                <Text
+                  style={[TextStyle.smallText, styles.textButton, {color:'#91919c'}]}
+                >  {  swap !="forgot"  ? texts[swap].bottomText : texts["signin"].bottomText}
+                </Text>
 
-              <Text
-                style={[TextStyle.smallText, styles.textButton, styles.link]}
-                onPress={()=>this.changeFuncti(swap) }
-              >  {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].bottonBtn}
-              </Text>
+                <Text
+                  style={[TextStyle.smallText, styles.textButton, styles.link]}
+                  onPress={()=>this.changeFuncti(swap) }
+                >  {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].bottonBtn}
+                </Text>
+            </View>
+              
           </View>
-            
-        </View>
-       
-      </ScrollView>
+        
+        </ScrollView>
               
       </ImageBackground>
     );
