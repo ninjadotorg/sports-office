@@ -21,6 +21,7 @@ import { fetchUser, updateRacing } from '@/actions/UserAction';
 import { leftRoom,startRacing,finishedRoom } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
+import { scale,verticalScale } from 'react-native-size-matters';
 import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
@@ -28,9 +29,13 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
 import ViewUtil from '@/utils/ViewUtil';
+import FastImage from 'react-native-fast-image'
+
 
 export const TAG = 'ChallengeScreen';
 let heightMap = screenSize.height;
+const dialogPercentHeight = 0.9;
+const dialogHeightImage = screenSize.height*dialogPercentHeight;
 const colors = ['purple','blue','yellow','green'];
 let lastIndexPosition = 0;
 let currentPositionIndex = 0;
@@ -340,27 +345,28 @@ class ChallengeScreen extends BaseScreen {
     //   { playerName: 'HIEn', goal: 27 },
     //   { playerName: 'HTOn', goal: 27 },
     //   { playerName: 'HTOn', goal: 22 },
+    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 }
     // ];
 
     const {players=[]} = this.state;
     // sort list player
     return (
-      <ImageBackground
-        width="100%"
-        height="100%"
-        style={{ width: '100%', height: '100%', flex: 1 }}
-        resizeMode="stretch"
+      <FastImage
+        style={{flex: 1,width:dialogHeightImage,height:dialogHeightImage}}
+        resizeMode={FastImage.resizeMode.stretch}
         source={images.back_score}
       >
-        <View style={{ flex: 1, paddingVertical: 10, paddingHorizontal: 20 }}>
+        <View style={{ flex: 1, paddingVertical: 30, paddingHorizontal: 30 }}>
           <Text
             style={[
-              TextStyle.mediumText,
+              TextStyle.extraText,
               {
                 textAlign: 'center',
                 color: 'white',
-                fontWeight: "600",
+                fontWeight: '600',
                 textAlignVertical: 'center'
               }
             ]}
@@ -374,29 +380,33 @@ class ChallengeScreen extends BaseScreen {
             <View style={{ flex: 1 }}>
               {players.sort((a,b)=>a.goal>b.goal).map(player => {
                 return (
-                  <View style={{ flexDirection: 'row', marginVertical: 2 }}>
+                  <View style={{ flexDirection: 'row', marginVertical:verticalScale(5) }}>
                     <Image source={images.ic_gold} />
-                    <View style={{ justifyContent: 'center', marginLeft: 10 }}>
+                    <View style={{ justifyContent: 'center', marginLeft: scale(15) }}>
                       <Text
                         style={[
-                          TextStyle.mediumText,
+                          TextStyle.bigText,
                           {
                             color: 'white',
                             textAlignVertical: 'center'
                           }
                         ]}
                       >
-                        {player.playerName || 'No Name'}
+                        {player.playerName || ''}
                       </Text>
                       <Text
                         style={[
                           TextStyle.normalText,
-                          { color: 'white', textAlignVertical: 'center' }
+                          { color: 'white', textAlignVertical: 'center',fontWeight:'bold' }
                         ]}
                       >
-                        {Number(player.goal) >= 100
-                          ? 'To Finish'
-                          : Number(player.goal)}
+                      <Text style={[
+                        TextStyle.normalText,
+                        { color: '#8d8d8d' ,fontWeight:'normal'}
+                      ]}>Finished </Text>
+                         {Number(player.goal) >= 100
+                          ? '100%'
+                          : `${Number(player.goal)}%`}
                       </Text>
                     </View>
                   </View>
@@ -411,12 +421,12 @@ class ChallengeScreen extends BaseScreen {
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
           />
         </View>
-      </ImageBackground>
+      </FastImage>
     );
   };
 
   onPressFinish = this.onClickView(()=>{
-    this.replaceScreen(this.props.navigation,TAGHOME);
+    this.replaceScreen(this.props.navigation,TAGCREATE);
   });
 
   renderMap = () => {
@@ -542,8 +552,9 @@ class ChallengeScreen extends BaseScreen {
         {ViewUtil.CustomProgressBar({visible:isLoadingAllScreen})}
         <PopupDialog
           width="70%"
-          height="90%"
+          height={`${dialogPercentHeight*100}%`}
           hasOverlay
+          dialogStyle={{backgroundColor:'transparent'}}
           dismissOnTouchOutside={false}
           ref={(popupDialog) => { this.popupDialog = popupDialog; }}>
           {this.renderDashBoardAchivement()}  
