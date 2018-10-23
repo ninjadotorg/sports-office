@@ -52,6 +52,7 @@ class ItemMap extends PureComponent {
             this.props.onItemSelected(dataItem.id);
           }}
         >
+        <View style={styles.imageContainerIOS}>
           {ViewUtil.ImageView({
             style: styles.image,
             source: {
@@ -59,13 +60,15 @@ class ItemMap extends PureComponent {
             },
             resizeMode: FastImage.resizeMode.cover
           })}
-
+          </View>
           <View
             style={{
               flex: 1,
               justifyContent: 'space-around',
-              backgroundColor: '#282828',
-              paddingHorizontal: 10
+              backgroundColor: '#31314a',
+              paddingHorizontal: 10,
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
             }}
           >
             <Text

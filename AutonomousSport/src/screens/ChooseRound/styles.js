@@ -23,7 +23,7 @@ const mainColor = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: mainColor.backgroundColor
+    backgroundColor: 'transparent'
   },
   topBar: {
     alignSelf: 'center',
@@ -112,10 +112,11 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 25,
     borderWidth: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#02BB4F',
     borderColor: '#02BB4F',
     minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+    paddingHorizontal: scaleSize(20),
+    color: 'white',
   }
 });
 
