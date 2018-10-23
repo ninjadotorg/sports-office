@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image ,ImageBackground} from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { Button, Header, ButtonGroup } from 'react-native-elements';
 import { TAG as TAGHOME } from '@/screens/Home';
@@ -76,20 +76,20 @@ class CreateRoomScreen extends BaseScreen {
     const { selectedIndex } = this.state;
     return (
       <View style={styles.topBar}>
+          
         <TouchableOpacity
           style={{ flexDirection: 'row' }}
           onPress={this.onPressBack}
         >
-          {icons.back({
-            containerStyle: { marginHorizontal: 0 }
-          })}
+          <Image source={images.ic_backtop}  style={{width:32, height:32, marginTop:12 }}/>
           <Text
             style={[
               TextStyle.mediumText,
               {
                 color: 'white',
                 textAlignVertical: 'center',
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginLeft:20, 
               }
             ]}
           >
@@ -107,35 +107,37 @@ class CreateRoomScreen extends BaseScreen {
           ]}
           underlayColor="transparent"
           selectedButtonStyle={styles.selectedButtonStyle}
-          containerStyle={styles.buttonGroup}
+          containerStyle={[styles.buttonGroup,{backgroundColor:"transparent", borderWidth:0}]}
         />
       </View>
     );
   };
   render() {
     return (
-      <View style={styles.container}>
-        <Header backgroundColor="transparent">{this.renderLeftHeader()}</Header>
-        <RoomList levelIndex={this.state.selectedIndex} />
-        <View style={styles.containerBottom}>
-          <Button
-            title="Random"
-            textStyle={[
-              TextStyle.mediumText,
-              { fontWeight: 'bold', color: '#02BB4F' }
-            ]}
-            buttonStyle={[styles.button]}
-            onPress={this.onPressRandom}
-          />
-          <Button
-            title="New Racing"
-            buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
-            textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
-            onPress={this.onPressCreateRoom}
-          />
+      <ImageBackground style={[styles.containerimg]} source={images.backgroundx}> 
+        <View style={styles.container}>
+          <Header  backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0}} >{this.renderLeftHeader()}</Header>
+          <RoomList levelIndex={this.state.selectedIndex} />
+          <View style={styles.containerBottom}>
+            <Button
+              title="Random"
+              textStyle={[
+                TextStyle.mediumText,
+                { fontWeight: 'bold', color: '#02BB4F' }
+              ]}
+              buttonStyle={[styles.button]}
+              onPress={this.onPressRandom}
+            />
+            <Button
+              title="New Racing"
+              buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
+              textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+              onPress={this.onPressCreateRoom}
+            />
+          </View>
+          {this.initDialogInvite()}
         </View>
-        {this.initDialogInvite()}
-      </View>
+        </ImageBackground>
     );
   }
 }

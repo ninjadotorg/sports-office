@@ -186,35 +186,54 @@ class RoomList extends Component {
         parallaxProps={parallaxProps}
         dataItem={item}
       />
+ 
     );
   };
 
   render() {
-    const { dataFilter = [] } = this.state;
+    const { isFetching, dataFilter = [] } = this.state;
     // console.log('levelIndex-rooms', dataFilter);
+    // return (
+    //   <View style={styles.container}>
+    //     {dataFilter?.length > 0 ? (
+    //       <Carousel
+    //         ref={c => {
+    //           this._carousel = c;
+    //         }}
+    //         hasParallaxImages
+    //         data={dataFilter}
+    //         renderItem={this.renderItem}
+    //         sliderWidth={sliderWidth}
+    //         itemWidth={itemWidth}
+    //         loop
+    //       />
+    //     ) : (
+    //       <Image
+    //         source={{
+    //           uri:
+    //             'https://images.pexels.com/photos/53040/pexels-photo-53040.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+    //         }}
+    //         style={[styles.image, { resizeMode: 'cover' }]}
+    //       />
+    //     )}
+    //   </View>
+    // );
     return (
-      <View style={styles.container}>
-        {dataFilter?.length > 0 ? (
-          <Carousel
-            ref={c => {
-              this._carousel = c;
-            }}
-            hasParallaxImages
-            data={dataFilter}
-            renderItem={this.renderItem}
-            sliderWidth={sliderWidth}
-            itemWidth={itemWidth}
-            loop
-          />
-        ) : (
-          <Image
-            source={{
-              uri:
-                'https://images.pexels.com/photos/53040/pexels-photo-53040.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-            }}
-            style={[styles.image, { resizeMode: 'cover' }]}
-          />
-        )}
+      <View style={styles.container}> 
+          <FlatList
+          horizontal
+          style={[styles.list, {}]}
+          ListHeaderComponent={this.renderHeader}
+          data={dataFilter}
+          initialNumToRender={5}
+          keyExtractor={item => String(item.id)}
+          renderItem={this.renderItem}
+          onEndReachedThreshold={0.7}
+          onRefresh={this.handleRefresh}
+          refreshing={isFetching}
+          onEndReached={this.handleLoadMore}
+          ListFooterComponent={this.renderLoading}
+        />
       </View>
     );
   }

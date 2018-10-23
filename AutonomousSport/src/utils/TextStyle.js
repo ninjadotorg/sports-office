@@ -27,6 +27,10 @@ export const fontSizeHeader = () => 15 * scale();
 
 export const FONT_FAMILY = Platform.OS === 'ios' ? 'Poppins' : 'poppins';
 const TextStyle = StyleSheet.create({
+  xxxExtraText: {
+    fontFamily: FONT_FAMILY,
+    fontSize: 60 * scale()
+  },
   xxExtraText: {
     fontFamily: FONT_FAMILY,
     fontSize: 30 * scale()

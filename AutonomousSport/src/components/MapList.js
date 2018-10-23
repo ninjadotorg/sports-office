@@ -104,7 +104,7 @@ class MapList extends Component {
   render() {
     const { data, isFetching } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{paddingBottom:100}]}>
         <FlatList
           horizontal
           style={[styles.list, {}]}

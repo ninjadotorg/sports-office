@@ -406,8 +406,8 @@ export default class SetupScreen extends BaseScreen {
   render() {
     const { isLoading } = this.state;
     return (
-      <ImageBackground style={styles.container} source={images.backgroundx}> 
-      <View style={[styles.container,{paddingLeft:40 }]}>
+      <ImageBackground style={[styles.container,{ paddingBottom:0, paddingRight:0 }]} source={images.backgroundx}> 
+      <View style={[styles.container,{paddingLeft:40, paddingBottom:0, paddingRight:0 }]}>
         <Image
           source={images.logo}
           style={{ width: 58, height: 58, margin: 10,marginTop:30  }}
@@ -435,7 +435,7 @@ export default class SetupScreen extends BaseScreen {
             />
           )}
           <Image
-            source={images.bike2}
+            source={images.bike}
             style={[{
               width: 739,
               height: 479,

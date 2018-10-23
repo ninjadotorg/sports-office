@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text , Image } from 'react-native';
 import { Avatar, Button } from 'react-native-elements';
 import { verticalScale } from 'react-native-size-matters';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import User from '@/models/User';
 import { makeFriend,makeInvited } from '@/actions/FriendAction';
 import { onClickView } from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
+import images from '@/assets';
 
 export const TAG = 'ItemFriend';
 
@@ -86,20 +87,26 @@ class ItemFriend extends PureComponent {
     return (
       <View style={[styles.container,
       {paddingTop:14, paddingBottom:14, paddingRight:verticalScale(0),paddingLeft:0, marginLeft:0, borderBottomWidth:1, borderBottomColor:'#333333'}]}>
+         
+        {/* <Image
+          source={images.user}
+          style={{ width: scale(30), height: scale(30) }}
+        />  */}
+
         <Avatar
           medium
           rounded
           overlayContainerStyle={{
             backgroundColor: 'rgba(255,255,255,0.2)',
-            borderWidth: 1,
-            borderColor: 'white', 
-            
+            borderWidth: 0,
+            borderColor: 'white',  
           }}
-          icon={{ type: 'font-awesome', name: 'user', color: 'white' }}
+          source={images.user}
           onPress={() => console.log('Works!')}
           activeOpacity={0.2}
-          containerStyle={{ alignSelf: 'center', marginLeft:0 }}
-        />
+          containerStyle={{ alignSelf: 'center', marginLeft:-8 }}
+        />  
+
         <View style={{ marginHorizontal: 10, flex: 1, marginLeft: verticalScale(20) }}>
           <Text
             style={[
