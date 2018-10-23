@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image ,ImageBackground} from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { SearchBar, Button, Header, ButtonGroup } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
@@ -48,43 +48,51 @@ class NewRoomScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <TouchableOpacity style={styles.topBar} onPress={this.onPressBack}>
-        {icons.back({
-          containerStyle: { marginHorizontal: 0 }
-        })}
-        <Text
-          style={[
-            TextStyle.mediumText,
-            {
-              color: 'white',
-              textAlignVertical: 'center',
-              marginHorizontal: 10
-            }
-          ]}
-        >
-          Choose map
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.topBar}>
+          <TouchableOpacity 
+            style={{ flexDirection: 'row' }} onPress={this.onPressBack}>
+            <Image source={images.ic_backtop}  style={{width:32, height:32, marginTop:10 }}/>
+            <Text
+              style={[
+                TextStyle.mediumText,
+                {
+                  color: 'white',
+                  textAlignVertical: 'center',
+                  marginHorizontal: 10,
+                  marginLeft:20,
+                  marginTop:10,
+                }
+              ]}
+            >
+              Choose map
+            </Text>
+          </TouchableOpacity>
+      </View>
     );
   };
   render() {
     return (
-      <View style={styles.container}>
-        <Header backgroundColor="transparent">{this.renderLeftHeader()}</Header>
-        <MapList />
-        {/*<View style={styles.containerBottom}>
-          <Button
-            title="Next"
-            textStyle={[
-              TextStyle.mediumText,
-              { fontWeight: 'bold', color: '#02BB4F' }
-            ]}
-            buttonStyle={[styles.button]}
-            onPress={this.onPressCreateRoom}
-          />
-        </View>*/}
-        {this.initDialogInvite()}
-      </View>
+      <ImageBackground style={[styles.container]} source={images.backgroundx}> 
+        <View style={styles.container}>
+           <Header backgroundColor="transparent"  outerContainerStyles={{borderBottomWidth:0}}>{this.renderLeftHeader()}</Header>
+          
+           <MapList />
+        
+          
+          {/*<View style={styles.containerBottom}>
+            <Button
+              title="Next"
+              textStyle={[
+                TextStyle.mediumText,
+                { fontWeight: 'bold', color: '#02BB4F' }
+              ]}
+              buttonStyle={[styles.button]}
+              onPress={this.onPressCreateRoom}
+            />
+          </View>*/}
+          {this.initDialogInvite()}
+        </View>
+      </ImageBackground>
     );
   }
 }

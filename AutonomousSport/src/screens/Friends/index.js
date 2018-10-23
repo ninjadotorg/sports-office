@@ -251,7 +251,8 @@ class FriendsScreen extends BaseScreen {
             borderRadius:32, 
           }}
           placeholder="Find friend by email or name"
-          inputStyle={{paddingLeft:20, paddingTop:14, height: 42, borderRadius:32}}
+          placeholderTextColor="#AFAFB9"
+          inputStyle={{paddingLeft:20, borderRadius:32,color:"#FFFFFF"}}
         />
       </View>
     );
@@ -316,7 +317,8 @@ class FriendsScreen extends BaseScreen {
     console.log("friendscreen", selectedIndex, listFriends,isLoading, inviteMode);
 
     return (
-      <ImageBackground style={[styles.container, {paddingRight:40 }]}>
+      <ImageBackground style={[styles.container, {paddingRight:40 }]}  source={images.backgroundx}> 
+
         <Header backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0,paddingTop:40}}>
           {this.renderLeftHeader()}
         </Header>

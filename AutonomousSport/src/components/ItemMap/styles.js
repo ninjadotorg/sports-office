@@ -21,6 +21,13 @@ const styles = StyleSheet.create({
     height: heightItem,
     borderColor: 'blue'
   },
+  imageContainerIOS: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    overflow: 'hidden', 
+  },
 
   image: { width: widthImage, height: heightImage }
 });

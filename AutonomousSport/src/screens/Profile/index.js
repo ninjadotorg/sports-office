@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text ,TextInput,ScrollView} from 'react-native';
+import { View, Text ,TextInput,ScrollView, ImageBackground, TouchableOpacity, Image} from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { connect } from 'react-redux';
 import styles,{color} from './styles';
@@ -41,19 +41,27 @@ class ProfileScreen extends BaseScreen {
 
   renderCenterHeader = () => {
     return (
-      <Text
-        style={[
-          TextStyle.bigText,
-          {
-            fontWeight:'bold',
-            color: 'white',
-            textAlignVertical: 'center',
-            marginHorizontal: 10
-          }
-        ]}
-      >
-        Your Profile
-      </Text>
+       
+      <View style={[styles.topBar]}>
+          <TouchableOpacity style={{ position:'absolute', left:0 }} onPress={this.onPressBack}>
+            <Image source={images.ic_backtop}  style={{width:32, height:32, marginTop:12 }}/> 
+          </TouchableOpacity>  
+          <Text
+              style={[
+                TextStyle.mediumText,
+                {
+                  color: 'white',
+                  textAlignVertical: 'center',
+                  marginHorizontal: 10,
+                  marginLeft:20,
+                }
+              ]}
+            >
+            Your Profile 
+            </Text>
+
+      </View>
+
     );
   };
 
@@ -102,76 +110,78 @@ class ProfileScreen extends BaseScreen {
     const { user,isLoading } = this.state;
     const {userInfo = {}} = user ||{};
     return (
-      <ScrollView contentContainerStyle={{flex:1,flexGrow: 1}} style={{flexGrow: 1,flex:1}}>
-        <View style={styles.container}>
-          <Header
-            backgroundColor="transparent"
-            leftComponent={this.iconBack}
-            centerComponent={this.renderCenterHeader()}
-          />
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              flex: 1
-            }}
-          >
-            <Text
-              style={[
-                TextStyle.mediumText,
-                {
-                  color: 'white',
-                  textAlignVertical: 'center',
-                  alignSelf: 'center'
-                }
-              ]}
-            >
-              {`Email: ${userInfo?.email || ''}`}
-            </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <DashboardProfile kcal={Math.round((userInfo?.profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.profile?.miles||0)*1000)/1000} />
-            </View>
-          </View>
-          
-          <View style={styles.containerInput}>
-              <Text style={[TextStyle.normalText,styles.textLabel]}>Name</Text>
-              <TextInput
-                ref={(name) => {
-                  this.name = name;
-                }}
-                style={[TextStyle.normalText,styles.text,{flex:2,color:'white'}]}
-                underlineColorAndroid="transparent"
-                placeholder="john@smith.com"
-                defaultValue={userInfo?.fullname}
-                placeholderTextColor={color.placeHolder}
-                keyboardType="default"
-              />
-        </View>
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              flex: 1,
-              alignItems: 'center'
-            }}
-          >
-            <Button
-              loading={isLoading}
-              title="Save"
-              buttonStyle={styles.button}
-              textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
-              onPress={this.onPressSave}
+
+      <ImageBackground style={styles.container} source={images.backgroundx}> 
+        <ScrollView contentContainerStyle={{flex:1,flexGrow: 1}} style={{flexGrow: 1,flex:1}}>
+          <View style={styles.container}>
+            <Header
+              backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0}} 
+              centerComponent={this.renderCenterHeader()}
             />
-            <Text
-              onPress={this.onPressLogout}
-              style={[TextStyle.normalText, { color: 'white' }]}
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                flex: 1
+              }}
             >
-              Log out
-            </Text>
+              <Text
+                style={[
+                  TextStyle.mediumText,
+                  {
+                    color: 'white',
+                    textAlignVertical: 'center',
+                    alignSelf: 'center'
+                  }
+                ]}
+              >
+                {`Email: ${userInfo?.email || ''}`}
+              </Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <DashboardProfile kcal={Math.round((userInfo?.profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.profile?.miles||0)*1000)/1000} />
+              </View>
+            </View>
+            
+            <View style={styles.containerInput}>
+                <Text style={[TextStyle.normalText,styles.textLabel]}>Name</Text>
+                <TextInput
+                  ref={(name) => {
+                    this.name = name;
+                  }}
+                  style={[TextStyle.normalText,styles.text,{flex:2,color:'white'}]}
+                  underlineColorAndroid="transparent"
+                  placeholder="john@smith.com"
+                  defaultValue={userInfo?.fullname}
+                  placeholderTextColor={color.placeHolder}
+                  keyboardType="default"
+                />
           </View>
-          {this.initDialogInvite()}
-        </View>
-      </ScrollView>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                flex: 1,
+                alignItems: 'center'
+              }}
+            >
+              <Button
+                loading={isLoading}
+                title="Save"
+                buttonStyle={styles.button}
+                textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
+                onPress={this.onPressSave}
+              />
+              <Text
+                onPress={this.onPressLogout}
+                style={[TextStyle.normalText, { color: 'white' }]}
+              >
+                Log out
+              </Text>
+            </View>
+            {this.initDialogInvite()}
+          </View>
+        </ScrollView>
+        </ImageBackground>
     );
   }
 }
