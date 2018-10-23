@@ -31,7 +31,7 @@ const mainColor = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: mainColor.backgroundColor
+    backgroundColor: 'transparent'
   },
   topBar: {
     alignSelf: 'center',

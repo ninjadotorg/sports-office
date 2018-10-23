@@ -30,8 +30,11 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     flexDirection: 'row',
-    paddingBottom: verticalScale(20),
-    justifyContent: 'space-around'
+    paddingBottom: verticalScale(60),
+    justifyContent: 'space-around',
+    width:'60%',
+    alignItems: 'center',
+    marginLeft:'20%',
   },
   containerCenter: {
     flex: 1,
@@ -46,7 +49,17 @@ const styles = StyleSheet.create({
     borderColor: '#02BB4F',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
+  },
+  containerRowTop: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start' // if you want to fill rows left to right
+  },
+  itemTop:{
+    width: '50%' // is 50% of container width
   }
+
 });
 
 export default styles;

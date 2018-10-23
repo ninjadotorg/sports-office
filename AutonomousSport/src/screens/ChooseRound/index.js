@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image,ImageBackground } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { SearchBar, Button, Header, ButtonGroup } from 'react-native-elements';
 import { ParallaxImage } from 'react-native-snap-carousel';
@@ -94,24 +94,28 @@ class ChooseRoundScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <TouchableOpacity style={styles.topBar} onPress={this.onPressBack}>
-        {icons.back({
-          containerStyle: { marginHorizontal: 0 },
-          
-        })}
+      <View style={styles.topBar}>  
+        <TouchableOpacity
+          style={{ flexDirection: 'row' }}
+          onPress={this.onPressBack}
+        > 
+        <Image source={images.ic_backtop}  style={{width:32, height:32, marginTop:12 }}/>
         <Text
           style={[
             TextStyle.mediumText,
             {
               color: 'white',
               textAlignVertical: 'center',
-              marginHorizontal: 10
+              marginHorizontal: 10,
+              marginLeft:20, 
+              marginTop:10, 
             }
           ]}
         >
           Number of rounds
         </Text>
       </TouchableOpacity>
+      </View>
     );
   };
   onPress = (direct)=>{
@@ -127,50 +131,52 @@ class ChooseRoundScreen extends BaseScreen {
     const {valueRound,sumMiles = 0,isLoading = false} = this.state;
     
     return (
-      <View style={styles.container}>
-        <Header backgroundColor="transparent">
-          {this.renderLeftHeader()}
-        </Header>
-        <View style={{flex:1,flexDirection:'column',justifyContent:'center'}}>
-          <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-            <TouchableOpacity onPress={()=>this.onPress(-1)}>
-              <Image source={images.ic_plus_down} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}} />
-            </TouchableOpacity>
-            <View style={[styles.containerCenter,{minWidth:sizeImageCenter,minHeight:sizeImageCenter,marginHorizontal:moderateScale(30)}]}>
-              <Image source={images.image_velocity} style={{position:'absolute',width:sizeImageCenter,height:sizeImageCenter}} />
-              <Text style={[TextStyle.xxExtraText,{color:'white',fontWeight:'bold'}]}>{valueRound}</Text>
-              <Text style={[TextStyle.mediumText,{color:'white'}]}>{`${valueRound>1?'rounds':'round'}`}</Text>
+      <ImageBackground style={[styles.container]} source={images.backgroundx}> 
+        <View style={styles.container}>
+          <Header backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0}} >
+            {this.renderLeftHeader()}
+          </Header>
+          <View style={{flex:1,flexDirection:'column',justifyContent:'center'}}>
+            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+              <TouchableOpacity onPress={()=>this.onPress(-1)}>
+                <Image source={images.ic_plus_down} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}} />
+              </TouchableOpacity>
+              <View style={[styles.containerCenter,{minWidth:sizeImageCenter,minHeight:sizeImageCenter,marginHorizontal:moderateScale(40)}]}>
+                <Image source={images.image_velocity} style={{position:'absolute',width:sizeImageCenter,height:sizeImageCenter}} />
+                <Text style={[TextStyle.xxxExtraText,{color:'white',fontWeight:'bold'}]}>{valueRound}</Text>
+                <Text style={[TextStyle.xExtraText,{color:'white',fontWeight: '600',opacity: 0.8,marginTop:-10}]}>{`${valueRound>1?'rounds':'round'}`}</Text>
+              </View>
+              <TouchableOpacity onPress={()=>this.onPress(1)}>
+                <Image source={images.ic_plus_up} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}}/>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={()=>this.onPress(1)}>
-              <Image source={images.ic_plus_up} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}}/>
-            </TouchableOpacity>
+            <Text
+              style={[
+                TextStyle.mediumText,
+                {
+                  marginTop:20,
+                  color: 'white',
+                  fontWeight:'bold',
+                  textAlignVertical: 'center',
+                  alignSelf:'center'
+                }
+              ]}
+            >
+            {`~${sumMiles} ${sumMiles>1?'miles':'mile'}`}
+            </Text>
           </View>
-          <Text
-            style={[
-              TextStyle.mediumText,
-              {
-                marginTop:20,
-                color: 'white',
-                fontWeight:'bold',
-                textAlignVertical: 'center',
-                alignSelf:'center'
-              }
-            ]}
-          >
-          {`~${sumMiles} ${sumMiles>1?'miles':'mile'}`}
-          </Text>
+          <View style={styles.containerBottom}>
+            <Button
+              loading={isLoading}
+              title="Next"
+              textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'white'}]}
+              buttonStyle={[styles.button , {marginBottom:40}]}
+              onPress={this.onPressCreateRoom}
+            />
+          </View>
+          {this.initDialogInvite()}
         </View>
-        <View style={styles.containerBottom}>
-          <Button
-            loading={isLoading}
-            title="Next"
-            textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
-            buttonStyle={[styles.button]}
-            onPress={this.onPressCreateRoom}
-          />
-        </View>
-        {this.initDialogInvite()}
-      </View>
+        </ImageBackground>
     );
   }
 }

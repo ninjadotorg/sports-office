@@ -195,9 +195,32 @@ class HomeScreen extends BaseScreen {
 
     const { userInfo = {}, practiceInfo = {} } = user || {};
     return (
-      <ImageBackground style={styles.container} source={images.image_start}>
-        <View style={styles.containerTop}>
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+      <ImageBackground style={styles.container} source={images.backgroundx}>
+        
+
+        <View style={styles.containerCenter}>
+          <Image
+            source={images.image_velocity}
+            style={{
+              position: 'absolute',
+              width: sizeImageCenter,
+              height: sizeImageCenter
+            }}
+          />
+          <Text
+            style={[
+              TextStyle.xxxExtraText,
+              { color: 'white', fontWeight: 'bold' , }
+            ]}
+          >
+            {Math.ceil(speed)}
+          </Text>
+          <Text style={[TextStyle.xExtraText, { color: 'white' ,fontWeight: '600', opacity: 0.8, marginTop:-10}]}>mi/h</Text>
+        </View>
+            
+
+        <View style={[styles.containerTop , styles.containerRowTop, {position:'absolute'}]}>
+          <View style={[ styles.itemTop, { flexDirection: 'row', alignItems: 'flex-start' }] }>
             <TouchableOpacity onPress={this.onPressProfile}>
               <Image
                 source={images.user}
@@ -207,12 +230,12 @@ class HomeScreen extends BaseScreen {
 
             <TouchableOpacity onPress={this.onPressListFriends}>
               <Image
-                source={images.user}
-                style={{ width: scale(30), height: scale(30), marginLeft: 10 }}
+                source={images.user_friend}
+                style={{ width: scale(30), height: scale(30), marginLeft: 40 }}
               />
             </TouchableOpacity>
           </View>
-          <View>
+          <View style={[ styles.itemTop,  {alignItems: 'flex-end' , right:0} ]} >
             <DashboardProfile
               kcal={
                 Math.round(
@@ -227,25 +250,7 @@ class HomeScreen extends BaseScreen {
             />
           </View>
         </View>
-        <View style={styles.containerCenter}>
-          <Image
-            source={images.image_velocity}
-            style={{
-              position: 'absolute',
-              width: sizeImageCenter,
-              height: sizeImageCenter
-            }}
-          />
-          <Text
-            style={[
-              TextStyle.xxExtraText,
-              { color: 'white', fontWeight: 'bold' }
-            ]}
-          >
-            {Math.ceil(speed)}
-          </Text>
-          <Text style={[TextStyle.mediumText, { color: 'white' }]}>mi/h</Text>
-        </View>
+
         <View style={styles.containerBottom}>
           <Button
             title={isStarted ? 'Reset' : 'Practice'}

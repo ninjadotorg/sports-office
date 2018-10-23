@@ -21,9 +21,14 @@ const mainColor = {
   backgroundColor: '#181818'
 };
 const styles = StyleSheet.create({
+  containerimg: {
+    flex: 1,
+    flexDirection: 'row', 
+    backgroundColor: 'transparent'
+  },
   container: {
     flex: 1,
-    backgroundColor: mainColor.backgroundColor
+    backgroundColor: 'transparent'
   },
   topBar: {
     alignSelf: 'center',
@@ -99,10 +104,18 @@ const styles = StyleSheet.create({
     shadowColor: 'transparent',
     borderBottomColor: 'transparent'
   },
+  // containerBottom: {
+  //   flexDirection: 'row',
+  //   paddingBottom: verticalScale(20),
+  //   justifyContent: 'space-around'
+  // },
   containerBottom: {
     flexDirection: 'row',
-    paddingBottom: verticalScale(20),
-    justifyContent: 'space-around'
+    paddingBottom: verticalScale(60),
+    justifyContent: 'space-around',
+    width:'60%',
+    alignItems: 'center',
+    marginLeft:'20%',
   },
   button: {
     

@@ -9,6 +9,8 @@ import TextStyle, { scale } from '@/utils/TextStyle';
 import User from '@/models/User';
 import images, { icons } from '@/assets';
 import Room from '@/models/Room';
+import FastImage from 'react-native-fast-image';
+import ViewUtil from '@/utils/ViewUtil';
 
 export const TAG = 'ItemRoom';
 
@@ -43,87 +45,90 @@ class ItemRoom extends PureComponent {
     const source = uri ? { uri } : images.bike;
 
     return (
-      <TouchableOpacity
-        style={styleContainerItem}
-        onPress={() => {
-          this.props.onItemSelected(dataItem.id);
-        }}
-      >
-        <ParallaxImage
-          source={source}
-          containerStyle={[styles.imageContainer, {}]}
-          style={[styles.image, { resizeMode: uri ? 'cover' : 'center' }]}
-          parallaxFactor={0.35}
-          showSpinner
-          spinnerColor="rgba(255, 255, 255, 0.4)"
-          {...parallaxProps}
-        />
+
+      <View style={styles.container}> 
+        <TouchableOpacity
+          style={styleContainerItem}
+          onPress={() => {
+            this.props.onItemSelected(dataItem.id);
+          }}
+        > 
+        <View style={styles.imageContainerIOS}>
+
+          {ViewUtil.ImageView({
+              style: styles.image,
+              source: {
+                uri: uri
+              },
+              resizeMode: FastImage.resizeMode.cover
+          })}
+        </View>
 
         <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-            flex: 1,
-            justifyContent: 'space-around',
-            backgroundColor: 'rgba(40, 40, 40, 0.5)',
-            padding: 10
-          }}
-        >
-          <Text
-            style={[
-              TextStyle.mediumText,
-              {
-                color: 'rgba(255,255,255,1)',
-                textAlignVertical: 'center',
-                fontWeight: 'bold'
-              }
-            ]}
+            style={{
+              flex: 1,
+              justifyContent: 'space-around',
+              backgroundColor: '#31314a',
+              paddingHorizontal: 10,
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+            }}
           >
-            {dataItem?.name || 'No Name'}
-          </Text>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'row', flex: 1 }}>
-              {icons.bike({
-                containerStyle: { marginRight: 10 }
-              })}
-              <Text
-                style={[
-                  TextStyle.normalText,
-                  {
-                    color: '#ADAFB2',
-                    textAlignVertical: 'center'
-                  }
-                ]}
-              >
-                {`${dataItem?.miles} miles`}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-                justifyContent: 'flex-end'
-              }}
+            <Text
+              style={[
+                TextStyle.mediumText,
+                {
+                  color: 'rgba(255,255,255,1)',
+                  textAlignVertical: 'center',
+                  fontWeight: 'bold'
+                }
+              ]}
             >
-              {icons.groupUser({
-                containerStyle: { marginRight: 10 }
-              })}
-              <Text
-                style={[
-                  TextStyle.normalText,
-                  {
-                    color: '#ADAFB2',
-                    textAlignVertical: 'center'
-                  }
-                ]}
+              {dataItem?.name || 'No Name'}
+            </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', flex: 1 }}>
+                {icons.bike({
+                  containerStyle: { marginRight: 10 }
+                })}
+                <Text
+                  style={[
+                    TextStyle.normalText,
+                    {
+                      color: '#ADAFB2',
+                      textAlignVertical: 'center'
+                    }
+                  ]}
+                >
+                  {`${dataItem?.miles} miles`}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flex: 1,
+                  justifyContent: 'flex-end'
+                }}
               >
-                {`${dataItem?.RoomPlayers?.length || '0'}`}
-              </Text>
+                {icons.groupUser({
+                  containerStyle: { marginRight: 10 }
+                })}
+                <Text
+                  style={[
+                    TextStyle.normalText,
+                    {
+                      color: '#ADAFB2',
+                      textAlignVertical: 'center'
+                    }
+                  ]}
+                >
+                  {`${dataItem?.RoomPlayers?.length || '0'}`}
+                </Text>
+              </View>
             </View>
           </View>
+        </TouchableOpacity>
         </View>
-      </TouchableOpacity>
     );
   }
 }
