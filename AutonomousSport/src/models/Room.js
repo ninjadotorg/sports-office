@@ -21,8 +21,11 @@ export default class Room {
   }
 
   getPathOfMap = (): [] => {
-    const json = JSON.parse(this.Map?.datapoints);
-    return json['points'] || [];
+    try {
+      const json = JSON.parse(this.Map?.datapoints);
+      return json['points'] || [];
+    } catch (error) {}
+    return [];
   };
 
   getMapSize = (): { width: 0, height: 0 } => {

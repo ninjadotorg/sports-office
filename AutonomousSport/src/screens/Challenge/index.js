@@ -29,12 +29,12 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
 import ViewUtil from '@/utils/ViewUtil';
-import FastImage from 'react-native-fast-image'
+import FastImage from 'react-native-fast-image';
 
 
 export const TAG = 'ChallengeScreen';
 let heightMap = screenSize.height;
-const dialogPercentHeight = 0.9;
+const dialogPercentHeight = 0.8;
 const dialogHeightImage = screenSize.height*dialogPercentHeight;
 const colors = ['purple','blue','yellow','green'];
 let lastIndexPosition = 0;
@@ -278,6 +278,7 @@ class ChallengeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
+    // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
     
@@ -340,19 +341,21 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderDashBoardAchivement = () => {
-    // const players = [
+    // let players = [
     //   { playerName: 'HienTon', goal: 27 },
     //   { playerName: 'HIEn', goal: 27 },
-    //   { playerName: 'HTOn', goal: 27 },
-    //   { playerName: 'HTOn', goal: 22 },
-    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTOn27', goal: 27 },
+    //   { playerName: 'HTOn22', goal: 22 },
+    //   { playerName: 'HienTon100', goal: 100 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 }
     // ];
 
-    const {players=[]} = this.state;
+    let {players=[]} = this.state;
     // sort list player
+
+    players?.sort((a,b)=>Number(b.goal) - Number(a.goal))||[];
     return (
       <FastImage
         style={{flex: 1,width:dialogHeightImage,height:dialogHeightImage}}
@@ -378,15 +381,17 @@ class ChallengeScreen extends BaseScreen {
             contentContainerStyle={{ flexGrow: 1 }}
           >
             <View style={{ flex: 1 }}>
-              {players.sort((a,b)=>a.goal>b.goal).map(player => {
+              {players.map(player => {
+                const iconResult =Number(player.goal) >= 100? images.ic_gold:images.ic_sliver;
                 return (
-                  <View style={{ flexDirection: 'row', marginVertical:verticalScale(5) }}>
-                    <Image source={images.ic_gold} />
-                    <View style={{ justifyContent: 'center', marginLeft: scale(15) }}>
+                  <View style={{ flexDirection: 'row', marginVertical:verticalScale(5),flex:1 }}>
+                    <Image source={iconResult}  style={{alignSelf:'center'}}/>
+                    <View style={{ justifyContent: 'center', marginLeft: scale(15),flex:1 }}>
                       <Text
                         style={[
                           TextStyle.bigText,
                           {
+                            paddingTop:20,
                             color: 'white',
                             textAlignVertical: 'center'
                           }
@@ -397,15 +402,17 @@ class ChallengeScreen extends BaseScreen {
                       <Text
                         style={[
                           TextStyle.normalText,
-                          { color: 'white', textAlignVertical: 'center',fontWeight:'bold' }
+                          { color: 'white', textAlignVertical: 'center',fontWeight:'bold',borderBottomWidth:1,borderColor:'#8d8d8d20', flex:1,paddingVertical:20 }
                         ]}
                       >
                       <Text style={[
                         TextStyle.normalText,
                         { color: '#8d8d8d' ,fontWeight:'normal'}
-                      ]}>Finished </Text>
+                      ]}>{Number(player.goal) >= 100
+                        ? 'The Champion'
+                        : `Finished `}</Text>
                          {Number(player.goal) >= 100
-                          ? '100%'
+                          ? ''
                           : `${Number(player.goal)}%`}
                       </Text>
                     </View>
@@ -431,7 +438,7 @@ class ChallengeScreen extends BaseScreen {
 
   renderMap = () => {
     const { user, room, isReady, playersMarker=[],isLoading = false,players = []} = this.state;
-    const uriPhoto =  { uri: room?.photo || '' } || images.map;
+    const uriPhoto = room?.photo ?  { uri: room?.photo  } : images.image_start;
     const markersView = this.renderMarker();
     return (
       <GameLoop style={styles.map} onUpdate={this.updateHandler} >
