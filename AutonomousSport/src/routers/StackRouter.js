@@ -130,6 +130,7 @@ const StackRouter = createStackNavigator(
   },
   {
     headerMode: 'screen',
+    // initialRouteName: 'CreateRoomScreen',
     initialRouteName: 'SignInScreen'
   }
 );
