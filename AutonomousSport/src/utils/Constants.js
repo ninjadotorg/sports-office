@@ -20,11 +20,13 @@ export class STATE_BLUETOOTH {
 }
 export const Config = {
   API_URL: (() => {
-    if (!__DEV__) {
-      return '';
-    } else {
-      return ConfigReact.default.API_URL;
-    }
+    // if (!__DEV__) {
+    //   return '';
+    // } else {
+    //   return ConfigReact.default.API_URL;
+    // }
+
+    return ConfigReact.default.API_URL;
   })(),
   OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || ''
 };

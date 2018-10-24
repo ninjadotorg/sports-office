@@ -55,4 +55,5 @@ buck-out/
 *.env
 .env
 # Bundle artifact
-*.jsbundle 
+*.jsbundle
+/android
