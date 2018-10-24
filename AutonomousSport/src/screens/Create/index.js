@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image ,ImageBackground} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ImageBackground
+} from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { Button, Header, ButtonGroup } from 'react-native-elements';
 import { TAG as TAGHOME } from '@/screens/Home';
@@ -76,12 +83,14 @@ class CreateRoomScreen extends BaseScreen {
     const { selectedIndex } = this.state;
     return (
       <View style={styles.topBar}>
-          
         <TouchableOpacity
           style={{ flexDirection: 'row' }}
           onPress={this.onPressBack}
         >
-          <Image source={images.ic_backtop}  style={{width:32, height:32, marginTop:12 }}/>
+          <Image
+            source={images.ic_backtop}
+            style={{ width: 32, height: 32, marginTop: 12 }}
+          />
           <Text
             style={[
               TextStyle.mediumText,
@@ -89,7 +98,7 @@ class CreateRoomScreen extends BaseScreen {
                 color: 'white',
                 textAlignVertical: 'center',
                 marginHorizontal: 10,
-                marginLeft:20, 
+                marginLeft: 20
               }
             ]}
           >
@@ -105,18 +114,31 @@ class CreateRoomScreen extends BaseScreen {
             TextStyle.normalText,
             styles.selectedTextStyleButton
           ]}
+          component={TouchableOpacity}
           underlayColor="transparent"
+          
           selectedButtonStyle={styles.selectedButtonStyle}
-          containerStyle={[styles.buttonGroup,{backgroundColor:"transparent", borderWidth:0}]}
+          containerStyle={[
+            styles.buttonGroup,
+            { backgroundColor: 'transparent', borderWidth: 0 }
+          ]}
         />
       </View>
     );
   };
   render() {
     return (
-      <ImageBackground style={[styles.containerimg]} source={images.backgroundx}> 
+      <ImageBackground
+        style={[styles.containerimg]}
+        source={images.backgroundx}
+      >
         <View style={styles.container}>
-          <Header  backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0}} >{this.renderLeftHeader()}</Header>
+          <Header
+            backgroundColor="transparent"
+            outerContainerStyles={{ borderBottomWidth: 0 }}
+          >
+            {this.renderLeftHeader()}
+          </Header>
           <RoomList levelIndex={this.state.selectedIndex} />
           <View style={styles.containerBottom}>
             <Button
@@ -137,7 +159,7 @@ class CreateRoomScreen extends BaseScreen {
           </View>
           {this.initDialogInvite()}
         </View>
-        </ImageBackground>
+      </ImageBackground>
     );
   }
 }

@@ -23,7 +23,7 @@ const mainColor = {
 const styles = StyleSheet.create({
   containerimg: {
     flex: 1,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     backgroundColor: 'transparent'
   },
   container: {
@@ -92,17 +92,20 @@ const styles = StyleSheet.create({
     color: '#F6F6F6'
   },
   buttonGroup: {
-    borderBottomColor: 'transparent',
-    borderTopColor: 'transparent',
+    // borderBottomColor: 'transparent',
+    // borderTopColor: 'transparent',
+    borderColor: 'transparent',
     shadowColor: 'transparent',
     backgroundColor: '#181818',
     flex: 1,
     borderWidth: 0
   },
   selectedButtonStyle: {
-    backgroundColor: mainColor.backgroundColor,
+    // backgroundColor: mainColor.backgroundColor,
+    borderBottomWidth: 2,
+    backgroundColor: 'transparent',
     shadowColor: 'transparent',
-    borderBottomColor: 'transparent'
+    borderBottomColor: '#02bb4f'
   },
   // containerBottom: {
   //   flexDirection: 'row',
@@ -113,12 +116,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: verticalScale(60),
     justifyContent: 'space-around',
-    width:'60%',
+    width: '60%',
     alignItems: 'center',
-    marginLeft:'20%',
+    marginLeft: '20%'
   },
   button: {
-    
     borderRadius: 25,
     borderWidth: 1,
     backgroundColor: 'transparent',
