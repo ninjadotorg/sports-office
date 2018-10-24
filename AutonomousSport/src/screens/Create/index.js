@@ -23,6 +23,14 @@ import { connect } from 'react-redux';
 import { fetchUser } from '@/actions/UserAction';
 
 export const TAG = 'CreateRoomScreen';
+const component1 = () => <Text>Hello</Text>;
+const component2 = () => <Text>World</Text>;
+const component3 = () => <Text>ButtonGroup</Text>;
+const buttons = [
+  { element: component1 },
+  { element: component2 },
+  { element: component3 }
+];
 
 class CreateRoomScreen extends BaseScreen {
   static navigationOptions = navigation => {
@@ -108,15 +116,14 @@ class CreateRoomScreen extends BaseScreen {
         <ButtonGroup
           onPress={this.updateIndex}
           selectedIndex={selectedIndex}
+          innerBorderStyle={{ color: 'transparent' }}
           buttons={['Level 1', 'Level 2', 'Level 3', 'Level 4']}
           textStyle={[TextStyle.normalText, styles.textStyleButton]}
           selectedTextStyle={[
             TextStyle.normalText,
             styles.selectedTextStyleButton
           ]}
-          component={TouchableOpacity}
           underlayColor="transparent"
-          
           selectedButtonStyle={styles.selectedButtonStyle}
           containerStyle={[
             styles.buttonGroup,

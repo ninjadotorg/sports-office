@@ -390,7 +390,7 @@ export default class SetupScreen extends BaseScreen {
     );
   };
   getListAdress = () => {
-    console.log(TAG, ' getListAdress = ', this.state.peripherals.values());
+    // console.log(TAG, ' getListAdress = ', this.state.peripherals.values());
     return Array.from(this.state.peripherals.values());
   };
   renderEmpty = () => {
@@ -413,6 +413,16 @@ export default class SetupScreen extends BaseScreen {
           style={{ width: 58, height: 58, margin: 10,marginTop:30  }}
         />
         <View style={[styles.containerRight,{marginLeft:20, marginTop:10} ]}>
+          <Image
+            source={images.bike}
+            style={[{
+              width: 739,
+              height: 479,
+              bottom: 0,
+              right: 0,
+              position: 'absolute'
+            }]}
+          />
           <Text style={[TextStyle.extraText, styles.textLabel,{marginLeft:10,marginTop:10}]}>
             Autonomous
           </Text>
@@ -434,16 +444,7 @@ export default class SetupScreen extends BaseScreen {
               renderItem={this.renderItem}
             />
           )}
-          <Image
-            source={images.bike}
-            style={[{
-              width: 739,
-              height: 479,
-              bottom: 0,
-              right: 0,
-              position: 'absolute'
-            }]}
-          />
+         
         </View>
       </View>
             
