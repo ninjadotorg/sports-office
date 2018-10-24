@@ -86,10 +86,12 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5
   },
   textStyleButton: {
-    color: '#02BB4F'
+    color: 'white',
+    fontWeight: 'bold'
   },
   selectedTextStyleButton: {
-    color: '#F6F6F6'
+    color: 'white',
+    fontWeight: 'bold'
   },
   buttonGroup: {
     // borderBottomColor: 'transparent',

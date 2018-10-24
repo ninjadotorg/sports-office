@@ -119,13 +119,18 @@ class SignInScreen extends BaseScreen {
         user: nextProps.user,
         loading:false
       });
-      
-      if(isLogged&&isLoggedFirebase){
-        this.receiveSignIn({isLogged:isLogged });
-      }else if(isLogged && !isLoggedFirebase){
-        
-        this.props.loginWithFirebase({email:userNext.userInfo.email,password:userNext.userInfo.fbtoken});
+      if(isLogged){
+        if(isLoggedFirebase){
+          this.receiveSignIn({isLogged:isLogged });
+        }else{
+          this.props.loginWithFirebase({email:userNext.userInfo.email,password:userNext.userInfo.fbtoken});
+        }
+      }else{
+        this.setState({
+          isCheckingRegular:false
+        });
       }
+      
     }
   }
   
