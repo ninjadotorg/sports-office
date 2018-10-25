@@ -370,7 +370,7 @@ export default class SetupScreen extends BaseScreen {
             style={[{
               width: 20,
               height: 27,
-              marginTop:8 
+              marginTop:8
             }]}
           />
         <Text
@@ -416,11 +416,12 @@ export default class SetupScreen extends BaseScreen {
           <Image
             source={images.bike}
             style={[{
-              width: 739,
-              height: 479,
+              width: 500,
+              height: 324,
               bottom: 0,
               right: 0,
-              position: 'absolute'
+              position: 'absolute',
+              opacity:0.8
             }]}
           />
           <Text style={[TextStyle.extraText, styles.textLabel,{marginLeft:10,marginTop:10}]}>

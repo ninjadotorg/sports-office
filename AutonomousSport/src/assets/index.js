@@ -22,7 +22,7 @@ const images = {
   // mapVector: require('@/assets/images/map.svg'),
   // map: require('@/assets/images/map.jpg'),
   ic_racer1: require('@/assets/images/ic_racer1.png'),
-  ic_no_friend_list: require('@/assets/images/icons8addusergroup.png'),
+  ic_no_friend_list: require('@/assets/images/nofriends.png'),
   ic_backtop: require('@/assets/images/ic_back.png'),
   ic_check: require('@/assets/images/check.png')
 };
