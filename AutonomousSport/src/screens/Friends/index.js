@@ -300,6 +300,7 @@ class FriendsScreen extends BaseScreen {
         onPress={this.updateIndex}
         selectedIndex={selectedIndex}
         buttons={buttons}
+        innerBorderStyle={{ color: 'transparent' }}
         textStyle={[TextStyle.normalText, styles.textStyleButton]}
         selectedTextStyle={[
           TextStyle.normalText,
@@ -307,6 +308,7 @@ class FriendsScreen extends BaseScreen {
         ]}
         selectedButtonStyle={styles.selectedButtonStyle}
         containerStyle={styles.buttonGroup} 
+        
       />
     );
   };
@@ -327,14 +329,14 @@ class FriendsScreen extends BaseScreen {
           {this.renderTabButton()} 
         </View>
         {listFriends.length == 0  && selectedIndex ===0 ?  
-          <View style={[styles.containerImg,{marginLeft:verticalScale(40), marginRight:verticalScale(10)}]}> 
+          <View style={[styles.containerImg,{marginLeft:verticalScale(40),marginRight:verticalScale(10)}]}> 
 
               <Image
                   source={images.ic_no_friend_list}   
-                  style={[styles.image, { resizeMode:  'cover' }]} 
+                  style={[styles.image, { resizeMode:  'cover',  marginTop:-40 }]} 
               />
               <Text 
-                style={[TextStyle.smallText, TextStyle.buttonText]}
+                style={[TextStyle.smallText, TextStyle.buttonText, {marginTop:verticalScale(20)}]}
               >
               You have no friends
               </Text>
