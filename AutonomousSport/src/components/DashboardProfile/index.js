@@ -27,16 +27,16 @@ class DashboardProfile extends Component {
         <View style={styles.item}>
           <Text
             style={[
-              TextStyle.bigText,
-              { color: 'white', textAlign: 'center', fontWeight: 'bold' }
+              TextStyle.mediumText,
+              { color: 'white', textAlign: 'left', fontWeight: 'bold' }
             ]}
           >
             {kcal}
           </Text>
           <Text
             style={[
-              TextStyle.mediumText,
-              { color: 'white', textAlign: 'center' }
+              TextStyle.normalText,
+              { color: 'white', textAlign: 'left' }
             ]}
           >
             Kcal
@@ -50,16 +50,16 @@ class DashboardProfile extends Component {
         <View style={styles.item}>
           <Text
             style={[
-              TextStyle.bigText,
-              { color: 'white', textAlign: 'center', fontWeight: 'bold' }
+              TextStyle.mediumText,
+              { color: 'white', textAlign: 'left', fontWeight: 'bold' }
             ]}
           >
             {mile}
           </Text>
           <Text
             style={[
-              TextStyle.mediumText,
-              { color: 'white', textAlign: 'center' }
+              TextStyle.normalText,
+              { color: 'white', textAlign: 'left' }
             ]}
           >
             Miles

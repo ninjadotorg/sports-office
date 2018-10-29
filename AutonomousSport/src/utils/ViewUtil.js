@@ -130,6 +130,16 @@ const ViewUtil = {
     return (
       <View
         style={[
+          { height: 1, flex: 1, backgroundColor: 'white', marginTop:4,marginBottom:4},
+          styleContainer
+        ]}
+      />
+    );
+  },
+  line2: ({ styleContainer = {} }) => {
+    return (
+      <View
+        style={[
           { height: 1, flex: 1, backgroundColor: 'white' },
           styleContainer
         ]}
