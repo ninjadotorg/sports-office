@@ -307,9 +307,9 @@ class SignInScreen extends BaseScreen {
                      
                   {swap !="signup" ? null :
 
-                    <TouchableOpacity  onPress={this.onPressEye} style={[styles.buttonStyle, {position:'absolute', right:2, 
-                           marginTop:-70, backgroundColor:'transparent', width:48}]}>
-                                    <Image source={this.state.eye}  /> 
+                    <TouchableOpacity  onPress={this.onPressEye} style={[styles.buttonStyle, {position:'absolute',  marginRight:2,right:3, 
+                           marginTop:-72, backgroundColor:'transparent'}]}>
+                                    <Image source={this.state.eye} style={{width:24, height:16}}  /> 
                     </TouchableOpacity>
 
                      

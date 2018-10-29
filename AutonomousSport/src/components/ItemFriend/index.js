@@ -86,7 +86,8 @@ class ItemFriend extends PureComponent {
     console.log("invited", dataItem);
     return (
       <View style={[styles.container,
-      {paddingTop:14, paddingBottom:14, paddingRight:verticalScale(0),paddingLeft:0, marginLeft:0, borderBottomWidth:1, borderBottomColor:'#333333'}]}>
+      {paddingTop:14, paddingBottom:14, paddingRight:verticalScale(0),paddingLeft:0,
+       marginLeft:0, borderBottomWidth:1, borderBottomColor:'#76717f'}]}>
          
         {/* <Image
           source={images.user}

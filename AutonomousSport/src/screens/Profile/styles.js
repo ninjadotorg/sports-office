@@ -1,90 +1,153 @@
 import { StyleSheet } from 'react-native';
+import { scale } from '@/utils/TextStyle';
 import {
-  verticalScale,
   scale as scaleSize,
-  moderateScale
+  moderateScale,
+  verticalScale
 } from 'react-native-size-matters';
-import { screenSize } from '@/utils/TextStyle';
 
-const widthInput = screenSize.width / 3;
+const textButton = {
+  textAlign: 'center',
+  color: 'white'
+};
+
+const socialButtonText = {
+  ...textButton,
+  marginTop: 5
+};
+
+const buttonStyle = {
+  height: 50,
+  backgroundColor: '#02BB4F',
+  borderWidth: 1,
+  borderRadius: scaleSize(30),
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderColor: 'transparent'
+};
 
 export const color = {
-  placeHolder: 'rgba(255,255,255,0.5)'
+  placeHolder: 'rgba(255,255,255,0.5)',
+  social: {
+    facebook: '#3F51B5',
+    google: '#DE4940'
+    // facebook: 'transparent',
+    // google: 'transparent'
+  },
+  textSocial: {
+    facebook: 'black',
+    google: 'black'
+  }
 };
+
+//backgroundColor: '#232339'
+
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: 'transparent'
+    flexDirection: 'row',  
   },
-  topBar: {
+
+  text: {
+    color: 'white'
+  },
+  textLogo: {
+    fontWeight: 'bold',
     alignSelf: 'center',
-    flexDirection: 'row', 
+    marginTop: verticalScale(20)
   },
   textLabel: { color: color.placeHolder, flex: 1, textAlignVertical: 'center' },
-  button: {
-    borderRadius: 25,
-    borderWidth: 0,
-    backgroundColor: '#02BB4F',
-    borderColor: '#02BB4F',
-    minWidth: scaleSize(100),
-    width: widthInput
+  endScreenText: {
+    marginBottom: 20
+  },
+  textButton,
+  socialButtonText,
+  buttonStyle,
+  socialContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  socialButton: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  socialButtonIcon: { marginRight: 10, marginLeft: 0 },
+
+  socialButtonTextFB: {
+    ...socialButtonText,
+    color: color.textSocial.facebook
+  },
+  socialButtonTextGG: {
+    ...socialButtonText,
+    color: color.textSocial.google
+  },
+  socialButtonFB: {
+    flex: 1,
+    flexDirection: 'row',
+    marginRight: 5,
+    backgroundColor: color.social.facebook
+  },
+  socialButtonGG: {
+    flex: 1,
+    marginLeft: 5,
+    flexDirection: 'row',
+    backgroundColor: color.social.google
+  },
+  socialBottomTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  socialBottomText: { color: color.placeHolder },
+  marginBottom10: { marginBottom: 10 },
+  linkContainer: {
+    borderBottomWidth: 1,
+    borderColor: 'white'
+  },
+  linkContainerMargin: {
+    marginBottom: 0,
+    alignSelf: 'center'
+  },
+  link: {
+    textAlign: 'center',
+    color: 'white',
+    alignSelf: 'center'
   },
   containerInput: {
-    alignSelf: 'center',
-    width: widthInput,
     flexDirection: 'row',
     borderBottomWidth: 1,
     paddingVertical: verticalScale(10),
     borderBottomColor: 'rgba(255,255,255,0.2)'
   },
-  containerTop: {
-    padding: moderateScale(20),
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  containerTopRight: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
-    borderWidth: 1.5,
-    paddingVertical: moderateScale(5),
-    flexDirection: 'row'
-  },
-  topRightItem: {
-    paddingHorizontal: moderateScale(10)
-  },
-  containerBottom: {
-    flexDirection: 'row',
-    paddingBottom: verticalScale(60),
-    justifyContent: 'space-around',
-    width:'60%',
-    alignItems: 'center',
-    marginLeft:'20%',
-  },
-  containerCenter: {
+  scrollView: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexGrow: 1,
+    backgroundColor: 'transparent',
+    paddingHorizontal: scaleSize(120)
+  },
+  mainView: { flex: 1, alignContent: 'center', backgroundColor: 'transparent' },
+  containerStyle: {
+    flex: 1,
+    paddingVertical: moderateScale(10),
+    backgroundColor: 'transparent',
+    //backgroundColor:'#232339',
     justifyContent: 'center'
   },
-  button: {
-    borderRadius: 25,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    borderColor: '#02BB4F',
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+  imgContainerStyle: {
+    paddingBottom: 40,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  containerRowTop: {
+
+  inputContainerStyle: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start' // if you want to fill rows left to right
+    justifyContent: 'center'
   },
-  itemTop:{
-    width: '50%' // is 50% of container width
+  errorItem: {
+    color: 'red',
+    textAlign: 'center',
+    justifyContent: 'center',
+    width: '100%'
   }
 });
 

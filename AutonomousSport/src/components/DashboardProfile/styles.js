@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   item: {
-    paddingHorizontal: moderateScale(10)
+    paddingHorizontal: moderateScale(16)
   }
 });
 export default styles;
