@@ -125,6 +125,7 @@ class ChallengeNameScreen extends BaseScreen {
             {
               color: 'white',
               textAlignVertical: 'center',
+              fontWeight: 'bold',
               marginHorizontal: 10,
               marginLeft:20, 
               marginTop:10, 

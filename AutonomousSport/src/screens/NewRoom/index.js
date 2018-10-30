@@ -57,6 +57,7 @@ class NewRoomScreen extends BaseScreen {
                 TextStyle.mediumText,
                 {
                   color: 'white',
+                  fontWeight: 'bold',
                   textAlignVertical: 'center',
                   marginHorizontal: 10,
                   marginLeft:20,
