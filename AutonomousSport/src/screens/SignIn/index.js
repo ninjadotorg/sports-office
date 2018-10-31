@@ -116,7 +116,7 @@ class SignInScreen extends BaseScreen {
       const isLogged = !_.isEmpty(userNext.userInfo);
       const isLoggedFirebase = !_.isEmpty(userNext.firebaseInfo);
       this.setState({
-        user: nextProps.user,
+        user:_.isEmpty(userNext.userInfo)?undefined:nextProps.user,
         loading:false
       });
       if(isLogged){
@@ -168,7 +168,7 @@ class SignInScreen extends BaseScreen {
        swap: data =="signin" ? "signup" : "signin",
        error:'',
        secureTextEntry:true,
-    })
+    });
     
   });
 
@@ -179,7 +179,7 @@ class SignInScreen extends BaseScreen {
     console.log(TAG,' onPressEye ',y);
     this.setState({
       eye:  y,
-      secureTextEntry:  (y == images.ic_eye ? true : false ),
+      secureTextEntry:  (y == images.ic_eye ? true : false )
     });
 
   })

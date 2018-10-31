@@ -27,7 +27,6 @@ export const receiveLogin = data => ({
   payload: data
 });
 
-export const logout = () => ({ type: ACTIONS.AUTH_LOGOUT });
 export const login = () => ({ type: ACTIONS.AUTH_LOGIN });
 export const userLocal = () => ({ type: ACTIONS.GET_USER_LOCAL });
 
@@ -98,6 +97,15 @@ export const fetchUser = () => async dispatch => {
   } else {
   }
   dispatch({ type: ACTIONS.GET_USER, payload: {} });
+};
+
+export const logout = () => async dispatch => {
+  try {
+    await LocalDatabase.logout();
+  } catch (error) {}
+  dispatch({
+    type: ACTIONS.AUTH_LOGOUT
+  });
 };
 export const updateName = (fullname = '') => async dispatch => {
   try {
