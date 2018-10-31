@@ -16,8 +16,7 @@ import {
   ImageBackground,
   Dimensions
 } from 'react-native';
-
-import { stringToBytes, bytesToString } from 'convert-string';
+import { connect } from 'react-redux';
 import BleManager from 'react-native-ble-manager';
 import BaseScreen from '@/screens/BaseScreen';
 import styles from './styles';
@@ -27,13 +26,14 @@ import TextStyle from '@/utils/TextStyle';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import LocalDatabase from '@/utils/LocalDatabase';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
-import ViewUtil from '@/utils/ViewUtil';
+import ViewUtil,{delayCallingManyTime} from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
+import { disconnectBluetooth } from '@/actions/RaceAction';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 export const TAG = 'SetupScreen';
-export default class SetupScreen extends BaseScreen {
+class SetupScreen extends BaseScreen {
   constructor(props) {
     super(props);
 
@@ -44,10 +44,10 @@ export default class SetupScreen extends BaseScreen {
       refreshing: false,
       appState: ''
     };
-    BleManager.start({ showAlert: true });
+    BleManager.start({ showAlert: true,forceLegacy:false });
     this.handlerUpdate = null;
     this.handleStopScan = this.handleStopScan.bind(this);
-
+    // this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
   }
 
@@ -90,20 +90,20 @@ export default class SetupScreen extends BaseScreen {
 
       let result3 = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-      );
+      );      
 
       if (result && result2 & result3) {
         console.log('Permission is OK');
         return Promise.resolve(1);
       } else {
-        result = await PermissionsAndroid.requestPermission(
+        result = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
         );
-        result2 = await PermissionsAndroid.requestPermission(
+        result2 = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.CAMERA
         );
 
-        result3 = await PermissionsAndroid.requestPermission(
+        result3 = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
         );
 
@@ -150,7 +150,7 @@ export default class SetupScreen extends BaseScreen {
 
   componentWillUnmount() {
     console.log(TAG, ' componentWillUnmount ');
-    clearTimeout(this.timeout);
+    // clearTimeout(this.timeout);
     if (this.peripheralBluetooth) {
       BleManager.stopNotification(
         this.peripheralBluetooth.peripheral,
@@ -194,10 +194,26 @@ export default class SetupScreen extends BaseScreen {
     // let b = a.split(',')[1];
     // console.log(TAG, `handleUpdateValueForCharacteristic 01 Recieved ${temp} for characteristic`);
     // value, peripheral, characteristic, service
-
-    if ( this.peripheralBluetooth  && !_.isEmpty(data)) {
-      this.replaceScreen(this.props.navigation, TAGSIGNIN);
+    try {
+      if ( this.peripheralBluetooth  && !_.isEmpty(data)) {
+        
+        await BleManager.stopNotification(
+          this.peripheralBluetooth.peripheral,
+          this.peripheralBluetooth.service,
+          this.peripheralBluetooth.characteristic
+        );
+        await LocalDatabase.saveBluetooth(
+          JSON.stringify(this.peripheralBluetooth.toJSON())
+        ); 
+        // alert("connect succesfully");
+      }
+    } catch (error) {
+      
+    }finally{
+        this.replaceScreen(this.props.navigation, TAGSIGNIN);
     }
+      // this.handlerUpdate?.remove();
+      console.log(TAG, ' handleUpdateValueForCharacteristic ');
   };
 
   handleStopScan() {
@@ -331,16 +347,14 @@ export default class SetupScreen extends BaseScreen {
             ' bakeCharacteristicUUID =' +
             bakeCharacteristic
         );
-        await BleManager.startNotification(id, serviceUUID, bakeCharacteristic);
+        BleManager.startNotification(id, serviceUUID, bakeCharacteristic);
         console.log(TAG, ' connect 03 ');
         this.peripheralBluetooth = new PeripheralBluetooth(
           id,
           serviceUUID,
           bakeCharacteristic
         );
-        await LocalDatabase.saveBluetooth(
-          JSON.stringify(this.peripheralBluetooth.toJSON())
-        );
+        
 
         console.log('Started notification on end');
       }
@@ -360,7 +374,7 @@ export default class SetupScreen extends BaseScreen {
         onPress={this.onClickView(async () => {
           console.log(TAG, ' onPressItemConnect = begin ');
           this.isLoading = true;
-          await Util.excuteWithTimeout(this.connect(item), 7);
+          await Util.excuteWithTimeout(this.connect(item), 10);
           this.isLoading = false;
           this.startScan();
         })}
@@ -402,16 +416,44 @@ export default class SetupScreen extends BaseScreen {
       )
     );
   };
+  excuteDisconnect = async ()=>{
+    console.log(TAG, ' disconnectBluetooth begin ');
+    const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
+    
+    console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
+    if (periBluetooth && periBluetooth.peripheral) {
+      console.log(TAG, ' disconnectBluetooth begin02 ');
+      // await BleManager.start({ showAlert: false });
+      // await this.props.disconnectBluetooth();
+      await LocalDatabase.logout();
+      console.log(TAG, ' disconnectBluetooth begin03 ');
+      await BleManager.disconnect(periBluetooth.peripheral);
+      console.log(TAG, ' disconnectBluetooth begin04 ');
+    }
+  };
+  disconnect = this.onClickView(async ()=>{
+    try {
+      this.isLoading = true;
+      await Util.excuteWithTimeout(this.excuteDisconnect(),10);  
+      
+    } catch (error) {
+      console.log(TAG, ' disconnectBluetooth error ',error);
+    }finally{
+      this.isLoading = false;
+    }
+  });
 
   render() {
     const { isLoading } = this.state;
     return (
       <ImageBackground style={[styles.container,{ paddingBottom:0, paddingRight:0 }]} source={images.backgroundx}> 
       <View style={[styles.container,{paddingLeft:40, paddingBottom:0, paddingRight:0 }]}>
-        <Image
-          source={images.logo}
-          style={{ width: 58, height: 58, margin: 10,marginTop:30  }}
-        />
+        <TouchableOpacity onPress={__DEV__?this.disconnect:undefined}>
+          <Image
+            source={images.logo}
+            style={{ width: 58, height: 58, margin: 10,marginTop:30  }}
+          />
+        </TouchableOpacity>
         <View style={[styles.containerRight,{marginLeft:20, marginTop:10} ]}>
           <Image
             source={images.bike}
@@ -453,3 +495,12 @@ export default class SetupScreen extends BaseScreen {
     );
   }
 }
+
+export default connect(
+  state => ({
+    
+  }),
+  {
+    disconnectBluetooth
+  }
+)(SetupScreen);

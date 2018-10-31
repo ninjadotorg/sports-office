@@ -222,9 +222,6 @@ export default class ApiService {
   }
 
   static async getRoomList({ page = 1, page_size = 10 }) {
-    // if (__DEV__) {
-    //   return ;
-    // }
     const url = Api.GET_LIST_ROOM;
     const response = await ApiService.getURL(METHOD.GET, url, {
       page,

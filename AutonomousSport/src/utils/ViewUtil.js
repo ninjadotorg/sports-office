@@ -15,7 +15,9 @@ export const onClickView = funcOnView => {
     leading: true
   });
 };
-
+export const delayCallingManyTime = (funcOnView, second = 1) => {
+  return debounce(funcOnView, second * 1000);
+};
 const ViewUtil = {
   CustomProgressBar: ({ visible }) => (
     <Modal onRequestClose={() => null} visible={visible}>
@@ -130,7 +132,13 @@ const ViewUtil = {
     return (
       <View
         style={[
-          { height: 1, flex: 1, backgroundColor: 'white', marginTop:4,marginBottom:4},
+          {
+            height: 1,
+            flex: 1,
+            backgroundColor: 'white',
+            marginTop: 4,
+            marginBottom: 4
+          },
           styleContainer
         ]}
       />
