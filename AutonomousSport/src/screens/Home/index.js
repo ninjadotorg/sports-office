@@ -17,7 +17,7 @@ import { TAG as TAGCREATE } from '@/screens/Create';
 import { TAG as TAGFRIENDS } from '@/screens/Friends';
 import { TAG as TAGPROFILE } from '@/screens/Profile';
 import images from '@/assets';
-import { moderateScale, scale } from 'react-native-size-matters';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
@@ -30,6 +30,7 @@ import {
   updatePractiseRacing,
   loginWithFirebase
 } from '@/actions/UserAction';
+ 
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = moderateScale(130);
@@ -263,7 +264,7 @@ class HomeScreen extends BaseScreen {
           />
           <Button
             title="Start Racing"
-            buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
+            buttonStyle={[styles.button, {    minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F' }]}
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
             onPress={this.onPressCreateRoom}
           />

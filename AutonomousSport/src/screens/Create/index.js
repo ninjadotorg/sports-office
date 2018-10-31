@@ -104,9 +104,11 @@ class CreateRoomScreen extends BaseScreen {
               TextStyle.mediumText,
               {
                 color: 'white',
+                fontWeight: 'bold',
                 textAlignVertical: 'center',
                 marginHorizontal: 10,
-                marginLeft: 20
+                marginLeft: 20,
+                marginTop:8,
               }
             ]}
           >

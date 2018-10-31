@@ -29,8 +29,11 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     flexDirection: 'row',
-    paddingBottom: verticalScale(20),
-    justifyContent: 'space-around'
+    paddingBottom: verticalScale(20), 
+    justifyContent: 'space-around',
+    width: '60%',
+    alignItems: 'center',
+    marginLeft: '20%'
   },
   containerCenter: {
     flex: 1,
@@ -64,6 +67,16 @@ const styles = StyleSheet.create({
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
   },
+  buttondis2: {
+    borderRadius: 32,
+    borderWidth: 1,
+    backgroundColor: '#02BB4F',
+    borderColor: '#02BB4F',
+    opacity: 0.5,
+    minWidth: scaleSize(100),
+    paddingHorizontal: scaleSize(20)
+  },
+
   button: {
     borderRadius: 32,
     borderWidth: 1,
