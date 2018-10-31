@@ -190,23 +190,32 @@ export const disconnectBluetooth = () => async dispatch => {
   });
   timestampPrevious = 0;
   roundPrevious = 0;
-  const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
-  console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
-  if (handlerUpdate) {
-    bleManagerEmitter.removeSubscription(handlerUpdate);
-    handlerUpdate?.remove();
-    handlerUpdate = null;
+  try {
+    const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
+    console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
+    if (handlerUpdate) {
+      bleManagerEmitter.removeSubscription(handlerUpdate);
+      handlerUpdate?.remove();
+      handlerUpdate = null;
+    }
+    if (periBluetooth && periBluetooth.peripheral) {
+      console.log(TAG, ' disconnectBluetooth stop-----');
+      await BleManager.start({ showAlert: false });
+      console.log(TAG, ' disconnectBluetooth stop11-----');
+      receiveDataFromBluetooth = false;
+      console.log(TAG, ' disconnectBluetooth stop12-----');
+      await BleManager.stopNotification(
+        periBluetooth.peripheral,
+        periBluetooth.service,
+        periBluetooth.characteristic
+      );
+      console.log(TAG, ' disconnectBluetooth stop13-----');
+      await BleManager.disconnect(periBluetooth.peripheral);
+    }
+  } catch (error) {
+    console.log(TAG, ' disconnectBluetooth error');
   }
-  if (periBluetooth && periBluetooth.peripheral) {
-    console.log(TAG, ' disconnectBluetooth stop-----');
-    await BleManager.start({ showAlert: false });
-    receiveDataFromBluetooth = false;
-    await BleManager.stopNotification(
-      periBluetooth.peripheral,
-      periBluetooth.service,
-      periBluetooth.characteristic
-    );
-  }
+
   console.log(TAG, ' disconnectBluetooth end ');
   dispatch({
     type: ACTIONS.CONNECT_BLUETOOTH,

@@ -7,6 +7,9 @@ const TAG = 'UserReceducer';
 const initialState = { userInfo: {}, practiceInfo: {}, firebaseInfo: {} };
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ACTIONS.AUTH_LOGOUT: {
+      return initialState;
+    }
     case ACTIONS.AUTH_LOGIN: {
       const payload = action.payload || {};
       if (!_.isEmpty(payload)) {

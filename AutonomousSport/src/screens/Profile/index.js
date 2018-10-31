@@ -18,9 +18,10 @@ import { connect } from 'react-redux';
 import TextStyle,{screenSize} from '@/utils/TextStyle';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { TAG as TAGSETUP } from '@/screens/Setup';
-import { fetchUser,updateName,signIn,forGotPass, loginWithFirebase } from '@/actions/UserAction';
+import { TAG as TAGSIGNIN } from '@/screens/SignIn';
+import { fetchUser,updateName,signIn,forGotPass,logout } from '@/actions/UserAction';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
-import { Icon,Button,Header } from 'react-native-elements';
+import { Button,Header } from 'react-native-elements';
 import styles,{ color } from './styles';
  import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
@@ -30,6 +31,7 @@ import {disconnectBluetooth} from '@/actions/RaceAction';
 import DashboardProfile from '@/components/DashboardProfile';
 import LocalDatabase from '@/utils/LocalDatabase';
 import BleManager from 'react-native-ble-manager'; 
+import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 
 export const TAG = 'ProfileScreen'; 
 
@@ -129,22 +131,27 @@ class ProfileScreen extends BaseScreen {
 
   } );
 
+  excuteDisconnect = async ()=>{
+    const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
+    console.log(TAG, ' excuteDisconnect get data = ', periBluetooth);
+    if (periBluetooth && periBluetooth.peripheral) {
+      console.log(TAG, ' excuteDisconnect begin');
+      console.log(TAG, ' excuteDisconnect begin01');
+      await this.props.disconnectBluetooth();
+      console.log(TAG, ' excuteDisconnect begin02');
+      
+      console.log(TAG, ' excuteDisconnect begin03');
+    }
+  };
 
   onPressLogout = this.onClickView(async ()=>{
     try {
-      const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
-      await Util.excuteWithTimeout(async ()=>{
-        console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
-        if (periBluetooth && periBluetooth.peripheral) {
-          await BleManager.start({ showAlert: false });
-          await this.props.disconnectBluetooth();
-          await BleManager.disconnect(periBluetooth.peripheral);
-        }
-      },5);  
+      
+      await Util.excuteWithTimeout(this.excuteDisconnect(),10);  
     } catch (error) {
       
     }finally{
-      await LocalDatabase.logout();
+      await this.props.logout();
       this.replaceScreen(this.props.navigation,TAGSIGNIN);
     }
 
@@ -416,7 +423,7 @@ export default connect(
   state => ({
     user:state.user
   }),
-  { getUser: fetchUser ,updateName,disconnectBluetooth}
+  { getUser: fetchUser ,updateName,disconnectBluetooth,logout}
 )(ProfileScreen);
 
 
