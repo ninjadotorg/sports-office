@@ -155,7 +155,7 @@ class ItemFriend extends PureComponent {
               marginRight: 0,
               alignSelf: 'center'
             }}  
-            buttonStyle={{ height: verticalScale(24),width: verticalScale(80)  , borderWidth:1, borderColor: dataItem?.is_add_invited ? '#333333' :"transparent" }}
+            buttonStyle={{ height: verticalScale(24),width: verticalScale(80)  , borderWidth:1, borderColor: dataItem?.is_add_invited ? '#76717f' :"transparent" }}
             title={ this.state.dataItem?.is_add_invited ?  'Invited' :  'Invite' }
             onPress={this.onClickMakeFriend}
             backgroundColor={dataItem?.is_add_invited ? 'transparent' :'#02BB4F'}  
@@ -170,7 +170,7 @@ class ItemFriend extends PureComponent {
                 marginRight: 0,
                 alignSelf: 'center'
               }}
-              buttonStyle={{ height: verticalScale(24),width: verticalScale(80)  , borderWidth:1, borderColor: dataItem?.is_maked_friend ? '#333333' :"transparent" }}
+              buttonStyle={{ height: verticalScale(24),width: verticalScale(80)  , borderWidth:1, borderColor: dataItem?.is_maked_friend ? '#76717f' :"transparent" }}
               title={ dataItem?.is_maked_friend ?  'Friend' :  'Add Friend' }
               onPress={this.onClickMakeFriend}
               backgroundColor={dataItem?.is_maked_friend ? 'transparent' :'#02BB4F'}  
