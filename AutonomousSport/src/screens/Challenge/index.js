@@ -30,7 +30,7 @@ import Player from '@/models/Player';
 import Util from '@/utils/Util';
 import ViewUtil from '@/utils/ViewUtil';
 import FastImage from 'react-native-fast-image';
-
+import { createImageProgress } from 'react-native-image-progress';
 
 export const TAG = 'ChallengeScreen';
 let heightMap = screenSize.height;
@@ -41,29 +41,32 @@ let lastIndexPosition = 0;
 let currentPositionIndex = 0;
 let listLastIndexPosition = {};
 const limitToRotate = (20+90) * (Math.PI/180);
-
+const FastImageView = createImageProgress(FastImage);
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
     // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
     const { width = 0, height = 1 } = room?.getMapSize()||{};
+    console.log(TAG,' constructor widthRealMap = ',width,' heightRealMap = ',height);
     const sizeMap = Util.calculateMapSize({widthReal:width,heightReal:height});
     this.ratios = sizeMap.ratios;
     this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
     const angle = this.getAngleWithCurrentPoint(0) ;
+    this.posInit = {
+      y: pointStart.y,
+      x: pointStart.x,
+      rotate:angle
+    };
     this.widthMap = sizeMap.width;
     heightMap = sizeMap.height;
+    console.log(TAG,' constructor widthMap = ',this.widthMap,' heightMap = ',heightMap);
     this.state = {
       room: room,
       user: {},
-      pos: {
-        y: pointStart.y,
-        x: pointStart.x,
-        rotate:angle
-      },
+      pos: this.posInit,
       playersColor:{},
       players:[],
       playersMarker:[],
@@ -250,15 +253,23 @@ class ChallengeScreen extends BaseScreen {
 
   createMarkerWithPosition= (pos={x:0,y:0},color = 'red')=>{
     return (<View style={{
-        padding:10,
-        backgroundColor:color,
+        backgroundColor:'#81b1ff23',
         borderRadius:sizeIconRacing.width/2,
         width:sizeIconRacing.width,
         height:sizeIconRacing.width,
         position: 'absolute',
         top: pos.y ,
+        justifyContent:'center',
         left: pos.x
-    }}/>);
+    }}>
+    <View style={{
+      backgroundColor:color,
+      alignSelf:'center',
+      borderRadius:sizeIconRacing.width/2 - scale(10),
+      width:sizeIconRacing.width - scale(20),
+      height:sizeIconRacing.width - scale(20),
+  }}/>
+    </View>);
     
     // return icons.markerPlayer({
     //   color: color,
@@ -283,20 +294,23 @@ class ChallengeScreen extends BaseScreen {
   updateHandler = ({ touches, screen, time }) => {
     
     if(lastIndexPosition < currentPositionIndex){
-      const {pos} = this.state;
+      
       const tempIndex = Math.ceil(lastIndexPosition);
       const nextPoint = this.getCurrentPoint(tempIndex);
       
       if(tempIndex!== currentPositionIndex){
+        console.log(TAG,' updateHandler nextPoint begin');
+        const {pos = this.posInit} = this.state;
         let angle = this.getAngleWithCurrentPoint(tempIndex);
         angle = (Math.abs(angle - pos.rotate)<limitToRotate)? pos.rotate:angle; 
-        console.log(TAG," updateHandler nextPoint Player = ",angle); 
+        console.log(TAG,' updateHandler nextPoint Player = ',angle); 
+        const posNew = {
+          x:nextPoint.x,
+          y:nextPoint.y,
+          rotate:angle
+        };
         this.setState({
-          pos:{
-            x:nextPoint.x,
-            y:nextPoint.y,
-            rotate:angle
-          }
+          pos:posNew
         });
         lastIndexPosition += (currentPositionIndex - lastIndexPosition)*time.delta/1000;
       }else{
@@ -449,14 +463,14 @@ class ChallengeScreen extends BaseScreen {
           minScale={1}
           maxScale={2}
           imageHeight={heightMap}>
-          {ViewUtil.ImageView({
-            style:{ width: this.widthMap, height: heightMap },
-              resizeMode:"contain",
-              source:uriPhoto
-          },[
-            markersView,playersMarker
-          ])}
-            
+          <FastImageView
+            style={{ width: this.widthMap, height: heightMap}}
+            resizeMode={FastImage.resizeMode.contain}
+            source={uriPhoto}>
+            {playersMarker}
+            {markersView}
+          </FastImageView>
+         
         </ImageZoom>
         
 
@@ -478,8 +492,7 @@ class ChallengeScreen extends BaseScreen {
     );
   };
 
-  renderMarker = () => {
-    const { pos } = this.state;
+  renderMarker = (pos = this.state.pos || this.posInit) => {
     return (<Image source={images.ic_racer1} 
         resizeMode='center'
         style={{
@@ -540,12 +553,12 @@ class ChallengeScreen extends BaseScreen {
   }
 
   render() {
-    const { room, user,players=[],isLoadingAllScreen = false } = this.state;
+    const { room, user,players=[],isLoadingAllScreen = false,playersColor = {} } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
         <View style={{ alignItems: 'center' }}>
-          <BikerProfile onStreamCreated={this.onStreamCreated} onStreamDestroyed={this.onStreamDestroyed} room={room} user={user} players={players} />
+          <BikerProfile onStreamCreated={this.onStreamCreated} onStreamDestroyed={this.onStreamDestroyed} room={room} user={user} players={players} playersColor={playersColor} />
         </View>
 
         {icons.close({
