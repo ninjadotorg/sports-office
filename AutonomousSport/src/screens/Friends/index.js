@@ -274,7 +274,7 @@ class FriendsScreen extends BaseScreen {
  
     return ( 
 
-      <View style={[styles.containerBottom, {width: '60%'}]}>
+      <View style={[styles.containerBottom, {}]}>
         <Button 
             title="Skip sending invitation"
             textStyle={[TextStyle.mediumText,{ fontWeight:'bold', color:'#02BB4F',backgroundColor: 'transparent'}]}
@@ -318,7 +318,7 @@ class FriendsScreen extends BaseScreen {
 
     const {selectedIndex, listFriends,isLoading, inviteMode} = this.state;
 
-    console.log("friendscreen", selectedIndex, listFriends,isLoading, inviteMode);
+    console.log(TAG, selectedIndex, listFriends,isLoading, inviteMode);
 
     return (
       <ImageBackground style={[styles.container, {paddingRight:40 }]}  source={images.backgroundx}> 

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 
   topBar: {
     alignSelf: 'center',
-    flexDirection: 'row', 
+    flexDirection: 'row'
   },
   containerTop: {
     padding: moderateScale(10),
@@ -29,11 +29,9 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     flexDirection: 'row',
-    paddingBottom: verticalScale(20), 
-    justifyContent: 'space-around',
-    width: '60%',
+    marginBottom: verticalScale(20),
     alignItems: 'center',
-    marginLeft: '20%'
+    alignSelf: 'center'
   },
   containerCenter: {
     flex: 1,
@@ -51,13 +49,13 @@ const styles = StyleSheet.create({
     color: '#F6F6F6'
   },
   buttonGroup: {
-    borderColor:'#02BB4F',
+    borderColor: '#02BB4F',
     borderRadius: 32,
     backgroundColor: 'transparent'
   },
   selectedButtonStyle: {
     backgroundColor: '#02BB4F',
-    borderColor:'#02BB4F',
+    borderColor: '#02BB4F'
   },
   button2: {
     borderRadius: 32,
@@ -85,11 +83,11 @@ const styles = StyleSheet.create({
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
   },
-  image: { 
+  image: {
     resizeMode: 'cover',
     borderRadius: Platform.OS === 'ios' ? 8 : 0,
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'center'
     // borderTopLeftRadius: entryBorderRadius,
     // borderTopRightRadius: entryBorderRadius
   }

@@ -30,6 +30,7 @@ import {
   updatePractiseRacing,
   loginWithFirebase
 } from '@/actions/UserAction';
+import * as Animatable from 'react-native-animatable';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = moderateScale(130);
@@ -204,7 +205,10 @@ class HomeScreen extends BaseScreen {
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
         <View style={styles.containerCenter}>
-          <Image
+          <Animatable.Image
+            animation="pulse" 
+            easing="ease-out" 
+            iterationCount={Math.ceil(speed)>0?1:0}
             source={images.image_velocity}
             style={{
               position: 'absolute',
