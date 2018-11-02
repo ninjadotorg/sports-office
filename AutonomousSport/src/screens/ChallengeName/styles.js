@@ -117,13 +117,15 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(20),
     justifyContent: 'space-around'
   },
-  button: {
-    borderRadius: 25,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    borderColor: '#02BB4F',
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+  button: { 
+  minWidth: scaleSize(100),
+  paddingHorizontal: scaleSize(20) ,
+  backgroundColor: '#02BB4F',
+  borderWidth: 1,
+  borderRadius: scaleSize(30),
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderColor: 'transparent' 
   },
   containerInput: {
     alignSelf: 'center',

@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
-    padding: 10
+    padding: 10,
+    marginTop:60,
   },
   list: {
     flex: 1
@@ -135,15 +136,17 @@ class RoomList extends Component {
     if (levelIndex == 3) {
       levelf = { min: 50, max: 10000 };
     }
-
-    const datal =
-      data?.filter(
-        room => room.miles <= levelf.max && room.miles >= levelf.min
-      ) || [];
-
-    datal.sort(function(a, b) {
+  
+  
+    data.sort(function(a, b) {
       return b.id - a.id;
     });
+
+    const datal =  data?.filter(
+                            room => room.miles <= levelf.max && room.miles >= levelf.min
+                          ) || [];
+
+     
     this.setState({
       data: data,
       levelFillter: levelf,

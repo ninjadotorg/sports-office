@@ -173,7 +173,7 @@ class ChallengeNameScreen extends BaseScreen {
             <Button
               loading={isLoading}
               title="Next"
-              textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#02BB4F'}]}
+              textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'white'}]}
               buttonStyle={[styles.button , {marginBottom:40}]}
               onPress={this.onPressCreateRoom}
             />

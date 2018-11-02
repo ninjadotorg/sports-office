@@ -310,6 +310,8 @@ func main() {
 
 	//update UpdateUser
 	userapi.POST("/user/update", ctl.UpdateUser) 
+	userapi.POST("/user/updatepwd", ctl.UpdatePassword) 
+	
 	
 	//stream-data-
 

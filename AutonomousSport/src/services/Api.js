@@ -5,6 +5,7 @@ export default class Api {
   static FORGOT_PASS = `${Config.API_URL}/api/forgot-pass`;
   static SIGN_IN = `${Config.API_URL}/api/auth`;
   static UPDATE_NAME = `${Config.API_URL}/api/user/update`;
+  static UPDATE_PASSWORD= `${Config.API_URL}/api/user/updatepwd`;
   static SIGN_UP = `${Config.API_URL}/api/signup`;
   static INIT_HANDSHAKE = `${Config.API_URL}/api/handshake/init`;
   static GET_LIST_ROOM = `${Config.API_URL}/api/room/list`;
