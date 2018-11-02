@@ -12,7 +12,7 @@ import BaseScreen from '@/screens/BaseScreen';
 import { Button } from 'react-native-elements';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import styles, { sliderWidth, itemWidth } from './styles';
-import TextStyle from '@/utils/TextStyle';
+import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { TAG as TAGCREATE } from '@/screens/Create';
 import { TAG as TAGFRIENDS } from '@/screens/Friends';
 import { TAG as TAGPROFILE } from '@/screens/Profile';
@@ -30,7 +30,7 @@ import {
   updatePractiseRacing,
   loginWithFirebase
 } from '@/actions/UserAction';
- 
+import * as Animatable from 'react-native-animatable';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = moderateScale(130);
@@ -148,6 +148,13 @@ class HomeScreen extends BaseScreen {
     this.props.getUser();
     //this.showDialogInvite(true);
     this.onPressReset();
+    console.log(
+      TAG,
+      ' componentDidMount width = ',
+      screenSize.width,
+      ' height = ',
+      screenSize.height
+    );
   }
 
   // componentWillUnmount() {
@@ -197,10 +204,11 @@ class HomeScreen extends BaseScreen {
     const { userInfo = {}, practiceInfo = {} } = user || {};
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
-        
-
         <View style={styles.containerCenter}>
-          <Image
+          <Animatable.Image
+            animation="pulse" 
+            easing="ease-out" 
+            iterationCount={Math.ceil(speed)>0?1:0}
             source={images.image_velocity}
             style={{
               position: 'absolute',
@@ -211,17 +219,39 @@ class HomeScreen extends BaseScreen {
           <Text
             style={[
               TextStyle.xxxExtraText,
-              { color: 'white', fontWeight: 'bold' , }
+              { color: 'white', fontWeight: 'bold' }
             ]}
           >
             {Math.ceil(speed)}
           </Text>
-          <Text style={[TextStyle.xExtraText, { color: 'white' ,fontWeight: '600', opacity: 0.8, marginTop:-10}]}>mi/h</Text>
+          <Text
+            style={[
+              TextStyle.xExtraText,
+              {
+                color: 'white',
+                fontWeight: '600',
+                opacity: 0.8,
+                marginTop: -10
+              }
+            ]}
+          >
+            mi/h
+          </Text>
         </View>
-            
 
-        <View style={[styles.containerTop , styles.containerRowTop, {position:'absolute'}]}>
-          <View style={[ styles.itemTop, { flexDirection: 'row', alignItems: 'flex-start' }] }>
+        <View
+          style={[
+            styles.containerTop,
+            styles.containerRowTop,
+            { position: 'absolute' }
+          ]}
+        >
+          <View
+            style={[
+              styles.itemTop,
+              { flexDirection: 'row', alignItems: 'flex-start' }
+            ]}
+          >
             <TouchableOpacity onPress={this.onPressProfile}>
               <Image
                 source={images.user}
@@ -236,18 +266,10 @@ class HomeScreen extends BaseScreen {
               />
             </TouchableOpacity>
           </View>
-          <View style={[ styles.itemTop,  {alignItems: 'flex-end' , right:0} ]} >
+          <View style={[styles.itemTop, { alignItems: 'flex-end', right: 0 }]}>
             <DashboardProfile
-              kcal={
-                Math.round(
-                  (practiceInfo?.kcal || 0) * 100
-                ) / 100
-              }
-              mile={
-                Math.round(
-                  (practiceInfo?.miles || 0) * 1000
-                ) / 1000
-              }
+              kcal={Math.round((practiceInfo?.kcal || 0) * 100) / 100}
+              mile={Math.round((practiceInfo?.miles || 0) * 1000) / 1000}
             />
           </View>
         </View>
@@ -263,8 +285,8 @@ class HomeScreen extends BaseScreen {
             onPress={this.onPressReset}
           />
           <Button
-            title="Start Racing"
-            buttonStyle={[styles.button, {    minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F',borderWidth: 0 }]}
+            title="Start Racing" 
+            buttonStyle={[styles.button, {    minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F',borderWidth: 0 }]} 
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
             onPress={this.onPressCreateRoom}
           />
