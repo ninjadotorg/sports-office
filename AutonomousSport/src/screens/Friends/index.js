@@ -303,6 +303,7 @@ class FriendsScreen extends BaseScreen {
         selectedIndex={selectedIndex}
         buttons={buttons}
         innerBorderStyle={{ color: 'transparent' }}
+        buttonStyle={styles.buttonStyle}
         textStyle={[TextStyle.normalText, styles.textStyleButton]}
         selectedTextStyle={[
           TextStyle.normalText,
