@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: moderateScale(10),
     borderRadius: moderateScale(10),
+    width: widthImage,
+    height: heightItem,
   },
   containerItemsChecked: {
     borderColor: 'green',
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
   // },
   containerItem: {
     flexDirection: 'column',
-    height: heightItem,
+    height: '100%',
     borderColor: 'blue'
   },
 

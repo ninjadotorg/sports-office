@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     backgroundColor: '#02BB4F',
-    borderColor: '#02BB4F',
+    borderColor:'transparent',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20),
     color: 'white',

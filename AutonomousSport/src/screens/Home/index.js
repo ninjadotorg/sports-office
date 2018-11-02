@@ -285,15 +285,8 @@ class HomeScreen extends BaseScreen {
             onPress={this.onPressReset}
           />
           <Button
-            title="Start Racing"
-            buttonStyle={[
-              styles.button,
-              {
-                minWidth: scale(90),
-                paddingHorizontal: scale(15),
-                backgroundColor: '#02BB4F'
-              }
-            ]}
+            title="Start Racing" 
+            buttonStyle={[styles.button, {    minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F',borderWidth: 0 }]} 
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
             onPress={this.onPressCreateRoom}
           />
