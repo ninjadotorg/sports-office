@@ -253,7 +253,7 @@ class FriendsScreen extends BaseScreen {
           }}
           placeholder="Find friend by email or name"
           placeholderTextColor="#AFAFB9"
-          inputStyle={{paddingLeft:20, borderRadius:32,color:"#FFFFFF"}}
+          inputStyle={{paddingLeft:20, borderRadius:32,color:"#FFFFFF", backgroundColor: 'rgba(255,255,255,0.15)'}}
         />
       </View>
     );
@@ -286,7 +286,7 @@ class FriendsScreen extends BaseScreen {
             disabled={this.state.checkinvitebtn}
             disabledStyle={styles.buttondis2}
             textStyle={[TextStyle.mediumText,{fontWeight:'bold'}]}
-            buttonStyle={styles.button2 }
+            buttonStyle= {[ {borderColor:'transparent'}, styles.button2] }
             onPress={this.onPressNextGo}
           />
         </View>
@@ -335,10 +335,10 @@ class FriendsScreen extends BaseScreen {
 
               <Image
                   source={images.ic_no_friend_list}   
-                  style={[styles.image, { resizeMode:  'cover',  marginTop:-40 }]} 
+                  style={[styles.image, { resizeMode:  'cover',  marginTop:-40, height:101, width:150  }]} 
               />
               <Text 
-                style={[TextStyle.smallText, TextStyle.buttonText, {marginTop:verticalScale(20)}]}
+                style={[TextStyle.smallText, TextStyle.buttonText, {marginTop:verticalScale(10), color:"#8A8398"}]}
               >
               You have no friends
               </Text>

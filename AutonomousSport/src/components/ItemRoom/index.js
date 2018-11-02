@@ -66,27 +66,31 @@ class ItemRoom extends PureComponent {
 
         <View
             style={{
-              flex: 1,
+              flex: 1, 
               justifyContent: 'space-around',
               backgroundColor: '#31314a',
               paddingHorizontal: 10,
               borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
+              borderBottomRightRadius: 10, 
             }}
           >
-            <Text
-              style={[
-                TextStyle.mediumText,
-                {
-                  color: 'rgba(255,255,255,1)',
-                  textAlignVertical: 'center',
-                  fontWeight: 'bold'
-                }
-              ]}
-            >
-              {dataItem?.name || 'No Name'}
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
+           <View style={{ flexDirection: 'row', position:'absolute', top: 10, left:0,paddingHorizontal: 10}}>
+              <Text
+                numberOfLines={2}
+                style={[
+                  TextStyle.mediumText,
+                  {
+                    lineHeight: 30,
+                    color: 'rgba(255,255,255,1)', 
+                    fontWeight: 'bold',
+                    
+                  }
+                ]}
+              >
+                {dataItem?.name || 'No Name'}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', position:'absolute', bottom:10,right:10, }}>
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 {icons.bike({
                   containerStyle: { marginRight: 10 }
@@ -128,7 +132,7 @@ class ItemRoom extends PureComponent {
             </View>
           </View>
         </TouchableOpacity>
-        </View>
+      </View>
     );
   }
 }

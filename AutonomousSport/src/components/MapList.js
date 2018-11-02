@@ -56,8 +56,13 @@ class MapList extends Component {
       //   JSON.stringify(nextProps?.user)
       // );
       // this.fetchData();
+     let data = nextProps?.mapList.list || [];
+     data.sort(function(a, b) {
+       return a.miles - b.miles;
+     }); 
+
       this.setState({
-        data: nextProps?.mapList.list
+        data: data
       });
     }
   }

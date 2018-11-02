@@ -174,6 +174,16 @@ export default class ApiService {
     });
     return response;
   }
+
+  static async updatePassword({ cpassword = '', npassword }) {
+    const url = Api.UPDATE_PASSWORD;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      cpassword,
+      npassword
+    });
+    return response;
+  }
+
   static async signUp({ email = '', password = '', fullname = '' }) {
     const url = Api.SIGN_UP;
     const response = await ApiService.getURL(METHOD.POST, url, {

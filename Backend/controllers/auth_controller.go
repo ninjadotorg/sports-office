@@ -171,9 +171,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 
 	//secretKey := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" 
 	user := new(models.User)  
-	user.Email = c.FormValue("email")
-	user.Fullname = c.FormValue("fullname") 
-
+	user.Email = c.FormValue("email") 
 	
 	//user.Password, _ = models.HashPassword(c.FormValue("password"))  
 	user.FetchByUsername(basectl.Dao)
@@ -184,7 +182,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		user = new(models.User)  
 		user.Email = c.FormValue("email")
 		user.Password, _ = models.HashPassword(c.FormValue("password"))  
-
+		user.Fullname = c.FormValue("fullname") 
 		detectUsername := strings.Split(user.Email, "@")
 		if c.FormValue("fullname") == ""{
 			user.Fullname =  detectUsername[0]  
@@ -946,8 +944,8 @@ func (basectl *BaseController)PractiveArchivement(c echo.Context) error{
 	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel) 
 
 	fmt.Println("Error setting value: %v ", usermodel.Profile)
-	usermodel.Profile.Kcal = Kcals + usermodel.Profile.Kcal
-	usermodel.Profile.Miles = Miles + usermodel.Profile.Miles 
+	usermodel.Profile.Kcal = Kcals  //+ usermodel.Profile.Kcal
+	usermodel.Profile.Miles = Miles //+ usermodel.Profile.Miles 
 
 	basectl.Dao.Save(&usermodel.Profile)
 
@@ -984,6 +982,69 @@ func (basectl *BaseController)UpdateUser(c echo.Context) error{
 	usermodel.Fullname = Fullname
 
 	basectl.Dao.Save(&usermodel)
+
+	usermodel.Password = ""
+
+	var f interface{}
+	f = map[string]interface{}{ 
+		"user": usermodel,
+	}   
+	return c.JSON(http.StatusOK,f) 
+ 
+}
+
+// api/update/password
+func (basectl *BaseController)UpdatePassword(c echo.Context) error{
+ 
+	var f2 interface{}
+	var Cpassword =  c.FormValue("cpassword") 
+	//Kcals, _ := strconv.ParseFloat(c.FormValue("kcals"),64)
+	if Cpassword =="" {
+		 
+		f2 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "Your current password is required",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+	}
+
+	var Npassword =  c.FormValue("npassword") 
+	//Kcals, _ := strconv.ParseFloat(c.FormValue("kcals"),64)
+	if Npassword =="" {
+		  
+		f2 = map[string]interface{}{ 
+			"status" : 0,
+			"message": "New password is required",
+		}
+		return c.JSON(http.StatusBadRequest,f2) 
+
+	}
+ 
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)  
+	userid := int(claims["id"].(float64))  
+
+	usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : userid }).Set("gorm:auto_preload", true).First(&usermodel)  
+ 
+	if usermodel.ID <= 0 {
+		return echo.ErrUnauthorized 
+
+	}else{
+		if models.CheckPasswordHash(Cpassword , usermodel.Password ) == false {
+			
+			f2 = map[string]interface{}{ 
+				"status" : 0,
+				"message": "Your current password is invalid",
+			}
+			return c.JSON(http.StatusBadRequest,f2) 
+		}
+
+		usermodel.Password, _ = models.HashPassword(Npassword)   
+
+		basectl.Dao.Save(&usermodel)
+		
+	} 
 
 	usermodel.Password = ""
 
