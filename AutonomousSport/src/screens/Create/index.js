@@ -15,6 +15,7 @@ import TextStyle from '@/utils/TextStyle';
 import ApiService from '@/services/ApiService';
 import { TAG as TAGNEWROOM } from '@/screens/NewRoom';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 import images, { icons } from '@/assets';
 import RoomList from '@/components/RoomList';
@@ -50,10 +51,10 @@ class CreateRoomScreen extends BaseScreen {
 
   componentDidMount() {}
 
-  updateIndex(selectedIndex) {
+  updateIndex = selectedIndex => {
     this.setState({ selectedIndex });
     console.log('updateIndex-levelIndex', selectedIndex);
-  }
+  };
 
   onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGNEWROOM);
@@ -92,13 +93,13 @@ class CreateRoomScreen extends BaseScreen {
     return (
       <View style={styles.topBar}>
         <TouchableOpacity
-          style={{ flexDirection: 'row' }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
           onPress={this.onPressBack}
         >
-          <Image
-            source={images.ic_backtop}
-            style={{ width: 32, height: 32, marginTop: 12 }}
-          />
+          <Image source={images.ic_backtop} style={{ width: 32, height: 32 }} />
           <Text
             style={[
               TextStyle.mediumText,
@@ -106,19 +107,38 @@ class CreateRoomScreen extends BaseScreen {
                 color: 'white',
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
-                marginHorizontal: 10,
-                marginLeft: 20,
-                marginTop:8,
+                marginLeft: 20
               }
             ]}
           >
             Choose a race to start
           </Text>
         </TouchableOpacity>
-        <ButtonGroup
+        <View
+          style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}
+        >
+          <SegmentedControlTab
+            values={['Level 1', 'Level 2', 'Level 3', 'Level 4']}
+            selectedIndex={selectedIndex}
+            onTabPress={this.updateIndex}
+            tabsContainerStyle={[styles.buttonGroup, {}]}
+            tabStyle={styles.buttonItemStyle}
+            tabTextStyle={[TextStyle.mediumText, styles.textStyleButton]}
+            activeTabStyle={styles.selectedButtonStyle}
+            activeTabTextStyle={[
+              TextStyle.mediumText,
+              styles.selectedTextStyleButton
+            ]}
+            borderRadius={0}
+          />
+        </View>
+        {/*<ButtonGroup
+          component={TouchableOpacity}
           onPress={this.updateIndex}
           selectedIndex={selectedIndex}
           innerBorderStyle={{ color: 'transparent' }}
+          buttonStyle={styles.buttonItemStyle}
+          activeOpacity={0}
           buttons={['Level 1', 'Level 2', 'Level 3', 'Level 4']}
           textStyle={[TextStyle.normalText, styles.textStyleButton]}
           selectedTextStyle={[
@@ -131,7 +151,7 @@ class CreateRoomScreen extends BaseScreen {
             styles.buttonGroup,
             { backgroundColor: 'transparent', borderWidth: 0 }
           ]}
-        />
+        />*/}
       </View>
     );
   };
