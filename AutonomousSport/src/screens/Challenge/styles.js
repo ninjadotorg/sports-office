@@ -25,10 +25,12 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 25,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
+    borderWidth: 0,
+    backgroundColor: '#0fcb5d',
+    // backgroundColor: 'red',
     borderColor: '#02BB4F',
     minWidth: scaleSize(100),
+    width: scaleSize(120),
     paddingHorizontal: scaleSize(20)
   }
 });

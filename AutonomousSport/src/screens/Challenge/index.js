@@ -31,6 +31,7 @@ import Util from '@/utils/Util';
 import ViewUtil from '@/utils/ViewUtil';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
+import * as Animatable from 'react-native-animatable';
 
 export const TAG = 'ChallengeScreen';
 let heightMap = screenSize.height;
@@ -50,6 +51,7 @@ class ChallengeScreen extends BaseScreen {
     const { width = 0, height = 1 } = room?.getMapSize()||{};
     console.log(TAG,' constructor widthRealMap = ',width,' heightRealMap = ',height);
     const sizeMap = Util.calculateMapSize({widthReal:width,heightReal:height});
+    this.sizeMap = sizeMap;
     this.ratios = sizeMap.ratios;
     this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
@@ -60,8 +62,8 @@ class ChallengeScreen extends BaseScreen {
       x: pointStart.x,
       rotate:angle
     };
-    this.widthMap = sizeMap.width;
-    heightMap = sizeMap.height;
+    this.widthMap = sizeMap.widthExpect;
+    heightMap = sizeMap.heightExpect;
     console.log(TAG,' constructor widthMap = ',this.widthMap,' heightMap = ',heightMap);
     this.state = {
       room: room,
@@ -435,6 +437,7 @@ class ChallengeScreen extends BaseScreen {
               })}
             </View>
           </ScrollView>
+          
           <Button
             title="OK"
             onPress={this.onPressFinish}
@@ -457,12 +460,13 @@ class ChallengeScreen extends BaseScreen {
     return (
       <GameLoop style={styles.map} onUpdate={this.updateHandler} >
         <ImageZoom 
-          cropWidth={this.widthMap}
+          cropWidth={this.sizeMap.width}
           cropHeight={screenSize.height}
           imageWidth={this.widthMap}
+          imageHeight={heightMap}
           minScale={1}
-          maxScale={2}
-          imageHeight={heightMap}>
+          enableCenterFocus={false}
+          maxScale={2}>
           <FastImageView
             style={{ width: this.widthMap, height: heightMap}}
             resizeMode={FastImage.resizeMode.contain}
@@ -475,18 +479,19 @@ class ChallengeScreen extends BaseScreen {
         
 
         {isReady || user?.id!== room.userId || playersMarker?.length<=1 ? null : (
-          <Button
-            loading={isLoading}
-            containerViewStyle={{
-              position: 'absolute',
-              width: 300,
-              bottom: 10
-            }}
-            title="Get ready"
-            onPress={this.onPressReady}
-            buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
-            textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
-          />
+          <Animatable.View style={[{
+            position: 'absolute',
+            bottom: verticalScale(20)
+          }]} animation="tada" duration={1200} iterationDelay={1000} iterationCount='infinite' delay={3000} direction="normal">
+            <Button
+              loading={isLoading}
+              containerViewStyle={[styles.button]}
+              title="Get ready"
+              onPress={this.onPressReady}
+              buttonStyle={[{ backgroundColor: 'transparent' }]}
+              textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+            />
+          </Animatable.View>
         )}
       </GameLoop>
     );

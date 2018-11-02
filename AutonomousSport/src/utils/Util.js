@@ -42,19 +42,23 @@ export default class Util {
   };
 
   static calculateMapSize = ({ widthReal, heightReal }): {} => {
-    let heightMap = screenSize.height;
+    const heightMapExpect = screenSize.height;
+    let heightMap = heightMapExpect;
     const ratios = widthReal / (heightReal || 1);
 
+    const widthMapExpect = heightMapExpect * ratios;
     let widthMap = heightMap * ratios;
 
     if (screenSize.width - widthMap < Constants.MIN_SIZE_VIDEO) {
       widthMap = screenSize.width - Constants.MIN_SIZE_VIDEO;
       heightMap = widthMap / ratios;
     }
-    let scaleSize = heightMap / heightReal;
+    let scaleSize = heightMapExpect / heightReal;
     return {
       width: widthMap,
       height: heightMap,
+      widthExpect: widthMapExpect,
+      heightExpect: heightMapExpect,
       ratios: ratios,
       scaleSize: scaleSize
     };
