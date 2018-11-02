@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   // },
   containerBottom: {
     flexDirection: 'row',
-    paddingBottom: verticalScale(60),
+    paddingBottom: verticalScale(30),
     justifyContent: 'space-around',
     width: '60%',
     alignItems: 'center',

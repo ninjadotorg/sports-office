@@ -161,7 +161,7 @@ class CreateRoomScreen extends BaseScreen {
             />
             <Button
               title="New Racing"
-              buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
+              buttonStyle={[styles.button, { backgroundColor: '#02BB4F', borderColor:'transparent' }]}
               textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
               onPress={this.onPressCreateRoom}
             />

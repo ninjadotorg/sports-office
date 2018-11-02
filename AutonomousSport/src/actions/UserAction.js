@@ -15,6 +15,7 @@ export const ACTIONS = {
   SIGNIN_WITH_FIREBASE: 'SIGNIN_WITH_FIREBASE',
   GET_USER_LOCAL: 'GET_USER',
   UPDATE_USER_NAME: 'UPDATE_USER_NAME',
+  UPDATE_USER_PASSWORD:'UPDATE_USER_PASSWORD',
   UPDATE_RACING: 'UPDATE_RACING',
   RESET_RACING: 'RESET_RACING',
   UPDATE_PRACTISE_RACING: 'UPDATE_PRACTISE_RACING'
@@ -125,6 +126,26 @@ export const updateName = (fullname = '') => async dispatch => {
   }
   dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: {} });
 };
+
+export const updatePassword = (cpassword = '', npassword) => async dispatch => {
+  try {
+    const response = await ApiService.updatePassword({ cpassword: cpassword, npassword: npassword });
+    console.log(TAG, ' - updateName - response ', response);
+
+    let user: User = await LocalDatabase.getUserInfo();
+    if (!_.isEmpty(response) && user) {
+      response.user.Profile['kcal'] = user.Profile.kcal || 0;
+      response.user.Profile['miles'] = user.Profile.miles || 0;
+    }
+
+    dispatch({ type: ACTIONS.UPDATE_USER_PASSWORD, payload: response?.user || {} });
+    return;
+  } catch (e) {
+    console.log(TAG, ' - updateName - error ', e);
+  }
+  dispatch({ type: ACTIONS.UPDATE_USER_PASSWORD, payload: {} });
+};
+
 
 export const updateRacing = ({ kcal = 0, miles = 0 }) => async dispatch => {
   try {

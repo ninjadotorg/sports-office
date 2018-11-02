@@ -19,7 +19,7 @@ import TextStyle,{screenSize} from '@/utils/TextStyle';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { TAG as TAGSETUP } from '@/screens/Setup';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
-import { fetchUser,updateName,signIn,forGotPass,logout } from '@/actions/UserAction';
+import { fetchUser,updateName, updatePassword, signIn,forGotPass,logout } from '@/actions/UserAction';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import { Button,Header } from 'react-native-elements';
 import styles,{ color } from './styles';
@@ -54,6 +54,10 @@ class ProfileScreen extends BaseScreen {
        },
        eye: images.ic_eye,
        secureTextEntry: true,
+       eye2: images.ic_eye,
+       secureTextEntry2: true,
+       npassw:"",
+       cpassw:"",
 
     };
   }
@@ -107,19 +111,31 @@ class ProfileScreen extends BaseScreen {
        swap: data =="profile" ? "update" : "profile",
        error:'',
        secureTextEntry:true,
+       secureTextEntry2:true,
     })
     
   });
 
-  onPressEye = onClickView(()=>{
+  onPressEye = onClickView((index)=>{
+    
     let y = this.state.eye;
-    y = (y == images.ic_eye ? images.ic_eye_flash : images.ic_eye );
-
-    console.log(TAG,' onPressEye ',y);
-    this.setState({
-      eye:  y,
-      secureTextEntry:  (y == images.ic_eye ? true : false ),
-    });
+    let y2 = this.state.eye2;
+    if( index == 1){
+        y = (y == images.ic_eye ? images.ic_eye_flash : images.ic_eye );
+        this.setState({
+        eye:  y,
+        secureTextEntry:  (y == images.ic_eye ? true : false ),
+      });
+    }else{
+        y2 = (y2 == images.ic_eye ? images.ic_eye_flash : images.ic_eye );
+        this.setState({ 
+        eye2:  y2, 
+        secureTextEntry2:  (y2 == images.ic_eye ? true : false ),
+      });
+    }
+      
+    
+      
 
   })
   
@@ -158,14 +174,38 @@ class ProfileScreen extends BaseScreen {
   });
 
 
-  onPressSave = this.onClickView(() => {
-    const name = this.name._lastNativeText;
-    if(name){
-      this.setState({
-        isLoading:true
-      });
-      this.props.updateName(name);
+  onPressSave = this.onClickView(async() => {
+    const { swap } = this.state;
+    if(swap =="profile"){
+        const name = this.name._lastNativeText;
+        console.log("onPressSave",name);
+        if(name){ 
+          this.setState({
+            isLoading:true
+          }); 
+          await this.props.updateName(name);
+          
+        }
+    }else{
+
+        this.setState({
+            isLoading:true
+        }); 
+        const cpassword = this.password._lastNativeText;
+        const npassword = this.npassword._lastNativeText;
+        data = this.props.updatePassword(cpassword,npassword);
+        this.setState({
+            npassw:"",
+            cpassw:"",
+        }); 
+
     }
+
+     this.setState({
+      isLoading:false
+    }); 
+
+
   });
 
   onPressSignIn =  onClickView(async () => {
@@ -303,9 +343,10 @@ class ProfileScreen extends BaseScreen {
                   style={[TextStyle.normalText,styles.text,{flex:2}]}
                   underlineColorAndroid="transparent"
                   secureTextEntry = {this.state.secureTextEntry}
+                  defaultValue={this.state.cpassw}
                 />
                 <TouchableOpacity 
-                 onPress={this.onPressEye} 
+                 onPress={()=>this.onPressEye(1)} 
                   style={[styles.buttonStyle, {position:'absolute',  marginTop:20, marginRight:2,right:3, backgroundColor:'transparent'}]}>
                     <Image source={this.state.eye} style={{width:24, height:16}}  /> 
               </TouchableOpacity>
@@ -317,17 +358,18 @@ class ProfileScreen extends BaseScreen {
                   placeholder="******"
                   label="New password"
                   placeholderTextColor={color.placeHolder}
-                  ref={(newpassword) => {
-                    this.newpassword = newpassword;
+                  ref={(npassword) => {
+                    this.npassword = npassword;
                   }}
                   disableFullscreenUI={true}
                   style={[TextStyle.normalText,styles.text,{flex:2}]}
                   underlineColorAndroid="transparent"
-                  secureTextEntry = {this.state.secureTextEntry}
+                  secureTextEntry = {this.state.secureTextEntry2}
+                  defaultValue={this.state.npassw}
                 />
-                <TouchableOpacity  onPress={this.onPressEye} 
+                <TouchableOpacity  onPress={()=> this.onPressEye(2)} 
                 style={[styles.buttonStyle, {position:'absolute', marginTop:20, marginRight:1,right:1, backgroundColor:'transparent'}]}>
-                              <Image source={this.state.eye} style={{width:24, height:16}}  /> 
+                              <Image source={this.state.eye2} style={{width:24, height:16}}  /> 
               </TouchableOpacity>
               </View> 
           
@@ -423,7 +465,7 @@ export default connect(
   state => ({
     user:state.user
   }),
-  { getUser: fetchUser ,updateName,disconnectBluetooth,logout}
+  { getUser: fetchUser ,updateName, updatePassword, disconnectBluetooth,logout}
 )(ProfileScreen);
 
 
