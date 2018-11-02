@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     alignSelf: 'center',
+    backgroundColor: 'transparent',
     flexDirection: 'row'
   },
   containerTop: {
@@ -98,8 +99,13 @@ const styles = StyleSheet.create({
     // borderTopColor: 'transparent',
     borderColor: 'transparent',
     shadowColor: 'transparent',
-    backgroundColor: '#181818',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
     flex: 1,
+    maxWidth: screenSize.width / 2 + screenSize.width / 8
+  },
+  buttonItemStyle: {
+    backgroundColor: 'transparent',
     borderWidth: 0
   },
   selectedButtonStyle: {
