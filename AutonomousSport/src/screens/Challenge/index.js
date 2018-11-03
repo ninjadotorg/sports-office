@@ -291,7 +291,7 @@ class ChallengeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    // this.popupDialog.show();
+    this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
     
@@ -357,18 +357,18 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderDashBoardAchivement = () => {
-    // let players = [
-    //   { playerName: 'HienTon', goal: 27 },
-    //   { playerName: 'HIEn', goal: 27 },
-    //   { playerName: 'HTOn27', goal: 27 },
-    //   { playerName: 'HTOn22', goal: 22 },
-    //   { playerName: 'HienTon100', goal: 100 },
-    //   { playerName: 'HTon', goal: 25 },
-    //   { playerName: 'HTon', goal: 25 },
-    //   { playerName: 'HTon', goal: 25 }
-    // ];
+    let players = [
+      { playerName: 'HienTon', goal: 27 },
+      { playerName: 'HIEn', goal: 27 },
+      { playerName: 'HTOn27', goal: 27 },
+      { playerName: 'HTOn22', goal: 22 },
+      { playerName: 'HienTon100', goal: 100 },
+      { playerName: 'HTon', goal: 25 },
+      { playerName: 'HTon', goal: 25 },
+      { playerName: 'HTon', goal: 25 }
+    ];
 
-    let {players=[]} = this.state;
+    //let {players=[]} = this.state;
     // sort list player
 
     players?.sort((a,b)=>Number(b.goal) - Number(a.goal))||[];
@@ -396,19 +396,21 @@ class ChallengeScreen extends BaseScreen {
             style={{ flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 ,marginTop:scale(10)}}>
               {players.map(player => {
                 const iconResult =Number(player.goal) >= 100? images.ic_gold:images.ic_sliver;
                 return (
-                  <View style={{ flexDirection: 'row', marginVertical:verticalScale(5),flex:1 }}>
-                    <Image source={iconResult}  style={{alignSelf:'center'}}/>
+                  <View style={{ flexDirection: 'row', marginVertical:verticalScale(5),flex:1, marginTop:0, paddingHorizontal:scale(10) }}>
+                    <Image source={iconResult}  style={{alignSelf:'center',marginBottom:scale(10) }}/>
                     <View style={{ justifyContent: 'center', marginLeft: scale(15),flex:1 }}>
                       <Text
                         style={[
-                          TextStyle.bigText,
+                          TextStyle.mediumText,
                           {
-                            paddingTop:20,
+                            paddingTop:10,
+                            paddingBottom:10,
                             color: 'white',
+                            fontWeight:'bold',
                             textAlignVertical: 'center'
                           }
                         ]}
@@ -418,7 +420,8 @@ class ChallengeScreen extends BaseScreen {
                       <Text
                         style={[
                           TextStyle.normalText,
-                          { color: 'white', textAlignVertical: 'center',fontWeight:'bold',borderBottomWidth:1,borderColor:'#8d8d8d20', flex:1,paddingVertical:20 }
+                          { color: 'white', textAlignVertical: 'center',fontWeight:'bold',borderBottomWidth:1,
+                            borderColor:'#8d8d8d20', flex:1,paddingBottom:24}
                         ]}
                       >
                       <Text style={[
