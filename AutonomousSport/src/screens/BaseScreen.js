@@ -64,18 +64,20 @@ class BaseScreen extends Component {
         this.showDialogInvite(false);
     },
     onPressJoinNow = async()=>{
-      //this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo);
+      try {
+        const {roomInfo} = this.state;
       //call to APIs get infor....
-        console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
-        const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
-        // const url = Api.JOIN_ROOM;
-        // const response = await ApiService.getURL(METHOD.POST, url, {
-        //   session: this.state.roomInfo.session
-        // });
+      if(!_.isEmpty(roomInfo) && !_.isEmpty(roomInfo.session)){
+        console.log(TAG, ' onPressJoinNow - joinRoom = ', roomInfo);
+        const response = await ApiService.joinRoom({session: roomInfo.session});
         console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
         this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
+      }
 
-
+      } catch (error) {
+        
+      }
+      
     }
   ) => {
 
