@@ -2,10 +2,11 @@
  * @providesModule Constants
  */
 import * as ConfigReact from 'react-native-config';
+import { scale } from 'react-native-size-matters';
 
 export default class Constants {
   static BACK_KEY = 'BACK';
-  static MIN_SIZE_VIDEO = 150;
+  static MIN_SIZE_VIDEO = scale(100);
 }
 
 export class STATE_BLUETOOTH {
