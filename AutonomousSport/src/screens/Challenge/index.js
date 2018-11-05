@@ -41,7 +41,7 @@ const colors = ['purple','blue','yellow','green'];
 let lastIndexPosition = 0;
 let currentPositionIndex = 0;
 let listLastIndexPosition = {};
-const limitToRotate = (20+90) * (Math.PI/180);
+const limitToRotate = (60) * (Math.PI/180);
 const FastImageView = createImageProgress(FastImage);
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
@@ -291,7 +291,7 @@ class ChallengeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    this.popupDialog.show();
+    // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
     
@@ -301,15 +301,21 @@ class ChallengeScreen extends BaseScreen {
       const nextPoint = this.getCurrentPoint(tempIndex);
       
       if(tempIndex!== currentPositionIndex){
-        console.log(TAG,' updateHandler nextPoint begin');
+        // console.log(TAG,' updateHandler nextPoint begin');
         const {pos = this.posInit} = this.state;
         let angle = this.getAngleWithCurrentPoint(tempIndex);
-        angle = (Math.abs(angle - pos.rotate)<limitToRotate)? pos.rotate:angle; 
-        console.log(TAG,' updateHandler nextPoint Player = ',angle); 
+        console.log(TAG,' updateHandler nextPoint angle ',angle);
+      
+        // if((Math.abs(angle - pos.rotate)<limitToRotate)){
+        //   console.log(TAG,' updateHandler not over tempIndex = ',tempIndex);
+        //   angle = pos.rotate;
+        // }
+        pos.rotate += (angle - pos.rotate)*time.delta/1000;
+        console.log(TAG,' updateHandler nextPoint angle01 = ',angle," limitToRotate = ",limitToRotate);
         const posNew = {
           x:nextPoint.x,
           y:nextPoint.y,
-          rotate:angle
+          rotate:pos.rotate
         };
         this.setState({
           pos:posNew
@@ -357,18 +363,18 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderDashBoardAchivement = () => {
-    let players = [
-      { playerName: 'HienTon', goal: 27 },
-      { playerName: 'HIEn', goal: 27 },
-      { playerName: 'HTOn27', goal: 27 },
-      { playerName: 'HTOn22', goal: 22 },
-      { playerName: 'HienTon100', goal: 100 },
-      { playerName: 'HTon', goal: 25 },
-      { playerName: 'HTon', goal: 25 },
-      { playerName: 'HTon', goal: 25 }
-    ];
+    // let players = [
+    //   { playerName: 'HienTon', goal: 27 },
+    //   { playerName: 'HIEn', goal: 27 },
+    //   { playerName: 'HTOn27', goal: 27 },
+    //   { playerName: 'HTOn22', goal: 22 },
+    //   { playerName: 'HienTon100', goal: 100 },
+    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTon', goal: 25 }
+    // ];
 
-    //let {players=[]} = this.state;
+    let {players=[]} = this.state;
     // sort list player
 
     players?.sort((a,b)=>Number(b.goal) - Number(a.goal))||[];
@@ -472,7 +478,7 @@ class ChallengeScreen extends BaseScreen {
           maxScale={2}>
           <FastImageView
             style={{ width: this.widthMap, height: heightMap}}
-            resizeMode={FastImage.resizeMode.contain}
+            resizeMode="contain"
             source={uriPhoto}>
             {playersMarker}
             {markersView}

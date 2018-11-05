@@ -9,8 +9,10 @@ import Room from '@/models/Room';
 import { Config } from '@/utils/Constants';
 // import Player from '@/models/Player';
 import TextStyle from '@/utils/TextStyle';
+import Util from '@/utils/Util';
 
 export const TAG = 'BikerProfile';
+const MAX_LENGHT = 7;
 class OTPublisherCustom extends OTPublisher {
   constructor(props) {
     super(props);
@@ -32,8 +34,8 @@ class OTPublisherCustom extends OTPublisher {
                 containerStyle: { marginRight: scale(2) },
                 color:'#00e751'
               })}
-              <Text style={[TextStyle.normalText, { color: '#ffffff70' ,fontWeight:'bold' }]}>
-                {playerMe?.playerName || ''}
+              <Text style={[TextStyle.normalText, { color: '#ffffff' ,fontWeight:'bold' }]}>
+                {Util.truncate(playerMe?.playerName,MAX_LENGHT) || ''}
               </Text>
             </View>
             
@@ -94,8 +96,8 @@ class OTSubscriberCustom extends OTSubscriber {
                   justifyContent: 'center'
                 }}
               />
-              <Text style={[TextStyle.normalText, {  color: '#ffffff70' ,fontWeight:'bold'}]}>
-                {player?.playerName || ''}
+              <Text style={[TextStyle.normalText, {  color: '#ffffff' ,fontWeight:'bold'}]}>
+              {Util.truncate(player?.playerName,MAX_LENGHT) || ''}
               </Text>
             </View>
 
