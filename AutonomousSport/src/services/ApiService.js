@@ -167,7 +167,7 @@ export default class ApiService {
     });
     return response;
   }
-  static async updateName({ fullname = '' }) {
+  static async updateName({ fullname = '' }): {} {
     const url = Api.UPDATE_NAME;
     const response = await ApiService.getURL(METHOD.POST, url, {
       fullname
