@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, AppState, } from 'react-native';
 import Util from '@/utils/Util';
 import firebase from 'react-native-firebase';
 import { onClickView } from '@/utils/ViewUtil';
@@ -19,7 +19,8 @@ import Api from '@/services/Api';
 import METHOD from '@/services/Method';
 import ApiService from '@/services/ApiService';
 import Room from '@/models/Room';
-//import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
+import BleManager from 'react-native-ble-manager';
+
 
 
 export const TAG = 'BaseScreen';
@@ -45,15 +46,32 @@ class BaseScreen extends Component {
   constructor(props) {
     super(props);
     this.onClickView = onClickView;
-
+    
     this.state={
       roomInfo:null,
       playername:"",
       errorMessage:false,
     };
-    
+    this.appState = AppState.currentState;
   }
-   
+  
+  componentDidMount(){
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  handleAppStateChange = (nextAppState)=>{
+    if (this.appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!');
+      BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
+        console.log('Connected peripherals: ' + peripheralsArray?.length);
+      });
+    }
+    this.appState = nextAppState;
+  }
 
   onPressBack = () => {
     this.props.navigation.goBack();
