@@ -49,7 +49,8 @@ class BaseScreen extends Component {
     
     this.state={
       roomInfo:null,
-      playername:''
+      playername:"",
+      errorMessage:false,
     };
     this.appState = AppState.currentState;
   }
@@ -84,13 +85,16 @@ class BaseScreen extends Component {
     onPressJoinNow = async()=>{
       try {
         const {roomInfo} = this.state;
-      //call to APIs get infor....
-      if(!_.isEmpty(roomInfo) && !_.isEmpty(roomInfo.session)){
-        console.log(TAG, ' onPressJoinNow - joinRoom = ', roomInfo);
-        const response = await ApiService.joinRoom({session: roomInfo.session});
+        //call to APIs get infor.... 
+        console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
+        const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
         console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
-        this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
-      }
+        if(response?.room){
+            this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
+        }else{
+          this.showDialogInvite(false);
+          this.setState({errorMessage:true});
+        } 
 
       } catch (error) {
         
@@ -109,8 +113,9 @@ class BaseScreen extends Component {
             if( data ){
              
               const room = new Room(data.room);
-              console.log("BaseScreen room cover", room.Map.cover); 
-              this.setState({roomInfo: room, playername:data.inviter }); 
+              console.log("BaseScreen room cover", room.Map.cover);  
+                
+              this.setState({ errorMessage:false, roomInfo: room, playername:data.inviter }); 
               this.dataPrefference.remove();
               this.showDialogInvite(true);
             }
@@ -150,12 +155,19 @@ class BaseScreen extends Component {
                   TextStyle.mediumText,
                   { }
                 ]}> invited you to join his race in </Text>
+
                 <Text style={[
                   TextStyle.mediumText,
                   { fontWeight: 'bold', color: 'black' }
                 ]}> {`${this.state.roomInfo?.Map?.name || ''} (${this.state.roomInfo?.miles||'0'} Miles)`}</Text>
               
               </Text>
+
+              { this.state.errorMessage ? 
+                  <Text style={[ TextStyle.mediumText,{ lineHeight:35, color: 'black', flex: 1, paddingHorizontal: 10 }]}> 
+                     zSorry, Your room not aready to join.
+                  </Text>
+               : null }
               <View
                 style={{flexDirection: 'row',justifyContent: 'flex-end'}}
               >

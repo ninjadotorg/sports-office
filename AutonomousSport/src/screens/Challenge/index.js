@@ -359,7 +359,7 @@ class ChallengeScreen extends BaseScreen {
   finishedRacing = this.onClickView(()=>{
     this.roomDataPrefference?.off('value');
     // show dialog
-    this.popupDialog.show();
+    //this.popupDialog.show();
   });
 
   renderDashBoardAchivement = () => {
