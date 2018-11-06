@@ -41,7 +41,9 @@ class ChallengeNameScreen extends BaseScreen {
   }
 
   componentDidMount() {
+     var listfriend = this.props.invitedlist;
      
+     console.log("changeName, listfriend ", listfriend );
   }
  
   onPressCreateRoom = this.onClickView( async () => {
