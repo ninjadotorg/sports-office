@@ -125,6 +125,12 @@ class FriendsScreen extends BaseScreen {
   componentDidMount() {
     const {offset,limit} = this.state;
     this.props.fetchAllFriend({offset,limit});
+
+    //invitedlist
+     var listf = this.props?.invitedlist ||0;
+     if(listf.length >0){
+        this.setState({ checkinvitebtn:false});
+     }
   }
 
   updateIndex = selectedIndexItem => {
@@ -372,6 +378,7 @@ FriendsScreen.defaultProps = {};
 export default connect(
   state => ({
     friends:state.friend.friendList,
+    invitedlist:state.friend.invitedlist,
   }),
   {fetchAllUser,fetchAllFriend}
 )(FriendsScreen);
