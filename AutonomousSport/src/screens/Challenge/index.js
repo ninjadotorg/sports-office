@@ -353,22 +353,22 @@ class ChallengeScreen extends BaseScreen {
   finishedRacing = this.onClickView(()=>{
     this.roomDataPrefference?.off('value');
     // show dialog
-    this.popupDialog.show();
+    //this.popupDialog.show();
   });
 
   renderDashBoardAchivement = () => {
-    let players = [
-      { playerName: 'HienTon', goal: 27 },
-      { playerName: 'HIEn', goal: 27 },
-      { playerName: 'HTOn27', goal: 27 },
-      { playerName: 'HTOn22', goal: 22 },
-      { playerName: 'HienTon100', goal: 100 },
-      { playerName: 'HTon', goal: 25 },
-      { playerName: 'HTon', goal: 25 },
-      { playerName: 'HTon', goal: 25 }
-    ];
+    // let players = [
+    //   { playerName: 'HienTon', goal: 27 },
+    //   { playerName: 'HIEn', goal: 27 },
+    //   { playerName: 'HTOn27', goal: 27 },
+    //   { playerName: 'HTOn22', goal: 22 },
+    //   { playerName: 'HienTon100', goal: 100 },
+    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTon', goal: 25 },
+    //   { playerName: 'HTon', goal: 25 }
+    // ];
 
-    //let {players=[]} = this.state;
+    let {players=[]} = this.state;
     // sort list player
 
     players?.sort((a,b)=>Number(b.goal) - Number(a.goal))||[];

@@ -99,11 +99,12 @@ class RoomList extends Component {
   // }
   componentWillReceiveProps(nextProps) {
     const { data, joinRoom, levelFillter } = this.state;
-    const newData = nextProps?.roomList?.list;
+    const newData = nextProps?.roomList?.list || data;
     if (JSON.stringify(newData) !== JSON.stringify(data)) {
       console.log(TAG, ' componentWillReceiveProps - room list ');
-
       this.updateListRoom(newData, nextProps.levelIndex);
+      
+
     } else if (
       nextProps?.joinRoomData['token'] &&
       JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
@@ -113,13 +114,11 @@ class RoomList extends Component {
       this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
     }
 
-    if (
-      nextProps?.levelIndex &&
-      nextProps?.levelIndex !== this.props.levelIndex
-    ) {
-      console.log(TAG, ' levelIndex ', nextProps?.levelIndex);
-      this.updateListRoom(newData, nextProps.levelIndex);
+    if ( nextProps?.levelIndex && nextProps?.levelIndex !== this.props.levelIndex ) {
+         console.log(TAG, ' updateListRoom ', nextProps?.levelIndex, newData);
+         this.updateListRoom(newData, nextProps.levelIndex);
     }
+
   }
 
   updateListRoom = (data = [], levelIndex = 0) => {
@@ -142,9 +141,9 @@ class RoomList extends Component {
       return b.id - a.id;
     });
 
-    const datal =  data?.filter(
-                            room => room.miles <= levelf.max && room.miles >= levelf.min
-                          ) || [];
+    const datal =  data?.filter( 
+                      room => room.miles <= levelf.max && room.miles >= levelf.min
+                      ) || [];
 
      
     this.setState({
