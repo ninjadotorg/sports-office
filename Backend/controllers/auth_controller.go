@@ -1061,10 +1061,16 @@ func (basectl *BaseController)UpdatePassword(c echo.Context) error{
 func (basectl *BaseController)ListRoom(c echo.Context) error{
 
 	var listroom []models.Room
-	basectl.Dao.Where(models.Room{Status:1}).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
-	//.Where("name = ?", "jinzhu").
-	//basectl.Dao.Raw("select rooms.* , count(roomplayers.room_id) as Ncoi from rooms , roomplayers where rooms.status = 1 and rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING Ncoi >= 1 AND Ncoi < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY ID desc ").Set("gorm:auto_preload", true).Scan(&listroom)
-	//basectl.Dao.Model(&u).Related(&u.Balances)
+	//basectl.Dao.Where(models.Room{Status:1} ).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
+	basectl.Dao.Where(" DATE(`created_at`) = CURDATE()  " ).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
+	 
+	//.Model(models.Room{Status:1})
+	for i := len(listroom) - 1; i >= 0; i-- {
+		if (len(listroom[i].RoomPlayers) == 0 ){	
+			fmt.Println("remove item setting value: %v ", listroom[i])
+			listroom = append(listroom[:i], listroom[i+1:]...)
+		}
+	} 
 	var f interface{}
 	f = map[string]interface{}{ 
 		"list": listroom,
