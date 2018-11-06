@@ -178,7 +178,7 @@ class ProfileScreen extends BaseScreen {
     const { swap } = this.state;
     if(swap =="profile"){
         const name = this.name._lastNativeText;
-        console.log("onPressSave",name);
+        console.log(" onPressSave ",name);
         if(name){ 
           this.setState({
             isLoading:true
@@ -193,7 +193,7 @@ class ProfileScreen extends BaseScreen {
         }); 
         const cpassword = this.password._lastNativeText;
         const npassword = this.npassword._lastNativeText;
-        data = this.props.updatePassword(cpassword,npassword);
+        let data = this.props.updatePassword(cpassword,npassword);
         this.setState({
             npassw:"",
             cpassw:"",
@@ -263,7 +263,7 @@ class ProfileScreen extends BaseScreen {
               <Text style={{fontWeight: "bold"}}>Email:</Text> {` ${userInfo?.email || ''}`}
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop:34 }}>
-            <DashboardProfile kcal={Math.round((userInfo?.profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.profile?.miles||0)*1000)/1000} />
+            <DashboardProfile kcal={Math.round((userInfo?.Profile?.kcal||0)*100)/100} mile={Math.round((userInfo?.Profile?.miles||0)*1000)/1000} />
           </View>
           
           <View style={[styles.containerInput, {marginBottom:10 }]}>

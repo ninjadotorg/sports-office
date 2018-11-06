@@ -65,8 +65,9 @@ class BaseScreen extends Component {
         this.showDialogInvite(false);
     },
     onPressJoinNow = async()=>{
-      //this.replaceScreen(this.props.navigation,TAGCHALLENGE,roomInfo);
-      //call to APIs get infor....
+      try {
+        const {roomInfo} = this.state;
+        //call to APIs get infor.... 
         console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
         const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
         console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
@@ -75,9 +76,12 @@ class BaseScreen extends Component {
         }else{
           this.showDialogInvite(false);
           this.setState({errorMessage:true});
-        }
+        } 
 
-
+      } catch (error) {
+        
+      }
+      
     }
   ) => {
 
