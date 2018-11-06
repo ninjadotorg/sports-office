@@ -10,7 +10,8 @@ const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 let receiveDataFromBluetooth = false;
-let handlerUpdate = null;
+let handlerUpdate = null,
+  handlerDisconnect = null;
 let timestampPrevious = 0;
 let roundPrevious = 0;
 const TAG = 'RaceAction';
@@ -99,6 +100,20 @@ export const connectionBluetoothChange = dispatch => {
   };
 };
 
+export const disconnectBluetoothChange = dispatch => {
+  return data => {
+    receiveDataFromBluetooth = false;
+    dispatch({
+      type: ACTIONS.CONNECT_BLUETOOTH,
+      payload: {
+        state: STATE_BLUETOOTH.DISCONNECTED
+      }
+    });
+    console.log(TAG, ' disconnectBluetoothChange data = ', data);
+    connectAndPrepare()(dispatch);
+  };
+};
+
 export const connectAndPrepare = () => async dispatch => {
   // get data from local
   dispatch({
@@ -122,7 +137,7 @@ export const connectAndPrepare = () => async dispatch => {
     return;
   }
   // Connect to device
-
+  console.log(TAG, ' connectAndPrepare begin 01 ');
   dispatch({
     type: ACTIONS.CONNECT_BLUETOOTH,
     payload: {
@@ -160,14 +175,21 @@ export const connectAndPrepare = () => async dispatch => {
     receiveDataFromBluetooth = true;
     console.log(TAG, ' connectAndPrepare 05 ');
     if (handlerUpdate) {
-      bleManagerEmitter.removeSubscription(handlerUpdate);
       handlerUpdate.remove();
       handlerUpdate = null;
+
+      bleManagerEmitter.removeSubscription(handlerDisconnect);
+      handlerDisconnect = null;
     }
 
     handlerUpdate = bleManagerEmitter?.addListener(
       'BleManagerDidUpdateValueForCharacteristic',
       connectionBluetoothChange(dispatch)
+    );
+
+    handlerDisconnect = bleManagerEmitter.addListener(
+      'BleManagerDisconnectPeripheral',
+      disconnectBluetoothChange(dispatch)
     );
   } else {
     dispatch({
