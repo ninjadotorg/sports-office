@@ -47,6 +47,10 @@ class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
+    // console.log("ChallengeScreen",room);
+    // if(room.session == ""){
+      
+    // }
     // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
     const { width = 0, height = 1 } = room?.getMapSize()||{};
     console.log(TAG,' constructor widthRealMap = ',width,' heightRealMap = ',height);

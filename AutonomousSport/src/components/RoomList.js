@@ -99,23 +99,25 @@ class RoomList extends Component {
   // }
   componentWillReceiveProps(nextProps) {
     const { data, joinRoom, levelFillter } = this.state;
-    const newData = nextProps?.roomList?.list || data;
+    const newData = nextProps?.roomList?.list || data; 
     if (JSON.stringify(newData) !== JSON.stringify(data)) {
-      console.log(TAG, ' componentWillReceiveProps - room list ');
-      this.updateListRoom(newData, nextProps.levelIndex);
-      
-
+      //console.log(TAG, ' componentWillReceiveProps - room list ');
+      this.updateListRoom(newData, nextProps.levelIndex); 
     } else if (
-      nextProps?.joinRoomData['token'] &&
+       nextProps?.joinRoomData['token'] && 
       JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
     ) {
       const { itemSelected = {} } = this.state;
-      itemSelected['token'] = nextProps?.joinRoomData['token'];
-      this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
+      itemSelected['token'] = nextProps?.joinRoomData['token'];  
+      //console.log(TAG, ' componentWillReceiveProps - JoinRoom session ', nextProps?.joinRoomData?.room?.session);
+      console.log(TAG, ' componentWillReceiveProps - JoinRoom session itemSelected ', itemSelected);
+      if(itemSelected?.session){
+          this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
+      }
     }
-
-    if ( nextProps?.levelIndex && nextProps?.levelIndex !== this.props.levelIndex ) {
-         console.log(TAG, ' updateListRoom ', nextProps?.levelIndex, newData);
+    
+    //console.log(TAG, ' updateListRoom ', nextProps?.levelIndex, newData);
+    if (nextProps?.levelIndex !== this.props.levelIndex ) {
          this.updateListRoom(newData, nextProps.levelIndex);
     }
 
@@ -152,12 +154,21 @@ class RoomList extends Component {
       dataFilter: datal
     });
   };
+  
+  joinRoomSelect =(item)=>{
 
+      console.log("joinRoomSelect",item);
+      if(item.session !=""){
+        this.props.joinRoom({ session: item.session });
+      }
+
+  };
   handleRefresh = () => {
     return this.state.refreshing;
   };
 
   handleLoadMore = () => {};
+
 
   renderLoading = () => {
     if (!this.state.isFetching) return null;
@@ -166,7 +177,7 @@ class RoomList extends Component {
 
   renderHeader = () => {
     return null;
-  };
+  }; 
 
   renderItem = ({ item, index }, parallaxProps) => {
     return (
@@ -179,8 +190,8 @@ class RoomList extends Component {
               {
                 itemSelected: item
               },
-              () => {
-                this.props.joinRoom({ session: item.session });
+              () => { 
+                 this.joinRoomSelect(item) 
               }
             );
           }
