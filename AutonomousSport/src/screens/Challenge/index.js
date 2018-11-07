@@ -24,7 +24,7 @@ import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { scale,verticalScale } from 'react-native-size-matters';
 import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
-import { STATE_BLUETOOTH } from '@/utils/Constants';
+import { STATE_BLUETOOTH,CONSTANT_MESSAGE } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
@@ -71,6 +71,7 @@ class ChallengeScreen extends BaseScreen {
       pos: this.posInit,
       playersColor:{},
       players:[],
+      winner:{},
       playersMarker:[],
       race: {},
       distanceRun: 0,
@@ -221,8 +222,10 @@ class ChallengeScreen extends BaseScreen {
         console.log(TAG, ' onListenerChanel ---- ', data);
         
         let index = 0;
-        let isGetReady = false;
-        let isFinished = false;
+        let isGetReady = false ,isFinished = false;
+        let winner = null;
+        let reachMeMessage  = "";
+
         Object.keys(data).forEach(key => {
           const value = data[key];
 
@@ -236,17 +239,42 @@ class ChallengeScreen extends BaseScreen {
             arr.push(player);
             isFinished = player.goal>=100 || isFinished;
             index++;
+            winner = (!winner || player.goal> winner.goal )? player:winner;
 
+            // many case with is ME
+            reachMeMessage = value["isMe"] && ([20,50,70,90,99].includes(value.goal))? value.goal:'';
           }
         });
+        if(reachMeMessage){
+          const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
+          const distance =  (reachMeMessage*this.state.room?.miles /100 ) || 0;
+          const message = arr(distance)[Util.getRandomInt(0,arr.length-1)];
+          this.readText(message);
+        }
 
+        if(!isFinished && this.state.winner && winner && winner['fbuid'] !== this.state.winner['fbuid']){
+          const arr = winner["isMe"]?CONSTANT_MESSAGE.PASS_X:CONSTANT_MESSAGE.X_PASS;
+          
+          const index = Util.getRandomInt(0,arr.length-1);
+          const message = arr(this.state.winner.playerName||"")[index];
+          console.log(TAG, ' updateDataFromOtherPlayer - readText PASSS - ', message);
+          this.readText(message);
+        }
         this.setState({
           isFinished:isFinished,
           isReady:isGetReady||this.state.isReady,
           players: arr,
+          winner:winner,
           playersColor:playersColor
         });
         if(isFinished){
+          if(winner){
+            // read text
+            const arr = winner["isMe"]?CONSTANT_MESSAGE.FINISH_ANNOUCE_ME:CONSTANT_MESSAGE.FINISH_OTHER;
+            const index = Util.getRandomInt(0,arr.length-1);
+            const s = arr(winner.playerName)[index];
+            this.readText(s); 
+          }
           this.finishedRacing();
         }
       });
@@ -358,8 +386,9 @@ class ChallengeScreen extends BaseScreen {
   };
   finishedRacing = this.onClickView(()=>{
     this.roomDataPrefference?.off('value');
+    
     // show dialog
-    //this.popupDialog.show();
+    this.popupDialog.show();
   });
 
   renderDashBoardAchivement = () => {
@@ -537,6 +566,9 @@ class ChallengeScreen extends BaseScreen {
     const {room} = this.state;
     if(room &&room.session){
       this.setState({ isLoading: true });
+      const index = Util.getRandomInt(0,CONSTANT_MESSAGE.START_RACING.length-1);
+      this.readText(CONSTANT_MESSAGE.START_RACING[index]);
+      
       await this.props.startRacing({session:room.session});
       this.setState({ isLoading: false });
     }

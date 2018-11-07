@@ -136,6 +136,11 @@ class OTSubscriberCustom extends OTSubscriber {
 class BikerProfile extends Component {
   constructor(props) {
     super(props);
+    this.publisherProperties = {
+      publishAudio: true,
+      cameraPosition: 'front',
+      resolution: "352x288",
+    };
     this.state = {
       // user: {},
       players: props.players,
@@ -219,6 +224,7 @@ class BikerProfile extends Component {
     //   players: nextProps.players
     // });
   }
+  
 
   render() {
     const { players = [], playersColor = {} } = this.state;
@@ -235,6 +241,7 @@ class BikerProfile extends Component {
           token={this.room?.token || ''}
         >
           <OTPublisherCustom
+            properties={this.publisherProperties}
             styles={this.styles}
             playerMe={playerMe}
             style={this.styles.publisher}
