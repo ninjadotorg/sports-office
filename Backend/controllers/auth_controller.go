@@ -241,7 +241,12 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	t, err := token.SignedString([]byte(config.SECRET_KEY))
 	if err != nil {
 		return err
-	}  
+	} 
+	
+	
+	//usermodel := new(models.User) 
+	basectl.Dao.Where(&models.User{ID : user.ID }).Set("gorm:auto_preload", true).First(&user) 
+ 
 	 
 	var f interface{}
 	f = map[string]interface{}{
@@ -251,6 +256,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		"fbuid": fbuser.UID,
 		"email":  user.Email,
 		"fullname": user.Fullname,
+		"Profile": user.Profile,
 	}
 	return c.JSON(http.StatusOK,f) 
 	  
@@ -553,7 +559,7 @@ func (basectl *BaseController)RandomJoinRoom(c echo.Context) error{
 
 	var randRoom models.Room 
 
-	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.status = 1 and rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < " + config.MAX_PLAYER_IN_ROOM_STR + " ORDER BY RAND() LIMIT 1").Scan(&randRoom)
+	basectl.Dao.Raw("select rooms.* from rooms , roomplayers where rooms.status = 1 AND DATE(`created_at`) = CURDATE() AND rooms.ID = roomplayers.`room_id` group by roomplayers.room_id HAVING count(roomplayers.room_id) < " + config.MAX_PLAYER_IN_ROOM_STR + " AND count(roomplayers.room_id) >=1 ORDER BY RAND() LIMIT 1").Scan(&randRoom)
 	 
 	if randRoom.Session == "" {
 		
@@ -1062,7 +1068,7 @@ func (basectl *BaseController)ListRoom(c echo.Context) error{
 
 	var listroom []models.Room
 	//basectl.Dao.Where(models.Room{Status:1} ).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
-	basectl.Dao.Where(" DATE(`created_at`) = CURDATE()  " ).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
+	basectl.Dao.Where(" status = 1 AND DATE(`created_at`) = CURDATE()  " ).Order("ID desc").Set("gorm:auto_preload", true).Find(&listroom) //Limit(50).Find(&dices)
 	 
 	//.Model(models.Room{Status:1})
 	for i := len(listroom) - 1; i >= 0; i-- {
