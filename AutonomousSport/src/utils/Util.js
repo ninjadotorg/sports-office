@@ -41,6 +41,28 @@ export default class Util {
     });
   };
 
+  /**
+   * Get a random floating point number between `min` and `max`.
+   *
+   * @param {number} min - min number
+   * @param {number} max - max number
+   * @return {number} a random floating point number
+   */
+  static getRandomFloat = (min, max) => {
+    return Math.random() * (max - min) + min;
+  };
+
+  /**
+   * Get a random integer between `min` and `max`.
+   *
+   * @param {number} min - min number
+   * @param {number} max - max number
+   * @return {number} a random integer
+   */
+  static getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+
   static calculateMapSize = ({ widthReal, heightReal }): {} => {
     const heightMapExpect = screenSize.height;
     let heightMap = heightMapExpect;

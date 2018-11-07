@@ -20,8 +20,7 @@ import METHOD from '@/services/Method';
 import ApiService from '@/services/ApiService';
 import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
-
-
+import Tts from 'react-native-tts';
 
 export const TAG = 'BaseScreen';
 const styles = StyleSheet.create({
@@ -42,6 +41,10 @@ const styles = StyleSheet.create({
     // paddingHorizontal: scaleSize(18)
   }
 });
+const CONFIG_VOICE ={
+  speechRate: 0.5,
+  speechPitch: 1
+}
 class BaseScreen extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +56,52 @@ class BaseScreen extends Component {
       errorMessage:false,
     };
     this.appState = AppState.currentState;
+    this.initVoice();
   }
+
+  initVoice =()=>{
+    this.initializedVoice = false;
+    Tts.addEventListener("tts-start", event =>{}
+    );
+    Tts.addEventListener("tts-finish", event =>{}
+    );
+    Tts.addEventListener("tts-cancel", event =>{}
+    );
+    Tts.setDefaultRate(CONFIG_VOICE.speechRate);
+    Tts.setDefaultPitch(CONFIG_VOICE.speechPitch);
+    Tts.getInitStatus().then(async ()=>{
+      const voices = await Tts.voices();
+      const availableVoices = voices
+        .filter(v => !v.networkConnectionRequired && !v.notInstalled)
+        .map(v => {
+          return { id: v.id, name: v.name, language: v.language };
+        });
+      let selectedVoice = null;
+      if (voices && voices.length > 0) {
+        selectedVoice = voices[0].id;
+        try {
+          await Tts.setDefaultLanguage('en-IE');
+        } catch (err) {
+          // My Samsung S9 has always this error: "Language is not supported"
+          if (err.code === 'no_engine') {
+            Tts.requestInstallEngine();
+          }
+          console.log(`setDefaultLanguage error `, err," language = ",voices[0].language);
+        }
+        await Tts.setDefaultVoice(voices[0].id);
+        this.initializedVoice = true;
+      } else {
+        this.initializedVoice = true;
+      }
+    });
+  }
+
+  readText = async (text:String) => {
+    if(this.initializedVoice && text){
+      Tts.stop();
+      Tts.speak(text);
+    }
+  };
   
   componentDidMount(){
     AppState.addEventListener('change', this.handleAppStateChange);

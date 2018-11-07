@@ -22,7 +22,7 @@ import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
 import PopupDialog from 'react-native-popup-dialog';
-import { STATE_BLUETOOTH } from '@/utils/Constants';
+import { STATE_BLUETOOTH, CONSTANT_MESSAGE } from '@/utils/Constants';
 import {
   fetchUser,
   resetRacing,
@@ -31,6 +31,7 @@ import {
   loginWithFirebase
 } from '@/actions/UserAction';
 import * as Animatable from 'react-native-animatable';
+import Util from '@/utils/Util';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = moderateScale(130);
@@ -166,6 +167,9 @@ class HomeScreen extends BaseScreen {
 
   onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGCREATE);
+    // const s= CONSTANT_MESSAGE.FINISH_ANNOUCE_ME("HIEN")[0];
+    // console.log(TAG, ' onPressCreateRoom message = ',s);
+    // this.readText(s);
   });
 
   onPressReset = this.onClickView(async () => {
