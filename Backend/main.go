@@ -306,7 +306,7 @@ func main() {
 	userapi.GET("/friend/list", ctl.ListMyFriends) 
 
 	//archivement  
-	userapi.POST("/practive/archivement", ctl.PractiveArchivement) 
+	userapi.POST("/practice/archivement", ctl.PractiveArchivement) 
 
 	//update UpdateUser
 	userapi.POST("/user/update", ctl.UpdateUser) 
