@@ -80,10 +80,13 @@ class BaseScreen extends Component {
       if (voices && voices.length > 0) {
         selectedVoice = voices[0].id;
         try {
-          await Tts.setDefaultLanguage(voices[0].language);
+          await Tts.setDefaultLanguage('en-IE');
         } catch (err) {
           // My Samsung S9 has always this error: "Language is not supported"
-          console.log(`setDefaultLanguage error `, err);
+          if (err.code === 'no_engine') {
+            Tts.requestInstallEngine();
+          }
+          console.log(`setDefaultLanguage error `, err," language = ",voices[0].language);
         }
         await Tts.setDefaultVoice(voices[0].id);
         this.initializedVoice = true;
