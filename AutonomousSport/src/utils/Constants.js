@@ -48,3 +48,76 @@ export const COLOR = {
   TEXT: '#333333',
   GRAY: '#E0E0E0'
 };
+export const CONSTANT_MESSAGE = {
+  START_RACING: [
+    'Are you ready? Go!',
+    'And... we\'re off!',
+    'The race is on! Let\'s go!',
+    'You look like a winner. Get this!',
+    'Hey speedster. Go get em!'
+  ],
+  REACH_20: (distance = '') => [
+    'You\'re 20% through! Looking good!',
+    `Just ${distance} left to go! Keep at it!`,
+    `Doing great! ${distance} left to glory!`,
+    `Good effort. Let's amp it up for the next leg! ${distance} to go!`,
+    'You\'re 20% on the way to victory.'
+  ],
+  REACH_50: (distance = '') => [
+    'Halfway done! Yes!',
+    'Already halfway through! Time flies when you\'re going fast.',
+    '50% complete. You\'re killing it!',
+    'Already 50% champion!',
+    'You\'ve passed the halfway mark! No turning back!'
+  ],
+  REACH_70: (distance = '') => [
+    'We\'re in the final third of the race! Push harder!',
+    `${distance} left! It's still anyone's race!`,
+    `Only ${distance} left! Full speed ahead! `,
+    'Already halfway through! Time flies when you\'re going fast.',
+    'No time to slack! Only 30% left to go! ',
+    'Keep at it, you\'re in the final third!'
+  ],
+  REACH_90: (distance = '') => [
+    'Let\'s up the pace! Only 10% to go ',
+    '90% done, you\'re on the home run now!',
+    'No time to slack, you\'re nearly there!',
+    '10% left to go, let\'s ramp up the pace!',
+    'You\'re on the last leg - one last push to the finish line!'
+  ],
+  REACH_99: (distance = '') => [
+    'The finish line is in sight! ',
+    'You\'re coming up on the finish line!',
+    'So close!',
+    'You\'re almost there!',
+    'The finish line is right in front of you!'
+  ],
+  PASS_X: (name = '') => [
+    `You’ve just passed ${name}! Keep going!`,
+    `You whizzed past ${name}!`,
+    `You overtook ${name}! Awesome.`,
+    `${name} just bit your dust!`,
+    `You left ${name} behind!`
+  ],
+  X_PASS: (name = '') => [
+    `${name} just passed you! Try harder!`,
+    `${name} overtook you. Speed up!`,
+    `${name} is now in front of you! Catch them!`,
+    `You've been overtaken by ${name}. Go faster!`,
+    `You're now trailing ${name}! Speed up!`
+  ],
+  FINISH_ANNOUCE_ME: (name = '') => [
+    `Yeah! You win! Congratulations ${name}`,
+    'You did it! You\'re number one! ',
+    `Well done ${name}! Way to go!`,
+    `${name} You\'re the one true champion!`,
+    `${name} victory is yours!`
+  ],
+  FINISH_OTHER: (name = '') => [
+    `Times up! ${name} won!`,
+    `Better luck next time, ${name} is the winner`,
+    `What a race! ${name} takes first place!`,
+    `Time\'s up! ${name} takes the crown!`,
+    `It\'s all over! ${name} is the victor!`
+  ]
+};

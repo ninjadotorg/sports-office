@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "convert-string": "^0.1.0",
-    "opentok-react-native": "0.8.3",
+    "opentok-react-native": "git://github.com/matsatit/opentok-react-native.git",
     "prop-types": "^15.6.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
@@ -43,6 +43,7 @@
     "react-native-snap-carousel": "^3.7.2",
     "react-native-svg": "^7.0.3",
     "react-native-svg-uri": "^1.2.3",
+    "react-native-tts": "^2.0.0",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.7.0",
     "react-navigation-redux-helpers": "^2.0.2",
