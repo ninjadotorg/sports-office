@@ -114,6 +114,7 @@ class SignInScreen extends BaseScreen {
       const userNext = nextProps?.user||{};
       console.log(TAG, ' componentWillReceiveProps - prevProps?.user =  ',userNext);
       const isLogged = !_.isEmpty(userNext.userInfo);
+      const isPressButton = this.state.loading;
       const isLoggedFirebase = !_.isEmpty(userNext.firebaseInfo);
       this.setState({
         user:_.isEmpty(userNext.userInfo)?undefined:nextProps.user,
@@ -129,6 +130,9 @@ class SignInScreen extends BaseScreen {
         this.setState({
           isCheckingRegular:false
         });
+        if(isPressButton){
+          this.showToastMessage("Please check again your infomation to login");
+        }
       }
       
     }
@@ -209,6 +213,7 @@ class SignInScreen extends BaseScreen {
           this.setState({ loading:false });
 
       }else{
+        this.showToastMessage('Email is not correct!!');
         this.setState({ error:'Email is not correct!!' }); 
       }
     }else{
@@ -219,9 +224,11 @@ class SignInScreen extends BaseScreen {
             this.props.signIn({email,password,name});
           }else{
             this.setState({ error:'Email is not correct!!' }); 
+            this.showToastMessage('Email is not correct!!');
           }
         } else {
           this.setState({ error:'Please input your email, password' });
+          this.showToastMessage('Please input your email, password');
         }
       }
 
@@ -289,7 +296,7 @@ class SignInScreen extends BaseScreen {
 
             <View style={{flexDirection: 'row'}}>
                 <View style={{flex:1, alignItems: 'center'}}>
-                    {!error ? null : (
+                    {/*!error ? null : (
                     <Text
                       style={[
                         TextStyle.normalText,
@@ -300,7 +307,7 @@ class SignInScreen extends BaseScreen {
                     >
                       {error}
                     </Text>
-                  )}
+                    )*/}
 
                 </View>
                 <View style={{position:'absolute', right:0  }}> 
@@ -428,7 +435,7 @@ class SignInScreen extends BaseScreen {
                 >  {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].bottonBtn}
                 </Text>
             </View>
-              
+            {this.renderToastMessage()}
           </View>
         
         </ScrollView>
