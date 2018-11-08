@@ -92,6 +92,9 @@ class ChallengeScreen extends BaseScreen {
   }
 
   onStreamCreated =(streamId)=>{
+
+    console.log("ChallengeScreen streamId",streamId);
+
     const {user} = this.state;
     // push stream Id on firebase
     if(!_.isEmpty(streamId)&& !_.isEmpty(user)){
