@@ -6,6 +6,7 @@ import { onClickView } from '@/utils/ViewUtil';
 import PopupDialog from 'react-native-popup-dialog';
 import { Button } from 'react-native-elements';
 import TextStyle from '@/utils/TextStyle';
+import Toast, {DURATION} from 'react-native-easy-toast';
 import {
   moderateScale,
   scale as scaleSize,
@@ -13,11 +14,6 @@ import {
 } from 'react-native-size-matters';
 import _ from 'lodash';
 import images from '@/assets';
-import { connect } from 'react-redux';
-import { fetchUser,signIn,forGotPass, loginWithFirebase } from '@/actions/UserAction';
-import Api from '@/services/Api';
-import METHOD from '@/services/Method';
-import ApiService from '@/services/ApiService';
 import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
 import Tts from 'react-native-tts';
@@ -58,7 +54,14 @@ class BaseScreen extends Component {
     this.appState = AppState.currentState;
     this.initVoice();
   }
-
+  renderToastMessage = ()=>{
+    return <Toast position='top' ref="toast"/>;
+  }
+  showToastMessage = (text = "",callback = null)=>{
+    if(text && this.refs.toast){
+      this.refs.toast.show(text,500,callback);
+    }
+  }
   initVoice =()=>{
     this.initializedVoice = false;
     Tts.addEventListener("tts-start", event =>{}
@@ -77,16 +80,16 @@ class BaseScreen extends Component {
           return { id: v.id, name: v.name, language: v.language };
         });
       let selectedVoice = null;
-      if (voices && voices.length > 0) {
+      if (availableVoices && availableVoices.length > 0) {
         selectedVoice = voices[0].id;
         try {
-          await Tts.setDefaultLanguage('en-IE');
+          await Tts.setDefaultLanguage(availableVoices[0].language);
         } catch (err) {
           // My Samsung S9 has always this error: "Language is not supported"
           if (err.code === 'no_engine') {
             Tts.requestInstallEngine();
           }
-          console.log(`setDefaultLanguage error `, err," language = ",voices[0].language);
+          console.log(`setDefaultLanguage error `, err," language = ",availableVoices[0].language);
         }
         await Tts.setDefaultVoice(voices[0].id);
         this.initializedVoice = true;
@@ -133,7 +136,7 @@ class BaseScreen extends Component {
     onPressJoinNow = async()=>{
       try {
         const {roomInfo} = this.state;
-        //call to APIs get infor.... 
+        //call to APIs get infor....  
         console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
         const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
         console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
@@ -142,7 +145,7 @@ class BaseScreen extends Component {
         }else{
           this.showDialogInvite(false);
           this.setState({errorMessage:true});
-        } 
+        }  
 
       } catch (error) {
         
@@ -159,13 +162,13 @@ class BaseScreen extends Component {
             const data = dataSnap.val();
 
             if( data ){
-             
               const room = new Room(data.room);
-              console.log("BaseScreen room cover", room.Map.cover);  
-                
-              this.setState({ errorMessage:false, roomInfo: room, playername:data.inviter }); 
-              this.dataPrefference.remove();
-              this.showDialogInvite(true);
+              if(!_.isEmpty(room)){
+                console.log("BaseScreen room cover", room.Map.cover);  
+                this.setState({ errorMessage:false, roomInfo: room, playername:data.inviter }); 
+                this.dataPrefference.remove();
+                this.showDialogInvite(true);
+              }
             }
         });
     } 

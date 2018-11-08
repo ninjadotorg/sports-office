@@ -21,4 +21,5 @@ export default class Api {
   static ROOM_INVITE = `${Config.API_URL}/api/room/session/invite`;
   static ROOM_UPDATE_NAME = `${Config.API_URL}/api/room/session/update`;
   static START_RACING = `${Config.API_URL}/api/room/session/action`;
+  static PRACTICE_ARCHIVEMENT= `${Config.API_URL}/api/practice/archivement`;
 }
