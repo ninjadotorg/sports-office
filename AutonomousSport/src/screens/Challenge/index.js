@@ -256,7 +256,7 @@ class ChallengeScreen extends BaseScreen {
           this.readText(message);
         }
 
-        if(!isFinished && this.state.winner && winner && winner['fbuid'] !== this.state.winner['fbuid']){
+        if(isGetReady && !isFinished && this.state.winner && winner && winner['fbuid'] !== this.state.winner['fbuid']){
           const arr = winner["isMe"]?CONSTANT_MESSAGE.PASS_X:CONSTANT_MESSAGE.X_PASS;
           
           const index = Util.getRandomInt(0,arr.length-1);
