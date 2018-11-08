@@ -5,6 +5,7 @@ import Util from '@/utils/Util';
 import _ from 'lodash';
 import Room from '@/models/Room';
 import LocalDatabase from '@/utils/LocalDatabase';
+import User from '@/models/User';
 
 const TIME_OUT_API = 8;
 const TAG = 'ApiService';
@@ -208,6 +209,16 @@ export default class ApiService {
     });
     return !_.isEmpty(response) ? new Room(response?.room) : null;
   }
+
+  static practiceArchivement = async ({ kcals = 0, miles = 0 }) => {
+    // practice/archivement
+    const url = Api.PRACTICE_ARCHIVEMENT;
+    const response = await ApiService.getURL(METHOD.POST, url, {
+      miles: miles,
+      kcals: kcals
+    });
+    return !_.isEmpty(response) ? response : null;
+  };
 
   static async leftRoom({ session = '' }) {
     if (session) {

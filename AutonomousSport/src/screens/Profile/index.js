@@ -19,7 +19,7 @@ import TextStyle,{screenSize} from '@/utils/TextStyle';
 import { TAG as TAGHOME } from '@/screens/Home';
 import { TAG as TAGSETUP } from '@/screens/Setup';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
-import { fetchUser,updateName, updatePassword, signIn,forGotPass,logout } from '@/actions/UserAction';
+import { fetchUser,updateName, updatePassword, signIn,forGotPass,logout,updateDataPracticeInfo } from '@/actions/UserAction';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import { Button,Header } from 'react-native-elements';
 import styles,{ color } from './styles';
@@ -78,6 +78,7 @@ class ProfileScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
+    this.props.updateDataPracticeInfo();
   }
   
   
@@ -465,7 +466,7 @@ export default connect(
   state => ({
     user:state.user
   }),
-  { getUser: fetchUser ,updateName, updatePassword, disconnectBluetooth,logout}
+  { getUser: fetchUser ,updateName, updatePassword, disconnectBluetooth,logout,updateDataPracticeInfo}
 )(ProfileScreen);
 
 
