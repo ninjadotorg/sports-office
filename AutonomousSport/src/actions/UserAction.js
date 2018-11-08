@@ -15,10 +15,11 @@ export const ACTIONS = {
   SIGNIN_WITH_FIREBASE: 'SIGNIN_WITH_FIREBASE',
   GET_USER_LOCAL: 'GET_USER',
   UPDATE_USER_NAME: 'UPDATE_USER_NAME',
-  UPDATE_USER_PASSWORD:'UPDATE_USER_PASSWORD',
+  UPDATE_USER_PASSWORD: 'UPDATE_USER_PASSWORD',
   UPDATE_RACING: 'UPDATE_RACING',
   RESET_RACING: 'RESET_RACING',
-  UPDATE_PRACTISE_RACING: 'UPDATE_PRACTISE_RACING'
+  UPDATE_PRACTISE_RACING: 'UPDATE_PRACTISE_RACING',
+  UPDATE_DATA_PRACTICE_INFO: 'UPDATE_DATA_PRACTICE_INFO'
 };
 
 export const setError = msg => ({ type: ACTIONS.AUTH_ERROR_SET, payload: msg });
@@ -127,9 +128,32 @@ export const updateName = (fullname = '') => async dispatch => {
   dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: {} });
 };
 
+export const updateDataPracticeInfo = () => async dispatch => {
+  try {
+    let user: User = await LocalDatabase.getUserInfo();
+    if (user) {
+      const kcal =  (user.Profile.kcal || 0);
+      const miles = (user.Profile.miles || 0);
+      const response = await ApiService.practiceArchivement({ kcals:kcal,miles:miles});
+      console.log(TAG, ' - updateDataPracticeInfo - response ', response);
+      
+      dispatch({ type: ACTIONS.UPDATE_DATA_PRACTICE_INFO, payload: response || {} });
+    }
+    
+
+    return;
+  } catch (e) {
+    console.log(TAG, ' - updateName - error ', e);
+  }
+  dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: {} });
+};
+
 export const updatePassword = (cpassword = '', npassword) => async dispatch => {
   try {
-    const response = await ApiService.updatePassword({ cpassword: cpassword, npassword: npassword });
+    const response = await ApiService.updatePassword({
+      cpassword: cpassword,
+      npassword: npassword
+    });
     console.log(TAG, ' - updateName - response ', response);
 
     let user: User = await LocalDatabase.getUserInfo();
@@ -138,14 +162,16 @@ export const updatePassword = (cpassword = '', npassword) => async dispatch => {
       response.user.Profile['miles'] = user.Profile.miles || 0;
     }
 
-    dispatch({ type: ACTIONS.UPDATE_USER_PASSWORD, payload: response?.user || {} });
+    dispatch({
+      type: ACTIONS.UPDATE_USER_PASSWORD,
+      payload: response?.user || {}
+    });
     return;
   } catch (e) {
     console.log(TAG, ' - updateName - error ', e);
   }
   dispatch({ type: ACTIONS.UPDATE_USER_PASSWORD, payload: {} });
 };
-
 
 export const updateRacing = ({ kcal = 0, miles = 0 }) => async dispatch => {
   try {
