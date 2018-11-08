@@ -137,7 +137,7 @@ class BaseScreen extends Component {
         console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
         const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
         console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
-        if(response?.room){
+        if(response?.room?.token){
             this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
         }else{
           this.showDialogInvite(false);
