@@ -29,6 +29,7 @@ import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 import ViewUtil,{delayCallingManyTime} from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
 import { disconnectBluetooth } from '@/actions/RaceAction';
+import { scale } from 'react-native-size-matters';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -354,8 +355,6 @@ class SetupScreen extends BaseScreen {
           serviceUUID,
           bakeCharacteristic
         );
-        
-
         console.log('Started notification on end');
       }
     } catch (error) {
@@ -458,8 +457,8 @@ class SetupScreen extends BaseScreen {
           <Image
             source={images.bike}
             style={[{
-              width: 500,
-              height: 324,
+              width: scale(250),
+              height: scale(162),
               bottom: 0,
               right: 0,
               position: 'absolute',

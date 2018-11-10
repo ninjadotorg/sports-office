@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: verticalScale(60),
     justifyContent: 'space-around',
-    width:'60%',
-    alignItems: 'center',
-    marginLeft:'20%',
+    width: '60%',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   containerCenter: {
     flex: 1,
@@ -56,10 +56,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'flex-start' // if you want to fill rows left to right
   },
-  itemTop:{
+  itemTop: {
     width: '50%' // is 50% of container width
   }
-
 });
 
 export default styles;
