@@ -68,8 +68,10 @@ class CreateRoomScreen extends BaseScreen {
       });
 
       const roomInfo = await ApiService.joinRandomRoom({});
-      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);
-      if (roomInfo?.session && roomInFo?.token ) {
+      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo); 
+      if (roomInfo?.session && roomInfo?.token ) {
+        console.log(TAG, ' onPressRandomJoin 3 token ', roomInfo?.token);
+
         this.replaceScreen(
           this.props.navigation,
           TAGCHALLENGE,
