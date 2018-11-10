@@ -15,7 +15,7 @@ let handlerUpdate = null,
 let timestampPrevious = 0;
 let roundPrevious = 0;
 const TAG = 'RaceAction';
-const cycle = 0.3;
+const cycle = 0.5;
 const weight = 70;
 export const ACTIONS = {
   CONNECT_BLUETOOTH: 'CONNECT_BLUETOOTH',
@@ -56,7 +56,8 @@ export const connectionBluetoothChange = dispatch => {
         // let speed = rph * 0.10472 * cycle;
         // todo HienTon : add 100 to test
         // speed = cycle * 6.28 * 2.2369356 * (rps + 200);
-        speed = cycle * 6.28 * 2.2369356 * rps;
+        // speed = cycle * 6.28 * 2.2369356 * rps;
+        speed = 0.0009171425863 * rps;
         speed = speed < 0 ? 0 : speed;
 
         const distanceRun = speed * timeHour;
