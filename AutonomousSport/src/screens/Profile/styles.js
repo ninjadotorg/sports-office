@@ -43,10 +43,9 @@ export const color = {
 //backgroundColor: '#232339'
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-    flexDirection: 'row',  
+    flexDirection: 'row'
   },
 
   text: {
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
   },
   textLabel: { color: color.placeHolder, flex: 1, textAlignVertical: 'center' },
   endScreenText: {
-    marginBottom: 20
+    // marginBottom: verticalScale(20)
   },
   textButton,
   socialButtonText,
@@ -95,8 +94,10 @@ const styles = StyleSheet.create({
     backgroundColor: color.social.google
   },
   socialBottomTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center'
+    flexDirection: 'column',
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'flex-end'
   },
   socialBottomText: { color: color.placeHolder },
   marginBottom10: { marginBottom: 10 },
@@ -104,14 +105,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'white'
   },
-  linkContainerMargin: {
-    marginBottom: 0,
-    alignSelf: 'center'
-  },
   link: {
     textAlign: 'center',
     color: 'white',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: verticalScale(10),
+    marginTop: verticalScale(10)
   },
   containerInput: {
     flexDirection: 'row',
@@ -120,7 +119,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255,255,255,0.2)'
   },
   scrollView: {
-    flex: 1,
     flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: scaleSize(120)
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: moderateScale(10),
     backgroundColor: 'transparent',
-    //backgroundColor:'#232339',
+    // backgroundColor: '#232339',
     justifyContent: 'center'
   },
   imgContainerStyle: {

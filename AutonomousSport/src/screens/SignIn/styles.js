@@ -18,7 +18,9 @@ const socialButtonText = {
 
 const buttonStyle = {
   height: 50,
-  backgroundColor: '#02BB4F',
+  backgroundColor: '#02bb4f',
+  marginLeft: 0,
+  marginRight: 0,
   borderWidth: 1,
   borderRadius: scaleSize(30),
   justifyContent: 'center',
@@ -43,10 +45,17 @@ export const color = {
 //backgroundColor: '#232339'
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-    flexDirection: 'row',  
+    flexDirection: 'row'
+  },
+
+  bottomContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly'
+    // justifyContent: 'flex-end',
+    // paddingBottom: verticalScale(10)
   },
 
   text: {
@@ -58,9 +67,7 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(20)
   },
   textLabel: { color: color.placeHolder, flex: 1, textAlignVertical: 'center' },
-  endScreenText: {
-    marginBottom: 20
-  },
+  endScreenText: {},
   textButton,
   socialButtonText,
   buttonStyle,
@@ -120,15 +127,15 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255,255,255,0.2)'
   },
   scrollView: {
-    flex: 1,
     flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: scaleSize(120)
   },
-  mainView: { flex: 1, alignContent: 'center', backgroundColor: 'transparent' },
+  mainView: { flex: 1, backgroundColor: 'transparent' },
   containerStyle: {
     flex: 1,
     paddingVertical: moderateScale(10),
+    // backgroundColor: 'blue',
     backgroundColor: 'transparent',
     //backgroundColor:'#232339',
     justifyContent: 'center'
@@ -141,6 +148,7 @@ const styles = StyleSheet.create({
 
   inputContainerStyle: {
     flex: 1,
+    backgroundColor: 'transparent',
     justifyContent: 'center'
   },
   errorItem: {
