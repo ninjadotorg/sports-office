@@ -136,7 +136,7 @@ const StackRouter = createStackNavigator(
     // initialRouteParams: { transition: 'fade' },
     // transitionConfig: TransitionConfig,
     lazy: true,
-    initialRouteName: 'HomeScreen'
+    initialRouteName: 'SignInScreen'
   }
 );
 

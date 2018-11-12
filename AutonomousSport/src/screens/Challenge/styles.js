@@ -27,10 +27,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 0,
     backgroundColor: '#0fcb5d',
-    // backgroundColor: 'red',
     borderColor: '#02BB4F',
     minWidth: scaleSize(100),
-    width: scaleSize(120),
+    width: scaleSize(150),
     paddingHorizontal: scaleSize(20)
   }
 });

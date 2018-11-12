@@ -10,14 +10,14 @@ import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { TAG as INVITEFRIENDS } from '@/screens/Friends';
 
 import images, { icons } from '@/assets';
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale , verticalScale } from 'react-native-size-matters';
 import { connect } from 'react-redux';
 import { fetchUser } from '@/actions/UserAction';
 
 export const TAG = 'ChooseRoundScreen';
 
 
-const sizeImageCenter = moderateScale(130);
+const sizeImageCenter = verticalScale(150);
 class ChooseRoundScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -142,11 +142,11 @@ class ChooseRoundScreen extends BaseScreen {
               <TouchableOpacity onPress={()=>this.onPress(-1)}>
                 <Image source={images.ic_plus_down} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}} />
               </TouchableOpacity>
-              <View style={[styles.containerCenter,{minWidth:sizeImageCenter,minHeight:sizeImageCenter,marginHorizontal:moderateScale(40)}]}>
-                <Image source={images.image_velocity} style={{position:'absolute',width:sizeImageCenter,height:sizeImageCenter}} />
+              
+              <ImageBackground style={[styles.containerCenter,{width:sizeImageCenter,height:sizeImageCenter,marginHorizontal:moderateScale(40)}]} source={images.image_velocity} >
                 <Text style={[TextStyle.xxxExtraText,{color:'white',fontWeight:'bold'}]}>{valueRound}</Text>
-                <Text style={[TextStyle.xExtraText,{color:'white',fontWeight: '600',opacity: 0.8,marginTop:-10}]}>{`${valueRound>1?'rounds':'round'}`}</Text>
-              </View>
+                <Text style={[TextStyle.xExtraText,{color:'white',fontWeight: '600',opacity: 0.8}]}>{`${valueRound>1?'rounds':'round'}`}</Text>
+              </ImageBackground>
               <TouchableOpacity onPress={()=>this.onPress(1)}>
                 <Image source={images.ic_plus_up} style={{width:sizeImageCenter/2 ,height:sizeImageCenter/2}}/>
               </TouchableOpacity>

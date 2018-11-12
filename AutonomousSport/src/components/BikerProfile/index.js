@@ -17,7 +17,6 @@ class OTPublisherCustom extends OTPublisher {
   constructor(props) {
     super(props);
     console.log(TAG, ' OTPublisherCustom constructor begin');
-    console.log(TAG, ' OTPublisherCustom constructor end');
   }
  
   render() {
@@ -29,7 +28,7 @@ class OTPublisherCustom extends OTPublisher {
         {super.render()}
         <View style={styles.parentViewPublishView}>
           <View style={[styles.publisherInfo,{backgroundColor:'transparent'}]}>
-            <View style={{flexDirection:'row',justifyContent:"center"}}>
+            <View style={{flexDirection:'row',justifyContent:'center'}}>
               {icons.bike({
                 containerStyle: { marginRight: scale(2) },
                 color:'#00e751'
@@ -153,7 +152,7 @@ class BikerProfile extends Component {
 
     this.publisherEventHandlers = {
       streamCreated: event => {
-        console.log(TAG, 'Publisher stream created!', event);
+        console.log(TAG, ' Publisher stream created!', event);
 
         // push stream Id on firebase
         if (!_.isEmpty(event) && event.streamId) {
@@ -161,7 +160,7 @@ class BikerProfile extends Component {
         }
       },
       streamDestroyed: event => {
-        console.log(TAG, 'Publisher stream destroyed!', event);
+        console.log(TAG, ' Publisher stream destroyed!', event);
         this.props.onStreamDestroyed(event?.streamId || '');
       }
     };
@@ -239,6 +238,7 @@ class BikerProfile extends Component {
           apiKey={Config.OPENTOK_API_KEY}
           sessionId={this.room?.session || ''}
           token={this.room?.token || ''}
+          // eventHandlers={this.publisherEventHandlers}
         >
           <OTPublisherCustom
             properties={this.publisherProperties}
