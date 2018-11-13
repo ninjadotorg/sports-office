@@ -167,7 +167,8 @@ class HomeScreen extends BaseScreen {
 
   onPressCreateRoom = this.onClickView(async () => {
     this.props.navigation.navigate(TAGCREATE);
-    // const s= CONSTANT_MESSAGE.FINISH_ANNOUCE_ME("HIEN")[0];
+    // const index = Util.getRandomInt(0,CONSTANT_MESSAGE.FINISH_ANNOUCE_ME().length-1);
+    // const s = CONSTANT_MESSAGE.FINISH_ANNOUCE_ME("Jason")[index];
     // console.log(TAG, ' onPressCreateRoom message = ',s);
     // this.readText(s);
   });

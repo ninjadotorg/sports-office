@@ -328,13 +328,13 @@ class FriendsScreen extends BaseScreen {
     console.log(TAG, selectedIndex, listFriends,isLoading, inviteMode);
 
     return (
-      <ImageBackground style={[styles.container, {paddingRight:40 }]}  source={images.backgroundx}> 
+      <ImageBackground style={[styles.container, {}]} source={images.backgroundx}> 
 
-        <Header backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0,paddingTop:40}}>
+        <Header backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0,paddingLeft:verticalScale(10),paddingRight:verticalScale(40), paddingTop:40}}>
           {this.renderLeftHeader()}
         </Header>
 
-        <View style={[styles.containerTop,{marginLeft:40}]}>
+        <View style={[styles.containerTop]}>
           {this.renderTabButton()} 
         </View>
         {listFriends.length == 0  && selectedIndex ===0 ?  
@@ -353,7 +353,7 @@ class FriendsScreen extends BaseScreen {
         : 
             <FlatList
               keyExtractor={item=>String(item.id)}
-              style={[styles.list,{ marginLeft:verticalScale(44), paddingLeft:0, marginRight:verticalScale(10), paddingRight:0}]}
+              style={[styles.list,{}]}
               refreshing={isLoading}
               onRefresh={this.onRefreshData}
               data={listFriends}
