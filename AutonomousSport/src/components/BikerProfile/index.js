@@ -138,7 +138,7 @@ class BikerProfile extends Component {
     this.publisherProperties = {
       publishAudio: true,
       cameraPosition: 'front',
-      resolution: "352x288",
+      resolution: '352x288'
     };
     this.state = {
       // user: {},
@@ -238,7 +238,6 @@ class BikerProfile extends Component {
           apiKey={Config.OPENTOK_API_KEY}
           sessionId={this.room?.session || ''}
           token={this.room?.token || ''}
-          // eventHandlers={this.publisherEventHandlers}
         >
           <OTPublisherCustom
             properties={this.publisherProperties}

@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image , ImageBackground} from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image , ScrollView,ImageBackground} from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import { SearchBar, Button, Header, ButtonGroup } from 'react-native-elements';
+import { Button, Header, ButtonGroup } from 'react-native-elements';
 import { ParallaxImage } from 'react-native-snap-carousel';
 import styles, { sliderWidth, itemWidth,color } from './styles';  
 import TextStyle from '@/utils/TextStyle';
@@ -14,7 +14,6 @@ import images, { icons } from '@/assets';
 import { moderateScale } from 'react-native-size-matters';
 import { connect } from 'react-redux';
 import { fetchAllUser,fetchAllFriend } from '@/actions/FriendAction';
-///friends:state.friend.friendList,
 import { leftRoom } from '@/actions/RoomAction';
 
 export const TAG = 'ChallengeNameScreen';
@@ -151,9 +150,8 @@ class ChallengeNameScreen extends BaseScreen {
           <Header  backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0}} >
             {this.renderLeftHeader()}
           </Header>
-          <View style={{flex:1,flexDirection:'column',justifyContent:'center'}}>
-            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-            
+          <ScrollView contentContainerStyle={{flexGrow:1}} style={{flex:1}}>
+            <View style={{flex:1,flexDirection:'column', justifyContent:'space-around'}}>
               <View style={styles.containerInput}>
                   <Text style={[TextStyle.normalText,styles.textLabel]}>Name</Text>
                   
@@ -168,18 +166,16 @@ class ChallengeNameScreen extends BaseScreen {
                     placeholder="Alice Smith"
                   />
               </View>
+              <Button
+                loading={isLoading}
+                title="Next"
+                textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'white'}]}
+                buttonStyle={{backgroundColor:'transparent'}}
+                containerViewStyle={[styles.button , {}]}
+                onPress={this.onPressCreateRoom}
+              />
             </View>
-            
-          </View>
-          <View style={styles.containerBottom}>
-            <Button
-              loading={isLoading}
-              title="Next"
-              textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'white'}]}
-              buttonStyle={[styles.button , {marginBottom:40}]}
-              onPress={this.onPressCreateRoom}
-            />
-          </View>
+          </ScrollView>
         </View>
         </ImageBackground>
     );

@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   containerTop: {
-    padding: moderateScale(10),
+    paddingVertical: moderateScale(10),
+    paddingHorizontal: verticalScale(40),
     flexDirection: 'column',
     justifyContent: 'space-between'
   },
@@ -38,8 +39,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   list: {
-    padding: moderateScale(10),
     flex: 1,
+    paddingVertical: moderateScale(10),
+    marginHorizontal: verticalScale(40),
     backgroundColor: 'transparent'
   },
   textStyleButton: {
