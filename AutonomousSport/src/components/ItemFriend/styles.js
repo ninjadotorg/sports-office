@@ -1,11 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
+import { verticalScale, scale } from 'react-native-size-matters';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: moderateScale(5),
-    flexDirection: 'row'
+    paddingHorizontal: verticalScale(5),
+    flexDirection: 'row',
+    paddingVertical: verticalScale(10),
+    borderBottomWidth: 1,
+    
+    borderBottomColor: '#76717f'
   }
 });
 export default styles;
