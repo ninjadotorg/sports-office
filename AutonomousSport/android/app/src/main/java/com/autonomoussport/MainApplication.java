@@ -3,6 +3,7 @@ package com.autonomoussport;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
 import net.no_mad.tts.TextToSpeechPackage;
 import com.surajit.rnrg.RNRadialGradientPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;

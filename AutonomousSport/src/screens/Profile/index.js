@@ -248,13 +248,12 @@ class ProfileScreen extends BaseScreen {
     const {userInfo = {}} = user ||{};
     return ( 
       <KeyboardAvoidingView
-        style={[styles.containerStyle,{minHeight: (screenSize.height/2)}]}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : (-screenSize.height/3 + scale(30))}
-        contentContainerStyle={[{flex:1,flexGrow:1},{minHeight: (screenSize.height/2)}]}
+        style={[styles.containerStyle]}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 64}
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
       > 
-        <View style={[styles.inputContainerStyle, ]}>  
-          <Text style={[TextStyle.extraText,styles.text,styles.textLogo,{ marginBottom:15}] }>{texts[swap].button}</Text>
+        <View style={[styles.inputContainerStyle ]}>  
+          <Text style={[TextStyle.extraText,styles.text,styles.textLogo,{ marginBottom:verticalScale(15)}] }>{texts[swap].button}</Text>
            <Text
               style={[
                 TextStyle.mediumText,
@@ -300,7 +299,7 @@ class ProfileScreen extends BaseScreen {
                   )}
 
                 </View>
-                <View style={{position:'absolute', right:0  }}> 
+                <View style={{alignSelf:'flex-end' }}> 
                      {swap =="update" ? null : (
                       <Text
                       onPress={this.onPressForgot}
@@ -422,33 +421,25 @@ class ProfileScreen extends BaseScreen {
              <View
                 style={[
                   styles.socialBottomTextContainer,
-                  styles.linkContainerMargin, 
                   styles.endScreenText
                 ]}
               >
-              <Button
-                  loading={loading}
-                  buttonStyle={[styles.buttonStyle, {marginBottom:80}]}
-                  title={texts[swap]["bottonBtn"]}
-                  textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
-                  containerViewStyle={{width: '100%', marginLeft: 0, marginRight: 0}}
-                  onPress={this.onPressSave}
-                />
-              </View>  
-
-              <View
-                style={[
-                  styles.socialBottomTextContainer,
-                  styles.linkContainerMargin, 
-                  styles.endScreenText
-                ]}
-              >  
+                <View style={{flex:1,flexDirection:'column',justifyContent:'center'}}>
+                  <Button
+                    loading={loading}
+                    buttonStyle={[{backgroundColor:'transparent'}]}
+                    title={texts[swap]["bottonBtn"]}
+                    textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
+                    containerViewStyle={[styles.buttonStyle,{marginLeft:0,marginRight:0}]}
+                    onPress={this.onPressSave}
+                  />
+                </View>
                 <Text
-                  style={[TextStyle.smallText, styles.textButton, styles.link]}
-                  onPress={this.onPressLogout}
-                >  {  swap !="profile"  ? texts[swap].bottomText : texts["profile"].bottomText}
-                </Text>
-            </View>
+                  style={[TextStyle.smallText, styles.link]}
+                  onPress={this.onPressLogout}> 
+                  { swap !="profile"  ? texts[swap].bottomText : texts["profile"].bottomText}
+                </Text>  
+              </View>  
               
           </View>
         

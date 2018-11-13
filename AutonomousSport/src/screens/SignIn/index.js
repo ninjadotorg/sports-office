@@ -239,14 +239,16 @@ class SignInScreen extends BaseScreen {
     return (
       
       <KeyboardAvoidingView
-        style={[styles.containerStyle,{minHeight: (screenSize.height/2)}]}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : (-screenSize.height/3 + scale(30))}
-        contentContainerStyle={[{flex:1,flexGrow:1},{minHeight: (screenSize.height/2)}]}
+        // style={[styles.containerStyle,{minHeight: (screenSize.height/2)}]}
+        // keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : (-screenSize.height/3 + scale(30))}
+        // contentContainerStyle={[{flex:1,flexGrow:1},{minHeight: (screenSize.height/2)}]}
+        style={[styles.containerStyle]}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 64}
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
       > 
         <View style={[styles.inputContainerStyle]}>
           {swap =="signup" ? ( 
-            <View style={[styles.containerInput, {marginBottom:10 }]}>
+            <View style={[styles.containerInput, {marginBottom:verticalScale(7) }]}>
               <Text style={[TextStyle.normalText,styles.textLabel]}>Name</Text>
               
               <TextInput
@@ -259,10 +261,8 @@ class SignInScreen extends BaseScreen {
                 placeholderTextColor={color.placeHolder}
                 placeholder="Alice Smith"
               />
-          </View>
-            
-          ) : null}
-          <View style={[styles.containerInput, {marginBottom:10 }]}>
+          </View>) : null}
+          <View style={[styles.containerInput, {marginBottom:verticalScale(7) }]}>
             <Text style={[TextStyle.normalText,styles.textLabel]}>Email</Text>
             <TextInput
               ref={(email) => {
@@ -277,7 +277,7 @@ class SignInScreen extends BaseScreen {
             />
           </View>
           {swap !="forgot" ? ( 
-          <View style={[styles.containerInput, {marginBottom:10 }]}>
+          <View style={[styles.containerInput, {marginBottom:verticalScale(7) }]}>
             <Text style={[TextStyle.normalText,styles.textLabel]}>Password</Text>
             <TextInput
               placeholder="******"
@@ -310,7 +310,7 @@ class SignInScreen extends BaseScreen {
                     )*/}
 
                 </View>
-                <View style={{position:'absolute', right:0  }}> 
+                <View style={{alignSelf:'flex-end'  }}> 
                      
                   {swap !="signup" ? null :
 
@@ -323,7 +323,7 @@ class SignInScreen extends BaseScreen {
                   }
                       {swap =="forgot" ? null : (
                       <Text
-                      onPress={this.onPressForgot}
+                        onPress={this.onPressForgot}
                         style={[TextStyle.normalText,  
                         {textAlign:'right', color:'#02BB4F'}]} 
                       >
@@ -398,43 +398,40 @@ class SignInScreen extends BaseScreen {
           contentContainerStyle={styles.scrollView}> 
           {ViewUtil.SplashScreen({visible:isCheckingRegular})}
           <View style={styles.mainView}>
-          <Text style={[TextStyle.extraText,styles.text,styles.textLogo, {marginTop: 110 }] }>{texts[swap].button}</Text>
+            <Text style={[TextStyle.extraText,styles.text,styles.textLogo, {marginTop: verticalScale(50) }] }>{texts[swap].button}</Text>
             {this.renderSignInWithEmail()}  
 
             <View
                 style={[
-                  styles.socialBottomTextContainer,
-                  styles.linkContainerMargin, 
-                  styles.endScreenText
+                  styles.bottomContainer
                 ]}
               >
               <Button
                   loading={loading}
-                  buttonStyle={[styles.buttonStyle, {marginBottom:80}]}
+                  buttonStyle={[{backgroundColor:'transparent'}]}
                   title={texts[swap]["button"]}
                   textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
-                  containerViewStyle={{width: '100%', marginLeft: 0, marginRight: 0}}
+                  containerViewStyle={[styles.buttonStyle,{}]}
                   onPress={this.onPressSignIn}
                 />
-                </View>
-            <View
-                style={[
-                  styles.socialBottomTextContainer,
-                  styles.linkContainerMargin, 
-                  styles.endScreenText
-                ]}
-              >
-                <Text
-                  style={[TextStyle.smallText, styles.textButton, {color:'#91919c'}]}
-                >  {  swap !="forgot"  ? texts[swap].bottomText : texts["signin"].bottomText}
-                </Text>
+                
+                <View
+                    style={[
+                      styles.socialBottomTextContainer,
+                      styles.endScreenText,
+                      {}
+                    ]}
+                  >
+                  <Text style={[TextStyle.smallText, styles.textButton, {color:'#91919c'}]}
+                  >{swap !="forgot"  ? texts[swap].bottomText : texts["signin"].bottomText}</Text>
 
-                <Text
-                  style={[TextStyle.smallText, styles.textButton, styles.link]}
-                  onPress={()=>this.changeFuncti(swap) }
-                >  {  swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].bottonBtn}
-                </Text>
-            </View>
+                  <Text
+                    style={[TextStyle.smallText, styles.textButton, styles.link]}
+                    onPress={()=>this.changeFuncti(swap)}
+                  >  {swap !="forgot"  ? texts[swap].bottonBtn : texts["signin"].bottonBtn}
+                  </Text>
+                </View>
+              </View>
             {this.renderToastMessage()}
           </View>
         

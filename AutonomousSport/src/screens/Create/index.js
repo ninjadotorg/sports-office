@@ -68,8 +68,8 @@ class CreateRoomScreen extends BaseScreen {
       });
 
       const roomInfo = await ApiService.joinRandomRoom({});
-      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo); 
-      if (roomInfo?.session && roomInfo?.token ) {
+      console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);
+      if (roomInfo?.session && roomInfo?.token) {
         console.log(TAG, ' onPressRandomJoin 3 token ', roomInfo?.token);
 
         this.replaceScreen(
@@ -134,26 +134,6 @@ class CreateRoomScreen extends BaseScreen {
             borderRadius={0}
           />
         </View>
-        {/*<ButtonGroup
-          component={TouchableOpacity}
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          innerBorderStyle={{ color: 'transparent' }}
-          buttonStyle={styles.buttonItemStyle}
-          activeOpacity={0}
-          buttons={['Level 1', 'Level 2', 'Level 3', 'Level 4']}
-          textStyle={[TextStyle.normalText, styles.textStyleButton]}
-          selectedTextStyle={[
-            TextStyle.normalText,
-            styles.selectedTextStyleButton
-          ]}
-          underlayColor="transparent"
-          selectedButtonStyle={styles.selectedButtonStyle}
-          containerStyle={[
-            styles.buttonGroup,
-            { backgroundColor: 'transparent', borderWidth: 0 }
-          ]}
-        />*/}
       </View>
     );
   };
@@ -183,7 +163,10 @@ class CreateRoomScreen extends BaseScreen {
             />
             <Button
               title="New Racing"
-              buttonStyle={[styles.button, { backgroundColor: '#02BB4F', borderColor:'transparent' }]}
+              buttonStyle={[
+                styles.button,
+                { backgroundColor: '#02BB4F', borderColor: 'transparent' }
+              ]}
               textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
               onPress={this.onPressCreateRoom}
             />
