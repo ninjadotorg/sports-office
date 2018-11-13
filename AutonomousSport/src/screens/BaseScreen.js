@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 });
 const CONFIG_VOICE ={
   speechRate: 0.5,
-  speechPitch: 1
+  speechPitch: 1.25
 }
 class BaseScreen extends Component {
   constructor(props) {
@@ -74,24 +74,32 @@ class BaseScreen extends Component {
     Tts.setDefaultPitch(CONFIG_VOICE.speechPitch);
     Tts.getInitStatus().then(async ()=>{
       const voices = await Tts.voices();
-      const availableVoices = voices
-        .filter(v => !v.networkConnectionRequired && !v.notInstalled)
-        .map(v => {
-          return { id: v.id, name: v.name, language: v.language };
-        });
-      let selectedVoice = null;
+      // const availableVoices = voices
+      //   .filter(v => !v.networkConnectionRequired && !v.notInstalled)
+      //   .map(v => {
+      //     return { id: v.id, name: v.name, language: v.language };
+      //   });
+      let availableVoices = voices.filter(v =>  v.language.includes('en-US')&&v.language.includes('female'));
       if (availableVoices && availableVoices.length > 0) {
-        selectedVoice = voices[0].id;
+
+        let selectedVoice = availableVoices[0];
+        console.log(`setDefaultVoice  `,selectedVoice);
         try {
-          await Tts.setDefaultLanguage(availableVoices[0].language);
+          if(selectedVoice.notInstalled){
+            await Tts.requestInstallEngine();
+          };
+          await Tts.setDefaultLanguage(selectedVoice.language);
+          // await Tts.setDefaultLanguage('en-US');
         } catch (err) {
           // My Samsung S9 has always this error: "Language is not supported"
           if (err.code === 'no_engine') {
             Tts.requestInstallEngine();
           }
-          console.log(`setDefaultLanguage error `, err," language = ",availableVoices[0].language);
+          console.log(`setDefaultLanguage error `, err," language = ",selectedVoice.language);
         }
-        await Tts.setDefaultVoice(voices[0].id);
+        await Tts.setDefaultVoice(selectedVoice.id);
+
+        // await Tts.setDefaultVoice('en-us-x-sfg#female_2-local');
         this.initializedVoice = true;
       } else {
         this.initializedVoice = true;

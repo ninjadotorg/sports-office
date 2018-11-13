@@ -14,12 +14,11 @@ const wp = percentage => {
 const slideHeight = screenSize?.height * 0.36;
 const slideWidth = wp(50);
 const itemHorizontalMargin = wp(2);
- 
+
 const widthInput = screenSize.width / 3;
 
 export const sliderWidth = screenSize?.width || 100;
 export const itemWidth = slideWidth + itemHorizontalMargin * 2;
-
 
 export const color = {
   placeHolder: 'rgba(255,255,255,0.5)'
@@ -117,15 +116,16 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(20),
     justifyContent: 'space-around'
   },
-  button: { 
-  minWidth: scaleSize(100),
-  paddingHorizontal: scaleSize(20) ,
-  backgroundColor: '#02BB4F',
-  borderWidth: 1,
-  borderRadius: scaleSize(30),
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderColor: 'transparent' 
+  button: {
+    alignSelf: 'center',
+    width: scaleSize(100),
+    paddingHorizontal: scaleSize(20),
+    backgroundColor: '#02BB4F',
+    borderWidth: 1,
+    borderRadius: scaleSize(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'transparent'
   },
   containerInput: {
     alignSelf: 'center',
@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255,255,255,0.2)'
   },
   textLabel: { color: color.placeHolder, flex: 1, textAlignVertical: 'center' }
-
 });
 
 export default styles;
