@@ -103,7 +103,9 @@ class ChallengeScreen extends BaseScreen {
     }
   }
   onStreamDestroyed =(streamId)=>{
-    this.roomDataPrefference?.off('value');
+    if(streamId && !this.state.isLoadingAllScreen){
+      this.onPressClose(); 
+    }
   }
   getCurrentPoint = (currentPositionIndex = 0) => {
     let x,y = 0;
@@ -127,7 +129,6 @@ class ChallengeScreen extends BaseScreen {
     const pointStart = this.getCurrentPoint(currentPositionIndex);
     const futurePoint = this.getCurrentPoint(nextIndex);
     return Math.atan2(futurePoint.y - pointStart.y, futurePoint.x - pointStart.x) + Math.PI/2;
-    // return Math.atan2(futurePoint.y - pointStart.y, futurePoint.x - pointStart.x); 
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -308,20 +309,6 @@ class ChallengeScreen extends BaseScreen {
   }}/>
     </View>);
     
-    // return icons.markerPlayer({
-    //   color: color,
-    //   size: sizeIconRacing.width,
-    //   iconStyle:{
-    //     margin:0
-    //   },
-    //   containerStyle: {
-    //     paddingVertical:0,
-    //     paddingHorizontal:0,
-    //     position: 'absolute',
-    //     top: pos.y ,
-    //     left: pos.x
-    //   }
-    // });
   }
 
   componentDidMount() {
@@ -586,15 +573,19 @@ class ChallengeScreen extends BaseScreen {
     // this.props.disconnectBluetooth();
     this.roomDataPrefference?.off('value');
   }
-
+  leftRoom = ()=>{
+    const { room } = this.state;
+    this.props.leftRoom({ session: room?.session })
+  }
   onPressClose = this.onClickView(async () => {
     try {
-      const { room } = this.state;
+      
       this.showLoadingAllScreen = true;
-      await Util.excuteWithTimeout(this.props.leftRoom({ session: room?.session }),4);
+      this.roomDataPrefference?.off('value');
+      await Util.excuteWithTimeout(this.leftRoom(),4);
       
     } catch (error) {
-      this.showLoadingAllScreen = false;
+      // this.showLoadingAllScreen = false;
     }finally{
       this.replaceScreen(this.props.navigation, TAGCREATE);
     }
