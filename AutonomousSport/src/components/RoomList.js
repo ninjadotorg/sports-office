@@ -20,6 +20,10 @@ import ItemRoom from '@/components/ItemRoom';
 import { fetchRoom, joinRoom } from '@/actions/RoomAction';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { screenSize } from '@/utils/TextStyle';
+import images, { icons } from '@/assets';
+import TextStyle from '@/utils/TextStyle';
+import { verticalScale, moderateScale, scale } from 'react-native-size-matters';
+
 
 export const TAG = 'RoomList';
 const wp = percentage => {
@@ -39,6 +43,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop:60,
   },
+   containerImg: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   list: {
     flex: 1
   },
@@ -49,6 +59,14 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
     borderRadius: Platform.OS === 'ios' ? 8 : 0
+    // borderTopLeftRadius: entryBorderRadius,
+    // borderTopRightRadius: entryBorderRadius
+  },
+  imageIconNoroom: {
+    resizeMode: 'cover',
+    borderRadius: Platform.OS === 'ios' ? 8 : 0,
+    alignItems: 'center',
+    justifyContent: 'center'
     // borderTopLeftRadius: entryBorderRadius,
     // borderTopRightRadius: entryBorderRadius
   },
@@ -176,7 +194,7 @@ class RoomList extends Component {
   };
 
   renderHeader = () => {
-    return null;
+    return null ;
   }; 
 
   renderItem = ({ item, index }, parallaxProps) => {
@@ -232,7 +250,22 @@ class RoomList extends Component {
     //   </View>
     // );
     return (
-      <View style={styles.container}> 
+      <View style={styles.container}>  
+           {dataFilter.length ==0 ? 
+              <View style={[styles.containerImg, {marginTop:verticalScale(60)}]}>  
+                  <Image
+                      source={images.ic_norooms}
+                      style={[styles.imageIconNoroom, { resizeMode:  'cover',  height:scale(48), width:scale(48)  }]} 
+                  />
+                  <Text 
+                    style={[TextStyle.smallText, TextStyle.buttonText, {marginTop:verticalScale(10), color:"#8A8398"}]}
+                  >
+                  There are no rooms available
+                  </Text>
+              </View>
+
+          :null }
+
           <FlatList
           horizontal
           style={[styles.list, {}]}
