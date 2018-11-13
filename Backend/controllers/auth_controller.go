@@ -287,6 +287,9 @@ func (basectl *BaseController)CreateSession(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest,f21) 
 	}
 
+	//media_mode
+	 
+
 	ot := opentok.New(config.OPENTOK_API_KEY, config.OPENTOK_SCRET) 
 	s, err := ot.Session(nil) 
 
