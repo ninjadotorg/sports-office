@@ -242,7 +242,6 @@ class RoomList extends Component {
     //   </View>
     // );
     return (
-<<<<<<< HEAD
       <View style={styles.container}>  
            {dataFilter.length ==0 ? 
               <View style={[styles.containerImg, {marginTop:verticalScale(60)}]}>  
@@ -260,10 +259,6 @@ class RoomList extends Component {
           :null }
 
           <FlatList
-=======
-      <View style={styles.container}>
-        <FlatList
->>>>>>> 5be261d4a7650bc4c69f9f2c75c68d01a83005d2
           horizontal
           contentContainerStyle={{
             alignItems: 'center'
