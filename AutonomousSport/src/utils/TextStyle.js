@@ -1,5 +1,9 @@
 import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
+import {
+  moderateScale,
+  verticalScale,
+  scale as horizontalScale
+} from 'react-native-size-matters';
 import { COLOR } from '@/utils/Constants';
 
 const STATUSBAR_HEIGHT = StatusBar.currentHeight || 20;
@@ -25,11 +29,12 @@ export const scale = () => {
 
 export const fontSizeHeader = () => 15 * scale();
 
-export const FONT_FAMILY = Platform.OS === 'ios' ? 'Poppins' : 'poppins';
+export const FONT_FAMILY = Platform.OS === 'ios' ? 'Roboto' : 'Roboto';
 const TextStyle = StyleSheet.create({
   xxxExtraText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 60 * scale()
+    fontSize: verticalScale(60),
+    lineHeight: verticalScale(60)
   },
   xxExtraText: {
     fontFamily: FONT_FAMILY,
@@ -37,7 +42,7 @@ const TextStyle = StyleSheet.create({
   },
   xExtraText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 26 * scale()
+    fontSize: verticalScale(26)
   },
   extraText: {
     fontFamily: FONT_FAMILY,

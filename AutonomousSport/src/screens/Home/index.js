@@ -34,7 +34,7 @@ import * as Animatable from 'react-native-animatable';
 import Util from '@/utils/Util';
 
 export const TAG = 'HomeScreen';
-const sizeImageCenter = moderateScale(130);
+const sizeImageCenter = verticalScale(130);
 class HomeScreen extends BaseScreen {
   static navigationOptions = navigation => {
     return {
@@ -213,7 +213,7 @@ class HomeScreen extends BaseScreen {
           <Animatable.Image
             animation="pulse" 
             easing="ease-out" 
-            iterationCount={Math.ceil(speed)>0?1:0}
+            iterationCount={1}
             source={images.image_velocity}
             style={{
               position: 'absolute',
@@ -234,7 +234,7 @@ class HomeScreen extends BaseScreen {
               TextStyle.xExtraText,
               {
                 color: 'white',
-                fontWeight: '600',
+                fontWeight: 'bold',
                 opacity: 0.8,
                 marginTop: -10
               }
@@ -291,8 +291,8 @@ class HomeScreen extends BaseScreen {
           />
           <Button
             title="Start Racing" 
-            buttonStyle={[styles.button, {    minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F',borderWidth: 0 }]} 
-            textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+            buttonStyle={[styles.button, { minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F',borderWidth: 0 }]} 
+            textStyle={[TextStyle.mediumText, { fontWeight: '700' }]}
             onPress={this.onPressCreateRoom}
           />
         </View>

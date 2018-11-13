@@ -2,7 +2,7 @@ import { StyleSheet, Platform } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { screenSize } from '@/utils/TextStyle';
 
-const heightItem = (50 * screenSize.height) / 100;
+const heightItem = (60 * screenSize.height) / 100;
 const heightImage = (heightItem * 2) / 3;
 const widthImage = (heightImage * 12) / 12;
 
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(10),
     borderRadius: moderateScale(10),
     width: widthImage,
-    height: heightItem,
+    height: heightItem
   },
   containerItemsChecked: {
     borderColor: 'green',
@@ -63,11 +63,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    overflow: 'hidden', 
+    overflow: 'hidden'
   },
-  image: { width: widthImage, height: heightImage, 
-    borderTopLeftRadius:10,
-    borderTopRightRadius:10, }
+  image: {
+    width: widthImage,
+    height: heightImage,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
+  }
   // image: {
   //   ...StyleSheet.absoluteFillObject,
   //   resizeMode: 'cover',

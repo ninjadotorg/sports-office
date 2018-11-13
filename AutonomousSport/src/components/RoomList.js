@@ -39,9 +39,7 @@ export const sliderWidth = screenSize?.width || 100;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
-    padding: 10,
-    marginTop:60,
+    paddingHorizontal: 10
   },
    containerImg: {
     flex: 1,
@@ -117,28 +115,31 @@ class RoomList extends Component {
   // }
   componentWillReceiveProps(nextProps) {
     const { data, joinRoom, levelFillter } = this.state;
-    const newData = nextProps?.roomList?.list || data; 
+    const newData = nextProps?.roomList?.list || data;
     if (JSON.stringify(newData) !== JSON.stringify(data)) {
       //console.log(TAG, ' componentWillReceiveProps - room list ');
-      this.updateListRoom(newData, nextProps.levelIndex); 
+      this.updateListRoom(newData, nextProps.levelIndex);
     } else if (
-       nextProps?.joinRoomData['token'] && 
+      nextProps?.joinRoomData['token'] &&
       JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
     ) {
       const { itemSelected = {} } = this.state;
-      itemSelected['token'] = nextProps?.joinRoomData['token'];  
+      itemSelected['token'] = nextProps?.joinRoomData['token'];
       //console.log(TAG, ' componentWillReceiveProps - JoinRoom session ', nextProps?.joinRoomData?.room?.session);
-      console.log(TAG, ' componentWillReceiveProps - JoinRoom session itemSelected ', itemSelected);
-      if(itemSelected?.session){
-          this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
+      console.log(
+        TAG,
+        ' componentWillReceiveProps - JoinRoom session itemSelected ',
+        itemSelected
+      );
+      if (itemSelected?.session) {
+        this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
       }
     }
-    
-    //console.log(TAG, ' updateListRoom ', nextProps?.levelIndex, newData);
-    if (nextProps?.levelIndex !== this.props.levelIndex ) {
-         this.updateListRoom(newData, nextProps.levelIndex);
-    }
 
+    //console.log(TAG, ' updateListRoom ', nextProps?.levelIndex, newData);
+    if (nextProps?.levelIndex !== this.props.levelIndex) {
+      this.updateListRoom(newData, nextProps.levelIndex);
+    }
   }
 
   updateListRoom = (data = [], levelIndex = 0) => {
@@ -155,31 +156,28 @@ class RoomList extends Component {
     if (levelIndex == 3) {
       levelf = { min: 50, max: 10000 };
     }
-  
-  
+
     data.sort(function(a, b) {
       return b.id - a.id;
     });
 
-    const datal =  data?.filter( 
-                      room => room.miles <= levelf.max && room.miles >= levelf.min
-                      ) || [];
+    const datal =
+      data?.filter(
+        room => room.miles <= levelf.max && room.miles >= levelf.min
+      ) || [];
 
-     
     this.setState({
       data: data,
       levelFillter: levelf,
       dataFilter: datal
     });
   };
-  
-  joinRoomSelect =(item)=>{
 
-      console.log("joinRoomSelect",item);
-      if(item.session !=""){
-        this.props.joinRoom({ session: item.session });
-      }
-
+  joinRoomSelect = item => {
+    console.log('joinRoomSelect', item);
+    if (item.session != '') {
+      this.props.joinRoom({ session: item.session });
+    }
   };
   handleRefresh = () => {
     return this.state.refreshing;
@@ -187,15 +185,14 @@ class RoomList extends Component {
 
   handleLoadMore = () => {};
 
-
   renderLoading = () => {
     if (!this.state.isFetching) return null;
     return ViewUtil.loadingComponent();
   };
 
   renderHeader = () => {
-    return null ;
-  }; 
+    return null;
+  };
 
   renderItem = ({ item, index }, parallaxProps) => {
     return (
@@ -204,20 +201,15 @@ class RoomList extends Component {
         onItemSelected={itemId => {
           if (item?.session) {
             // create token from session
-            this.setState(
-              {
-                itemSelected: item
-              },
-              () => { 
-                 this.joinRoomSelect(item) 
-              }
-            );
+            this.joinRoomSelect(item);
+            this.setState({
+              itemSelected: item
+            });
           }
         }}
         parallaxProps={parallaxProps}
         dataItem={item}
       />
- 
     );
   };
 
@@ -250,6 +242,7 @@ class RoomList extends Component {
     //   </View>
     // );
     return (
+<<<<<<< HEAD
       <View style={styles.container}>  
            {dataFilter.length ==0 ? 
               <View style={[styles.containerImg, {marginTop:verticalScale(60)}]}>  
@@ -267,7 +260,14 @@ class RoomList extends Component {
           :null }
 
           <FlatList
+=======
+      <View style={styles.container}>
+        <FlatList
+>>>>>>> 5be261d4a7650bc4c69f9f2c75c68d01a83005d2
           horizontal
+          contentContainerStyle={{
+            alignItems: 'center'
+          }}
           style={[styles.list, {}]}
           ListHeaderComponent={this.renderHeader}
           data={dataFilter}
