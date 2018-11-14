@@ -17,6 +17,7 @@ import images from '@/assets';
 import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
 import Tts from 'react-native-tts';
+import ApiService from '@/services/ApiService';
 
 export const TAG = 'BaseScreen';
 const styles = StyleSheet.create({
@@ -145,18 +146,22 @@ class BaseScreen extends Component {
       try {
         const {roomInfo} = this.state;
         //call to APIs get infor....  
-        console.log(TAG, ' onPressJoinNow - joinRoom = ', this.state.roomInfo);
-        const response = await ApiService.joinRoom({session: this.state.roomInfo.session});
-        console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
-        if(response?.room?.token){
-            this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
-        }else{
-          this.showDialogInvite(false);
-          this.setState({errorMessage:true});
-        }  
+        if(!_.isEmpty(roomInfo)){
+          console.log(TAG, ' onPressJoinNow - joinRoom = ', roomInfo);
+          const response = await ApiService.joinRoom({session: roomInfo.session});
+          console.log(TAG, ' onPressJoinNow - joinRoom = ', response);
+          if(response?.room?.token){
+              this.replaceScreen(this.props.navigation,"ChallengeScreen",response.room);
+          }else{
+            // this.showDialogInvite(false);
+            this.setState({errorMessage:true});
+          } 
+        } 
 
       } catch (error) {
         
+      }finally{
+        this.showDialogInvite(false);
       }
       
     }
