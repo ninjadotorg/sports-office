@@ -153,6 +153,7 @@ class ItemFriend extends PureComponent {
               alignItems: 'center',
               alignSelf: 'center'
             }}
+            textStyle={[TextStyle.mediumText]}
             buttonStyle={{
               borderWidth: 1,
               borderColor: dataItem?.is_add_invited ? '#76717f' : 'transparent'
@@ -174,11 +175,13 @@ class ItemFriend extends PureComponent {
             fontSize={12 * scale()}
             containerViewStyle={{
               marginRight: 0,
+              minWidth: verticalScale(85),
+              alignItems: 'center',
               alignSelf: 'center'
             }}
             buttonStyle={{
-              height: verticalScale(24),
-              width: verticalScale(80),
+              // height: verticalScale(24),
+              // width: verticalScale(80),
               borderWidth: 1,
               borderColor: dataItem?.is_maked_friend ? '#76717f' : 'transparent'
             }}

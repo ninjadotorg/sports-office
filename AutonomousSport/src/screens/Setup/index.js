@@ -29,7 +29,7 @@ import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 import ViewUtil,{delayCallingManyTime} from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
 import { disconnectBluetooth } from '@/actions/RaceAction';
-import { scale } from 'react-native-size-matters';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -471,7 +471,7 @@ class SetupScreen extends BaseScreen {
           <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:10}]}>
             Welcome to <Text style={{fontWeight: "bold"}}>Autonomous Bike</Text>. Please connect the app to<Text style={{fontWeight: "bold"}}> the Bike via Bluetooth</Text>.
           </Text>
-          <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:50}]}>
+          <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:verticalScale(30)}]}>
             Select <Text style={{fontWeight: "bold"}}>Autonomous Bike</Text> below:
           </Text>
           {isLoading ? (
