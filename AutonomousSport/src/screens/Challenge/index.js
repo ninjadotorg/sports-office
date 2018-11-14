@@ -316,36 +316,36 @@ class ChallengeScreen extends BaseScreen {
     // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
-    
-    if(lastIndexPosition < currentPositionIndex){
-      
-      const tempIndex = Math.ceil(lastIndexPosition);
-      const nextPoint = this.getCurrentPoint(tempIndex);
-      
-      if(tempIndex!== currentPositionIndex){
-        // console.log(TAG,' updateHandler nextPoint begin');
-        const {pos = this.posInit} = this.state;
-        let angle = this.getAngleWithCurrentPoint(tempIndex);
-        console.log(TAG,' updateHandler nextPoint angle ',angle);
-      
-        // if((Math.abs(angle - pos.rotate)<limitToRotate)){
-        //   console.log(TAG,' updateHandler not over tempIndex = ',tempIndex);
-        //   angle = pos.rotate;
-        // }
-        pos.rotate += (angle - pos.rotate)*time.delta/1000;
-        console.log(TAG,' updateHandler nextPoint angle01 = ',angle," limitToRotate = ",limitToRotate);
-        const posNew = {
-          x:nextPoint.x,
-          y:nextPoint.y,
-          rotate:pos.rotate
-        };
-        this.setState({
-          pos:posNew
-        });
-        lastIndexPosition += (currentPositionIndex - lastIndexPosition)*time.delta/1000;
+    if(this.state.isReady && lastIndexPosition < currentPositionIndex){
+      let tempIndex = lastIndexPosition + (currentPositionIndex - lastIndexPosition)*time.delta/1000;  
+      if(Math.ceil(tempIndex) === Math.ceil(lastIndexPosition)){
+        lastIndexPosition = tempIndex;
+        // return;
       }else{
-        lastIndexPosition = currentPositionIndex;
-      }
+        tempIndex = Math.ceil(lastIndexPosition);
+        const nextPoint = this.getCurrentPoint(tempIndex);
+        
+        if(tempIndex!== currentPositionIndex){
+          // console.log(TAG,' updateHandler nextPoint begin');
+          const {pos = this.posInit} = this.state;
+          let angle = this.getAngleWithCurrentPoint(tempIndex);
+          console.log(TAG,' updateHandler nextPoint angle ',angle, " - tempIndex = ",tempIndex);
+        
+          // pos.rotate += (angle - pos.rotate)*time.delta/1000;
+          const posNew = {
+            x:nextPoint.x,
+            y:nextPoint.y,
+            rotate:angle
+          };
+          this.setState({
+            pos:posNew
+          });
+          lastIndexPosition += (currentPositionIndex - lastIndexPosition)*time.delta/1000;
+        }else{
+          lastIndexPosition = currentPositionIndex;
+        }
+      };
+      
       
     }
 
@@ -359,7 +359,8 @@ class ChallengeScreen extends BaseScreen {
       if (!_.isEmpty(player) && !player.isMe) {
         indexPosition = Math.ceil((this.listPoint.length * player.goal) / 100);
         lastIndex  = listLastIndexPosition[player.fbuid]||0;
-        if(lastIndex <indexPosition){
+        // console.log(TAG,' updateHandler - players.map indexPosition = ',indexPosition,' lastIndex = ',lastIndex);
+        if(lastIndex < indexPosition){
           isHaveChange = true;
           lastIndex += (indexPosition - lastIndex)*time.delta/1000;
         }else{
@@ -372,6 +373,7 @@ class ChallengeScreen extends BaseScreen {
     });
 
     if(isHaveChange || playersMarker?.length!== markers?.length){
+      console.log(TAG,' updateHandler - player change');
       this.setState({
         playersMarker:markers
       });     
@@ -571,11 +573,11 @@ class ChallengeScreen extends BaseScreen {
   componentWillUnmount() {
     console.log(TAG, ' componentWillUnmount ok');
     // this.props.disconnectBluetooth();
-    this.roomDataPrefference?.off('value');
+    // this.roomDataPrefference?.off('value');
   }
   leftRoom = ()=>{
     const { room } = this.state;
-    this.props.leftRoom({ session: room?.session })
+    this.props.leftRoom({ session: room?.session });
   }
   onPressClose = this.onClickView(async () => {
     try {
@@ -585,7 +587,7 @@ class ChallengeScreen extends BaseScreen {
       await Util.excuteWithTimeout(this.leftRoom(),4);
       
     } catch (error) {
-      // this.showLoadingAllScreen = false;
+      this.showLoadingAllScreen = false;
     }finally{
       this.replaceScreen(this.props.navigation, TAGCREATE);
     }
