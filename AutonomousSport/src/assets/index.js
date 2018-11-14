@@ -24,7 +24,8 @@ const images = {
   ic_racer1: require('@/assets/images/ic_racer1.png'),
   ic_no_friend_list: require('@/assets/images/nofriends.png'),
   ic_backtop: require('@/assets/images/ic_back.png'),
-  ic_check: require('@/assets/images/check.png')
+  ic_check: require('@/assets/images/check.png'),
+  ic_norooms: require('@/assets/images/norooms.png')
 };
 export const icons = {
   close: ({
