@@ -133,7 +133,7 @@ class ChooseRoundScreen extends BaseScreen {
     
     return (
       <ImageBackground style={[styles.container]} source={images.backgroundx}> 
-        <View style={styles.container}>
+        
           <Header backgroundColor="transparent" outerContainerStyles={{borderBottomWidth:0}} >
             {this.renderLeftHeader()}
           </Header>
@@ -176,7 +176,6 @@ class ChooseRoundScreen extends BaseScreen {
             />
           </View>
           {this.initDialogInvite()}
-        </View>
         </ImageBackground>
     );
   }

@@ -148,15 +148,8 @@ class HomeScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
     this.props.getUser();
-    //this.showDialogInvite(true);
+    // this.showDialogInvite(true);
     this.onPressReset();
-    // console.log(
-    //   TAG,
-    //   ' componentDidMount width = ',
-    //   screenSize.width,
-    //   ' height = ',
-    //   screenSize.height
-    // );
   }
 
   // componentWillUnmount() {

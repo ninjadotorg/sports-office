@@ -42,7 +42,7 @@ class MapList extends Component {
     itemSelected: 0
   };
   componentDidMount() {
-    this.props.fetchMap({ offset: 0, limit: 100 });
+    this.handleRefresh();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,22 +56,28 @@ class MapList extends Component {
       //   JSON.stringify(nextProps?.user)
       // );
       // this.fetchData();
-     let data = nextProps?.mapList.list || [];
-     data.sort(function(a, b) {
-       return a.miles - b.miles;
-     }); 
+      let data = nextProps?.mapList.list || [];
+      data.sort(function(a, b) {
+        return a.miles - b.miles;
+      });
 
       this.setState({
-        data: data
+        data: data,
+        refreshing: false
       });
     }
   }
 
-  handleRefresh = () => {
-    return this.state.refreshing;
-  };
+  handleRefresh = onClickView(() => {
+    if (!this.state.refreshing) {
+      this.setState({
+        refreshing: true
+      });
+      this.props.fetchMap({ offset: 0, limit: 100 });
+    }
+  });
 
-  handleLoadMore = () => {};
+  handleLoadMore = onClickView(() => {});
 
   renderLoading = () => {
     if (!this.state.isFetching) return null;
@@ -107,9 +113,9 @@ class MapList extends Component {
   };
 
   render() {
-    const { data, isFetching } = this.state;
+    const { data, isFetching, refreshing } = this.state;
     return (
-      <View style={[styles.container,{paddingBottom:100}]}>
+      <View style={[styles.container, {}]}>
         <FlatList
           horizontal
           style={[styles.list, {}]}
@@ -120,7 +126,7 @@ class MapList extends Component {
           renderItem={this.renderItem}
           onEndReachedThreshold={0.7}
           onRefresh={this.handleRefresh}
-          refreshing={isFetching}
+          refreshing={refreshing}
           onEndReached={this.handleLoadMore}
           ListFooterComponent={this.renderLoading}
         />
