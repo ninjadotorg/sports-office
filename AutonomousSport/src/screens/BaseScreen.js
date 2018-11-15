@@ -29,13 +29,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     width: '35%',
-    height: verticalScale(50),
+    height:45,
+    alignItems: 'center',
+    justifyContent:'center',
     backgroundColor: 'transparent',
     borderColor: '#21c364',
     marginRight:0,
     marginLeft:0,
-    // minWidth: scaleSize(100),
-    // paddingHorizontal: scaleSize(18)
+    paddingVertical:1
   }
 });
 const CONFIG_VOICE ={
@@ -185,11 +186,11 @@ class BaseScreen extends Component {
             }
         });
     } 
-    const uri = 'https://storage.googleapis.com/oskar-ai/1/HongKong_nNYONeB1BpzY331lNoD9.jpg' || this.state.roomInfo?.Map?.cover;
+    const uri =  this.state.roomInfo?.Map?.cover||'https://storage.googleapis.com/oskar-ai/1/HongKong_nNYONeB1BpzY331lNoD9.jpg';
     return (
       <PopupDialog
-        width="80%"
-        height="60%"
+        width="50%"
+        height="35%"
         hasOverlay
         dismissOnTouchOutside={false}
         ref={popupDialog => {
@@ -207,14 +208,15 @@ class BaseScreen extends Component {
                     lineHeight:35,
                     color: 'black',
                     flex: 1,
-                    paddingHorizontal: 10
+                    paddingHorizontal: 10,
+                    textAlign:'left'
                   }
                 ]}
               > 
                 <Text style={[
                   TextStyle.mediumText,
                   { fontWeight: 'bold' }
-                ]}>  {this.state.playername }</Text>
+                ]}>{this.state.playername||'' }</Text>
                 <Text style={[
                   TextStyle.mediumText,
                   { }
@@ -223,13 +225,13 @@ class BaseScreen extends Component {
                 <Text style={[
                   TextStyle.mediumText,
                   { fontWeight: 'bold', color: 'black' }
-                ]}> {`${this.state.roomInfo?.Map?.name || ''} (${this.state.roomInfo?.miles||'0'} Miles)`}</Text>
+                ]}>{`${this.state.roomInfo?.Map?.name || ''} (${this.state.roomInfo?.miles||'0'} Miles)`}</Text>
               
               </Text>
 
               { this.state.errorMessage ? 
                   <Text style={[ TextStyle.mediumText,{ lineHeight:35, color: 'black', flex: 1, paddingHorizontal: 10 }]}> 
-                     zSorry, Your room not aready to join.
+                     Sorry, Your room not aready to join.
                   </Text>
                : null }
               <View
@@ -257,7 +259,6 @@ class BaseScreen extends Component {
                   containerViewStyle={[
                     styles.button,
                     {
-                     
                       backgroundColor: '#21c364'
                     }
                   ]}
