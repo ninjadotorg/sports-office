@@ -295,15 +295,14 @@ export default class ApiService {
     return response;
   }
 
-  static async joinRandomRoom({}): Room {
+  static async joinRandomRoom({}) {
     const url = Api.JOIN_RANDOM_ROOM;
-    // const response = await ApiService.getURL(METHOD.GET, url, {
-    //   session: session
-    // });
     const response = await ApiService.getURL(METHOD.GET, url, {});
 
     console.log(TAG, ' - joinRandomRoom = ', response);
-    return !_.isEmpty(response) ? new Room(response?.room) : null;
+    return !_.isEmpty(response) && String(response.status) === '1'
+      ? new Room(response?.room)
+      : response;
   }
 
   static async startRacing({ session }): Room {

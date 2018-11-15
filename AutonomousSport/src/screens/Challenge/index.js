@@ -38,19 +38,16 @@ let heightMap = screenSize.height;
 const dialogPercentHeight = 0.8;
 const dialogHeightImage = screenSize.height*dialogPercentHeight;
 const colors = ['purple','blue','yellow','green'];
-let lastIndexPosition = 0;
-let currentPositionIndex = 0;
-let listLastIndexPosition = {};
+
 const limitToRotate = (60) * (Math.PI/180);
 const FastImageView = createImageProgress(FastImage);
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
-    // console.log("ChallengeScreen",room);
-    // if(room.session == ""){
-      
-    // }
+    this.lastIndexPosition = 0;
+    this.currentPositionIndex = 0;
+    this.listLastIndexPosition = {};
     // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
     const { width = 0, height = 1 } = room?.getMapSize()||{};
     console.log(TAG,' constructor widthRealMap = ',width,' heightRealMap = ',height);
@@ -93,7 +90,7 @@ class ChallengeScreen extends BaseScreen {
 
   onStreamCreated =(streamId)=>{
 
-    console.log("ChallengeScreen streamId",streamId);
+    console.log(TAG,' ChallengeScreen streamId ',streamId);
 
     const {user} = this.state;
     // push stream Id on firebase
@@ -177,7 +174,7 @@ class ChallengeScreen extends BaseScreen {
 
         const indexPosition = Math.ceil((this.listPoint.length * goalPercentNumber) / 100);
         const isFinished = goal>=100;
-        currentPositionIndex = indexPosition;
+        this.currentPositionIndex = indexPosition;
         this.setState({
           isFinished:isFinished,
           isLoading:false,
@@ -316,16 +313,17 @@ class ChallengeScreen extends BaseScreen {
     // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
-    if(this.state.isReady && lastIndexPosition < currentPositionIndex){
-      let tempIndex = lastIndexPosition + (currentPositionIndex - lastIndexPosition)*time.delta/1000;  
-      if(Math.ceil(tempIndex) === Math.ceil(lastIndexPosition)){
-        lastIndexPosition = tempIndex;
+    console.log(TAG,' updateHandler begin lastIndexPosition = ',this.lastIndexPosition, ' currentPositionIndex = ',this.currentPositionIndex);
+    if(this.state.isReady && this.lastIndexPosition < this.currentPositionIndex){
+      let tempIndex = this.lastIndexPosition + (this.currentPositionIndex - this.lastIndexPosition)*time.delta/1000;  
+      if(Math.ceil(tempIndex) === Math.ceil(this.lastIndexPosition)){
+        this.lastIndexPosition = tempIndex;
         // return;
       }else{
-        tempIndex = Math.ceil(lastIndexPosition);
+        tempIndex = Math.ceil(this.lastIndexPosition);
         const nextPoint = this.getCurrentPoint(tempIndex);
         
-        if(tempIndex!== currentPositionIndex){
+        if(tempIndex!== this.currentPositionIndex){
           // console.log(TAG,' updateHandler nextPoint begin');
           const {pos = this.posInit} = this.state;
           let angle = this.getAngleWithCurrentPoint(tempIndex);
@@ -340,9 +338,9 @@ class ChallengeScreen extends BaseScreen {
           this.setState({
             pos:posNew
           });
-          lastIndexPosition += (currentPositionIndex - lastIndexPosition)*time.delta/1000;
+          this.lastIndexPosition += (this.currentPositionIndex - this.lastIndexPosition)*time.delta/1000;
         }else{
-          lastIndexPosition = currentPositionIndex;
+          this.lastIndexPosition = this.currentPositionIndex;
         }
       };
       
@@ -358,7 +356,7 @@ class ChallengeScreen extends BaseScreen {
     const markers =  players.map(player => {
       if (!_.isEmpty(player) && !player.isMe) {
         indexPosition = Math.ceil((this.listPoint.length * player.goal) / 100);
-        lastIndex  = listLastIndexPosition[player.fbuid]||0;
+        lastIndex  = this.listLastIndexPosition[player.fbuid]||0;
         // console.log(TAG,' updateHandler - players.map indexPosition = ',indexPosition,' lastIndex = ',lastIndex);
         if(lastIndex < indexPosition){
           isHaveChange = true;
@@ -366,7 +364,7 @@ class ChallengeScreen extends BaseScreen {
         }else{
           lastIndex = indexPosition;
         };
-        listLastIndexPosition[player.fbuid] = lastIndex||0;
+        this.listLastIndexPosition[player.fbuid] = lastIndex||0;
         nextPoint = this.getCurrentPoint(Math.ceil(lastIndex));
         return this.createMarkerWithPosition(nextPoint,playersColor[player.fbuid]);
       }

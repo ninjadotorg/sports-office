@@ -427,9 +427,9 @@ class ProfileScreen extends BaseScreen {
                 <View style={{flex:1,flexDirection:'column',justifyContent:'center'}}>
                   <Button
                     loading={loading}
-                    buttonStyle={[{backgroundColor:'transparent'}]}
+                    buttonStyle={[{backgroundColor:'transparent',flex:1}]}
                     title={texts[swap]["bottonBtn"]}
-                    textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
+                    textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold',flex:1}]}
                     containerViewStyle={[styles.buttonStyle,{marginLeft:0,marginRight:0}]}
                     onPress={this.onPressSave}
                   />

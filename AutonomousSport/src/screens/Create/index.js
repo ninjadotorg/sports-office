@@ -22,6 +22,7 @@ import RoomList from '@/components/RoomList';
 
 import { connect } from 'react-redux';
 import { fetchUser } from '@/actions/UserAction';
+import Room from '@/models/Room';
 
 export const TAG = 'CreateRoomScreen';
 const component1 = () => <Text>Hello</Text>;
@@ -69,7 +70,7 @@ class CreateRoomScreen extends BaseScreen {
 
       const roomInfo = await ApiService.joinRandomRoom({});
       console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);
-      if (roomInfo?.session && roomInfo?.token) {
+      if (roomInfo instanceof Room && roomInfo?.session && roomInfo?.token) {
         console.log(TAG, ' onPressRandomJoin 3 token ', roomInfo?.token);
 
         this.replaceScreen(
@@ -77,6 +78,10 @@ class CreateRoomScreen extends BaseScreen {
           TAGCHALLENGE,
           roomInfo.toJSON()
         );
+      } else {
+        ////
+        console.log(TAG, ' onPressRandomJoin show message ', roomInfo['message']);
+        this.showToastMessage(roomInfo['message']);
       }
     } catch (error) {
     } finally {
@@ -133,6 +138,7 @@ class CreateRoomScreen extends BaseScreen {
             ]}
             borderRadius={0}
           />
+         
         </View>
       </View>
     );
@@ -172,6 +178,7 @@ class CreateRoomScreen extends BaseScreen {
             />
           </View>
           {this.initDialogInvite()}
+          {this.renderToastMessage()}
         </View>
       </ImageBackground>
     );

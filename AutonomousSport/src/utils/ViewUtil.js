@@ -80,7 +80,7 @@ const ViewUtil = {
               }
             ]}
           >
-            AUTONOMOUS BIKE
+            VELO
           </Text>
         </View>
       </View>
