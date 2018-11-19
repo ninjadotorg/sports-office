@@ -16,46 +16,47 @@ import (
 	//"github.com/labstack/echo"
 	"github.com/dgrijalva/jwt-go"
 )
- 
+
 // User ...
-type User struct { 
-	ID         int        `json:"id" gorm:"primary_key"`
-	CreatedAt *time.Time `json:"createdAt, omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
-	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
-	Fullname  string `json:"fullname, omitempty" gorm:"not null; type:varchar(100)"` 
-	Email     string `json:"email, omitempty" gorm:"type:varchar(100);unique;unique_index"`
-	Password  string `json:"password, omitempty" gorm:"not null; type:varchar(100)"`  
-	PhotoUrl  string `json:"photoUrl, omitempty" gorm:"type:varchar(100)"`
+type User struct {
+	ID         int        `json:"id"gorm:"primary_key"`
+	CreatedAt * time.Time `json:"createdAt, omitempty"`
+	UpdatedAt * time.Time `json:"updatedAt, omitempty"`
+	DeletedAt * time.Time `json:"deletedAt, omitempty"sql:"index"`  
+	Fullname  string `json:"fullname, omitempty"gorm:"not null; type:varchar(100)"` 
+	Email     string `json:"email, omitempty"gorm:"type:varchar(100);unique;unique_index"`
+	Password  string `json:"password, omitempty"gorm:"not null; type:varchar(100)"`  
+	Fbpass    string `json:"password, omitempty"gorm:"not null; type:varchar(100)"`  
+	PhotoUrl  string `json:"photoUrl, omitempty"gorm:"type:varchar(100)"`
 	Profile  Profile 
 	ProfileID  int
-	Fbuid 	string `json:"fbuid, omitempty" gorm:"type:varchar(100)"`
+	Fbuid 	string `json:"fbuid, omitempty"gorm:"type:varchar(100)"`
 
 }
 
 // User ...
-type UserView struct { 
-	ID         int        `json:"id" gorm:"primary_key"`
-	CreatedAt *time.Time `json:"createdAt, omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
-	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
-	Fullname   string `json:"fullname, omitempty" gorm:"not null; type:varchar(100)"` 
-	Email      string `json:"email, omitempty" gorm:"type:varchar(100);unique;unique_index"` 
-	PhotoUrl   string `json:"photoUrl, omitempty" gorm:"type:varchar(100)"`
+type UserView struct {
+	ID         int        `json:"id"gorm:"primary_key"`
+	CreatedAt * time.Time `json:"createdAt, omitempty"`
+	UpdatedAt * time.Time `json:"updatedAt, omitempty"`
+	DeletedAt * time.Time `json:"deletedAt, omitempty"sql:"index"`  
+	Fullname   string `json:"fullname, omitempty"gorm:"not null; type:varchar(100)"` 
+	Email      string `json:"email, omitempty"gorm:"type:varchar(100);unique;unique_index"` 
+	PhotoUrl   string `json:"photoUrl, omitempty"gorm:"type:varchar(100)"`
 	Profile  Profile   
 	ProfileID  int
-	Fbuid 	string `json:"fbuid, omitempty" gorm:"type:varchar(100)"`
+	Fbuid 	string `json:"fbuid, omitempty"gorm:"type:varchar(100)"`
 	IsMakeFriend  bool `json:"is_maked_friend"`
 }
- 
+
 // User ...
-type Profile struct { 
-	ID        int        `json:"id" gorm:"primary_key"`
-	CreatedAt *time.Time `json:"createdAt, omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt, omitempty"`
-	DeletedAt *time.Time `json:"deletedAt, omitempty" sql:"index"`  
-	Kcal 	  float64 `json:"kcal, omitempty" gorm:"not null"` 
-	Miles   float64  `json:"miles, omitempty" gorm:"not null"` 
+type Profile struct {
+	ID        int        `json:"id"gorm:"primary_key"`
+	CreatedAt * time.Time `json:"createdAt, omitempty"`
+	UpdatedAt * time.Time `json:"updatedAt, omitempty"`
+	DeletedAt * time.Time `json:"deletedAt, omitempty"sql:"index"`  
+	Kcal 	  float64 `json:"kcal, omitempty"gorm:"not null"` 
+	Miles   float64  `json:"miles, omitempty"gorm:"not null"` 
 }
 
 // TableName set User's table name to be `profiles`
@@ -64,7 +65,7 @@ func (Profile) TableName() string {
 }
 
 // TableName set User's table name to be `profiles`
-func (UserView) TableName() string {
+func (UserView)TableName()string {
 	return "users"
 }
 

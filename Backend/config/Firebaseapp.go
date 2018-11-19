@@ -2,26 +2,27 @@ package config
 
 import (
 	"log" 
+	"os"  
 	"golang.org/x/net/context" 
 	firebase "firebase.google.com/go"
 	//"firebase.google.com/go/auth" 
 	"google.golang.org/api/option"
 )
-    
+
 //=========firebase init =====
 // dat, _ := ioutil.ReadFile("../firebase.json")
 
 var firebaseApp *firebase.App
 
 
-func InitFB() *firebase.App {  
-	fbconfig := &firebase.Config{
-		DatabaseURL: "https://smart-trash-188411.firebaseio.com",
+func InitFB() *firebase.App {
+	fbconfig :=  & firebase.Config {
+		DatabaseURL : os.Getenv("FIREBASE_DATABASE_URL"), 
 	}
 
 	firebaseOpt := option.WithCredentialsFile("firebase.json")
 
-	fbctx :=context.Background()
+	fbctx := context.Background()
 
 	firebaseApp, err := firebase.NewApp(fbctx, fbconfig, firebaseOpt)
 	if err != nil {
@@ -53,11 +54,10 @@ func InitFB() *firebase.App {
 		Content: "",
 		Amount: 1,
 		WinAmount: "0.1", //FormatFloat(3.1415, 'E', -1, 64)
-		Symbol:    "ETH",
-		Chance: 4700,
-		Bet:	98733,
-		Win: 1,
-	} ); err != nil {
-		fmt.Printf("Error setting value: %v ", err) 
-	}
-	*/
+		Symbol:"ETH", 
+		Chance:4700, 
+		Bet:	98733, 
+		Win:1, 
+	}); err != nil {
+		fmt.Printf("Error setting value: %v ", err)
+	} */
