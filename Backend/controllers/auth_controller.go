@@ -181,7 +181,8 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	if user.ID <=0 {
 		user = new(models.User)  
 		user.Email = c.FormValue("email")
-		user.Password, _ = models.HashPassword(c.FormValue("password"))  
+		user.Password, _  = models.HashPassword(c.FormValue("password"))   
+		user.Fbpass, _  = models.HashPassword(c.FormValue("password"))   
 		user.Fullname = c.FormValue("fullname") 
 		detectUsername := strings.Split(user.Email, "@")
 		if c.FormValue("fullname") == ""{
@@ -212,7 +213,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 		params := (&auth.UserToCreate{}).
 		Email(user.Email).
 		EmailVerified(false). 
-		Password(user.Password ).   
+		Password(user.Fbpass ).   
 		Disabled(false)
 		fbuser2, err := client.CreateUser(ctnx, params)
 		if err != nil {
@@ -1049,7 +1050,7 @@ func (basectl *BaseController)UpdatePassword(c echo.Context) error{
 			return c.JSON(http.StatusBadRequest,f2) 
 		}
 
-		usermodel.Password, _ = models.HashPassword(Npassword)   
+		usermodel.Password, _  = models.HashPassword(Npassword)   
 
 		basectl.Dao.Save(&usermodel)
 		
