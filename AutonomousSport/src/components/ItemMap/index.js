@@ -1,15 +1,15 @@
 import React, { Component, PureComponent } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { Avatar, Button } from 'react-native-elements';
+import { View, Text, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { verticalScale } from 'react-native-size-matters';
 import styles from './styles';
 import TextStyle, { scale } from '@/utils/TextStyle';
 import User from '@/models/User';
 import { icons } from '@/assets';
 import Map from '@/models/Map';
-import ViewUtil from '@/utils/ViewUtil';
+import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 
 export const TAG = 'ItemMap';
 class ItemMap extends PureComponent {
@@ -48,18 +48,18 @@ class ItemMap extends PureComponent {
       <View style={styles.container}>
         <TouchableOpacity
           style={styleContainerItem}
-          onPress={() => {
+          onPress={onClickView(() => {
             this.props.onItemSelected(dataItem.id);
-          }}
-        >
-        <View style={styles.imageContainerIOS}>
-          {ViewUtil.ImageView({
-            style: styles.image,
-            source: {
-              uri: uri
-            },
-            resizeMode: FastImage.resizeMode.cover
           })}
+        >
+          <View style={styles.imageContainerIOS}>
+            {ViewUtil.ImageView({
+              style: styles.image,
+              source: {
+                uri: uri
+              },
+              resizeMode: FastImage.resizeMode.cover
+            })}
           </View>
           <View
             style={{
@@ -68,10 +68,11 @@ class ItemMap extends PureComponent {
               backgroundColor: '#31314a',
               paddingHorizontal: 10,
               borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
+              borderBottomRightRadius: 10
             }}
           >
             <Text
+              numberOfLines={1}
               style={[
                 TextStyle.mediumText,
                 {
@@ -85,7 +86,7 @@ class ItemMap extends PureComponent {
             </Text>
             <View style={{ flexDirection: 'row' }}>
               {icons.bike({
-                containerStyle: { marginRight: 10 },
+                containerStyle: { marginRight: verticalScale(10) },
                 onPress: this.onPressBack
               })}
               <Text
@@ -97,7 +98,7 @@ class ItemMap extends PureComponent {
                   }
                 ]}
               >
-                {`${dataItem?.miles || ''} miles`}
+                {`${dataItem?.miles || '0'} miles`}
               </Text>
             </View>
           </View>

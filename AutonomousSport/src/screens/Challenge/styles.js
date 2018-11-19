@@ -24,10 +24,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   button: {
-    borderRadius: 25,
+    borderRadius: scaleSize(25),
     borderWidth: 0,
-    backgroundColor: '#0fcb5d',
-    borderColor: '#02BB4F',
+    backgroundColor: '#ffc500',
+    borderColor: '#ffc500',
     minWidth: scaleSize(100),
     width: scaleSize(150),
     paddingHorizontal: scaleSize(20)

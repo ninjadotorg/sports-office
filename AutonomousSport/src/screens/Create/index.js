@@ -80,7 +80,11 @@ class CreateRoomScreen extends BaseScreen {
         );
       } else {
         ////
-        console.log(TAG, ' onPressRandomJoin show message ', roomInfo['message']);
+        console.log(
+          TAG,
+          ' onPressRandomJoin show message ',
+          roomInfo['message']
+        );
         this.showToastMessage(roomInfo['message']);
       }
     } catch (error) {
@@ -138,12 +142,12 @@ class CreateRoomScreen extends BaseScreen {
             ]}
             borderRadius={0}
           />
-         
         </View>
       </View>
     );
   };
   render() {
+    const { isLoading = false } = this.state;
     return (
       <ImageBackground
         style={[styles.containerimg]}
@@ -159,10 +163,11 @@ class CreateRoomScreen extends BaseScreen {
           <RoomList levelIndex={this.state.selectedIndex} />
           <View style={styles.containerBottom}>
             <Button
+              loading={isLoading}
               title="Random"
               textStyle={[
                 TextStyle.mediumText,
-                { fontWeight: 'bold', color: '#02BB4F' }
+                { fontWeight: 'bold', color: '#ffc500' }
               ]}
               buttonStyle={[styles.button]}
               onPress={this.onPressRandom}
@@ -171,9 +176,9 @@ class CreateRoomScreen extends BaseScreen {
               title="New Racing"
               buttonStyle={[
                 styles.button,
-                { backgroundColor: '#02BB4F', borderColor: 'transparent' }
+                { backgroundColor: '#ffc500', borderColor: 'transparent' }
               ]}
-              textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+              textStyle={[TextStyle.mediumText, { fontWeight: 'bold',color:'#534c5f' }]}
               onPress={this.onPressCreateRoom}
             />
           </View>

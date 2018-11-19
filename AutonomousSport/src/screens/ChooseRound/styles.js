@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5
   },
   textStyleButton: {
-    color: '#02BB4F'
+    color: '#ffc500'
   },
   selectedTextStyleButton: {
     color: '#F6F6F6'
@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   button: {
-    borderRadius: 25,
+    borderRadius: scaleSize(30),
     borderWidth: 1,
-    backgroundColor: '#02BB4F',
-    borderColor:'transparent',
+    backgroundColor: '#ffc500',
+    borderColor: 'transparent',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20),
-    color: 'white',
+    color: 'white'
   }
 });
 

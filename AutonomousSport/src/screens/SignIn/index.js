@@ -325,7 +325,7 @@ class SignInScreen extends BaseScreen {
                       <Text
                         onPress={this.onPressForgot}
                         style={[TextStyle.normalText,  
-                        {textAlign:'right', color:'#02BB4F'}]} 
+                        {textAlign:'right', color:'#ffc500'}]} 
                       >
                         Forgot password?
                       </Text> 
@@ -410,7 +410,7 @@ class SignInScreen extends BaseScreen {
                   loading={loading}
                   buttonStyle={[{backgroundColor:'transparent'}]}
                   title={texts[swap]["button"]}
-                  textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold'}]}
+                  textStyle={[TextStyle.mediumText, styles.textButton,{fontWeight: 'bold',flex:1}]}
                   containerViewStyle={[styles.buttonStyle,{}]}
                   onPress={this.onPressSignIn}
                 />

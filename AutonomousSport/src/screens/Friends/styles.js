@@ -45,33 +45,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   textStyleButton: {
-    color: '#02BB4F'
+    color: '#ffc500'
   },
   selectedTextStyleButton: {
-    color: '#F6F6F6'
+    color: '#534c5f'
   },
   buttonGroup: {
-    borderColor: '#02BB4F',
+    borderColor: '#ffc500',
     borderRadius: 32,
     backgroundColor: 'transparent'
   },
   selectedButtonStyle: {
-    backgroundColor: '#02BB4F',
-    borderColor: '#02BB4F'
+    backgroundColor: '#ffc500',
+    borderColor: '#ffc500'
   },
   button2: {
     borderRadius: 32,
     borderWidth: 1,
-    backgroundColor: '#02BB4F',
-    borderColor: '#02BB4F',
+    backgroundColor: '#ffc500',
+    borderColor: '#ffc500',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
   },
   buttondis2: {
     borderRadius: 32,
     borderWidth: 1,
-    backgroundColor: '#02BB4F',
-    borderColor: '#02BB4F',
+    backgroundColor: '#ffc500',
+    borderColor: '#ffc500',
     opacity: 0.5,
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     borderWidth: 1,
     backgroundColor: 'transparent',
-    borderColor: '#02BB4F',
+    borderColor: '#ffc500',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
   },

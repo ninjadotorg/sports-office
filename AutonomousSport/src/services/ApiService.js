@@ -300,7 +300,7 @@ export default class ApiService {
     const response = await ApiService.getURL(METHOD.GET, url, {});
 
     console.log(TAG, ' - joinRandomRoom = ', response);
-    return !_.isEmpty(response) && String(response.status) === '1'
+    return !_.isEmpty(response) && !_.isEmpty(response.room)
       ? new Room(response?.room)
       : response;
   }

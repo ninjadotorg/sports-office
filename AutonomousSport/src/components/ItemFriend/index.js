@@ -1,16 +1,19 @@
 import React, { PureComponent } from 'react';
 import { View, Text, Image } from 'react-native';
 import { Avatar, Button } from 'react-native-elements';
-import { verticalScale } from 'react-native-size-matters';
+import {
+  verticalScale,
+  scale as horizontalScale,
+  scale
+} from 'react-native-size-matters';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styles from './styles';
-import { Config } from '@/utils/Constants';
-import TextStyle, { scale } from '@/utils/TextStyle';
+import TextStyle from '@/utils/TextStyle';
 import User from '@/models/User';
 import { makeFriend, makeInvited } from '@/actions/FriendAction';
 import { onClickView } from '@/utils/ViewUtil';
-import Util from '@/utils/Util';
+import _ from 'lodash';
 import images from '@/assets';
 
 export const TAG = 'ItemFriend';
@@ -19,7 +22,6 @@ class ItemFriend extends PureComponent {
   constructor(props) {
     super(props);
     var dataItem = props.dataItem || {};
-    //dataItem['is_add_invited'] = false;
     this.state = {
       isLoading: false,
       dataItem: dataItem
@@ -28,11 +30,11 @@ class ItemFriend extends PureComponent {
   componentDidMount() {}
 
   onClickMakeFriend = onClickView(() => {
-    const { dataItem } = this.props;
+    const { dataItem, inviteMode = false } = this.props;
 
     console.log('invited onClickMakeFriend', dataItem);
 
-    if (this.props.inviteMode == false) {
+    if (!inviteMode) {
       if (dataItem?.id && !dataItem['is_maked_friend']) {
         this.setState({
           isLoading: true
@@ -69,6 +71,7 @@ class ItemFriend extends PureComponent {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log(TAG, ' componentWillReceiveProps begin = ', nextProps.dataItem);
     if (
+      !_.isEmpty(nextProps.dataItem) &&
       JSON.stringify(nextProps.dataItem) !== JSON.stringify(this.state.dataItem)
     ) {
       this.setState({
@@ -80,7 +83,8 @@ class ItemFriend extends PureComponent {
 
   render() {
     const { dataItem, isLoading } = this.state;
-    console.log('invited', dataItem);
+    // console.log('invited', dataItem);
+    const mile = Math.ceil(dataItem.Profile.miles || 0);
     return (
       <View style={[styles.container, {}]}>
         <Avatar
@@ -99,8 +103,9 @@ class ItemFriend extends PureComponent {
 
         <View
           style={{
-            marginHorizontal: 10,
+            marginHorizontal: horizontalScale(10),
             flex: 1,
+            justifyContent: 'center',
             marginLeft: verticalScale(20)
           }}
         >
@@ -125,7 +130,7 @@ class ItemFriend extends PureComponent {
               }
             ]}
           >
-            {`${dataItem.kcal} Kcal`}
+            {`${Math.ceil(dataItem.Profile.kcal || 0)} Kcal`}
           </Text>
         </View>
         <Text
@@ -139,61 +144,70 @@ class ItemFriend extends PureComponent {
             }
           ]}
         >
-          {`${dataItem.route} ${dataItem.textRouteUnit}`}
+          {`${mile} ${dataItem.textRouteUnit}${mile > 1 ? 's' : ''}`}
         </Text>
 
         {this.props.inviteMode ? (
           <Button
-            rounded
-            fontSize={12 * scale()}
             containerViewStyle={{
               marginRight: 0,
-              // height: verticalScale(24),
-              minWidth: verticalScale(85),
-              alignItems: 'center',
-              alignSelf: 'center'
-            }}
-            textStyle={[TextStyle.mediumText]}
-            buttonStyle={{
+              borderRadius: scale(30),
               borderWidth: 1,
-              borderColor: dataItem?.is_add_invited ? '#76717f' : 'transparent'
+              borderColor: dataItem?.is_add_invited ? '#76717f' : 'transparent',
+              backgroundColor: dataItem?.is_add_invited
+                ? 'transparent'
+                : '#ffc500',
+              height: 45,
+              minWidth: scale(80),
+              alignSelf: 'center',
+              justifyContent: 'center'
             }}
-            title={this.state.dataItem?.is_add_invited ? 'Invited' : 'Invite'}
+            textStyle={[
+              TextStyle.normalText,
+              {
+                color: dataItem?.is_add_invited ? 'white' : '#544e60'
+              }
+            ]}
+            buttonStyle={{ backgroundColor: 'transparent' }}
+            title={dataItem?.is_add_invited ? 'Invited' : 'Invite'}
             onPress={this.onClickMakeFriend}
-            backgroundColor={
-              dataItem?.is_add_invited ? 'transparent' : '#02BB4F'
-            }
             rightIcon={
               dataItem?.is_add_invited
                 ? { name: 'ios-checkmark', type: 'ionicon' }
-                : null
+                : undefined
             }
           />
         ) : (
           <Button
             rounded
-            fontSize={12 * scale()}
             containerViewStyle={{
               marginRight: 0,
-              minWidth: verticalScale(85),
-              alignItems: 'center',
-              alignSelf: 'center'
-            }}
-            buttonStyle={{
-              // height: verticalScale(24),
-              // width: verticalScale(80),
+              borderRadius: scale(30),
               borderWidth: 1,
-              borderColor: dataItem?.is_maked_friend ? '#76717f' : 'transparent'
+              borderColor: dataItem?.is_maked_friend
+                ? '#76717f'
+                : 'transparent',
+              backgroundColor: dataItem?.is_maked_friend
+                ? 'transparent'
+                : '#ffc500',
+              height: 45,
+              minWidth: scale(80),
+              alignSelf: 'center',
+              justifyContent: 'center'
             }}
+            textStyle={[
+              TextStyle.normalText,
+              {
+                color: dataItem?.is_maked_friend ? 'white' : '#544e60'
+              }
+            ]}
+            buttonStyle={{ backgroundColor: 'transparent' }}
             title={dataItem?.is_maked_friend ? 'Friend' : 'Add Friend'}
             onPress={this.onClickMakeFriend}
-            backgroundColor={
-              dataItem?.is_maked_friend ? 'transparent' : '#02BB4F'
-            }
             rightIcon={
               dataItem?.is_maked_friend
                 ? { name: 'ios-checkmark', type: 'ionicon' }
-                : null
+                : undefined
             }
           />
         )}

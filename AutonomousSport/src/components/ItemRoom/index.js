@@ -9,6 +9,7 @@ import images, { icons } from '@/assets';
 import Room from '@/models/Room';
 import FastImage from 'react-native-fast-image';
 import ViewUtil from '@/utils/ViewUtil';
+import Util from '@/utils/Util';
 
 export const TAG = 'ItemRoom';
 
@@ -62,31 +63,45 @@ class ItemRoom extends PureComponent {
 
           <View
             style={{
-              flex: 1, 
+              flex: 1,
               justifyContent: 'space-around',
               backgroundColor: '#31314a',
               paddingHorizontal: 10,
-              borderBottomLeftRadius: 10, 
-              borderBottomRightRadius: 10,  
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10
             }}
           >
-           <View style={{ flexDirection: 'row', position:'absolute', top: 10, left:0,paddingHorizontal: 10}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                position: 'absolute',
+                top: 10,
+                left: 0,
+                paddingHorizontal: 10
+              }}
+            >
               <Text
-                numberOfLines={2}
+                numberOfLines={1}
                 style={[
                   TextStyle.mediumText,
                   {
                     lineHeight: 30,
-                    color: 'rgba(255,255,255,1)', 
-                    fontWeight: 'bold',
-                    
+                    color: 'rgba(255,255,255,1)',
+                    fontWeight: 'bold'
                   }
                 ]}
               >
-                {dataItem?.name || 'No Name'}
+                {Util.truncate(dataItem?.name || '', 25)}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', position:'absolute', bottom:10,right:10, }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                position: 'absolute',
+                bottom: 10,
+                right: 10
+              }}
+            >
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 {icons.bike({
                   containerStyle: { marginRight: 10 }

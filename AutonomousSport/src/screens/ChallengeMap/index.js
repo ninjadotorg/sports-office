@@ -144,7 +144,7 @@ class ChallengeMapScreen extends BaseScreen {
             }}
             title="Get ready"
             onPress={this.onPressReady}
-            buttonStyle={[styles.button, { backgroundColor: '#02BB4F' }]}
+            buttonStyle={[styles.button, { backgroundColor: '#ffc500' }]}
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
           />
         )}

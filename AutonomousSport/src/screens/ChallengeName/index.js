@@ -160,16 +160,17 @@ class ChallengeNameScreen extends BaseScreen {
                     ref={(name) => {
                       this.name = name;
                     }}
+                    maxLength={50}
                     disableFullscreenUI={true}
                     style={[TextStyle.normalText,styles.text,{flex:2,color:'white'}]}
                     placeholderTextColor={color.placeHolder}
-                    placeholder="Alice Smith"
+                    placeholder="Central Park"
                   />
               </View>
               <Button
                 loading={isLoading}
                 title="Next"
-                textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'white'}]}
+                textStyle={[TextStyle.mediumText,{fontWeight:'bold',color:'#4e4759'}]}
                 buttonStyle={{backgroundColor:'transparent'}}
                 containerViewStyle={[styles.button , {}]}
                 onPress={this.onPressCreateRoom}

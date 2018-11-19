@@ -278,15 +278,15 @@ class HomeScreen extends BaseScreen {
             title={isStarted ? 'Reset' : 'Practice'}
             textStyle={[
               TextStyle.mediumText,
-              { fontWeight: 'bold', color: '#02BB4F' }
+              { fontWeight: 'bold', color: '#ffc500' }
             ]}
             buttonStyle={[styles.button]}
             onPress={this.onPressReset}
           />
           <Button
             title="Start Racing" 
-            buttonStyle={[styles.button, { minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#02BB4F',borderWidth: 0 }]} 
-            textStyle={[TextStyle.mediumText, { fontWeight: '700' }]}
+            buttonStyle={[styles.button, { minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#ffc500',borderWidth: 0 }]} 
+            textStyle={[TextStyle.mediumText, { fontWeight: 'bold',color:'#534c5f' }]}
             onPress={this.onPressCreateRoom}
           />
         </View>

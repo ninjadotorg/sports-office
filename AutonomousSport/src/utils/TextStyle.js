@@ -38,7 +38,8 @@ const TextStyle = StyleSheet.create({
   },
   xxExtraText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 30 * scale()
+    // fontSize: 30 * scale(),
+    fontSize: verticalScale(30)
   },
   xExtraText: {
     fontFamily: FONT_FAMILY,
@@ -46,28 +47,34 @@ const TextStyle = StyleSheet.create({
   },
   extraText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 22 * scale()
+    fontSize: verticalScale(22)
+    // fontSize: 22 * scale()
   },
   bigText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 18 * scale()
+    fontSize: verticalScale(18)
+    // fontSize: 18 * scale()
   },
 
   mediumText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 14 * scale()
+    fontSize: verticalScale(16)
+    // lineHeight: verticalScale(14)
   },
   normalText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 12 * scale()
+    fontSize: verticalScale(12)
+    // fontSize: 12 * scale()
   },
   smallText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 10 * scale()
+    fontSize: verticalScale(10)
+    // fontSize: 10 * scale()
   },
   minimizeText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 7 * scale()
+    fontSize: verticalScale(7)
+    // fontSize: 7 * scale()
   },
   button: {
     height: 42,
@@ -78,7 +85,8 @@ const TextStyle = StyleSheet.create({
   },
   buttonText: {
     fontFamily: FONT_FAMILY,
-    fontSize: 16,
+    // fontSize: 16,
+    fontSize: verticalScale(16),
     color: COLOR.WHITE
   }
 });

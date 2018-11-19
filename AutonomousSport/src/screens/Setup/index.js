@@ -19,17 +19,17 @@ import {
 import { connect } from 'react-redux';
 import BleManager from 'react-native-ble-manager';
 import BaseScreen from '@/screens/BaseScreen';
-import styles from './styles';
 import images, { icons } from '@/assets';
 import _ from 'lodash';
 import TextStyle from '@/utils/TextStyle';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import LocalDatabase from '@/utils/LocalDatabase';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
-import ViewUtil,{delayCallingManyTime} from '@/utils/ViewUtil';
+import ViewUtil, { delayCallingManyTime } from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
 import { disconnectBluetooth } from '@/actions/RaceAction';
 import { scale, verticalScale } from 'react-native-size-matters';
+import styles from './styles';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -45,7 +45,7 @@ class SetupScreen extends BaseScreen {
       refreshing: false,
       appState: ''
     };
-    BleManager.start({ showAlert: true,forceLegacy:false });
+    BleManager.start({ showAlert: true, forceLegacy: false });
     this.handlerUpdate = null;
     this.handleStopScan = this.handleStopScan.bind(this);
     // this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
@@ -81,30 +81,30 @@ class SetupScreen extends BaseScreen {
 
   checkPermission = async () => {
     if (Platform.OS === 'android' && Platform.Version >= 23) {
-      let result = await PermissionsAndroid.check(
+      let result = await PermissionsAndroid.checkPermission(
         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
       );
 
-      let result2 = await PermissionsAndroid.check(
+      let result2 = await PermissionsAndroid.checkPermission(
         PermissionsAndroid.PERMISSIONS.CAMERA
       );
 
-      let result3 = await PermissionsAndroid.check(
+      let result3 = await PermissionsAndroid.checkPermission(
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-      );      
+      );
 
       if (result && result2 & result3) {
         console.log('Permission is OK');
         return Promise.resolve(1);
       } else {
-        result = await PermissionsAndroid.request(
+        result = await PermissionsAndroid.requestPermission(
           PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
         );
-        result2 = await PermissionsAndroid.request(
+        result2 = await PermissionsAndroid.requestPermission(
           PermissionsAndroid.PERMISSIONS.CAMERA
         );
 
-        result3 = await PermissionsAndroid.request(
+        result3 = await PermissionsAndroid.requestPermission(
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
         );
 
@@ -143,7 +143,7 @@ class SetupScreen extends BaseScreen {
     ) {
       console.log('App has come to the foreground!');
       BleManager.getConnectedPeripherals([]).then(peripheralsArray => {
-        console.log('Connected peripherals: ' + peripheralsArray.length);
+        // console.log('Connected peripherals: ' + peripheralsArray.length);
       });
     }
     this.setState({ appState: nextAppState });
@@ -196,8 +196,7 @@ class SetupScreen extends BaseScreen {
     // console.log(TAG, `handleUpdateValueForCharacteristic 01 Recieved ${temp} for characteristic`);
     // value, peripheral, characteristic, service
     try {
-      if ( this.peripheralBluetooth  && !_.isEmpty(data)) {
-        
+      if (this.peripheralBluetooth && !_.isEmpty(data)) {
         await BleManager.stopNotification(
           this.peripheralBluetooth.peripheral,
           this.peripheralBluetooth.service,
@@ -205,16 +204,15 @@ class SetupScreen extends BaseScreen {
         );
         await LocalDatabase.saveBluetooth(
           JSON.stringify(this.peripheralBluetooth.toJSON())
-        ); 
+        );
         // alert("connect succesfully");
       }
     } catch (error) {
-      
-    }finally{
-        this.replaceScreen(this.props.navigation, TAGSIGNIN);
+    } finally {
+      this.replaceScreen(this.props.navigation, TAGSIGNIN);
     }
-      // this.handlerUpdate?.remove();
-      console.log(TAG, ' handleUpdateValueForCharacteristic ');
+    // this.handlerUpdate?.remove();
+    console.log(TAG, ' handleUpdateValueForCharacteristic ');
   };
 
   handleStopScan() {
@@ -368,7 +366,7 @@ class SetupScreen extends BaseScreen {
     console.log(TAG, ' renderItem = ', item);
     return (
       <TouchableOpacity
-        style={[styles.row, { backgroundColor: 'transparent' ,marginTop:5}]}
+        style={[styles.row, { backgroundColor: 'transparent', marginTop: 5 }]}
         key={item.id}
         onPress={this.onClickView(async () => {
           console.log(TAG, ' onPressItemConnect = begin ');
@@ -379,13 +377,15 @@ class SetupScreen extends BaseScreen {
         })}
       >
         <Image
-            source={images.ic_bluetooth}
-            style={[{
+          source={images.ic_bluetooth}
+          style={[
+            {
               width: 20,
               height: 27,
-              marginTop:8
-            }]}
-          />
+              marginTop: 8
+            }
+          ]}
+        />
         <Text
           style={[
             TextStyle.normalText,
@@ -393,7 +393,7 @@ class SetupScreen extends BaseScreen {
               textAlign: 'center',
               color: '#FFFFFF',
               padding: 10,
-              marginLeft:20
+              marginLeft: 20
             }
           ]}
         >
@@ -415,10 +415,10 @@ class SetupScreen extends BaseScreen {
       )
     );
   };
-  excuteDisconnect = async ()=>{
+  excuteDisconnect = async () => {
     console.log(TAG, ' disconnectBluetooth begin ');
     const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
-    
+
     console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
     if (periBluetooth && periBluetooth.peripheral) {
       console.log(TAG, ' disconnectBluetooth begin02 ');
@@ -430,14 +430,13 @@ class SetupScreen extends BaseScreen {
       console.log(TAG, ' disconnectBluetooth begin04 ');
     }
   };
-  disconnect = this.onClickView(async ()=>{
+  disconnect = this.onClickView(async () => {
     try {
       this.isLoading = true;
-      await Util.excuteWithTimeout(this.excuteDisconnect(),10);  
-      
+      await Util.excuteWithTimeout(this.excuteDisconnect(), 10);
     } catch (error) {
-      console.log(TAG, ' disconnectBluetooth error ',error);
-    }finally{
+      console.log(TAG, ' disconnectBluetooth error ', error);
+    } finally {
       this.isLoading = false;
     }
   });
@@ -445,60 +444,99 @@ class SetupScreen extends BaseScreen {
   render() {
     const { isLoading } = this.state;
     return (
-      <ImageBackground style={[styles.container,{ paddingBottom:0, paddingRight:0 }]} source={images.backgroundx}> 
-      <View style={[styles.container,{paddingLeft:40, paddingBottom:0, paddingRight:0 }]}>
-        <TouchableOpacity onPress={__DEV__?this.disconnect:undefined}>
-          <Image
-            source={images.logo}
-            style={{ width: 58, height: 58, margin: 10,marginTop:30  }}
-          />
-        </TouchableOpacity>
-        <View style={[styles.containerRight,{marginLeft:20, marginTop:10} ]}>
-          <Image
-            source={images.bike}
-            style={[{
-              width: scale(250),
-              height: scale(162),
-              bottom: 0,
-              right: 0,
-              position: 'absolute',
-              opacity:0.8
-            }]}
-          />
-          <Text style={[TextStyle.extraText, styles.textLabel,{marginLeft:10,marginTop:10}]}>
-            Autonomous
-          </Text>
-          <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:10}]}>
-            Welcome to <Text style={{fontWeight: "bold"}}>Autonomous Bike</Text>. Please connect the app to<Text style={{fontWeight: "bold"}}> the Bike via Bluetooth</Text>.
-          </Text>
-          <Text style={[TextStyle.normalText, styles.textLabel2,{marginLeft:10,marginTop:verticalScale(30)}]}>
-            Select <Text style={{fontWeight: "bold"}}>Autonomous Bike</Text> below:
-          </Text>
-          {isLoading ? (
-            ViewUtil.CustomProgressBar({ visible: true })
-          ) : (
-            <FlatList
-              onRefresh={this.startScan}
-              refreshing={this.state.scanning}
-              keyExtractor={(item, index) => item.id}
-              style={styles.scroll}
-              data={this.getListAdress()}
-              renderItem={this.renderItem}
+      <ImageBackground
+        style={[styles.container, { paddingBottom: 0, paddingRight: 0 }]}
+        source={images.backgroundx}
+      >
+        <View
+          style={[
+            styles.container,
+            { paddingLeft: 40, paddingBottom: 0, paddingRight: 0 }
+          ]}
+        >
+          <TouchableOpacity onPress={__DEV__ ? this.disconnect : undefined}>
+            <Image
+              source={images.logo}
+              style={{ width: 58, height: 58, margin: 10, marginTop: 30 }}
             />
-          )}
-         
+          </TouchableOpacity>
+          <View
+            style={[styles.containerRight, { marginLeft: 20, marginTop: 10 }]}
+          >
+            <Image
+              source={images.bike}
+              style={[
+                {
+                  width: scale(250),
+                  height: scale(162),
+                  bottom: 0,
+                  right: 0,
+                  position: 'absolute',
+                  opacity: 0.8
+                }
+              ]}
+            />
+            <Text
+              style={[
+                TextStyle.extraText,
+                styles.textLabel,
+                { marginLeft: 10, marginTop: 10 }
+              ]}
+            >
+              Autonomous
+            </Text>
+            <Text
+              style={[
+                TextStyle.normalText,
+                styles.textLabel2,
+                { marginLeft: 10, marginTop: 10 }
+              ]}
+            >
+              Welcome to
+              {' '}
+              <Text style={{ fontWeight: 'bold' }}>Autonomous Bike</Text>
+.
+              Please connect the app to
+              <Text style={{ fontWeight: 'bold' }}>
+                {' '}
+                the Bike via Bluetooth
+              </Text>
+              .
+            </Text>
+            <Text
+              style={[
+                TextStyle.normalText,
+                styles.textLabel2,
+                { marginLeft: 10, marginTop: verticalScale(30) }
+              ]}
+            >
+              Select 
+              {' '}
+              <Text style={{ fontWeight: 'bold' }}>Autonomous Bike</Text>
+              {' '}
+              below:
+            </Text>
+            {isLoading ? (
+              ViewUtil.CustomProgressBar({ visible: true })
+            ) : (
+              <FlatList
+                onRefresh={this.startScan}
+                refreshing={this.state.scanning}
+                keyExtractor={(item, index) => item.id}
+                style={styles.scroll}
+                data={this.getListAdress()}
+                renderItem={this.renderItem}
+              />
+            )}
+          </View>
         </View>
-      </View>
-            
       </ImageBackground>
     );
   }
 }
 
 export default connect(
-  state => ({
-    
-  }),
+  state => ({}),
   {
     disconnectBluetooth
   }

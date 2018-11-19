@@ -64,10 +64,10 @@ export const connectionBluetoothChange = dispatch => {
         const distanceRun = speed * timeHour;
         const kcaloriesBurned =
           (distanceRun * 1.609344 * weight * 1.036) / 1000;
-        console.log(
-          TAG,
-          ` connectionBluetoothChange round = ${round} for distanceRun = ${distanceRun}`
-        );
+        // console.log(
+        //   TAG,
+        //   ` connectionBluetoothChange round = ${round} for distanceRun = ${distanceRun}`
+        // );
         // calories burned = distance run (kilometres) x weight of runner (kilograms) x 1.036
         const data = {
           speed: speed,
@@ -218,9 +218,10 @@ export const disconnectBluetooth = () => async dispatch => {
     const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
     console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
     if (handlerUpdate) {
-      bleManagerEmitter.removeSubscription(handlerUpdate);
       handlerUpdate?.remove();
       handlerUpdate = null;
+      bleManagerEmitter.removeSubscription(handlerDisconnect);
+      handlerDisconnect = null;
     }
     if (periBluetooth && periBluetooth.peripheral) {
       console.log(TAG, ' disconnectBluetooth stop-----');
