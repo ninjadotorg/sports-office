@@ -124,7 +124,7 @@ func (basectl *BaseController)ConfirmEmailPass(c echo.Context) error{
 		services.SendNewPasswordConfirmEmail(user.Fullname, user.Email, password)
 		//send_request_password
 		f = map[string]interface{}{  
-			"message":"ok",
+			"message":"New password sent to your email address.",
 		}
 		return c.JSON(http.StatusOK,f) 
 
@@ -252,7 +252,7 @@ func (basectl *BaseController)Auth(c echo.Context) error{
 	var f interface{}
 	f = map[string]interface{}{
 		"token": t,
-		"fbtoken":user.Password, //firebase password.
+		"fbtoken":user.Fbpass,
 		"id": user.ID,
 		"fbuid": fbuser.UID,
 		"email":  user.Email,
