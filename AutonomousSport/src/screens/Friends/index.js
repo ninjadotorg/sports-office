@@ -14,7 +14,7 @@ import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import images, { icons } from '@/assets';
 import { verticalScale, moderateScale, scale } from 'react-native-size-matters';
-import ViewUtil from '@/utils/ViewUtil';
+import ViewUtil, { delayCallingManyTime } from '@/utils/ViewUtil';
 import ItemFriend from '@/components/ItemFriend';
 import { TAG as CHALLENGENAME } from '@/screens/ChallengeName';
 import { fetchAllUser, fetchAllFriend } from '@/actions/FriendAction';
@@ -51,7 +51,7 @@ class FriendsScreen extends BaseScreen {
       offset: 0,
       limit: limitRow,
       friends: {},
-      isLoading: false,
+      isLoading: true,
       listFriends: [],
       listFriendsIvite: [],
       search: '',
@@ -133,6 +133,7 @@ class FriendsScreen extends BaseScreen {
     if (selectedIndexItem !== selectedIndex) {
       offset = 0;
       limit = limitRow;
+      this.handleSearchClear();
       this.setState(
         {
           selectedIndex: selectedIndexItem
@@ -157,14 +158,13 @@ class FriendsScreen extends BaseScreen {
     });
   });
 
-  handleQueryChange = search => {
-    this.setState(state => ({ ...state, search: search || '' }));
-    let { isLoading, offset, limit } = this.state;
-    if (!isLoading) {
-      offset = 0;
-      this.fetchData({ offset, limit, search });
-    }
-  };
+  handleQueryChange = delayCallingManyTime(search => {
+    const { isLoading, offset, limit } = this.state;
+    // if (!isLoading) {
+      this.setState({ search: search || '',isLoading:true });
+      this.fetchData({ offset: 0, limit, search });
+    // }
+  },0.02);
 
   handleSearchCancel = () => this.handleQueryChange('');
   handleSearchClear = () => this.handleQueryChange('');
@@ -180,7 +180,7 @@ class FriendsScreen extends BaseScreen {
   // }
 
   fetchData = ({ offset, limit, search }) => {
-    let { selectedIndex } = this.state;
+    const { selectedIndex } = this.state;
     console.log(TAG, ' fetchData begin');
     selectedIndex === 0
       ? this.props.fetchAllFriend({ offset, limit, search })
@@ -211,13 +211,9 @@ class FriendsScreen extends BaseScreen {
       this.fetchData({ offset, limit, search });
     }
   });
-  onPressBack = () => {
+  onPressBack = this.onClickView(() => {
     this.props.navigation.goBack();
-    // if(this.state.inviteMode){
-    //   this.props.leftRoom({ session: this.state.roomInfo?.session });
-    //   this.replaceScreen(this.props.navigation, TAGHOME);
-    // }
-  };
+  });
   renderLeftHeader = () => {
     return (
       <View style={[styles.topBar]}>
@@ -250,12 +246,11 @@ class FriendsScreen extends BaseScreen {
           onChangeText={this.handleQueryChange}
           onCancel={this.handleSearchCancel}
           onClear={this.handleSearchClear}
-          value={this.state.search}
+          // value={this.state.search}
           icon={{ type: 'font-awesome', name: 'search' }}
           noIcon
           containerStyle={{
             flex: 1,
-            // marginLeft: verticalScale(200),
             borderBottomColor: 'transparent',
             borderTopColor: 'transparent',
             shadowColor: 'white',

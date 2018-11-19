@@ -8,15 +8,19 @@ export const ACTIONS = {
   GET_ALL_USER: 'GET_ALL_USER',
   GET_ALL_FRIEND: 'GET_ALL_FRIEND',
   MAKE_FRIEND: 'MAKE_FRIEND',
-  MAKE_INVITE:'MAKE_INVITE',
+  MAKE_INVITE: 'MAKE_INVITE'
 };
 
-export const fetchAllUser = ({ offset = 0, limit = 12, search='' }) => async dispatch => {
+export const fetchAllUser = ({
+  offset = 0,
+  limit = 12,
+  search = ''
+}) => async dispatch => {
   try {
     const response = await ApiService.getAllUser({
       offset: offset,
       limit: limit,
-      search: search,
+      search: search
     });
     console.log(TAG, ' - fetchAllUser - response ', response);
     dispatch({ type: ACTIONS.GET_ALL_USER, payload: response });
@@ -31,13 +35,13 @@ export const fetchAllUser = ({ offset = 0, limit = 12, search='' }) => async dis
 export const fetchAllFriend = ({
   offset = 0,
   limit = 12,
-  search=''
+  search = ''
 }) => async dispatch => {
   try {
     let response = await ApiService.getAllFriend({
       offset: offset,
       limit: limit,
-      search: search,
+      search: search
     });
 
     if (!_.isEmpty(response)) {
@@ -65,7 +69,7 @@ export const makeFriend = ({ friendId }) => async dispatch => {
           friendId
         })) || {};
       response['id'] = friendId;
-      console.log(TAG, ' - makeFriend - response ', response);
+      // console.log(TAG, ' - makeFriend - response ', response);
       dispatch({ type: ACTIONS.MAKE_FRIEND, payload: response });
       return;
     }
@@ -76,11 +80,10 @@ export const makeFriend = ({ friendId }) => async dispatch => {
   dispatch({ type: ACTIONS.MAKE_FRIEND, payload: {} });
 };
 
-
 export const makeInvited = ({ friendId, invited }) => async dispatch => {
   try {
-    if (friendId > 0) { 
-      var response = {"invited":invited, "id":friendId}; 
+    if (friendId > 0) {
+      var response = { invited: invited, id: friendId };
       dispatch({ type: ACTIONS.MAKE_INVITE, payload: response });
       return;
     }
@@ -90,4 +93,3 @@ export const makeInvited = ({ friendId, invited }) => async dispatch => {
 
   dispatch({ type: ACTIONS.MAKE_INVITE, payload: {} });
 };
-
