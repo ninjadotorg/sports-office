@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
-import { scale } from 'react-native-size-matters';
+import { scale,verticalScale } from 'react-native-size-matters';
 import _ from 'lodash';
 import StyleBikeProfile from './styles';
 import images, { icons } from '@/assets';
@@ -31,7 +31,8 @@ class OTPublisherCustom extends OTPublisher {
             <View style={{flexDirection:'row',justifyContent:'center'}}>
               {icons.bike({
                 containerStyle: { marginRight: scale(2) },
-                color:'#00e751'
+                color:'#00e751',
+                size:verticalScale(12)
               })}
               <Text style={[TextStyle.normalText, { color: '#ffffff' ,fontWeight:'bold' }]}>
                 {Util.truncate(playerMe?.playerName,MAX_LENGHT) || ''}
@@ -70,33 +71,34 @@ class OTSubscriberCustom extends OTSubscriber {
       return (
         <View
           key={streamId}
-          style={[
-            styles.subcriber,
-            { flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }
-          ]}
+          style={[styles.parentViewPublishView,{}]}
+          // style={[
+          //   styles.subcriber,
+          //   { flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }
+          // ]}
         >
           <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              paddingVertical: 10,
-              backgroundColor: 'transparent'
-            }}
+            style={[styles.publisherInfo,{backgroundColor:'transparent'}]}
+            // style={{
+            //   width: '100%',
+            //   flexDirection: 'row',
+            //   justifyContent: 'space-around',
+            //   paddingVertical: 10,
+            //   backgroundColor: 'transparent'
+            // }}
           >
-            <View style={{flexDirection:'row',alignItems:"center"}}>
+            <View style={{flexDirection:'row',alignItems:'center'}}>
               <View
                 style={{
                   backgroundColor: playersColor[player?.fbuid||'']||'transparent',
-                  borderRadius: scale(7)/2,
-                  width: scale(7),
-                  height: scale(7),
-                  marginRight: scale(2),
-                  justifyContent: 'center'
+                  borderRadius: verticalScale(12)/2,
+                  width: verticalScale(12),
+                  height: verticalScale(12),
+                  marginRight: scale(2)
                 }}
               />
               <Text style={[TextStyle.normalText, {  color: '#ffffff' ,fontWeight:'bold'}]}>
-              {Util.truncate(player?.playerName,MAX_LENGHT) || ''}
+                {Util.truncate(player?.playerName,MAX_LENGHT) || ''}
               </Text>
             </View>
 

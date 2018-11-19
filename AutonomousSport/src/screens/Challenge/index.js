@@ -212,7 +212,7 @@ class ChallengeScreen extends BaseScreen {
     console.log(TAG, ' saveUserInfo begin ');
 
     this.props.updateRacing({ kcal, miles });
-  }, 1000);
+  }, 200);
 
   onListenerChanel = () => {
     const { user } = this.state;
@@ -260,8 +260,8 @@ class ChallengeScreen extends BaseScreen {
         if(isGetReady && !isFinished && this.state.winner && winner && winner['fbuid'] !== this.state.winner['fbuid']){
           const arr = winner["isMe"]?CONSTANT_MESSAGE.PASS_X:CONSTANT_MESSAGE.X_PASS;
           
-          const index = Util.getRandomInt(0,arr.length-1);
-          const message = arr(this.state.winner.playerName||"")[index];
+          const index = Util.getRandomInt(0,arr().length-1);
+          const message = arr((winner["isMe"]?this.state.winner.playerName:winner["playerName"]) ||"")[index];
           console.log(TAG, ' updateDataFromOtherPlayer - readText PASSS - ', message);
           this.readText(message);
         }
@@ -313,7 +313,6 @@ class ChallengeScreen extends BaseScreen {
     // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
-    console.log(TAG,' updateHandler begin lastIndexPosition = ',this.lastIndexPosition, ' currentPositionIndex = ',this.currentPositionIndex);
     if(this.state.isReady && this.lastIndexPosition < this.currentPositionIndex){
       let tempIndex = this.lastIndexPosition + (this.currentPositionIndex - this.lastIndexPosition)*time.delta/1000;  
       if(Math.ceil(tempIndex) === Math.ceil(this.lastIndexPosition)){
@@ -327,7 +326,7 @@ class ChallengeScreen extends BaseScreen {
           // console.log(TAG,' updateHandler nextPoint begin');
           const {pos = this.posInit} = this.state;
           let angle = this.getAngleWithCurrentPoint(tempIndex);
-          console.log(TAG,' updateHandler nextPoint angle ',angle, " - tempIndex = ",tempIndex);
+          console.log(TAG,' updateHandler nextPoint angle ',angle, ' - tempIndex = ',tempIndex);
         
           // pos.rotate += (angle - pos.rotate)*time.delta/1000;
           const posNew = {
@@ -407,7 +406,7 @@ class ChallengeScreen extends BaseScreen {
         resizeMode={FastImage.resizeMode.stretch}
         source={images.back_score}
       >
-        <View style={{ flex: 1, paddingVertical: 30, paddingHorizontal: 30 }}>
+        <View style={{ flex: 1, paddingVertical: verticalScale(30), paddingHorizontal: verticalScale(30) }}>
           <Text
             style={[
               TextStyle.extraText,
@@ -473,7 +472,7 @@ class ChallengeScreen extends BaseScreen {
           <Button
             title="OK"
             onPress={this.onPressFinish}
-            buttonStyle={[styles.button, { backgroundColor: '#02BB4F',width:'30%',alignSelf:'center' }]}
+            buttonStyle={[styles.button, { backgroundColor: '#ffc500',width:'30%',alignSelf:'center' }]}
             textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
           />
         </View>
@@ -521,7 +520,7 @@ class ChallengeScreen extends BaseScreen {
               title="Get ready"
               onPress={this.onPressReady}
               buttonStyle={[{ backgroundColor: 'transparent' }]}
-              textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+              textStyle={[TextStyle.mediumText, {color:'#534c5f', fontWeight: 'bold' }]}
             />
           </Animatable.View>
         )}

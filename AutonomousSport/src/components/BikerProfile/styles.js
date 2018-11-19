@@ -69,7 +69,6 @@ export default class StyleBikeProfile {
         position: 'absolute',
         top: 0,
         left: 0,
-        // zIndex: 500000,
         backgroundColor: 'transparent',
         flex: 1,
         flexDirection: 'column'

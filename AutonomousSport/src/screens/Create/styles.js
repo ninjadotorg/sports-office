@@ -113,13 +113,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     backgroundColor: 'transparent',
     shadowColor: 'transparent',
-    borderBottomColor: '#02bb4f'
+    borderBottomColor: '#ffc500'
   },
-  // containerBottom: {
-  //   flexDirection: 'row',
-  //   paddingBottom: verticalScale(20),
-  //   justifyContent: 'space-around'
-  // },
   containerBottom: {
     flexDirection: 'row',
     paddingBottom: verticalScale(30),
@@ -129,10 +124,10 @@ const styles = StyleSheet.create({
     marginLeft: '20%'
   },
   button: {
-    borderRadius: 25,
+    borderRadius: scaleSize(30),
     borderWidth: 1,
     backgroundColor: 'transparent',
-    borderColor: '#02BB4F',
+    borderColor: '#ffc500',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
   }

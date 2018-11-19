@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   button: {
-    borderRadius: 25,
+    borderRadius: scaleSize(30),
     borderWidth: 1,
     backgroundColor: 'transparent',
-    borderColor: '#02BB4F',
+    borderColor: '#ffc500',
     minWidth: scaleSize(100),
     paddingHorizontal: scaleSize(20)
   },

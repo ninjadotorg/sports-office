@@ -8,7 +8,9 @@ import {
 
 const textButton = {
   textAlign: 'center',
-  color: 'white'
+  color: '#534c5f',
+  fontWeight: 'bold',
+  flex: 1
 };
 
 const socialButtonText = {
@@ -18,7 +20,7 @@ const socialButtonText = {
 
 const buttonStyle = {
   height: 50,
-  backgroundColor: '#02BB4F',
+  backgroundColor: '#ffc500',
   borderWidth: 1,
   borderRadius: scaleSize(30),
   justifyContent: 'center',

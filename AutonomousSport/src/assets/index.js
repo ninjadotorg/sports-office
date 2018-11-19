@@ -16,7 +16,7 @@ const images = {
   image_velocity: require('@/assets/images/image_velocity.png'),
   ic_plus_down: require('@/assets/images/ic_plus_down.png'),
   ic_plus_up: require('@/assets/images/ic_plus_up.png'),
-  ic_bluetooth: require('@/assets/images/buletooth.png'),
+  ic_bluetooth: require('@/assets/images/bluetooth.png'),
   ic_eye_flash: require('@/assets/images/eye_slash.png'),
   ic_eye: require('@/assets/images/eye.png'),
   // mapVector: require('@/assets/images/map.svg'),

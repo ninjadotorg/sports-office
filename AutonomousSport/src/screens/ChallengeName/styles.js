@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5
   },
   textStyleButton: {
-    color: '#02BB4F'
+    color: '#ffc500'
   },
   selectedTextStyleButton: {
     color: '#F6F6F6'
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: scaleSize(100),
     paddingHorizontal: scaleSize(20),
-    backgroundColor: '#02BB4F',
+    backgroundColor: '#ffc500',
     borderWidth: 1,
     borderRadius: scaleSize(30),
     justifyContent: 'center',

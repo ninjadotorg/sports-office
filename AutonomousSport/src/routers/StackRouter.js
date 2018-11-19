@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import * as Screens from '@/screens';
 import { FONT_FAMILY, fontSizeHeader } from '@/utils/TextStyle';
 import { COLOR } from '@/utils/Constants';
-// import TransitionConfig from '@/utils/TransitionConfig';
+import TransitionConfig from '@/utils/TransitionConfig';
 
 const customNavigationOption = {
   headerBackTitleStyle: { color: COLOR.BLACK },
@@ -134,7 +134,7 @@ const StackRouter = createStackNavigator(
     mode: 'card',
     // initialRouteName: 'CreateRoomScreen',
     // initialRouteParams: { transition: 'fade' },
-    // transitionConfig: TransitionConfig,
+    transitionConfig: TransitionConfig,
     lazy: true,
     initialRouteName: 'SignInScreen'
   }

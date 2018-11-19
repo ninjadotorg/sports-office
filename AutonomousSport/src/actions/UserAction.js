@@ -132,14 +132,19 @@ export const updateDataPracticeInfo = () => async dispatch => {
   try {
     let user: User = await LocalDatabase.getUserInfo();
     if (user) {
-      const kcal =  (user.Profile.kcal || 0);
-      const miles = (user.Profile.miles || 0);
-      const response = await ApiService.practiceArchivement({ kcals:kcal,miles:miles});
+      const kcal = user.Profile.kcal || 0;
+      const miles = user.Profile.miles || 0;
+      const response = await ApiService.practiceArchivement({
+        kcals: kcal,
+        miles: miles
+      });
       console.log(TAG, ' - updateDataPracticeInfo - response ', response);
-      
-      dispatch({ type: ACTIONS.UPDATE_DATA_PRACTICE_INFO, payload: response || {} });
+
+      dispatch({
+        type: ACTIONS.UPDATE_DATA_PRACTICE_INFO,
+        payload: response || {}
+      });
     }
-    
 
     return;
   } catch (e) {
@@ -176,9 +181,10 @@ export const updatePassword = (cpassword = '', npassword) => async dispatch => {
 export const updateRacing = ({ kcal = 0, miles = 0 }) => async dispatch => {
   try {
     let user: User = await LocalDatabase.getUserInfo();
-    if (user) {
+    if (user && (kcal !== 0 || miles !== 0)) {
       user.Profile['kcal'] = kcal + (user.Profile.kcal || 0);
       user.Profile['miles'] = miles + (user.Profile.miles || 0);
+      console.log(TAG, ' - updateRacing - miles =', user.Profile['miles']);
       await LocalDatabase.saveUserInfo(JSON.stringify(user.toJSON()));
     }
     dispatch({ type: ACTIONS.UPDATE_RACING, payload: user?.toJSON() || {} });
