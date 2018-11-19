@@ -31,7 +31,7 @@ func String(length int)string {
 
 func SendNewPasswordConfirmEmail(name string, email string, txhash string) {
 	
-	from := mail.NewEmail("Human", "human@autonomous.ai")
+	from := mail.NewEmail("Autonomous Velo Bike", "human@autonomous.ai")
 	subject := "You've gotten a new password"
 	to := mail.NewEmail(name, email)
 	htmlContent := "Dear customer,<br/>Thanks for your inquiry of new password. Here is your new password:<br/><b>" + txhash + "</b><br/>Please login to Autonomous Bike with your email and new password. You can change your password in Your Profile on Autonomous Bike app.<br/><br/>Thanks and regards,<br/>Autonomous Team"
@@ -57,11 +57,11 @@ func SendNewPasswordConfirmEmail(name string, email string, txhash string) {
 
 func SendRequestConfirmEmail(name string, email string, txhash string) {
 	
-	from := mail.NewEmail("Human", "human@autonomous.ai")
+	from := mail.NewEmail("Autonomous Velo Bike", "human@autonomous.ai")
 	subject := "Reset your password"
 	to := mail.NewEmail(name, email)
 	//plainTextContent := ""
-	link := "https://bike.autonomous.ai/confirm-forgot-pass/?email=" + email + "&txhash=" + txhash
+	link := config.AUTONOMOUS_API_HOST +"api/confirm-forgot-pass?email=" + email + "&txhash=" + txhash
 	htmlContent := "Dear customer,<br/>You've received this email because someone entered your email to Autonomous Bike's forgot password feature. <br/>Please click the link below to receive an email contained your new password:<br/>" + link + "<br/>If you dont request to change your password, feel free to skip this email.<br/><br/>Thankyou,<br/>Autonomous Team"
 
 	content := mail.NewContent("text/html", htmlContent)

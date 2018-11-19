@@ -31,6 +31,7 @@ var OPENTOK_SCRET = os.Getenv("OPENTOK_SCRET")
 var OPENTOK_API_KEY, _ = strconv.Atoi(os.Getenv("OPENTOK_API_KEY"))
 var SENDGRID_API_KEY = os.Getenv("SENDGRID_API_KEY")
 var FIREBASE_URL = os.Getenv("FIREBASE_DATABASE_URL")
+var AUTONOMOUS_API_HOST = os.Getenv("AUTONOMOUS_API_HOST")
 var gormConn * gorm.DB
 
 func GetDatabaseConnection() *gorm.DB {

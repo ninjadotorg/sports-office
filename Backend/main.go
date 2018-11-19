@@ -268,7 +268,7 @@ func main() {
 	// 		log.Fatalln("Error setting value:", err2)
 	// }
 
-	e.POST("/api/forgot-password", ctl.ForgotPass)
+	e.POST("/api/forgot-pass", ctl.ForgotPass)
 	e.GET("/api/confirm-forgot-pass", ctl.ConfirmEmailPass) 
 	e.POST("/api/auth", ctl.Auth) 
 	e.POST("/api/signup", ctl.Signup) 
