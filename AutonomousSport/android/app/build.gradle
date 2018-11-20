@@ -135,7 +135,7 @@ android {
             signingConfig signingConfigs.config
         }
         debug {
-            versionNameSuffix "-debug"
+            versionNameSuffix ""
         }
     }
     productFlavors {

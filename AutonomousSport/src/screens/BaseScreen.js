@@ -26,17 +26,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   button: {
-    borderRadius: 30,
+    borderRadius: verticalScale(25),
     borderWidth: 1,
     minWidth: '35%',
-    height: 45,
+    height: verticalScale(35),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
     borderColor: '#ffc500',
     marginRight: 0,
-    marginLeft: 0,
-    paddingVertical: 1
+    marginLeft: 0
   }
 });
 const CONFIG_VOICE = {
@@ -134,7 +133,7 @@ class BaseScreen extends Component {
     ) {
       console.log('App has come to the foreground!');
       BleManager.getConnectedPeripherals([]).then(peripheralsArray => {
-        console.log('Connected peripherals: ' + peripheralsArray?.length);
+        // console.log('Connected peripherals: ' + peripheralsArray?.length);
       });
     }
     this.appState = nextAppState;
@@ -209,7 +208,7 @@ class BaseScreen extends Component {
           this.popupInviteDialog = popupDialog;
         }}
       >
-        <View style={{ flex: 1, flexDirection: 'row', padding: 20 }}>
+        <View style={{ flex: 1, flexDirection: 'row', padding: verticalScale(10) }}>
           <Image
             style={[{ width: '40%', height: '100%', resizeMode: 'cover' }]}
             source={{ uri: uri }}
@@ -227,7 +226,7 @@ class BaseScreen extends Component {
               ]}
             >
               <Text style={[TextStyle.mediumText, { fontWeight: 'bold' }]}>
-                {this.state.playername || ''}
+                {this.state.playername || 'HienTon'}
               </Text>
               <Text style={[TextStyle.mediumText, {}]}>
                 {' '}

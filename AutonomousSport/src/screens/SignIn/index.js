@@ -454,7 +454,7 @@ class SignInScreen extends BaseScreen {
                 textStyle={[
                   TextStyle.mediumText,
                   styles.textButton,
-                  { fontWeight: 'bold', flex: 1 }
+                  { fontWeight: 'bold', flex: 1,color:'#534c5f' }
                 ]}
                 containerViewStyle={[styles.buttonStyle, {}]}
                 onPress={this.onPressSignIn}

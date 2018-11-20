@@ -15,7 +15,7 @@
     "flow": "flow",
     "flow start": "flow start",
     "flow stop": "flow stop",
-    "android": "react-native run-android",
+    "android": "react-native run-android --variant=stagingDebug",
     "ios": "react-native run-ios",
     "reload": "adb shell input keyevent 82",
     "log:android": "react-native log-android",
