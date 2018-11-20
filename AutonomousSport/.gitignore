@@ -41,6 +41,7 @@ yarn.lock
 buck-out/
 \.buckd/
 *.keystore
+.env.production
 
 # fastlane
 #

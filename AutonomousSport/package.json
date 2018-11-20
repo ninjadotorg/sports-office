@@ -10,6 +10,7 @@
   "scripts": {
     "start": "react-native start",
     "start:reset": "react-native start --reset-cache",
+    "release": "cd android && ENVFILE=.env.production ./gradlew assembleProductionRelease",
     "test": "jest",
     "flow": "flow",
     "flow start": "flow start",

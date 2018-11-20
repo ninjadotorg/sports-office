@@ -101,7 +101,7 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    flavorDimensions "default"
     defaultConfig {
         applicationId "com.autonomoussport"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -110,6 +110,14 @@ android {
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+    }
+    signingConfigs {
+        config {
+            keyAlias 'Autonomous'
+            keyPassword 'autonomous123'
+            storeFile file('../keystores/autokey')
+            storePassword 'autonomous123'
         }
     }
     splits {
@@ -124,6 +132,19 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.config
+        }
+        debug {
+            versionNameSuffix "-debug"
+        }
+    }
+    productFlavors {
+        staging {
+            applicationIdSuffix ""
+//            dimension "type"
+        }
+        production {
+//            dimension "type"
         }
     }
     // applicationVariants are e.g. debug, release
