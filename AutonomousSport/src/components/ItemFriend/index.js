@@ -30,27 +30,31 @@ class ItemFriend extends PureComponent {
   componentDidMount() {}
 
   onClickMakeFriend = onClickView(() => {
-    const { dataItem, inviteMode = false } = this.props;
-
-    console.log('invited onClickMakeFriend', dataItem);
+    const {
+      dataItem,
+      inviteMode = false,
+      makeFriend,
+      selectIdfn,
+      makeInvited
+    } = this.props;
+    // console.log('invited onClickMakeFriend', dataItem);
 
     if (!inviteMode) {
       if (dataItem?.id && !dataItem['is_maked_friend']) {
         this.setState({
           isLoading: true
         });
-        this.props.makeFriend({ friendId: dataItem?.id });
+        makeFriend({ friendId: dataItem?.id });
       }
     } else {
-      this.props.selectIdfn(dataItem?.id);
+      // this.setState({
+      //   isLoading: true
+      // });
+      selectIdfn(dataItem?.id);
 
-      this.props.makeInvited({
+      makeInvited({
         friendId: dataItem?.id,
         invited: dataItem?.is_add_invited
-      });
-
-      this.setState({
-        dataItem: dataItem
       });
     }
   });
@@ -149,6 +153,7 @@ class ItemFriend extends PureComponent {
 
         {this.props.inviteMode ? (
           <Button
+            loading={isLoading}
             containerViewStyle={{
               marginRight: 0,
               borderRadius: scale(30),
@@ -179,7 +184,7 @@ class ItemFriend extends PureComponent {
           />
         ) : (
           <Button
-            rounded
+            loading={isLoading}
             containerViewStyle={{
               marginRight: 0,
               borderRadius: scale(30),

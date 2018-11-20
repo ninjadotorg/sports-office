@@ -18,7 +18,7 @@ const socialButtonText = {
 
 const buttonStyle = {
   height: 50,
-  backgroundColor: '#02bb4f',
+  backgroundColor: '#ffc500',
   marginLeft: 0,
   marginRight: 0,
   borderWidth: 1,
