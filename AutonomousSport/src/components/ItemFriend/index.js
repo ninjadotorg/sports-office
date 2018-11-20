@@ -47,15 +47,14 @@ class ItemFriend extends PureComponent {
         makeFriend({ friendId: dataItem?.id });
       }
     } else {
+      // this.setState({
+      //   isLoading: true
+      // });
       selectIdfn(dataItem?.id);
 
       makeInvited({
         friendId: dataItem?.id,
         invited: dataItem?.is_add_invited
-      });
-
-      this.setState({
-        dataItem: dataItem
       });
     }
   });
@@ -154,6 +153,7 @@ class ItemFriend extends PureComponent {
 
         {this.props.inviteMode ? (
           <Button
+            loading={isLoading}
             containerViewStyle={{
               marginRight: 0,
               borderRadius: scale(30),
@@ -184,7 +184,7 @@ class ItemFriend extends PureComponent {
           />
         ) : (
           <Button
-            rounded
+            loading={isLoading}
             containerViewStyle={{
               marginRight: 0,
               borderRadius: scale(30),

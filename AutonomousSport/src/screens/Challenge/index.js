@@ -473,7 +473,7 @@ class ChallengeScreen extends BaseScreen {
             title="OK"
             onPress={this.onPressFinish}
             buttonStyle={[styles.button, { backgroundColor: '#ffc500',width:'30%',alignSelf:'center' }]}
-            textStyle={[TextStyle.mediumText, { fontWeight: 'bold' }]}
+            textStyle={[TextStyle.mediumText, { fontWeight: 'bold',color:'#534c5f' }]}
           />
         </View>
       </FastImage>

@@ -44,6 +44,7 @@ class FriendsScreen extends BaseScreen {
     const sumMiles = this.props.navigation.getParam('miles') || 0;
     const mapId = this.props.navigation.getParam('mapId') || -1;
     const loop = this.props.navigation.getParam('loop') || 1;
+    this.isLoadMore = false;
 
     this.state = {
       selectedIndex: 0,
@@ -51,7 +52,7 @@ class FriendsScreen extends BaseScreen {
       offset: 0,
       limit: limitRow,
       friends: {},
-      isLoading: true,
+      isLoading: false,
       listFriends: [],
       listFriendsIvite: [],
       search: '',
@@ -91,7 +92,7 @@ class FriendsScreen extends BaseScreen {
   componentWillReceiveProps(nextProps) {
     const { friends, listFriends = [] } = this.state;
     console.log(TAG, ' componentWillReceiveProps begin = ');
-
+    this.isLoadMore = false;
     if (!_.isEqualWith(nextProps?.friends, friends)) {
       console.log(
         TAG,
@@ -99,11 +100,11 @@ class FriendsScreen extends BaseScreen {
         listFriends.length
       );
       const listNew = nextProps?.friends?.list || [];
-      let listSum = _.unionBy(listNew, friends.list, 'id');
-      listSum = _.sortBy(listSum, 'id').reverse();
-      console.log(TAG, ' componentWillReceiveProps02 = length ', listSum[1]);
+      // let listSum = _.unionBy(listNew, friends.list, 'id');
+      // listSum = _.sortBy(listSum, 'id').reverse();
+      console.log(TAG, ' componentWillReceiveProps02 = listNew length ', listNew.length);
       const listFriendsNew =
-        listSum.map(item => {
+        listNew?.map(item => {
           return new User(item);
         }) || [];
 
@@ -118,8 +119,9 @@ class FriendsScreen extends BaseScreen {
   }
 
   componentDidMount() {
-    const { offset, limit } = this.state;
-    this.props.fetchAllFriend({ offset, limit });
+    // const { offset, limit } = this.state;
+    // this.props.fetchAllFriend({ offset, limit });
+    this.onRefreshData();
 
     //invitedlist
     var listf = this.props?.invitedlist || 0;
@@ -131,12 +133,14 @@ class FriendsScreen extends BaseScreen {
   updateIndex = selectedIndexItem => {
     let { selectedIndex, offset, limit } = this.state;
     if (selectedIndexItem !== selectedIndex) {
-      offset = 0;
-      limit = limitRow;
+      // offset = 0;
+      // limit = limitRow;
       this.handleSearchClear();
       this.setState(
         {
-          selectedIndex: selectedIndexItem
+          selectedIndex: selectedIndexItem,
+          offset:0,
+          limit:limitRow
         },
         () => {
           this.onRefreshData();
@@ -159,12 +163,12 @@ class FriendsScreen extends BaseScreen {
   });
 
   handleQueryChange = delayCallingManyTime(search => {
-    const { isLoading, offset, limit } = this.state;
+    // const { isLoading, offset, limit } = this.state;
     // if (!isLoading) {
-      this.setState({ search: search || '',isLoading:true });
-      this.fetchData({ offset: 0, limit, search });
+    this.setState({ search: search || '', offset:0,limit:limitRow });
+    this.fetchData({ offset: 0, limit:limitRow, search });
     // }
-  },0.02);
+  }, 0.5);
 
   handleSearchCancel = () => this.handleQueryChange('');
   handleSearchClear = () => this.handleQueryChange('');
@@ -181,7 +185,7 @@ class FriendsScreen extends BaseScreen {
 
   fetchData = ({ offset, limit, search }) => {
     const { selectedIndex } = this.state;
-    console.log(TAG, ' fetchData begin');
+    console.log(TAG, ' fetchData begin search = ',search);
     selectedIndex === 0
       ? this.props.fetchAllFriend({ offset, limit, search })
       : this.props.fetchAllUser({ offset, limit, search });
@@ -199,16 +203,21 @@ class FriendsScreen extends BaseScreen {
           isLoading: true
         },
         () => {
-          this.fetchData({ offset: 0, limitRow, search });
+          this.fetchData({ offset: 0,limit: limitRow, search });
         }
       );
     }
   });
   onLoadMore = this.onClickView(() => {
-    console.log(TAG, ' onLoadMore begin');
+    
     let { isLoading, offset, limit, search } = this.state;
-    if (!isLoading) {
-      this.fetchData({ offset, limit, search });
+    if (!this.isLoadMore && offset>=limit) {
+      console.log(TAG, ' onLoadMore begin');
+      this.isLoadMore = true;
+      this.setState({
+        isLoading:true
+      });
+      this.fetchData({ offset, limit, search });  
     }
   });
   onPressBack = this.onClickView(() => {
@@ -217,7 +226,7 @@ class FriendsScreen extends BaseScreen {
   renderLeftHeader = () => {
     return (
       <View style={[styles.topBar]}>
-        <View style={{ flexDirection: 'row',flex:1 }}>
+        <View style={{ flexDirection: 'row', flex: 1 }}>
           <TouchableOpacity
             style={{ flexDirection: 'row' }}
             onPress={this.onPressBack}
@@ -342,7 +351,7 @@ class FriendsScreen extends BaseScreen {
   render() {
     const { selectedIndex, listFriends, isLoading, inviteMode } = this.state;
 
-    console.log(TAG, selectedIndex, listFriends, isLoading, inviteMode);
+    // console.log(TAG, selectedIndex, listFriends, isLoading, inviteMode);
 
     return (
       <ImageBackground
