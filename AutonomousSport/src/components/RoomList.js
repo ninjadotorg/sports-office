@@ -24,7 +24,6 @@ import images, { icons } from '@/assets';
 import TextStyle from '@/utils/TextStyle';
 import { verticalScale, moderateScale, scale } from 'react-native-size-matters';
 
-
 export const TAG = 'RoomList';
 const wp = percentage => {
   const value = (percentage * screenSize.width) / 100;
@@ -39,13 +38,15 @@ export const sliderWidth = screenSize?.width || 100;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 10
   },
-   containerImg: {
+  containerImg: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   list: {
     flex: 1
@@ -57,22 +58,16 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
     borderRadius: Platform.OS === 'ios' ? 8 : 0
-    // borderTopLeftRadius: entryBorderRadius,
-    // borderTopRightRadius: entryBorderRadius
   },
   imageIconNoroom: {
     resizeMode: 'cover',
     borderRadius: Platform.OS === 'ios' ? 8 : 0,
     alignItems: 'center',
     justifyContent: 'center'
-    // borderTopLeftRadius: entryBorderRadius,
-    // borderTopRightRadius: entryBorderRadius
   },
   imageContainer: {
     height: '100%',
     marginBottom: Platform.OS === 'ios' ? 0 : -1,
-    // borderTopLeftRadius: entryBorderRadius,
-    // borderTopRightRadius: entryBorderRadius,
     borderRadius: 8
   }
 });
@@ -114,7 +109,7 @@ class RoomList extends Component {
   //   return null;
   // }
   componentWillReceiveProps(nextProps) {
-    const { data, joinRoom, levelFillter } = this.state;
+    const { data, joinRoom, levelFillter, itemSelected = {} } = this.state;
     const newData = nextProps?.roomList?.list || data;
     if (JSON.stringify(newData) !== JSON.stringify(data)) {
       //console.log(TAG, ' componentWillReceiveProps - room list ');
@@ -123,12 +118,10 @@ class RoomList extends Component {
       nextProps?.joinRoomData['token'] &&
       JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
     ) {
-      const { itemSelected = {} } = this.state;
       itemSelected['token'] = nextProps?.joinRoomData['token'];
-      //console.log(TAG, ' componentWillReceiveProps - JoinRoom session ', nextProps?.joinRoomData?.room?.session);
       console.log(
         TAG,
-        ' componentWillReceiveProps - JoinRoom session itemSelected ',
+        ' componentWillReceiveProps - JoinRoom itemSelected ',
         itemSelected
       );
       if (itemSelected?.session) {
@@ -175,7 +168,7 @@ class RoomList extends Component {
 
   joinRoomSelect = item => {
     console.log('joinRoomSelect', item);
-    if (item.session != '') {
+    if (item && item.session) {
       this.props.joinRoom({ session: item.session });
     }
   };
@@ -192,6 +185,28 @@ class RoomList extends Component {
 
   renderHeader = () => {
     return null;
+  };
+  renderEmpty = () => {
+    return (
+      <View style={[styles.containerImg, {}]}>
+        <Image
+          source={images.ic_norooms}
+          style={[
+            styles.imageIconNoroom,
+            { resizeMode: 'cover', height: scale(48), width: scale(48) }
+          ]}
+        />
+        <Text
+          style={[
+            TextStyle.smallText,
+            TextStyle.buttonText,
+            { marginTop: verticalScale(10), color: '#8A8398' }
+          ]}
+        >
+          There are no rooms available
+        </Text>
+      </View>
+    );
   };
 
   renderItem = ({ item, index }, parallaxProps) => {
@@ -215,54 +230,36 @@ class RoomList extends Component {
 
   render() {
     const { isFetching, dataFilter = [] } = this.state;
-    // console.log('levelIndex-rooms', dataFilter);
-    // return (
-    //   <View style={styles.container}>
-    //     {dataFilter?.length > 0 ? (
-    //       <Carousel
-    //         ref={c => {
-    //           this._carousel = c;
-    //         }}
-    //         hasParallaxImages
-    //         data={dataFilter}
-    //         renderItem={this.renderItem}
-    //         sliderWidth={sliderWidth}
-    //         itemWidth={itemWidth}
-    //         loop
-    //       />
-    //     ) : (
-    //       <Image
-    //         source={{
-    //           uri:
-    //             'https://images.pexels.com/photos/53040/pexels-photo-53040.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-    //         }}
-    //         style={[styles.image, { resizeMode: 'cover' }]}
-    //       />
-    //     )}
-    //   </View>
-    // );
     return (
-      <View style={styles.container}>  
-           {dataFilter.length ==0 ? 
-              <View style={[styles.containerImg, {marginTop:verticalScale(60)}]}>  
-                  <Image
-                      source={images.ic_norooms}
-                      style={[styles.imageIconNoroom, { resizeMode:  'cover',  height:scale(48), width:scale(48)  }]} 
-                  />
-                  <Text 
-                    style={[TextStyle.smallText, TextStyle.buttonText, {marginTop:verticalScale(10), color:"#8A8398"}]}
-                  >
-                  There are no rooms available
-                  </Text>
-              </View>
+      <View style={styles.container}>
+        {/*dataFilter.length == 0 ? (
+          <View style={[styles.containerImg, {}]}>
+            <Image
+              source={images.ic_norooms}
+              style={[
+                styles.imageIconNoroom,
+                { resizeMode: 'cover', height: scale(48), width: scale(48) }
+              ]}
+            />
+            <Text
+              style={[
+                TextStyle.smallText,
+                TextStyle.buttonText,
+                { marginTop: verticalScale(10), color: '#8A8398' }
+              ]}
+            >
+              There are no rooms available
+            </Text>
+          </View>
+            ) : null*/}
 
-          :null }
-
-          <FlatList
+        <FlatList
           horizontal
           contentContainerStyle={{
-            alignItems: 'center'
+            // alignItems: 'center',
+            flexGrow: 1
           }}
+          ListEmptyComponent={this.renderEmpty}
           style={[styles.list, {}]}
           ListHeaderComponent={this.renderHeader}
           data={dataFilter}
@@ -281,12 +278,12 @@ class RoomList extends Component {
 }
 
 RoomList.propTypes = {
-  levelIndex: PropTypes.number.isRequired
+  levelIndex: PropTypes.number.isRequired,
+  fetchRoom: PropTypes.func.isRequired,
+  joinRoom: PropTypes.func.isRequired
 };
 
-RoomList.defaultProps = {
-  levelIndex: -1
-};
+RoomList.defaultProps = {};
 export default compose(
   withNavigation,
   connect(

@@ -25,14 +25,6 @@ import { fetchUser } from '@/actions/UserAction';
 import Room from '@/models/Room';
 
 export const TAG = 'CreateRoomScreen';
-const component1 = () => <Text>Hello</Text>;
-const component2 = () => <Text>World</Text>;
-const component3 = () => <Text>ButtonGroup</Text>;
-const buttons = [
-  { element: component1 },
-  { element: component2 },
-  { element: component3 }
-];
 
 class CreateRoomScreen extends BaseScreen {
   static navigationOptions = navigation => {
@@ -46,8 +38,6 @@ class CreateRoomScreen extends BaseScreen {
       mapList: [],
       selectedIndex: 0
     };
-
-    this.updateIndex = this.updateIndex.bind(this);
   }
 
   componentDidMount() {}
@@ -80,12 +70,6 @@ class CreateRoomScreen extends BaseScreen {
           roomInfo.toJSON()
         );
       } else {
-        ////
-        console.log(
-          TAG,
-          ' onPressRandomJoin show message ',
-          roomInfo['message']
-        );
         this.showToastMessage(roomInfo['message']);
       }
     } catch (error) {
@@ -148,7 +132,7 @@ class CreateRoomScreen extends BaseScreen {
     );
   };
   render() {
-    const { isLoading = false } = this.state;
+    const { isLoading = false, selectedIndex = 0 } = this.state;
     return (
       <ImageBackground
         style={[styles.containerimg]}
@@ -161,7 +145,7 @@ class CreateRoomScreen extends BaseScreen {
           >
             {this.renderLeftHeader()}
           </Header>
-          <RoomList levelIndex={this.state.selectedIndex} />
+          <RoomList levelIndex={selectedIndex} />
           <View style={styles.containerBottom}>
             <Button
               loading={isLoading}
