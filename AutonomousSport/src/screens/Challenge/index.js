@@ -542,17 +542,6 @@ class ChallengeScreen extends BaseScreen {
         }}
     />);
 
-    // return icons.markerPlayer({
-    //   color: 'red',
-    //   size: sizeIconRacing.width,
-    //   containerStyle: {
-    //     paddingVertical:0,
-    //     paddingHorizontal:0,
-    //     position: 'absolute',
-    //     top: pos.y ,
-    //     left: pos.x
-    //   }
-    // });
   };
 
   onPressReady = this.onClickView(async () => {
@@ -572,20 +561,22 @@ class ChallengeScreen extends BaseScreen {
     // this.props.disconnectBluetooth();
     // this.roomDataPrefference?.off('value');
   }
-  leftRoom = ()=>{
+  leftRoom = async ()=>{
     const { room } = this.state;
-    this.props.leftRoom({ session: room?.session });
+    await this.props.leftRoom({ session: room?.session });
   }
   onPressClose = this.onClickView(async () => {
     try {
       
       this.showLoadingAllScreen = true;
       this.roomDataPrefference?.off('value');
-      await Util.excuteWithTimeout(this.leftRoom(),4);
+      console.log(TAG, ' onPressClose call-left-room');
+      await Util.excuteWithTimeout(this.leftRoom(),5);
       
     } catch (error) {
-      this.showLoadingAllScreen = false;
+      
     }finally{
+      this.showLoadingAllScreen = false;
       this.replaceScreen(this.props.navigation, TAGCREATE);
     }
     
