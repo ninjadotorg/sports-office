@@ -110,11 +110,13 @@ class ItemMap extends PureComponent {
 
 ItemMap.propTypes = {
   dataItem: PropTypes.instanceOf(Map).isRequired,
-  checked: PropTypes.bool
+  checked: PropTypes.bool,
+  onItemSelected: PropTypes.func
 };
 
 ItemMap.defaultProps = {
-  checked: false
+  checked: false,
+  onItemSelected: id => {}
 };
 
 export default connect(
