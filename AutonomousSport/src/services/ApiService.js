@@ -295,7 +295,7 @@ export default class ApiService {
     return response;
   }
 
-  static async joinRandomRoom({}) {
+  static async joinRandomRoom() {
     const url = Api.JOIN_RANDOM_ROOM;
     const response = await ApiService.getURL(METHOD.GET, url, {});
 

@@ -63,12 +63,13 @@ class CreateRoomScreen extends BaseScreen {
 
   onPressRandom = this.onClickView(async () => {
     console.log(TAG, ' onPressRandomJoin 1 ');
+
     try {
       this.setState({
         isLoading: true
       });
 
-      const roomInfo = await ApiService.joinRandomRoom({});
+      const roomInfo = await ApiService.joinRandomRoom();
       console.log(TAG, ' onPressRandomJoin 2 roomInFo ', roomInfo);
       if (roomInfo instanceof Room && roomInfo?.session && roomInfo?.token) {
         console.log(TAG, ' onPressRandomJoin 3 token ', roomInfo?.token);
@@ -178,7 +179,10 @@ class CreateRoomScreen extends BaseScreen {
                 styles.button,
                 { backgroundColor: '#ffc500', borderColor: 'transparent' }
               ]}
-              textStyle={[TextStyle.mediumText, { fontWeight: 'bold',color:'#534c5f' }]}
+              textStyle={[
+                TextStyle.mediumText,
+                { fontWeight: 'bold', color: '#534c5f' }
+              ]}
               onPress={this.onPressCreateRoom}
             />
           </View>
