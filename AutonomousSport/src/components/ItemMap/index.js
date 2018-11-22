@@ -42,14 +42,14 @@ class ItemMap extends PureComponent {
     const styleContainerItem = checked
       ? styles.containerItemsChecked
       : styles.containerItem;
-    const { dataItem } = this.props;
+    const { dataItem, onItemSelected } = this.props;
     const uri = dataItem?.cover || dataItem?.photo || '';
     return (
       <View style={styles.container}>
         <TouchableOpacity
           style={styleContainerItem}
           onPress={onClickView(() => {
-            this.props.onItemSelected(dataItem.id);
+            onItemSelected(dataItem.id);
           })}
         >
           <View style={styles.imageContainerIOS}>
