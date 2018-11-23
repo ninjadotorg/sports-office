@@ -364,7 +364,7 @@ class SetupScreen extends BaseScreen {
 
   renderItem = item => {
     const color = item.connected ? 'green' : '#fff';
-    console.log(TAG, ' renderItem = ', item);
+    // console.log(TAG, ' renderItem = ', item);
     return (
       <TouchableOpacity
         style={[styles.row, { backgroundColor: 'transparent', marginTop: 5 }]}
