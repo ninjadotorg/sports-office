@@ -165,7 +165,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-tts')
+    compile project(':react-native-sound-player')
     compile project(':react-native-radial-gradient')
     compile(project(':react-native-fast-image')){
         exclude (group: 'com.android.support', module: 'support-fragment')

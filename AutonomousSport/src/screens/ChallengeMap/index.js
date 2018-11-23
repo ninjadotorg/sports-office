@@ -156,10 +156,6 @@ class ChallengeMapScreen extends BaseScreen {
     this.setState({ isReady: true });
   });
 
-  componentWillUnmount() {
-    console.log(TAG, ' componentWillUnmount ok');
-  }
-
   onPressClose = this.onClickView(async () => {
     const { room } = this.state;
     this.props.leftRoom({ session: room?.session });

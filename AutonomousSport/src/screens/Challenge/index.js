@@ -691,6 +691,7 @@ class ChallengeScreen extends BaseScreen {
   });
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ok');
     // this.props.disconnectBluetooth();
     // this.roomDataPrefference?.off('value');

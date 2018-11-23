@@ -150,6 +150,7 @@ class SetupScreen extends BaseScreen {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ');
     // clearTimeout(this.timeout);
     if (this.peripheralBluetooth) {

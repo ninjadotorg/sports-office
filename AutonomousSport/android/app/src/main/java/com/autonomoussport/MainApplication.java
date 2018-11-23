@@ -3,8 +3,8 @@ package com.autonomoussport;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.johnsonsu.rnsoundplayer.RNSoundPlayerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
-import net.no_mad.tts.TextToSpeechPackage;
 import com.surajit.rnrg.RNRadialGradientPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.horcrux.svg.SvgPackage;
@@ -34,7 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new TextToSpeechPackage(),
+            new RNSoundPlayerPackage(),
             new RNRadialGradientPackage(),
             new FastImageViewPackage(),
             new SvgPackage(),
