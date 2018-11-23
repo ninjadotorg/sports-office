@@ -256,7 +256,6 @@ class RoomList extends Component {
         <FlatList
           horizontal
           contentContainerStyle={{
-            // alignItems: 'center',
             flexGrow: 1
           }}
           ListEmptyComponent={this.renderEmpty}

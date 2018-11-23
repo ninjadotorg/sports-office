@@ -53,7 +53,6 @@ class NewRoomScreen extends BaseScreen {
     this.props.navigation.goBack();
   };
   renderLeftHeader = () => {
-    const { selectedIndex } = this.state;
     return (
       <View style={styles.topBar}>
         <TouchableOpacity
@@ -95,18 +94,6 @@ class NewRoomScreen extends BaseScreen {
           </Header>
 
           <MapList />
-
-          {/*<View style={styles.containerBottom}>
-            <Button
-              title="Next"
-              textStyle={[
-                TextStyle.mediumText,
-                { fontWeight: 'bold', color: '#ffc500' }
-              ]}
-              buttonStyle={[styles.button]}
-              onPress={this.onPressCreateRoom}
-            />
-          </View>*/}
           {this.initDialogInvite()}
         </View>
       </ImageBackground>

@@ -66,9 +66,9 @@ class ChooseRoundScreen extends BaseScreen {
     }
   });
 
-  onPressBack = () => {
+  onPressBack = this.onClickView(() => {
     this.props.navigation.goBack();
-  };
+  });
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
