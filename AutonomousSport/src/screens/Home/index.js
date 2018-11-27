@@ -16,6 +16,8 @@ import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { TAG as TAGCREATE } from '@/screens/Create';
 import { TAG as TAGFRIENDS } from '@/screens/Friends';
 import { TAG as TAGPROFILE } from '@/screens/Profile';
+import { TAG as TAGTOPRACE } from '@/screens/TopRace';
+
 import images from '@/assets';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
@@ -168,7 +170,6 @@ class HomeScreen extends BaseScreen {
 
   onPressReset = this.onClickView(async () => {
     const { isStarted } = this.state;
-    console.log(TAG, ' onPressReset isStarted = ', isStarted);
     if (isStarted) {
       this.setState(
         {
@@ -196,6 +197,23 @@ class HomeScreen extends BaseScreen {
   onPressProfile = this.onClickView(() => {
     this.props.navigation.navigate(TAGPROFILE);
   });
+  onPressLeaderBoard = this.onClickView(() => {
+    this.props.navigation.navigate(TAGTOPRACE);
+  });
+
+  renderBluetoothStatus = () => {
+    const status = this.state.race.state || STATE_BLUETOOTH.UNKNOWN;
+    const img =
+      status === STATE_BLUETOOTH.CONNECTED ? images.ic_status_bluetooth_on : images.ic_status_bluetooth_off;
+    return (
+      <TouchableOpacity>
+        <Image
+          source={img}
+          style={{ width: scale(30), height: scale(30), marginLeft: 40 }}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   render() {
     const { user, speed, isStarted } = this.state;
@@ -203,10 +221,53 @@ class HomeScreen extends BaseScreen {
     const { userInfo = {}, practiceInfo = {} } = user || {};
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
-        <View style={styles.containerCenter}>
+        <View style={[styles.containerTop, styles.containerRowTop, {}]}>
+          <View
+            style={[
+              styles.itemTop,
+              { flexDirection: 'row', alignItems: 'flex-start' }
+            ]}
+          >
+            <TouchableOpacity onPress={this.onPressProfile}>
+              <Image
+                source={images.user}
+                style={{ width: scale(30), height: scale(30) }}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={this.onPressListFriends}>
+              <Image
+                source={images.user_friend}
+                style={{ width: scale(30), height: scale(30), marginLeft: 40 }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.itemTop, {}]}>
+            <DashboardProfile
+              kcal={Math.round((practiceInfo?.kcal || 0) * 100) / 100}
+              mile={Math.round((practiceInfo?.miles || 0) * 1000) / 1000}
+            />
+          </View>
+          <View
+            style={[
+              styles.itemTop,
+              { flexDirection: 'row', alignItems: 'flex-end' }
+            ]}
+          >
+            <TouchableOpacity onPress={this.onPressLeaderBoard}>
+              <Image
+                source={images.ic_leader_board}
+                style={{ width: scale(30), height: scale(30) }}
+              />
+            </TouchableOpacity>
+
+            {this.renderBluetoothStatus()}
+          </View>
+        </View>
+        <View style={[styles.containerCenter, {}]}>
           <Animatable.Image
-            animation="pulse" 
-            easing="ease-out" 
+            animation="pulse"
+            easing="ease-out"
             iterationCount={1}
             source={images.image_velocity}
             style={{
@@ -229,48 +290,12 @@ class HomeScreen extends BaseScreen {
               {
                 color: 'white',
                 fontWeight: 'bold',
-                opacity: 0.8,
-                marginTop: -10
+                opacity: 0.8
               }
             ]}
           >
             mi/h
           </Text>
-        </View>
-
-        <View
-          style={[
-            styles.containerTop,
-            styles.containerRowTop,
-            { position: 'absolute' }
-          ]}
-        >
-          <View
-            style={[
-              styles.itemTop,
-              { flexDirection: 'row', alignItems: 'flex-start' }
-            ]}
-          >
-            <TouchableOpacity onPress={this.onPressProfile}>
-              <Image
-                source={images.user}
-                style={{ width: scale(30), height: scale(30) }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={this.onPressListFriends}>
-              <Image
-                source={images.user_friend}
-                style={{ width: scale(30), height: scale(30), marginLeft: 40 }}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.itemTop, { alignItems: 'flex-end', right: 0 }]}>
-            <DashboardProfile
-              kcal={Math.round((practiceInfo?.kcal || 0) * 100) / 100}
-              mile={Math.round((practiceInfo?.miles || 0) * 1000) / 1000}
-            />
-          </View>
         </View>
 
         <View style={styles.containerBottom}>
@@ -284,9 +309,20 @@ class HomeScreen extends BaseScreen {
             onPress={this.onPressReset}
           />
           <Button
-            title="Start Racing" 
-            buttonStyle={[styles.button, { minWidth: scale(90), paddingHorizontal: scale(15), backgroundColor: '#ffc500',borderWidth: 0 }]} 
-            textStyle={[TextStyle.mediumText, { fontWeight: 'bold',color:'#534c5f' }]}
+            title="Start Racing"
+            buttonStyle={[
+              styles.button,
+              {
+                minWidth: scale(90),
+                paddingHorizontal: scale(15),
+                backgroundColor: '#ffc500',
+                borderWidth: 0
+              }
+            ]}
+            textStyle={[
+              TextStyle.mediumText,
+              { fontWeight: 'bold', color: '#534c5f' }
+            ]}
             onPress={this.onPressCreateRoom}
           />
         </View>

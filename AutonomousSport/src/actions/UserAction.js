@@ -15,6 +15,7 @@ export const ACTIONS = {
   SIGNIN_WITH_FIREBASE: 'SIGNIN_WITH_FIREBASE',
   GET_USER_LOCAL: 'GET_USER',
   UPDATE_USER_NAME: 'UPDATE_USER_NAME',
+  GET_TOP_RACER: 'GET_TOP_RACER',
   UPDATE_USER_PASSWORD: 'UPDATE_USER_PASSWORD',
   UPDATE_RACING: 'UPDATE_RACING',
   RESET_RACING: 'RESET_RACING',
@@ -126,6 +127,19 @@ export const updateName = (fullname = '') => async dispatch => {
     console.log(TAG, ' - updateName - error ', e);
   }
   dispatch({ type: ACTIONS.UPDATE_USER_NAME, payload: {} });
+};
+
+export const getTopRacer = () => async dispatch => {
+  try {
+    const response = await ApiService.leaderBoard();
+    console.log(TAG, ' - getTopRacer - response ', response);
+
+    dispatch({ type: ACTIONS.GET_TOP_RACER, payload: response || {} });
+    return;
+  } catch (e) {
+    console.log(TAG, ' - getTopRacer - error ', e);
+  }
+  dispatch({ type: ACTIONS.GET_TOP_RACER, payload: {} });
 };
 
 export const updateDataPracticeInfo = () => async dispatch => {

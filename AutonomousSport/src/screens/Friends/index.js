@@ -133,8 +133,6 @@ class FriendsScreen extends BaseScreen {
   updateIndex = selectedIndexItem => {
     let { selectedIndex, offset, limit } = this.state;
     if (selectedIndexItem !== selectedIndex) {
-      // offset = 0;
-      // limit = limitRow;
       this.handleSearchClear();
       this.setState(
         {
@@ -172,16 +170,6 @@ class FriendsScreen extends BaseScreen {
 
   handleSearchCancel = () => this.handleQueryChange('');
   handleSearchClear = () => this.handleQueryChange('');
-
-  // searchdata(text){
-  //   this.setState({search:text});
-  //   console.log(TAG,' searchdata begin',text);
-
-  //   let {isLoading,offset,limit} = this.state;
-  //   if(!isLoading){
-  //     this.fetchData({offset,limit,text});
-  //   }
-  // }
 
   fetchData = ({ offset, limit, search }) => {
     const { selectedIndex } = this.state;

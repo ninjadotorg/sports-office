@@ -1,5 +1,4 @@
 import { StyleSheet, Platform } from 'react-native';
-import { screenSize, scale } from '@/utils/TextStyle';
 import {
   verticalScale,
   scale as scaleSize,
@@ -51,13 +50,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: scaleSize(20)
   },
   containerRowTop: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start' // if you want to fill rows left to right
   },
   itemTop: {
-    width: '50%' // is 50% of container width
+    // width: '50%'
+    // justifyContent: 'center'
   }
 });
 

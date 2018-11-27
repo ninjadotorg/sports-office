@@ -156,25 +156,36 @@ export const connectAndPrepare = () => async dispatch => {
   // );
   console.log(TAG, ' connectAndPrepare 01 state-----');
   if (!receiveDataFromBluetooth) {
-    await BleManager.connect(periBluetooth.peripheral);
-    console.log(TAG, ' connectAndPrepare 02 ');
-    dispatch({
-      type: ACTIONS.CONNECT_BLUETOOTH,
-      payload: {
-        state: STATE_BLUETOOTH.CONNECTED,
-        data: {}
-      }
-    });
+    try {
+      await BleManager.connect(periBluetooth.peripheral);
+      console.log(TAG, ' connectAndPrepare 02 ');
+      dispatch({
+        type: ACTIONS.CONNECT_BLUETOOTH,
+        payload: {
+          state: STATE_BLUETOOTH.CONNECTING,
+          data: {}
+        }
+      });
 
-    console.log(TAG, ' connectAndPrepare 03 ');
-    await BleManager.retrieveServices(periBluetooth.peripheral);
-    console.log(TAG, ' connectAndPrepare 04 ');
-    await BleManager.startNotification(
-      periBluetooth.peripheral,
-      periBluetooth.service,
-      periBluetooth.characteristic
-    );
-    receiveDataFromBluetooth = true;
+      console.log(TAG, ' connectAndPrepare 03 ');
+      await BleManager.retrieveServices(periBluetooth.peripheral);
+      console.log(TAG, ' connectAndPrepare 04 ');
+      await BleManager.startNotification(
+        periBluetooth.peripheral,
+        periBluetooth.service,
+        periBluetooth.characteristic
+      );
+      receiveDataFromBluetooth = true;
+    } catch (error) {
+      dispatch({
+        type: ACTIONS.CONNECT_BLUETOOTH,
+        payload: {
+          state: STATE_BLUETOOTH.UNKNOWN,
+          data: {}
+        }
+      });
+    }
+
     console.log(TAG, ' connectAndPrepare 05 ');
     if (handlerUpdate) {
       handlerUpdate.remove();
