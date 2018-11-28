@@ -1,3 +1,4 @@
+import { StatusBar } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { screenSize } from '@/utils/TextStyle';
 import Constants from '@/utils/Constants';
@@ -64,17 +65,18 @@ export default class Util {
   };
 
   static calculateMapSize = ({ widthReal, heightReal }): {} => {
-    const heightMapExpect = screenSize.height;
+    const heightMapExpect =
+      screenSize.height + (StatusBar.currentHeight || 0);
     let heightMap = heightMapExpect;
     const ratios = widthReal / (heightReal || 1);
 
     const widthMapExpect = heightMapExpect * ratios;
     let widthMap = heightMap * ratios;
 
-    if (screenSize.width - widthMap < Constants.MIN_SIZE_VIDEO) {
-      widthMap = screenSize.width - Constants.MIN_SIZE_VIDEO;
-      heightMap = widthMap / ratios;
-    }
+    // if (screenSize.width - widthMap < Constants.MIN_SIZE_VIDEO) {
+    //   widthMap = screenSize.width - Constants.MIN_SIZE_VIDEO;
+    //   heightMap = widthMap / ratios;
+    // }
     let scaleSize = heightMapExpect / heightReal;
     return {
       width: widthMap,
