@@ -84,7 +84,7 @@ class ChallengeScreen extends BaseScreen {
       isLoading: false,
       isLoadingAllScreen: false,
       isFinished: false,
-      isReady: false
+      isReady: true
     };
 
     this.pathKey = `games/race-rooms/${room?.session || ''}`;
@@ -471,7 +471,7 @@ class ChallengeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    // this.popupDialog.show();
+    this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
     if (
@@ -561,18 +561,17 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderDashBoardAchivement = () => {
-    // let players = [
-    //   { playerName: 'HienTon', goal: 27 },
-    //   { playerName: 'HIEn', goal: 27 },
-    //   { playerName: 'HTOn27', goal: 27 },
+    let players = [
+      { playerName: 'Kat Brown', goal: 100 },
+      { playerName: 'Elina Hill', goal: 84 },
+      { playerName: 'Jone Miller', goal: 80  },
     //   { playerName: 'HTOn22', goal: 22 },
     //   { playerName: 'HienTon100', goal: 100 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 }
-    // ];
-
-    let { players = [] } = this.state;
+    ];
+    // let { players = [] } = this.state;
     // sort list player
 
     players?.sort((a, b) => Number(b.goal) - Number(a.goal)) || [];
@@ -864,7 +863,8 @@ class ChallengeScreen extends BaseScreen {
           width="70%"
           height={`${dialogPercentHeight * 100}%`}
           hasOverlay
-          dialogStyle={{ backgroundColor: 'transparent' }}
+          
+          dialogStyle={{ backgroundColor: 'transparent',alignItems:'center' }}
           dismissOnTouchOutside={false}
           ref={popupDialog => {
             this.popupDialog = popupDialog;

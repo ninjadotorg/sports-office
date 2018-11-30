@@ -151,7 +151,7 @@ class BaseScreen extends Component {
     }
   ) => {
     const fbuid = this.props.user?.userInfo?.fbuid || '';
-    console.log('BaseScreen fbuid', fbuid);
+    // console.log('BaseScreen fbuid', fbuid);
     if (!_.isEmpty(fbuid)) {
       this.dataPrefference = firebase.database().ref('users/' + fbuid);
       this.dataPrefference.on('value', dataSnap => {
