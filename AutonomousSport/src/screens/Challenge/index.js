@@ -17,7 +17,7 @@ import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { scale, verticalScale } from 'react-native-size-matters';
 import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
-import { STATE_BLUETOOTH, CONSTANT_MESSAGE } from '@/utils/Constants';
+import Constants, { STATE_BLUETOOTH, CONSTANT_MESSAGE, BUILD_MODE } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
@@ -28,7 +28,7 @@ import * as Animatable from 'react-native-animatable';
 import styles, { sizeIconRacing } from './styles';
 
 export const TAG = 'ChallengeScreen';
-const heightScreen = screenSize.height + (StatusBar.currentHeight || 0);
+const heightScreen = screenSize.height ;
 let heightMap = heightScreen;
 const dialogPercentHeight = 0.8;
 const dialogHeightImage = screenSize.height * dialogPercentHeight;
@@ -102,9 +102,8 @@ class ChallengeScreen extends BaseScreen {
         .child('players')
         ?.child(user.fbuid)
         .update({ streamId: streamId });
-        // for testing
-      // this.onListenerChanel();
-      ////
+      this.onListenerChanel();
+      
     }
   };
   onStreamDestroyed = streamId => {
@@ -210,11 +209,13 @@ class ChallengeScreen extends BaseScreen {
           ' sumKcal = ',
           sumKcal
         );
+        if(BUILD_MODE.isModeRecordVideo){
         // for testing
-        const keyFirst = Object.keys(firstDataForTesing)[0];
-        firstDataForTesing[keyFirst]['goal'] = goal;
-        this.updateDataTesting();
+          const keyFirst = Object.keys(firstDataForTesing)[0];
+          firstDataForTesing[keyFirst]['goal'] = goal;
+          this.updateDataTesting();
           //////
+        }
         this.playerMeDataPrefference.update({
           speed: data.speed,
           goal: goal,
@@ -796,8 +797,7 @@ class ChallengeScreen extends BaseScreen {
       this.readText(CONSTANT_MESSAGE.START_RACING[index]);
 
       await this.props.startRacing({ session: room.session });
-      // this.setState({ isLoading: false });
-      this.setState({ isLoading: false,isReady:true });
+      this.setState({ isLoading: false });
     }
   });
 
@@ -839,7 +839,7 @@ class ChallengeScreen extends BaseScreen {
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <View style={{ alignItems: 'center',display:'none' }}>
+        <View style={{ alignItems: 'center'}}>
           <BikerProfile
             onStreamCreated={this.onStreamCreated}
             onStreamDestroyed={this.onStreamDestroyed}
