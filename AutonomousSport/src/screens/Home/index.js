@@ -38,11 +38,6 @@ import styles, { sliderWidth, itemWidth } from './styles';
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
 class HomeScreen extends BaseScreen {
-  static navigationOptions = navigation => {
-    return {
-      title: 'Home'
-    };
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -56,10 +51,9 @@ class HomeScreen extends BaseScreen {
     };
 
     this.speed = {
-      countDown:0,
-      value:0
+      countDown: 0,
+      value: 0
     };
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -93,19 +87,20 @@ class HomeScreen extends BaseScreen {
       const {
         data,
         isSavedDevice = false,
-        state = STATE_BLUETOOTH.UNKNOW
+        state = STATE_BLUETOOTH.UNKNOWN
       } = race;
       console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
       if (isSavedDevice && state === STATE_BLUETOOTH.CONNECTED) {
         const s = distanceRun + data.distanceStreet || 0;
         const sumKcal = kcal + data.kcal || 0;
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
-        
+        this.setSpeed = {
+          value: data.speed || 0
+        };
         this.setState({
           user: nextProps.user,
           race: race,
           distanceRun: s,
-          speed: data.speed || 0,
           kcal: sumKcal
         });
         // save local user
@@ -149,7 +144,7 @@ class HomeScreen extends BaseScreen {
         {
           race: {},
           distanceRun: 0,
-          speed: 0,
+          // speed: 0,
           kcal: 0,
           isStarted: true
         },
@@ -190,22 +185,42 @@ class HomeScreen extends BaseScreen {
       </TouchableOpacity>
     );
   };
+
+  set setSpeed(newSpeed = { }) {
+    this.speed = {
+      ...this.speed,
+      ...newSpeed
+    };
+    // this.speed.value = value || this.speed.value;
+    // this.speed.countDown = countDown || this.speed.countDown;
+  }
   updateHandler = ({ touches, screen, time }) => {
-    
-    if (Math.round(this.speedCountDown) != this.state.speed) {
-      const valueChange = this.state.speed <= 0 ? (0) : this.state.speed;
-      const tempValue = ((valueChange - this.speedCountDown) * time.delta) / 1000;
-      const speedCountDown = this.speedCountDown + tempValue;
-    
-      this.speedCountDown = speedCountDown;
-      console.log(TAG,' updateHandler valueChange = ',valueChange,' speedCountDown = ',Math.ceil(speedCountDown),' tempValue = ',tempValue);
+    if (Math.round(Math.abs(this.speed.value - this.speed.countDown))>0) {
+      const valueChange = this.speed.value <= 0 ? 0 : this.speed.value;
+      const tempValue =
+        ((valueChange - this.speed.countDown) * time.delta) / 1000;
+      const speedCountDown = this.speed.countDown + tempValue;
+
+      this.speed.countDown = speedCountDown;
+      console.log(
+        TAG,
+        ' updateHandler speedCountDown = ',
+        Math.round(speedCountDown),
+        ' speed = ',
+        this.state.speed,
+        ', value = ',this.speed.value
+      );
+    }
+
+    if (Math.round(this.speed.countDown) != Math.round(this.state.speed)) {
+      console.log(TAG, ' updateHandler 01 ');
       this.setState({
-        speedCountDown: Math.round(speedCountDown)
+        speed: Math.round(this.speed.countDown)
       });
     }
   };
   render() {
-    const { user, speed, speedCountDown = 0, isStarted } = this.state;
+    const { user, speed, isStarted } = this.state;
 
     const { userInfo = {}, practiceInfo = {} } = user || {};
     return (
@@ -233,10 +248,8 @@ class HomeScreen extends BaseScreen {
           </View>
           <View style={[styles.itemTop, {}]}>
             <DashboardProfile
-              kcal={311}
-              mile={12}
-              // kcal={Math.round((practiceInfo?.kcal || 0) * 100) / 100}
-              // mile={Math.round((practiceInfo?.miles || 0) * 1000) / 1000}
+              kcal={Math.round((practiceInfo?.kcal || 0) * 100) / 100}
+              mile={Math.round((practiceInfo?.miles || 0) * 1000) / 1000}
             />
           </View>
           <View
@@ -276,7 +289,7 @@ class HomeScreen extends BaseScreen {
               { color: 'white', fontWeight: 'bold' }
             ]}
           >
-            {Math.ceil(speedCountDown)}
+            {Math.ceil(speed)}
           </Text>
           <Text
             style={[

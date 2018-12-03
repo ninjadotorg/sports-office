@@ -51,11 +51,12 @@ class SetupScreen extends BaseScreen {
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
   }
 
-  set peripherals(peripherals:Map){
-    this.state.peripherals.clear();
+  set peripherals(newPeripherals:Map){
+    // this.state.peripherals.clear();
+    console.log('set peripherals size = ',newPeripherals.size);
     this.setState({
       scanning: false,
-      peripherals:peripherals
+      peripherals:newPeripherals
     });
   }
 
@@ -233,7 +234,7 @@ class SetupScreen extends BaseScreen {
   };
 
   handleStopScan =()=> {
-    console.log('Scan is stopped');
+    console.log('Scan is stopped size = ',this.peripheralsParams.size);
     this.peripherals = this.peripheralsParams;
     
   }
