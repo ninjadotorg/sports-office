@@ -46,7 +46,9 @@ let firstDataForTesing = { E8oouxYufVbXPWssHdL9NqUfxZl1:
     archivement: 0 } };
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
-    StatusBar.setHidden(true);
+    if(BUILD_MODE.isModeRecordVideo){
+      StatusBar.setHidden(true);
+    }
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
     this.lastIndexPosition = 0;
@@ -84,7 +86,7 @@ class ChallengeScreen extends BaseScreen {
       isLoading: false,
       isLoadingAllScreen: false,
       isFinished: false,
-      isReady: true
+      isReady: false
     };
 
     this.pathKey = `games/race-rooms/${room?.session || ''}`;
@@ -472,7 +474,7 @@ class ChallengeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    this.popupDialog.show();
+    // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
     if (
@@ -501,8 +503,6 @@ class ChallengeScreen extends BaseScreen {
             ' - tempIndex = ',
             tempIndex
           );
-
-          // pos.rotate += (angle - pos.rotate)*time.delta/1000;
           const posNew = {
             x: nextPoint.x,
             y: nextPoint.y,
@@ -562,17 +562,17 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderDashBoardAchivement = () => {
-    let players = [
-      { playerName: 'Kat Brown', goal: 100 },
-      { playerName: 'Elina Hill', goal: 84 },
-      { playerName: 'Jone Miller', goal: 80  },
+    // let players = [
+      // { playerName: 'Kat Brown', goal: 100 },
+      // { playerName: 'Elina Hill', goal: 84 },
+      // { playerName: 'Jone Miller', goal: 80  },
     //   { playerName: 'HTOn22', goal: 22 },
     //   { playerName: 'HienTon100', goal: 100 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 }
-    ];
-    // let { players = [] } = this.state;
+    // ];
+    let { players = [] } = this.state;
     // sort list player
 
     players?.sort((a, b) => Number(b.goal) - Number(a.goal)) || [];

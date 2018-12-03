@@ -8,8 +8,7 @@ import {
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import { Header } from 'react-native-elements';
-import styles, { sliderWidth, itemWidth } from './styles';
+import { Header, Avatar } from 'react-native-elements';
 import TextStyle from '@/utils/TextStyle';
 import PropTypes from 'prop-types';
 import images, { icons } from '@/assets';
@@ -18,6 +17,8 @@ import { getTopRacer } from '@/actions/UserAction';
 import ItemTopRacer from '@/components/ItemTopRacer';
 import _ from 'lodash';
 import User from '@/models/User';
+import { scale } from 'react-native-size-matters';
+import styles, { sliderWidth, itemWidth } from './styles';
 
 export const TAG = 'TopRaceScreen';
 
@@ -67,13 +68,10 @@ class TopRaceScreen extends BaseScreen {
     return (
       <View style={styles.topBar}>
         <TouchableOpacity
-          style={{ flexDirection: 'row' }}
+          style={{ flexDirection: 'row', marginTop: 10 }}
           onPress={this.onPressBack}
         >
-          <Image
-            source={images.ic_backtop}
-            style={{ width: 32, height: 32, marginTop: 10 }}
-          />
+          <Image source={images.ic_backtop} style={{ width: 32, height: 32 }} />
           <Text
             style={[
               TextStyle.mediumText,
@@ -82,8 +80,7 @@ class TopRaceScreen extends BaseScreen {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 marginHorizontal: 10,
-                marginLeft: 20,
-                marginTop: 10
+                marginLeft: 20
               }
             ]}
           >
@@ -93,13 +90,61 @@ class TopRaceScreen extends BaseScreen {
       </View>
     );
   };
+  iconImage = asset => {
+    return <Image source={asset} style={{ alignSelf: 'center' }} />;
+  };
   renderItem = ({ item, index }) => {
-    return <ItemTopRacer key={String(item.id)} dataItem={item} />;
+    const isMe = this.state.dataTopRacer.list[index]['is_me'] || false;
+    let iconResult = (
+      <Avatar
+        rounded
+        titleStyle={[
+          TextStyle.mediumText,
+          {
+            color: 'white',
+            fontWeight: 'bold'
+          }
+        ]}
+        overlayContainerStyle={{
+          backgroundColor: 'rgba(255,255,255,0.2)',
+          borderWidth: 0,
+          borderColor: 'white'
+        }}
+        width={65}
+        height={65}
+        title={String(index + 1)}
+        containerStyle={{ alignSelf: 'center' }}
+      />
+    );
+
+    switch (index) {
+      case 0:
+        iconResult = this.iconImage(images.ic_gold_top);
+        break;
+      case 1:
+        iconResult = this.iconImage(images.ic_sliver);
+        break;
+      case 2:
+        iconResult = this.iconImage(images.ic_bronze);
+        break;
+      default:
+    }
+    return (
+      <ItemTopRacer
+        key={String(item.id)}
+        dataItem={item}
+        icon={iconResult}
+        isMe={isMe}
+      />
+    );
   };
   render() {
     const { listRacers, isLoading = false } = this.state;
     return (
-      <ImageBackground style={[styles.container]} source={images.backgroundx}>
+      <ImageBackground
+        style={[styles.container]}
+        source={images.background_top_race}
+      >
         <View style={styles.container}>
           <Header
             backgroundColor="transparent"

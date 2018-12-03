@@ -117,7 +117,7 @@ class BaseScreen extends Component {
   };
 
   onPressBack = () => {
-    this.props.navigation.goBack();
+    this.props.navigation?.goBack();
   };
 
   initDialogInvite = (

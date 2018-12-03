@@ -24,7 +24,7 @@ import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
 import PopupDialog from 'react-native-popup-dialog';
-import { STATE_BLUETOOTH, CONSTANT_MESSAGE } from '@/utils/Constants';
+import { STATE_BLUETOOTH, CONSTANT_PRACTISE_MESSAGE } from '@/utils/Constants';
 import {
   fetchUser,
   resetRacing,
@@ -202,23 +202,29 @@ class HomeScreen extends BaseScreen {
       const speedCountDown = this.speed.countDown + tempValue;
 
       this.speed.countDown = speedCountDown;
-      console.log(
-        TAG,
-        ' updateHandler speedCountDown = ',
-        Math.round(speedCountDown),
-        ' speed = ',
-        this.state.speed,
-        ', value = ',this.speed.value
-      );
+      // console.log(
+      //   TAG,
+      //   ' updateHandler speedCountDown = ',
+      //   Math.round(speedCountDown),
+      //   ' speed = ',
+      //   this.state.speed,
+      //   ', value = ',this.speed.value
+      // );
     }
 
     if (Math.round(this.speed.countDown) != Math.round(this.state.speed)) {
       console.log(TAG, ' updateHandler 01 ');
+      const nextSpeed = Math.round(this.speed.countDown);
+      this.triggerWithVoice(this.state.speed,nextSpeed);
       this.setState({
-        speed: Math.round(this.speed.countDown)
+        speed: nextSpeed
       });
     }
   };
+
+  triggerWithVoice =(previousSpeed = 0, nextSpeed = 0)=>{
+     // implement here
+  }
   render() {
     const { user, speed, isStarted } = this.state;
 
