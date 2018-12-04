@@ -504,7 +504,7 @@ class SetupScreen extends BaseScreen {
             >
               Welcome to
               {' '}
-              <Text style={{ fontWeight: 'bold' }}>Autonomous Bike</Text>
+              <Text style={{ fontWeight: 'bold' }}>VELO</Text>
 .
               Please connect the app to
               <Text style={{ fontWeight: 'bold' }}>
@@ -522,9 +522,9 @@ class SetupScreen extends BaseScreen {
             >
               Select 
               {' '}
-              <Text style={{ fontWeight: 'bold' }}>Autonomous Bike</Text>
+              <Text style={{ fontWeight: 'bold' }}>Meilan-SPD</Text>
               {' '}
-              below:
+              below (pull to refresh if neccessary)
             </Text>
             {isLoading ? (
               ViewUtil.CustomProgressBar({ visible: true })
