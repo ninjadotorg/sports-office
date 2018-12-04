@@ -91,10 +91,19 @@ const UserReducer = (state = initialState, action) => {
     }
     case ACTIONS.GET_TOP_RACER: {
       const payload = action.payload || {};
+      const userInfo = state.userInfo || {};
       const data = {
         ...payload,
-        status: payload.hasOwnProperty('list')
+        status: payload.hasOwnProperty('list') ? 1 : 0
       };
+      if (data.status === 1 && !_.isEmpty(userInfo)) {
+        let list = payload?.list || [];
+
+        const index = list.findIndex(item => item.id === userInfo.id);
+        if (index >= 0) {
+          list[index]['is_me'] = true;
+        }
+      }
       return { ...state, topRacer: data };
     }
     default:

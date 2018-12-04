@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
 import User from '@/models/User';
-import { makeFriend, makeInvited } from '@/actions/FriendAction';
+import { makeFriend } from '@/actions/FriendAction';
 import { onClickView } from '@/utils/ViewUtil';
 import _ from 'lodash';
 import images from '@/assets';
@@ -30,12 +30,7 @@ class ItemTopRacer extends PureComponent {
   componentDidMount() {}
 
   onClickMakeFriend = onClickView(() => {
-    const {
-      dataItem,
-      makeFriend,
-      selectIdfn,
-      makeInvited
-    } = this.props;
+    const { dataItem, makeFriend} = this.props;
     // console.log('invited onClickMakeFriend', dataItem);
     if (dataItem?.id && !dataItem['is_maked_friend']) {
       this.setState({
@@ -43,7 +38,6 @@ class ItemTopRacer extends PureComponent {
       });
       makeFriend({ friendId: dataItem?.id });
     }
-    
   });
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -61,24 +55,11 @@ class ItemTopRacer extends PureComponent {
 
   render() {
     const { dataItem, isLoading } = this.state;
-    // console.log('invited', dataItem);
+    const {icon,isMe} = this.props;
     const mile = Math.ceil(dataItem.Profile.miles || 0);
     return (
       <View style={[styles.container, {}]}>
-        <Avatar
-          medium
-          rounded
-          overlayContainerStyle={{
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            borderWidth: 0,
-            borderColor: 'white'
-          }}
-          source={images.user}
-          onPress={() => console.log('Works!')}
-          activeOpacity={0.2}
-          containerStyle={{ alignSelf: 'center' }}
-        />
-
+        {icon}
         <View
           style={{
             marginHorizontal: horizontalScale(10),
@@ -108,11 +89,13 @@ class ItemTopRacer extends PureComponent {
               }
             ]}
           >
-            {`${mile} ${dataItem.textRouteUnit}${mile > 1 ? 's' : ''} `}-{` ${Math.ceil(dataItem.Profile.kcal || 0)} Kcal`}
+            {`${mile} ${dataItem.textRouteUnit}${mile > 1 ? 's' : ''} `}
+-
+            {` ${Math.ceil(dataItem.Profile.kcal || 0)} Kcal`}
           </Text>
         </View>
 
-        <Button
+        {!isMe?(<Button
           loading={isLoading}
           containerViewStyle={{
             marginRight: 0,
@@ -141,19 +124,38 @@ class ItemTopRacer extends PureComponent {
               ? { name: 'ios-checkmark', type: 'ionicon' }
               : undefined
           }
-        />
+        />):null}
       </View>
     );
   }
 }
 
 ItemTopRacer.propTypes = {
-  dataItem: PropTypes.instanceOf(User).isRequired
+  dataItem: PropTypes.instanceOf(User).isRequired,
+  icon: PropTypes.element,
+  isMe:PropTypes.bool,
+  makeFriend:PropTypes.func
 };
 
-ItemTopRacer.defaultProps = {};
+ItemTopRacer.defaultProps = {
+  icon: (
+    <Avatar
+      medium
+      rounded
+      overlayContainerStyle={{
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderWidth: 0,
+        borderColor: 'white'
+      }}
+      source={images.user}
+      containerStyle={{ alignSelf: 'center' }}
+    />
+  ),
+  isMe:false,
+  makeFriend:null
+};
 
 export default connect(
   state => ({}),
-  { makeFriend, makeInvited }
+  { makeFriend }
 )(ItemTopRacer);

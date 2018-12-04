@@ -3,6 +3,7 @@
  */
 import * as ConfigReact from 'react-native-config';
 import { scale } from 'react-native-size-matters';
+import Util from '@/utils/Util';
 
 export default class Constants {
   static BACK_KEY = 'BACK';
@@ -51,6 +52,52 @@ export const COLOR = {
   RED: '#ff0000',
   TEXT: '#333333',
   GRAY: '#E0E0E0'
+};
+export const CONSTANT_PRACTISE_MESSAGE = {
+  START_RACING: () => {
+    const arr = ['start_practice_1', 'start_practice_2', 'start_practice_3'];
+    const indexRandom = Util.getRandomInt(1, 3);
+    return arr[indexRandom];
+  },
+  REACH_A_DISTANCE: (mile = 0) => {
+    const indexRandom = Util.getRandomInt(1, 3);
+    switch (mile) {
+      case 1:
+      case 2:
+      case 3:
+      case 5:
+      case 10:
+      case 20:
+      case 40:
+        return `reach_${mile}mi_${indexRandom}`;
+    }
+
+    return '';
+  },
+  PASS_A_SPEED: (speed = 0) => {
+    const indexRandom = Util.getRandomInt(1, 3);
+    switch (speed) {
+      case 5:
+      case 10:
+      case 20:
+      case 40:
+        return `pass_${speed}_${indexRandom}`;
+    }
+
+    return '';
+  },
+  REACH_A_ENERGY: (kcal = 0) => {
+    const indexRandom = Util.getRandomInt(1, 3);
+    switch (kcal) {
+      case 50:
+      case 100:
+      case 200:
+      case 300:
+        return `reach_${kcal}k_${indexRandom}`;
+    }
+
+    return '';
+  }
 };
 export const CONSTANT_MESSAGE = {
   START_RACING: [

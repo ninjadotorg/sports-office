@@ -3,10 +3,11 @@ import { Icon } from 'react-native-elements';
 
 const images = {
   backgroundx: require('@/assets/images/bg.png'),
-  // map_list: [require('@/assets/images/map_01.png')],
+  background_top_race: require('@/assets/images/background_top_race.png'),
   logo: require('@/assets/images/logo.png'),
   ic_gold: require('@/assets/images/ic_gold.png'),
-  // ic_bronze: require('@/assets/images/ic_bronze.png'),
+  ic_gold_top: require('@/assets/images/ic_gold_top.png'),
+  ic_bronze: require('@/assets/images/ic_bronze.png'),
   ic_sliver: require('@/assets/images/ic_sliver.png'),
   back_score: require('@/assets/images/back_score.png'),
   bike: require('@/assets/images/bgxedap.png'),

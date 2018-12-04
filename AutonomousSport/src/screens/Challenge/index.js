@@ -46,7 +46,9 @@ let firstDataForTesing = { E8oouxYufVbXPWssHdL9NqUfxZl1:
     archivement: 0 } };
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
-    StatusBar.setHidden(true);
+    if(BUILD_MODE.isModeRecordVideo){
+      StatusBar.setHidden(true);
+    }
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
     this.lastIndexPosition = 0;
@@ -471,6 +473,7 @@ class ChallengeScreen extends BaseScreen {
   };
 
   componentDidMount() {
+    super.componentDidMount();
     this.props.getUser();
     // this.popupDialog.show();
   }
@@ -494,15 +497,13 @@ class ChallengeScreen extends BaseScreen {
           // console.log(TAG,' updateHandler nextPoint begin');
           const { pos = this.posInit } = this.state;
           let angle = this.getAngleWithCurrentPoint(tempIndex);
-          console.log(
-            TAG,
-            ' updateHandler nextPoint angle ',
-            angle,
-            ' - tempIndex = ',
-            tempIndex
-          );
-
-          // pos.rotate += (angle - pos.rotate)*time.delta/1000;
+          // console.log(
+          //   TAG,
+          //   ' updateHandler nextPoint angle ',
+          //   angle,
+          //   ' - tempIndex = ',
+          //   tempIndex
+          // );
           const posNew = {
             x: nextPoint.x,
             y: nextPoint.y,
@@ -563,16 +564,15 @@ class ChallengeScreen extends BaseScreen {
 
   renderDashBoardAchivement = () => {
     // let players = [
-    //   { playerName: 'HienTon', goal: 27 },
-    //   { playerName: 'HIEn', goal: 27 },
-    //   { playerName: 'HTOn27', goal: 27 },
+      // { playerName: 'Kat Brown', goal: 100 },
+      // { playerName: 'Elina Hill', goal: 84 },
+      // { playerName: 'Jone Miller', goal: 80  },
     //   { playerName: 'HTOn22', goal: 22 },
     //   { playerName: 'HienTon100', goal: 100 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 },
     //   { playerName: 'HTon', goal: 25 }
     // ];
-
     let { players = [] } = this.state;
     // sort list player
 
@@ -864,7 +864,8 @@ class ChallengeScreen extends BaseScreen {
           width="70%"
           height={`${dialogPercentHeight * 100}%`}
           hasOverlay
-          dialogStyle={{ backgroundColor: 'transparent' }}
+          
+          dialogStyle={{ backgroundColor: 'transparent',alignItems:'center' }}
           dismissOnTouchOutside={false}
           ref={popupDialog => {
             this.popupDialog = popupDialog;
