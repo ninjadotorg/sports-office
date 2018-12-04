@@ -473,6 +473,7 @@ class ChallengeScreen extends BaseScreen {
   };
 
   componentDidMount() {
+    super.componentDidMount();
     this.props.getUser();
     // this.popupDialog.show();
   }
@@ -496,13 +497,13 @@ class ChallengeScreen extends BaseScreen {
           // console.log(TAG,' updateHandler nextPoint begin');
           const { pos = this.posInit } = this.state;
           let angle = this.getAngleWithCurrentPoint(tempIndex);
-          console.log(
-            TAG,
-            ' updateHandler nextPoint angle ',
-            angle,
-            ' - tempIndex = ',
-            tempIndex
-          );
+          // console.log(
+          //   TAG,
+          //   ' updateHandler nextPoint angle ',
+          //   angle,
+          //   ' - tempIndex = ',
+          //   tempIndex
+          // );
           const posNew = {
             x: nextPoint.x,
             y: nextPoint.y,

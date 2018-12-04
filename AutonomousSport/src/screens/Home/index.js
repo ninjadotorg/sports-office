@@ -94,6 +94,8 @@ class HomeScreen extends BaseScreen {
         const s = distanceRun + data.distanceStreet || 0;
         const sumKcal = kcal + data.kcal || 0;
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
+        this.triggerVoiceWithStart(distanceRun,s);
+        this.triggerVoiceWithDistance(distanceRun,s);
         this.setSpeed = {
           value: data.speed || 0
         };
@@ -186,7 +188,7 @@ class HomeScreen extends BaseScreen {
     );
   };
 
-  set setSpeed(newSpeed = { }) {
+  set setSpeed(newSpeed = {}) {
     this.speed = {
       ...this.speed,
       ...newSpeed
@@ -195,13 +197,13 @@ class HomeScreen extends BaseScreen {
     // this.speed.countDown = countDown || this.speed.countDown;
   }
   updateHandler = ({ touches, screen, time }) => {
-    if (Math.round(Math.abs(this.speed.value - this.speed.countDown))>0) {
-      const valueChange = this.speed.value <= 0 ? 0 : this.speed.value;
+    if (Math.round(Math.abs(this.speed.value - this.speed.countDown)) > 0) {
+      
       const tempValue =
-        ((valueChange - this.speed.countDown) * time.delta) / 1000;
+        ((this.speed.value - this.speed.countDown) * time.delta) / 1000;
       const speedCountDown = this.speed.countDown + tempValue;
 
-      this.speed.countDown = speedCountDown;
+      this.speed.countDown =  speedCountDown < 0 ? 0 :  speedCountDown;
       // console.log(
       //   TAG,
       //   ' updateHandler speedCountDown = ',
@@ -211,20 +213,45 @@ class HomeScreen extends BaseScreen {
       //   ', value = ',this.speed.value
       // );
     }
-
-    if (Math.round(this.speed.countDown) != Math.round(this.state.speed)) {
+    const nextSpeed = Math.round(this.speed.countDown);
+    if (nextSpeed != Math.round(this.state.speed) && this.speed.countDown >=0 && this.speed.countDown <= this.speed.value) {
       console.log(TAG, ' updateHandler 01 ');
-      const nextSpeed = Math.round(this.speed.countDown);
-      this.triggerWithVoice(this.state.speed,nextSpeed);
+      
+      this.triggerVoiceWithSpeed(this.state.speed, nextSpeed);
       this.setState({
         speed: nextSpeed
       });
     }
   };
 
-  triggerWithVoice =(previousSpeed = 0, nextSpeed = 0)=>{
-     // implement here
+  triggerVoiceWithSpeed = (previousSpeed = 0, nextSpeed = 0) => {
+    // implement here
+    if (previousSpeed < nextSpeed) {
+      this.readText(CONSTANT_PRACTISE_MESSAGE.PASS_A_SPEED(nextSpeed));
+    }
+  };
+  triggerVoiceWithDistance = (previous = 0, next = 0) => {
+    // implement here
+    previous = Math.floor(previous);
+    next = Math.floor(next);
+    if (previous < next) {
+      this.readText(CONSTANT_PRACTISE_MESSAGE.REACH_A_DISTANCE(next));
+    }
+  };
+  triggerVoiceWithEnergy =(previous = 0, next = 0)=>{
+    // implement here
+    previous = Math.floor(previous);
+    next = Math.floor(next);
+    if(previous < next ){
+     this.readText(CONSTANT_PRACTISE_MESSAGE.REACH_A_ENERGY(next));
+    }
+ }
+ triggerVoiceWithStart =(previous = 0, next = 0)=>{
+  // implement here
+  if(previous === 0 && previous < next ){
+   this.readText(CONSTANT_PRACTISE_MESSAGE.START_RACING());
   }
+}
   render() {
     const { user, speed, isStarted } = this.state;
 

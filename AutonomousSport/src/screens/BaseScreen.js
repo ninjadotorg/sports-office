@@ -52,8 +52,9 @@ class BaseScreen extends Component {
       playername: '',
       errorMessage: false
     };
+    this.playingVoice = false;
     this.appState = AppState.currentState;
-    this.initVoice();
+    
   }
   renderToastMessage = () => {
     return <Toast position="top" ref="toast" />;
@@ -66,7 +67,9 @@ class BaseScreen extends Component {
   initVoice = () => {
     this.initializedVoice = false;
     try {
-      
+      SoundPlayer.onFinishedPlaying((success:boolean)=>{
+        this.playingVoice = false;
+      });
       // this.sound = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, error => {
       //   if (error) {
       //     console.log('failed to load the sound', error);
@@ -89,13 +92,21 @@ class BaseScreen extends Component {
   };
 
   readText = async (fileName: String) => {
-    if (this.initializedVoice && fileName) {
-      SoundPlayer.playSoundFile(fileName, 'mp3');
+    try {
+      if (this.initializedVoice && fileName && !this.playingVoice) {
+        console.log(TAG,' readText = ',fileName);
+        this.playingVoice = true;
+        SoundPlayer.playSoundFile(fileName, 'mp3');
+      }  
+    } catch (error) {
+      
     }
+    
   };
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
+    this.initVoice();
   }
 
   componentWillUnmount() {

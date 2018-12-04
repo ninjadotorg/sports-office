@@ -41,6 +41,26 @@ Where:
  */
 const timeHour = 1 / 3600;
 let speed = 0;
+const getMETsHour = speed => {
+  if (speed) {
+    if (speed < 5.5) {
+      return 3.5;
+    } else if (speed < 10) {
+      return 5.8;
+    } else if (speed < 12) {
+      return 6.8;
+    } else if (speed < 14) {
+      return 8;
+    } else if (speed < 16) {
+      return 10;
+    } else if (speed < 20) {
+      return 12;
+    } else {
+      return 15.8;
+    }
+  }
+  return 0;
+};
 export const connectionBluetoothChange = dispatch => {
   return ({ value, peripheral, characteristic, service }) => {
     if (value && value.length > 4) {
@@ -62,8 +82,9 @@ export const connectionBluetoothChange = dispatch => {
         speed = speed < 0 ? 0 : speed;
 
         const distanceRun = speed * timeHour;
-        const kcaloriesBurned =
-          (distanceRun * 1.609344 * weight * 1.036) / 1000;
+        // const kcaloriesBurned =
+        //   (distanceRun * 1.609344 * weight * 1.036) / 1000;
+        const kcaloriesBurned = 0.01935 * getMETsHour(speed);
         // console.log(
         //   TAG,
         //   ` connectionBluetoothChange round = ${round} for distanceRun = ${distanceRun}`

@@ -54,7 +54,11 @@ export const COLOR = {
   GRAY: '#E0E0E0'
 };
 export const CONSTANT_PRACTISE_MESSAGE = {
-  START_RACING: ['start_1', 'start_2', 'start_3'],
+  START_RACING: () => {
+    const arr = ['start_practice_1', 'start_practice_2', 'start_practice_3'];
+    const indexRandom = Util.getRandomInt(1, 3);
+    return arr[indexRandom];
+  },
   REACH_A_DISTANCE: (mile = 0) => {
     const indexRandom = Util.getRandomInt(1, 3);
     switch (mile) {
@@ -89,7 +93,7 @@ export const CONSTANT_PRACTISE_MESSAGE = {
       case 100:
       case 200:
       case 300:
-        return `reach_${kcal}K_${indexRandom}`;
+        return `reach_${kcal}k_${indexRandom}`;
     }
 
     return '';
