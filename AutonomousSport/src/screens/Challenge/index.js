@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, Image, ScrollView, ImageBackground ,StatusBar} from 'react-native';
 import { GameLoop } from 'react-native-game-engine';
 import BaseScreen from '@/screens/BaseScreen';
 import PopupDialog from 'react-native-popup-dialog';
@@ -17,7 +17,7 @@ import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { scale, verticalScale } from 'react-native-size-matters';
 import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
-import { STATE_BLUETOOTH, CONSTANT_MESSAGE } from '@/utils/Constants';
+import Constants, { STATE_BLUETOOTH, CONSTANT_MESSAGE, BUILD_MODE } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
@@ -28,29 +28,31 @@ import * as Animatable from 'react-native-animatable';
 import styles, { sizeIconRacing } from './styles';
 
 export const TAG = 'ChallengeScreen';
-let heightMap = screenSize.height;
+const heightScreen = screenSize.height ;
+let heightMap = heightScreen;
 const dialogPercentHeight = 0.8;
 const dialogHeightImage = screenSize.height * dialogPercentHeight;
 const colors = ['purple', 'blue', 'yellow', 'green'];
 
 const limitToRotate = 60 * (Math.PI / 180);
 const FastImageView = createImageProgress(FastImage);
+let firstDataForTesing = { E8oouxYufVbXPWssHdL9NqUfxZl1: 
+  { streamId: 'D4CE87E6-FCA2-408D-A858-3C831BC4D731',
+    status: 2,
+    speed: 0,
+    playerName: 'Hh11',
+    token: 'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9MThlMTQzMjEyZGZjOTQ1MTBhODhmM2RlZWJlOWE0YzM3MzNkZWNiNTpzZXNzaW9uX2lkPTJfTVg0ME5qRTFORFF5TW41LU1UVTBNelF3TXpJMk9UUXpNMzU2Vldaak1HdEtVWE5KVDJwcGVYSnZRVlJyVnl0TE0zWi1mZyZjcmVhdGVfdGltZT0xNTQzNDAzMjY5Jm5vbmNlPTkwNzAyJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE1NDM0ODk2Njk=',
+    goal: 0,
+    archivement: 0 } };
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
+    StatusBar.setHidden(true);
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
     this.lastIndexPosition = 0;
     this.currentPositionIndex = 0;
     this.listLastIndexPosition = {};
-    // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
     const { width = 0, height = 1 } = room?.getMapSize() || {};
-    console.log(
-      TAG,
-      ' constructor widthRealMap = ',
-      width,
-      ' heightRealMap = ',
-      height
-    );
     const sizeMap = Util.calculateMapSize({
       widthReal: width,
       heightReal: height
@@ -68,13 +70,6 @@ class ChallengeScreen extends BaseScreen {
     };
     this.widthMap = sizeMap.widthExpect;
     heightMap = sizeMap.heightExpect;
-    console.log(
-      TAG,
-      ' constructor widthMap = ',
-      this.widthMap,
-      ' heightMap = ',
-      heightMap
-    );
     this.state = {
       room: room,
       user: {},
@@ -108,6 +103,7 @@ class ChallengeScreen extends BaseScreen {
         ?.child(user.fbuid)
         .update({ streamId: streamId });
       this.onListenerChanel();
+      
     }
   };
   onStreamDestroyed = streamId => {
@@ -213,6 +209,13 @@ class ChallengeScreen extends BaseScreen {
           ' sumKcal = ',
           sumKcal
         );
+        if(BUILD_MODE.isModeRecordVideo){
+        // for testing
+          const keyFirst = Object.keys(firstDataForTesing)[0];
+          firstDataForTesing[keyFirst]['goal'] = goal;
+          this.updateDataTesting();
+          //////
+        }
         this.playerMeDataPrefference.update({
           speed: data.speed,
           goal: goal,
@@ -237,6 +240,115 @@ class ChallengeScreen extends BaseScreen {
     this.props.updateRacing({ kcal, miles });
   }, 200);
 
+  updateDataTesting = () => {
+    const { user } = this.state;
+    // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
+
+    if (!_.isEmpty(user)) {
+      
+      const data =firstDataForTesing;
+      // for testing 
+      const keyFirst = Object.keys(data)[0];
+      const userToClone = data[keyFirst];
+      
+      if(!_.isEmpty(userToClone)){
+        let firstItem = _.cloneDeep(userToClone);
+        firstItem['fbuid'] = `${firstItem['fbuid']}0`;
+        firstItem['goal'] = Math.abs(firstItem['goal'] + 3);
+        data[`${keyFirst}0`] = firstItem;
+
+        let secondItem = _.cloneDeep(userToClone);
+        secondItem['fbuid'] = `${userToClone['fbuid']}1`;
+        secondItem['goal'] = Math.abs(userToClone['goal'] - 2);
+        data[`${keyFirst}1`] = secondItem;
+      }
+      ////////
+
+      let arr = [];
+      let playersColor = {};
+      console.log(TAG, ' onListenerChanel ---- ', data);
+
+      let index = 0;
+      let isGetReady = false,
+        isFinished = false;
+      let winner = null;
+      let reachMeMessage = '';
+
+      Object.keys(data).forEach(key => {
+        const value = data[key];
+
+        // console.log(TAG, ' updateDataFromOtherPlayer -', value);
+        if (!_.isEmpty(value)) {
+          value['fbuid'] = key;
+          value['isMe'] = key === user?.fbuid;
+          isGetReady = value['status'] === 2 || isGetReady;
+          const player = new Player(value);
+          playersColor[key] = colors[index];
+          arr.push(player);
+          isFinished = player.goal >= 100 || isFinished;
+          index++;
+          winner = !winner || player.goal > winner.goal ? player : winner;
+
+          // many case with is ME
+          reachMeMessage =
+            value['isMe'] && [20, 50, 70, 90, 99].includes(value.goal)
+              ? value.goal
+              : '';
+        }
+      });
+      if (reachMeMessage) {
+        const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
+        const distance = (reachMeMessage * this.state.room?.miles) / 100 || 0;
+        const message = arr(distance)[Util.getRandomInt(0, arr.length - 1)];
+        this.readText(message);
+      }
+
+      if (
+        isGetReady &&
+        !isFinished &&
+        this.state.winner &&
+        winner &&
+        winner['fbuid'] !== this.state.winner['fbuid']
+      ) {
+        const arr = winner['isMe']
+          ? CONSTANT_MESSAGE.PASS_X
+          : CONSTANT_MESSAGE.X_PASS;
+
+        const index = Util.getRandomInt(0, arr().length - 1);
+        const message = arr(
+          (winner['isMe']
+            ? this.state.winner.playerName
+            : winner['playerName']) || ''
+        )[index];
+        console.log(
+          TAG,
+          ' updateDataFromOtherPlayer - readText PASSS - ',
+          message
+        );
+        this.readText(message);
+      }
+      this.setState({
+        isFinished: isFinished,
+        isReady: isGetReady || this.state.isReady,
+        players: arr,
+        winner: winner,
+        playersColor: playersColor
+      });
+      if (isFinished) {
+        if (winner) {
+          // read text
+          const arr = winner['isMe']
+            ? CONSTANT_MESSAGE.FINISH_ANNOUCE_ME
+            : CONSTANT_MESSAGE.FINISH_OTHER;
+          const index = Util.getRandomInt(0, arr.length - 1);
+          const s = arr(winner.playerName)[index];
+          this.readText(s);
+        }
+        this.finishedRacing();
+      }
+    }
+  };
+
   onListenerChanel = () => {
     const { user } = this.state;
     // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
@@ -244,6 +356,7 @@ class ChallengeScreen extends BaseScreen {
     if (!_.isEmpty(user)) {
       this.roomDataPrefference.on('value', dataSnap => {
         const data = dataSnap?.toJSON() || {};
+        
         let arr = [];
         let playersColor = {};
         console.log(TAG, ' onListenerChanel ---- ', data);
@@ -606,7 +719,7 @@ class ChallengeScreen extends BaseScreen {
       <GameLoop style={styles.map} onUpdate={this.updateHandler}>
         <ImageZoom
           cropWidth={this.sizeMap.width}
-          cropHeight={screenSize.height}
+          cropHeight={heightScreen}
           imageWidth={this.widthMap}
           imageHeight={heightMap}
           minScale={1}
@@ -624,8 +737,7 @@ class ChallengeScreen extends BaseScreen {
         </ImageZoom>
 
         {isReady ||
-        user?.id !== room.userId ||
-        playersMarker?.length <= 1 ? null : (
+        user?.id !== room.userId ? null : (
           <Animatable.View
             style={[
               {
@@ -728,7 +840,7 @@ class ChallengeScreen extends BaseScreen {
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center'}}>
           <BikerProfile
             onStreamCreated={this.onStreamCreated}
             onStreamDestroyed={this.onStreamDestroyed}
