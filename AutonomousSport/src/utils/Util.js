@@ -1,3 +1,4 @@
+import { StatusBar } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { screenSize } from '@/utils/TextStyle';
 import Constants from '@/utils/Constants';

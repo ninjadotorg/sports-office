@@ -176,6 +176,12 @@ export default class ApiService {
     return response;
   }
 
+  static async leaderBoard(): {} {
+    const url = Api.LEADER_BOARD;
+    const response = await ApiService.getURL(METHOD.GET, url, {});
+    return response;
+  }
+
   static async updatePassword({ cpassword = '', npassword }) {
     const url = Api.UPDATE_PASSWORD;
     const response = await ApiService.getURL(METHOD.POST, url, {
@@ -295,7 +301,7 @@ export default class ApiService {
     return response;
   }
 
-  static async joinRandomRoom({}) {
+  static async joinRandomRoom() {
     const url = Api.JOIN_RANDOM_ROOM;
     const response = await ApiService.getURL(METHOD.GET, url, {});
 

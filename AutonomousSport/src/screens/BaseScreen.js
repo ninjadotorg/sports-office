@@ -13,10 +13,10 @@ import {
   verticalScale
 } from 'react-native-size-matters';
 import _ from 'lodash';
-import images from '@/assets';
+
 import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
-import Tts from 'react-native-tts';
+import SoundPlayer from 'react-native-sound-player';
 import ApiService from '@/services/ApiService';
 
 export const TAG = 'BaseScreen';
@@ -26,17 +26,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   button: {
-    borderRadius: 30,
+    borderRadius: verticalScale(25),
     borderWidth: 1,
     minWidth: '35%',
-    height: 45,
+    height: verticalScale(35),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
     borderColor: '#ffc500',
     marginRight: 0,
-    marginLeft: 0,
-    paddingVertical: 1
+    marginLeft: 0
   }
 });
 const CONFIG_VOICE = {
@@ -66,56 +65,32 @@ class BaseScreen extends Component {
   };
   initVoice = () => {
     this.initializedVoice = false;
-    Tts.addEventListener('tts-start', event => {});
-    Tts.addEventListener('tts-finish', event => {});
-    Tts.addEventListener('tts-cancel', event => {});
-    Tts.setDefaultRate(CONFIG_VOICE.speechRate);
-    Tts.setDefaultPitch(CONFIG_VOICE.speechPitch);
-    Tts.getInitStatus().then(async () => {
-      const voices = await Tts.voices();
-      // const availableVoices = voices
-      //   .filter(v => !v.networkConnectionRequired && !v.notInstalled)
-      //   .map(v => {
-      //     return { id: v.id, name: v.name, language: v.language };
-      //   });
-      let availableVoices = voices.filter(
-        v => v.language.includes('en-US') && v.language.includes('female')
-      );
-      if (availableVoices && availableVoices.length > 0) {
-        let selectedVoice = availableVoices[0];
-        console.log('setDefaultVoice  ', selectedVoice);
-        try {
-          if (selectedVoice.notInstalled) {
-            await Tts.requestInstallEngine();
-          }
-          await Tts.setDefaultLanguage(selectedVoice.language);
-          // await Tts.setDefaultLanguage('en-US');
-        } catch (err) {
-          // My Samsung S9 has always this error: "Language is not supported"
-          if (err.code === 'no_engine') {
-            Tts.requestInstallEngine();
-          }
-          console.log(
-            'setDefaultLanguage error ',
-            err,
-            ' language = ',
-            selectedVoice.language
-          );
-        }
-        await Tts.setDefaultVoice(selectedVoice.id);
-
-        // await Tts.setDefaultVoice('en-us-x-sfg#female_2-local');
-        this.initializedVoice = true;
-      } else {
-        this.initializedVoice = true;
-      }
-    });
+    try {
+      
+      // this.sound = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, error => {
+      //   if (error) {
+      //     console.log('failed to load the sound', error);
+      //     return;
+      //   }
+      // });
+  
+      // this.sound.setVolume(0.5);
+  
+      // this.sound.setPan(1);
+  
+      // this.sound.setNumberOfLoops(-1);
+  
+      // this.sound.setCurrentTime(2.5);
+      this.initializedVoice = true;
+    } catch (error) {
+      
+    }
+    
   };
 
-  readText = async (text: String) => {
-    if (this.initializedVoice && text) {
-      Tts.stop();
-      Tts.speak(text);
+  readText = async (fileName: String) => {
+    if (this.initializedVoice && fileName) {
+      SoundPlayer.playSoundFile(fileName, 'mp3');
     }
   };
 
@@ -124,6 +99,7 @@ class BaseScreen extends Component {
   }
 
   componentWillUnmount() {
+    SoundPlayer.unmount();
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
@@ -134,7 +110,7 @@ class BaseScreen extends Component {
     ) {
       console.log('App has come to the foreground!');
       BleManager.getConnectedPeripherals([]).then(peripheralsArray => {
-        console.log('Connected peripherals: ' + peripheralsArray?.length);
+        // console.log('Connected peripherals: ' + peripheralsArray?.length);
       });
     }
     this.appState = nextAppState;
@@ -209,7 +185,9 @@ class BaseScreen extends Component {
           this.popupInviteDialog = popupDialog;
         }}
       >
-        <View style={{ flex: 1, flexDirection: 'row', padding: 20 }}>
+        <View
+          style={{ flex: 1, flexDirection: 'row', padding: verticalScale(10) }}
+        >
           <Image
             style={[{ width: '40%', height: '100%', resizeMode: 'cover' }]}
             source={{ uri: uri }}
@@ -227,7 +205,7 @@ class BaseScreen extends Component {
               ]}
             >
               <Text style={[TextStyle.mediumText, { fontWeight: 'bold' }]}>
-                {this.state.playername || ''}
+                {this.state.playername || 'HienTon'}
               </Text>
               <Text style={[TextStyle.mediumText, {}]}>
                 {' '}
@@ -242,7 +220,7 @@ class BaseScreen extends Component {
                 ]}
               >
                 {`${this.state.roomInfo?.Map?.name || ''} (${this.state.roomInfo
-                ?.miles || '0'} Miles)`}
+                  ?.miles || '0'} Miles)`}
               </Text>
             </Text>
 

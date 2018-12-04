@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import BleManager from 'react-native-ble-manager';
 import BaseScreen from '@/screens/BaseScreen';
 import images, { icons } from '@/assets';
-import _ from 'lodash';
+import _,{debounce} from 'lodash';
 import TextStyle from '@/utils/TextStyle';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import LocalDatabase from '@/utils/LocalDatabase';
@@ -45,11 +45,18 @@ class SetupScreen extends BaseScreen {
       refreshing: false,
       appState: ''
     };
+    this.peripheralsParams = new Map(); 
     BleManager.start({ showAlert: true, forceLegacy: false });
     this.handlerUpdate = null;
-    this.handleStopScan = this.handleStopScan.bind(this);
-    // this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
+  }
+
+  set peripherals(peripherals:Map){
+    this.state.peripherals.clear();
+    this.setState({
+      scanning: false,
+      peripherals:peripherals
+    });
   }
 
   componentDidMount() {
@@ -57,7 +64,16 @@ class SetupScreen extends BaseScreen {
 
     this.handlerDiscover = bleManagerEmitter.addListener(
       'BleManagerDiscoverPeripheral',
-      this.handleDiscoverPeripheral
+      peripheral=>{
+        if (
+          !this.peripheralsParams.has(peripheral.id) &&
+          !_.isEmpty(peripheral) &&
+          !_.isEmpty(peripheral.name)
+        ) {
+          this.peripheralsParams?.set(peripheral.id, peripheral);
+        }
+       
+      } 
     );
     this.handlerStop = bleManagerEmitter.addListener(
       'BleManagerStopScan',
@@ -136,7 +152,7 @@ class SetupScreen extends BaseScreen {
     }
   };
 
-  handleAppStateChange(nextAppState) {
+  handleAppStateChange=(nextAppState)=>{
     if (
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
@@ -150,6 +166,7 @@ class SetupScreen extends BaseScreen {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ');
     // clearTimeout(this.timeout);
     if (this.peripheralBluetooth) {
@@ -215,33 +232,25 @@ class SetupScreen extends BaseScreen {
     console.log(TAG, ' handleUpdateValueForCharacteristic ');
   };
 
-  handleStopScan() {
+  handleStopScan =()=> {
     console.log('Scan is stopped');
-    this.setState({ scanning: false });
+    this.peripherals = this.peripheralsParams;
+    
   }
 
   startScan = () => {
     console.log(TAG, ' Begin Scanning...');
     if (!this.state.scanning) {
-      this.setState({ scanning: true, peripherals: new Map() }, () => {
+      this.peripheralsParams.clear();
+      this.state.peripherals.clear();
+      this.setState({ scanning: true}, () => {
         BleManager.scan([], 10, false).then(results => {
           console.log('Scanning...');
         });
       });
     }
   };
-  handleDiscoverPeripheral = peripheral => {
-    console.log(TAG, ' handleDiscoverPeripheral begin');
-    let peripherals = this.state.peripherals;
-    if (
-      !peripherals.has(peripheral.id) &&
-      !_.isEmpty(peripheral) &&
-      peripheral.name
-    ) {
-      peripherals?.set(peripheral.id, peripheral);
-      this.setState({ peripherals });
-    }
-  };
+  
 
   // connect = item => {
   //   if (item) {
@@ -363,7 +372,7 @@ class SetupScreen extends BaseScreen {
 
   renderItem = item => {
     const color = item.connected ? 'green' : '#fff';
-    console.log(TAG, ' renderItem = ', item);
+    // console.log(TAG, ' renderItem = ', item);
     return (
       <TouchableOpacity
         style={[styles.row, { backgroundColor: 'transparent', marginTop: 5 }]}
@@ -442,7 +451,7 @@ class SetupScreen extends BaseScreen {
   });
 
   render() {
-    const { isLoading } = this.state;
+    const { isLoading,scanning } = this.state;
     return (
       <ImageBackground
         style={[styles.container, { paddingBottom: 0, paddingRight: 0 }]}
@@ -521,7 +530,7 @@ class SetupScreen extends BaseScreen {
             ) : (
               <FlatList
                 onRefresh={this.startScan}
-                refreshing={this.state.scanning}
+                refreshing={scanning}
                 keyExtractor={(item, index) => item.id}
                 style={styles.scroll}
                 data={this.getListAdress()}

@@ -52,7 +52,6 @@ const ViewUtil = {
         }}
       >
         <RadialGradient
-          // colors={['#a4a6a6', 'black']}
           colors={['#ffffff', '#232339']}
           radius={screenSize.height}
           style={{

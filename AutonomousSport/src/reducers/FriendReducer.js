@@ -34,13 +34,13 @@ const FriendReducer = (state = initialState, action) => {
           : [...state.friendList.list, ...listSum];
 
         payload.list = listSum;
-        console.log(
-          TAG,
-          ' FriendReducer-GET_ALL_USER payload length = ',
-          listSum.length,
-          ' next = ',
-          next
-        );
+        // console.log(
+        //   TAG,
+        //   ' FriendReducer-GET_ALL_USER payload length = ',
+        //   listSum.length,
+        //   ' next = ',
+        //   next
+        // );
         mergeList(payload.list, state.invitedlist);
         // initialStateTemp.friendList = payload;
       }
@@ -53,13 +53,13 @@ const FriendReducer = (state = initialState, action) => {
         let friendList = _.cloneDeep(state.friendList) || {};
 
         let list = friendList?.list || [];
-        console.log(
-          TAG,
-          ' FriendReducer-MAKE_FRIEND success id = ',
-          id,
-          ' - list length = ',
-          list.length
-        );
+        // console.log(
+        //   TAG,
+        //   ' FriendReducer-MAKE_FRIEND success id = ',
+        //   id,
+        //   ' - list length = ',
+        //   list.length
+        // );
         if (id && !_.isEmpty(list)) {
           const index = list.findIndex(item => item.id === id);
           if (index >= 0) {

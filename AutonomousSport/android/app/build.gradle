@@ -1,7 +1,10 @@
 apply plugin: "com.android.application"
 project.ext.envConfigFiles = [
     debug: ".env",
+    productiondebug: ".env.production",
     release: ".env.production",
+    productionrelease: ".env.production",
+    stagingrelease: ".env",
     anothercustombuild: ".env",
 ]
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
@@ -101,15 +104,23 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    flavorDimensions "default"
     defaultConfig {
         applicationId "com.autonomoussport"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+    }
+    signingConfigs {
+        config {
+            keyAlias 'Autonomous'
+            keyPassword 'autonomous123'
+            storeFile file('../keystores/autokey')
+            storePassword 'autonomous123'
         }
     }
     splits {
@@ -124,6 +135,18 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.config
+        }
+        debug {
+            versionNameSuffix ""
+        }
+    }
+    productFlavors {
+        staging {
+            applicationIdSuffix ""
+        }
+        production {
+
         }
     }
     // applicationVariants are e.g. debug, release
@@ -142,7 +165,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-tts')
+    compile project(':react-native-sound-player')
     compile project(':react-native-radial-gradient')
     compile(project(':react-native-fast-image')){
         exclude (group: 'com.android.support', module: 'support-fragment')
