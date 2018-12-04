@@ -9,6 +9,10 @@ export default class Constants {
   static MIN_SIZE_VIDEO = scale(100);
 }
 
+export class BUILD_MODE {
+  static isModeRecordVideo = false;
+}
+
 export class STATE_BLUETOOTH {
   static UNKNOWN = 'UNKNOWN';
   static IDLE = 'IDLE';
