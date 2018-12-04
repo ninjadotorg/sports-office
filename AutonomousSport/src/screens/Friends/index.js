@@ -133,8 +133,6 @@ class FriendsScreen extends BaseScreen {
   updateIndex = selectedIndexItem => {
     let { selectedIndex, offset, limit } = this.state;
     if (selectedIndexItem !== selectedIndex) {
-      // offset = 0;
-      // limit = limitRow;
       this.handleSearchClear();
       this.setState(
         {
@@ -172,16 +170,6 @@ class FriendsScreen extends BaseScreen {
 
   handleSearchCancel = () => this.handleQueryChange('');
   handleSearchClear = () => this.handleQueryChange('');
-
-  // searchdata(text){
-  //   this.setState({search:text});
-  //   console.log(TAG,' searchdata begin',text);
-
-  //   let {isLoading,offset,limit} = this.state;
-  //   if(!isLoading){
-  //     this.fetchData({offset,limit,text});
-  //   }
-  // }
 
   fetchData = ({ offset, limit, search }) => {
     const { selectedIndex } = this.state;
@@ -255,7 +243,6 @@ class FriendsScreen extends BaseScreen {
           onChangeText={this.handleQueryChange}
           onCancel={this.handleSearchCancel}
           onClear={this.handleSearchClear}
-          // value={this.state.search}
           icon={{ type: 'font-awesome', name: 'search' }}
           noIcon
           containerStyle={{
@@ -268,12 +255,15 @@ class FriendsScreen extends BaseScreen {
             borderRadius: 30
           }}
           placeholder="Find friend by email or name"
-          placeholderTextColor="#AFAFB9"
+          placeholderTextColor="#f9f9f960"
           inputStyle={[
             TextStyle.normalText,
             {
+              paddingBottom:0,
+              paddingTop:0,
+              textAlignVertical:'center',
               paddingLeft: 20,
-              borderRadius: 32,
+              borderRadius: 30,
               color: '#FFFFFF',
               backgroundColor: 'rgba(255,255,255,0.15)'
             }

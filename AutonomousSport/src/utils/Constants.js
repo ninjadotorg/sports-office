@@ -9,6 +9,10 @@ export default class Constants {
   static MIN_SIZE_VIDEO = scale(100);
 }
 
+export class BUILD_MODE {
+  static isModeRecordVideo = false;
+}
+
 export class STATE_BLUETOOTH {
   static UNKNOWN = 'UNKNOWN';
   static IDLE = 'IDLE';
@@ -50,74 +54,99 @@ export const COLOR = {
 };
 export const CONSTANT_MESSAGE = {
   START_RACING: [
-    'Are you ready? Go!',
-    'And... we\'re off!',
-    'The race is on! Let\'s go!',
-    'You look like a winner. Get this!',
-    'Hey speedster. Go get em!'
+    'start_1',
+    'start_2',
+    'start_3',
+    'start_4',
+    'start_5',
+    'start_6',
+    'start_7',
+    'start_8'
   ],
   REACH_20: (distance = '') => [
-    'You\'re 20% through! Looking good!',
-    `Just ${distance} left to go! Keep at it!`,
-    `Doing great! ${distance} left to glory!`,
-    `Good effort. Let's amp it up for the next leg! ${distance} to go!`,
-    'You\'re 20% on the way to victory.'
+    'round_20_1',
+    'round_20_2',
+    'round_20_3',
+    'round_20_4'
   ],
   REACH_50: (distance = '') => [
-    'Halfway done! Yes!',
-    'Already halfway through! Time flies when you\'re going fast.',
-    '50% complete. You\'re killing it!',
-    'Already 50% champion!',
-    'You\'ve passed the halfway mark! No turning back!'
+    'round_50_1',
+    'round_50_2',
+    'round_50_3',
+    'round_50_4',
+    'round_50_5',
+    'round_50_6',
+    'round_50_7',
+    'round_50_8',
+    'round_50_9',
+    'round_50_10'
   ],
   REACH_70: (distance = '') => [
-    'We\'re in the final third of the race! Push harder!',
-    `${distance} left! It's still anyone's race!`,
-    `Only ${distance} left! Full speed ahead! `,
-    'Already halfway through! Time flies when you\'re going fast.',
-    'No time to slack! Only 30% left to go! ',
-    'Keep at it, you\'re in the final third!'
+    'round_70_1',
+    'round_70_2',
+    'round_70_3',
+    'round_70_4',
+    'round_70_5',
+    'round_70_6',
+    'round_70_7',
+    'round_70_8',
+    'round_70_9',
+    'round_70_10'
   ],
   REACH_90: (distance = '') => [
-    'Let\'s up the pace! Only 10% to go ',
-    '90% done, you\'re on the home run now!',
-    'No time to slack, you\'re nearly there!',
-    '10% left to go, let\'s ramp up the pace!',
-    'You\'re on the last leg - one last push to the finish line!'
+    'round_90_1',
+    'round_90_2',
+    'round_90_3',
+    'round_90_4',
+    'round_90_5'
   ],
   REACH_99: (distance = '') => [
-    'The finish line is in sight! ',
-    'You\'re coming up on the finish line!',
-    'So close!',
-    'You\'re almost there!',
-    'The finish line is right in front of you!'
+    'round_99_1',
+    'round_99_2',
+    'round_99_3',
+    'round_99_4',
+    'round_99_5'
   ],
   PASS_X: (name = '') => [
-    `You’ve just passed ${name}! Keep going!`,
-    `You whizzed past ${name}!`,
-    `You overtook ${name}! Awesome.`,
-    `${name} just bit your dust!`,
-    `You left ${name} behind!`
+    'pass_1',
+    'pass_2',
+    'pass_3',
+    'pass_4',
+    'pass_5',
+    'pass_6',
+    'pass_7',
+    'pass_8',
+    'pass_9',
+    'pass_10',
+    'pass_11'
   ],
   X_PASS: (name = '') => [
-    `${name} just passed you! Try harder!`,
-    `${name} overtook you. Speed up!`,
-    `${name} is now in front of you! Catch them!`,
-    `You've been overtaken by ${name}. Go faster!`,
-    `You're now trailing ${name}! Speed up!`
+    'passed_1',
+    'passed_2',
+    'passed_3',
+    'passed_4',
+    'passed_5',
+    'passed_6',
+    'passed_7',
+    'passed_8',
+    'passed_9',
+    'passed_10'
   ],
   FINISH_ANNOUCE_ME: (name = '') => [
-    `Yeah! You win! Congratulations ${name}`,
-    'You did it! You\'re number one! ',
-    `Well done ${name}! Way to go!`,
-    `${name} You\'re the one true champion!`,
-    `${name} victory is yours!`
+    'champion_1',
+    'champion_2',
+    'champion_3',
+    'champion_4',
+    'champion_5'
   ],
   FINISH_OTHER: (name = '') => [
-    `Times up! ${name} won!`,
-    `Better luck next time, ${name} is the winner`,
-    `What a race! ${name} takes first place!`,
-    `Time\'s up! ${name} takes the crown!`,
-    `It\'s all over! ${name} is the victor!`
+    'loser_1',
+    'loser_2',
+    'loser_3',
+    'loser_4',
+    'loser_5',
+    'loser_6',
+    'loser_7',
+    'loser_8'
   ]
 };

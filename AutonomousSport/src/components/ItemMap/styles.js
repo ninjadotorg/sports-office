@@ -13,20 +13,22 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(10)
   },
   containerItemsChecked: {
-    borderColor: 'green',
-    borderWidth: 1
+    borderColor: '#ffc500',
+    borderWidth: 1,
+    borderRadius: 10,
+    height: heightItem
   },
   containerItem: {
     flexDirection: 'column',
     height: heightItem,
-    borderColor: 'blue'
+    borderColor: 'transparent'
   },
   imageContainerIOS: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    overflow: 'hidden', 
+    overflow: 'hidden'
   },
 
   image: { width: widthImage, height: heightImage }

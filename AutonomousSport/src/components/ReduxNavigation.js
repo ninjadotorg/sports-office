@@ -36,7 +36,7 @@ class AppNavigation extends Component {
         this.state.appState.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        console.log(`${TAG} App foreground! ${dataEth}`);
+        console.log(`${TAG} App foreground!`);
       } else {
         console.log(`${TAG} App background!`);
       }

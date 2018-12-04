@@ -1,10 +1,16 @@
 import { ACTIONS } from '@/actions/UserAction';
+import { ACTIONS as ACTIONS_FRIEND } from '@/actions/FriendAction';
 import _ from 'lodash';
 import LocalDatabase from '@/utils/LocalDatabase';
 import ApiService from '@/services/ApiService';
 
 const TAG = 'UserReceducer';
-const initialState = { userInfo: {}, practiceInfo: {}, firebaseInfo: {} };
+const initialState = {
+  userInfo: {},
+  practiceInfo: {},
+  firebaseInfo: {},
+  topRacer: {}
+};
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.AUTH_LOGOUT: {
@@ -66,7 +72,31 @@ const UserReducer = (state = initialState, action) => {
       const payload = action.payload || {};
       return { ...state, practiceInfo: payload };
     }
+    case ACTIONS_FRIEND.MAKE_FRIEND: {
+      const payload = action.payload || {};
+      if (!_.isEmpty(payload) && String(payload?.success) === '1') {
+        const { id } = payload;
+        const topRace = _.cloneDeep(state.topRacer) || {};
+        let list = topRace?.list || [];
+        if (id && !_.isEmpty(list)) {
+          const index = list.findIndex(item => item.id === id);
+          if (index >= 0) {
+            list[index]['is_maked_friend'] = true;
+          }
 
+          return { ...state, topRacer: topRace };
+        }
+      }
+      return state;
+    }
+    case ACTIONS.GET_TOP_RACER: {
+      const payload = action.payload || {};
+      const data = {
+        ...payload,
+        status: payload.hasOwnProperty('list')
+      };
+      return { ...state, topRacer: data };
+    }
     default:
       return state;
   }

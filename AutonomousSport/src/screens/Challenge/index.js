@@ -1,30 +1,23 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  ImageBackground
-} from 'react-native';
-import { GameLoop } from "react-native-game-engine";
+import { View, Text, Image, ScrollView, ImageBackground ,StatusBar} from 'react-native';
+import { GameLoop } from 'react-native-game-engine';
 import BaseScreen from '@/screens/BaseScreen';
 import PopupDialog from 'react-native-popup-dialog';
 import { TAG as TAGCREATE } from '@/screens/Create';
 import { Button } from 'react-native-elements';
-import styles,{sizeIconRacing} from './styles';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
 
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
-import { leftRoom,startRacing,finishedRoom } from '@/actions/RoomAction';
+import { leftRoom, startRacing, finishedRoom } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
-import { scale,verticalScale } from 'react-native-size-matters';
+import { scale, verticalScale } from 'react-native-size-matters';
 import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
-import { STATE_BLUETOOTH,CONSTANT_MESSAGE } from '@/utils/Constants';
+import Constants, { STATE_BLUETOOTH, CONSTANT_MESSAGE, BUILD_MODE } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Player from '@/models/Player';
 import Util from '@/utils/Util';
@@ -32,48 +25,59 @@ import ViewUtil from '@/utils/ViewUtil';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 import * as Animatable from 'react-native-animatable';
+import styles, { sizeIconRacing } from './styles';
 
 export const TAG = 'ChallengeScreen';
-let heightMap = screenSize.height;
+const heightScreen = screenSize.height ;
+let heightMap = heightScreen;
 const dialogPercentHeight = 0.8;
-const dialogHeightImage = screenSize.height*dialogPercentHeight;
-const colors = ['purple','blue','yellow','green'];
+const dialogHeightImage = screenSize.height * dialogPercentHeight;
+const colors = ['purple', 'blue', 'yellow', 'green'];
 
-const limitToRotate = (60) * (Math.PI/180);
+const limitToRotate = 60 * (Math.PI / 180);
 const FastImageView = createImageProgress(FastImage);
+let firstDataForTesing = { E8oouxYufVbXPWssHdL9NqUfxZl1: 
+  { streamId: 'D4CE87E6-FCA2-408D-A858-3C831BC4D731',
+    status: 2,
+    speed: 0,
+    playerName: 'Hh11',
+    token: 'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9MThlMTQzMjEyZGZjOTQ1MTBhODhmM2RlZWJlOWE0YzM3MzNkZWNiNTpzZXNzaW9uX2lkPTJfTVg0ME5qRTFORFF5TW41LU1UVTBNelF3TXpJMk9UUXpNMzU2Vldaak1HdEtVWE5KVDJwcGVYSnZRVlJyVnl0TE0zWi1mZyZjcmVhdGVfdGltZT0xNTQzNDAzMjY5Jm5vbmNlPTkwNzAyJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE1NDM0ODk2Njk=',
+    goal: 0,
+    archivement: 0 } };
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
+    StatusBar.setHidden(true);
     super(props);
     const room: Room = new Room(props.navigation?.state.params);
     this.lastIndexPosition = 0;
     this.currentPositionIndex = 0;
     this.listLastIndexPosition = {};
-    // const { width = 0, height = 1 } = Image.resolveAssetSource(images.map);
-    const { width = 0, height = 1 } = room?.getMapSize()||{};
-    console.log(TAG,' constructor widthRealMap = ',width,' heightRealMap = ',height);
-    const sizeMap = Util.calculateMapSize({widthReal:width,heightReal:height});
+    const { width = 0, height = 1 } = room?.getMapSize() || {};
+    const sizeMap = Util.calculateMapSize({
+      widthReal: width,
+      heightReal: height
+    });
     this.sizeMap = sizeMap;
     this.ratios = sizeMap.ratios;
     this.scaleSize = sizeMap.scaleSize;
     this.listPoint = room.getPathOfMap();
     const pointStart = this.getCurrentPoint();
-    const angle = this.getAngleWithCurrentPoint(0) ;
+    const angle = this.getAngleWithCurrentPoint(0);
     this.posInit = {
       y: pointStart.y,
       x: pointStart.x,
-      rotate:angle
+      rotate: angle
     };
     this.widthMap = sizeMap.widthExpect;
     heightMap = sizeMap.heightExpect;
-    console.log(TAG,' constructor widthMap = ',this.widthMap,' heightMap = ',heightMap);
     this.state = {
       room: room,
       user: {},
       pos: this.posInit,
-      playersColor:{},
-      players:[],
-      winner:{},
-      playersMarker:[],
+      playersColor: {},
+      players: [],
+      winner: {},
+      playersMarker: [],
       race: {},
       distanceRun: 0,
       kcal: 0,
@@ -82,51 +86,56 @@ class ChallengeScreen extends BaseScreen {
       isFinished: false,
       isReady: false
     };
-    
+
     this.pathKey = `games/race-rooms/${room?.session || ''}`;
     this.dataPrefference = firebase.database().ref(this.pathKey);
     this.roomDataPrefference = this.dataPrefference.child('players');
   }
 
-  onStreamCreated =(streamId)=>{
+  onStreamCreated = streamId => {
+    console.log(TAG, ' ChallengeScreen streamId ', streamId);
 
-    console.log(TAG,' ChallengeScreen streamId ',streamId);
-
-    const {user} = this.state;
+    const { user } = this.state;
     // push stream Id on firebase
-    if(!_.isEmpty(streamId)&& !_.isEmpty(user)){
-      this.dataPrefference.child('players')?.child(user.fbuid).update({streamId: streamId});
+    if (!_.isEmpty(streamId) && !_.isEmpty(user)) {
+      this.dataPrefference
+        .child('players')
+        ?.child(user.fbuid)
+        .update({ streamId: streamId });
       this.onListenerChanel();
+      
     }
-  }
-  onStreamDestroyed =(streamId)=>{
-    if(streamId && !this.state.isLoadingAllScreen){
-      this.onPressClose(); 
+  };
+  onStreamDestroyed = streamId => {
+    if (streamId && !this.state.isLoadingAllScreen) {
+      this.onPressClose();
     }
-  }
+  };
   getCurrentPoint = (currentPositionIndex = 0) => {
-    let x,y = 0;
+    let x,
+      y = 0;
     try {
       const pointStart: [] = this.listPoint[currentPositionIndex || 0];
       // console.log(TAG, ' getCurrentPoint - nextPoint = ', pointStart);
-      x = (Number(pointStart[0])) * this.scaleSize - sizeIconRacing.width/2;
-      y = (Number(pointStart[1])) * this.scaleSize - sizeIconRacing.height/2;
-    } catch (error) {
-      
-    }
+      x = Number(pointStart[0]) * this.scaleSize - sizeIconRacing.width / 2;
+      y = Number(pointStart[1]) * this.scaleSize - sizeIconRacing.height / 2;
+    } catch (error) {}
     return {
-      x,y
-    }; 
-    
+      x,
+      y
+    };
   };
 
-  getAngleWithCurrentPoint = (currentPositionIndex = 0)=>{
-    currentPositionIndex =  (currentPositionIndex % this.listPoint.length) || 0;
-    const nextIndex = ((currentPositionIndex+1) % this.listPoint.length) || 1;
+  getAngleWithCurrentPoint = (currentPositionIndex = 0) => {
+    currentPositionIndex = currentPositionIndex % this.listPoint.length || 0;
+    const nextIndex = (currentPositionIndex + 1) % this.listPoint.length || 1;
     const pointStart = this.getCurrentPoint(currentPositionIndex);
     const futurePoint = this.getCurrentPoint(nextIndex);
-    return Math.atan2(futurePoint.y - pointStart.y, futurePoint.x - pointStart.x) + Math.PI/2;
-  }
+    return (
+      Math.atan2(futurePoint.y - pointStart.y, futurePoint.x - pointStart.x) +
+      Math.PI / 2
+    );
+  };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const {
@@ -141,16 +150,22 @@ class ChallengeScreen extends BaseScreen {
     } = this.state;
 
     if (!_.isEqual(nextProps?.user, user)) {
-      
       this.setState(
         {
           user: nextProps.user,
           isLoading: false,
-          race:nextProps.race
+          race: nextProps.race
         },
         () => {
-          if (_.isEmpty(this.state.race) || race.state !== STATE_BLUETOOTH.CONNECTED) {
-            console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
+          if (
+            _.isEmpty(this.state.race) ||
+            race.state !== STATE_BLUETOOTH.CONNECTED
+          ) {
+            console.log(
+              TAG,
+              ' componentWillReceiveProps - user = ',
+              nextProps?.user
+            );
             this.playerMeDataPrefference = this.dataPrefference
               .child('players')
               .child(this.state.user.fbuid);
@@ -168,16 +183,18 @@ class ChallengeScreen extends BaseScreen {
         const s = distanceRun + (data.distanceStreet || 0);
         const sumKcal = kcal + (data.kcal || 0);
         // caculate goal
-        const goalPercentNumber = (s * 100 / room?.miles) || 0;
+        const goalPercentNumber = (s * 100) / room?.miles || 0;
         const goal = Math.ceil(goalPercentNumber) || 0;
         console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
 
-        const indexPosition = Math.ceil((this.listPoint.length * goalPercentNumber) / 100);
-        const isFinished = goal>=100;
+        const indexPosition = Math.ceil(
+          (this.listPoint.length * goalPercentNumber) / 100
+        );
+        const isFinished = goal >= 100;
         this.currentPositionIndex = indexPosition;
         this.setState({
-          isFinished:isFinished,
-          isLoading:false,
+          isFinished: isFinished,
+          isLoading: false,
           race: race,
           distanceRun: s,
           kcal: sumKcal
@@ -188,8 +205,17 @@ class ChallengeScreen extends BaseScreen {
           ' componentWillReceiveProps02 - goal = ',
           goal,
           ' - indexPosition = ',
-          indexPosition,' sumKcal = ',sumKcal
+          indexPosition,
+          ' sumKcal = ',
+          sumKcal
         );
+        if(BUILD_MODE.isModeRecordVideo){
+        // for testing
+          const keyFirst = Object.keys(firstDataForTesing)[0];
+          firstDataForTesing[keyFirst]['goal'] = goal;
+          this.updateDataTesting();
+          //////
+        }
         this.playerMeDataPrefference.update({
           speed: data.speed,
           goal: goal,
@@ -200,8 +226,8 @@ class ChallengeScreen extends BaseScreen {
         this.saveUserInfo({ kcal: data.kcal || 0, miles: data.distanceStreet });
 
         // call api when goal :100
-        if(isFinished){
-          this.props.finishedRoom({session:room.session});
+        if (isFinished) {
+          this.props.finishedRoom({ session: room.session });
         }
       }
       console.log(TAG, ' componentWillReceiveProps end ---- ');
@@ -214,22 +240,132 @@ class ChallengeScreen extends BaseScreen {
     this.props.updateRacing({ kcal, miles });
   }, 200);
 
+  updateDataTesting = () => {
+    const { user } = this.state;
+    // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
+
+    if (!_.isEmpty(user)) {
+      
+      const data =firstDataForTesing;
+      // for testing 
+      const keyFirst = Object.keys(data)[0];
+      const userToClone = data[keyFirst];
+      
+      if(!_.isEmpty(userToClone)){
+        let firstItem = _.cloneDeep(userToClone);
+        firstItem['fbuid'] = `${firstItem['fbuid']}0`;
+        firstItem['goal'] = Math.abs(firstItem['goal'] + 3);
+        data[`${keyFirst}0`] = firstItem;
+
+        let secondItem = _.cloneDeep(userToClone);
+        secondItem['fbuid'] = `${userToClone['fbuid']}1`;
+        secondItem['goal'] = Math.abs(userToClone['goal'] - 2);
+        data[`${keyFirst}1`] = secondItem;
+      }
+      ////////
+
+      let arr = [];
+      let playersColor = {};
+      console.log(TAG, ' onListenerChanel ---- ', data);
+
+      let index = 0;
+      let isGetReady = false,
+        isFinished = false;
+      let winner = null;
+      let reachMeMessage = '';
+
+      Object.keys(data).forEach(key => {
+        const value = data[key];
+
+        // console.log(TAG, ' updateDataFromOtherPlayer -', value);
+        if (!_.isEmpty(value)) {
+          value['fbuid'] = key;
+          value['isMe'] = key === user?.fbuid;
+          isGetReady = value['status'] === 2 || isGetReady;
+          const player = new Player(value);
+          playersColor[key] = colors[index];
+          arr.push(player);
+          isFinished = player.goal >= 100 || isFinished;
+          index++;
+          winner = !winner || player.goal > winner.goal ? player : winner;
+
+          // many case with is ME
+          reachMeMessage =
+            value['isMe'] && [20, 50, 70, 90, 99].includes(value.goal)
+              ? value.goal
+              : '';
+        }
+      });
+      if (reachMeMessage) {
+        const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
+        const distance = (reachMeMessage * this.state.room?.miles) / 100 || 0;
+        const message = arr(distance)[Util.getRandomInt(0, arr.length - 1)];
+        this.readText(message);
+      }
+
+      if (
+        isGetReady &&
+        !isFinished &&
+        this.state.winner &&
+        winner &&
+        winner['fbuid'] !== this.state.winner['fbuid']
+      ) {
+        const arr = winner['isMe']
+          ? CONSTANT_MESSAGE.PASS_X
+          : CONSTANT_MESSAGE.X_PASS;
+
+        const index = Util.getRandomInt(0, arr().length - 1);
+        const message = arr(
+          (winner['isMe']
+            ? this.state.winner.playerName
+            : winner['playerName']) || ''
+        )[index];
+        console.log(
+          TAG,
+          ' updateDataFromOtherPlayer - readText PASSS - ',
+          message
+        );
+        this.readText(message);
+      }
+      this.setState({
+        isFinished: isFinished,
+        isReady: isGetReady || this.state.isReady,
+        players: arr,
+        winner: winner,
+        playersColor: playersColor
+      });
+      if (isFinished) {
+        if (winner) {
+          // read text
+          const arr = winner['isMe']
+            ? CONSTANT_MESSAGE.FINISH_ANNOUCE_ME
+            : CONSTANT_MESSAGE.FINISH_OTHER;
+          const index = Util.getRandomInt(0, arr.length - 1);
+          const s = arr(winner.playerName)[index];
+          this.readText(s);
+        }
+        this.finishedRacing();
+      }
+    }
+  };
+
   onListenerChanel = () => {
     const { user } = this.state;
     // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
-    
+
     if (!_.isEmpty(user)) {
-      
       this.roomDataPrefference.on('value', dataSnap => {
         const data = dataSnap?.toJSON() || {};
+        
         let arr = [];
         let playersColor = {};
         console.log(TAG, ' onListenerChanel ---- ', data);
-        
+
         let index = 0;
-        let isGetReady = false ,isFinished = false;
+        let isGetReady = false,
+          isFinished = false;
         let winner = null;
-        let reachMeMessage  = "";
+        let reachMeMessage = '';
 
         Object.keys(data).forEach(key => {
           const value = data[key];
@@ -238,47 +374,68 @@ class ChallengeScreen extends BaseScreen {
           if (!_.isEmpty(value)) {
             value['fbuid'] = key;
             value['isMe'] = key === user?.fbuid;
-            isGetReady = value['status'] === 2 || isGetReady;            
+            isGetReady = value['status'] === 2 || isGetReady;
             const player = new Player(value);
             playersColor[key] = colors[index];
             arr.push(player);
-            isFinished = player.goal>=100 || isFinished;
+            isFinished = player.goal >= 100 || isFinished;
             index++;
-            winner = (!winner || player.goal> winner.goal )? player:winner;
+            winner = !winner || player.goal > winner.goal ? player : winner;
 
             // many case with is ME
-            reachMeMessage = value["isMe"] && ([20,50,70,90,99].includes(value.goal))? value.goal:'';
+            reachMeMessage =
+              value['isMe'] && [20, 50, 70, 90, 99].includes(value.goal)
+                ? value.goal
+                : '';
           }
         });
-        if(reachMeMessage){
+        if (reachMeMessage) {
           const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
-          const distance =  (reachMeMessage*this.state.room?.miles /100 ) || 0;
-          const message = arr(distance)[Util.getRandomInt(0,arr.length-1)];
+          const distance = (reachMeMessage * this.state.room?.miles) / 100 || 0;
+          const message = arr(distance)[Util.getRandomInt(0, arr.length - 1)];
           this.readText(message);
         }
 
-        if(isGetReady && !isFinished && this.state.winner && winner && winner['fbuid'] !== this.state.winner['fbuid']){
-          const arr = winner["isMe"]?CONSTANT_MESSAGE.PASS_X:CONSTANT_MESSAGE.X_PASS;
-          
-          const index = Util.getRandomInt(0,arr().length-1);
-          const message = arr((winner["isMe"]?this.state.winner.playerName:winner["playerName"]) ||"")[index];
-          console.log(TAG, ' updateDataFromOtherPlayer - readText PASSS - ', message);
+        if (
+          isGetReady &&
+          !isFinished &&
+          this.state.winner &&
+          winner &&
+          winner['fbuid'] !== this.state.winner['fbuid']
+        ) {
+          const arr = winner['isMe']
+            ? CONSTANT_MESSAGE.PASS_X
+            : CONSTANT_MESSAGE.X_PASS;
+
+          const index = Util.getRandomInt(0, arr().length - 1);
+          const message = arr(
+            (winner['isMe']
+              ? this.state.winner.playerName
+              : winner['playerName']) || ''
+          )[index];
+          console.log(
+            TAG,
+            ' updateDataFromOtherPlayer - readText PASSS - ',
+            message
+          );
           this.readText(message);
         }
         this.setState({
-          isFinished:isFinished,
-          isReady:isGetReady||this.state.isReady,
+          isFinished: isFinished,
+          isReady: isGetReady || this.state.isReady,
           players: arr,
-          winner:winner,
-          playersColor:playersColor
+          winner: winner,
+          playersColor: playersColor
         });
-        if(isFinished){
-          if(winner){
+        if (isFinished) {
+          if (winner) {
             // read text
-            const arr = winner["isMe"]?CONSTANT_MESSAGE.FINISH_ANNOUCE_ME:CONSTANT_MESSAGE.FINISH_OTHER;
-            const index = Util.getRandomInt(0,arr.length-1);
+            const arr = winner['isMe']
+              ? CONSTANT_MESSAGE.FINISH_ANNOUCE_ME
+              : CONSTANT_MESSAGE.FINISH_OTHER;
+            const index = Util.getRandomInt(0, arr.length - 1);
             const s = arr(winner.playerName)[index];
-            this.readText(s); 
+            this.readText(s);
           }
           this.finishedRacing();
         }
@@ -286,100 +443,120 @@ class ChallengeScreen extends BaseScreen {
     }
   };
 
-  createMarkerWithPosition= (pos={x:0,y:0},color = 'red')=>{
-    return (<View style={{
-        backgroundColor:'#81b1ff23',
-        borderRadius:sizeIconRacing.width/2,
-        width:sizeIconRacing.width,
-        height:sizeIconRacing.width,
-        position: 'absolute',
-        top: pos.y ,
-        justifyContent:'center',
-        left: pos.x
-    }}>
-    <View style={{
-      backgroundColor:color,
-      alignSelf:'center',
-      borderRadius:sizeIconRacing.width/2 - scale(10),
-      width:sizeIconRacing.width - scale(20),
-      height:sizeIconRacing.width - scale(20),
-  }}/>
-    </View>);
-    
-  }
+  createMarkerWithPosition = (pos = { x: 0, y: 0 }, color = 'red') => {
+    return (
+      <View
+        style={{
+          backgroundColor: '#81b1ff23',
+          borderRadius: sizeIconRacing.width / 2,
+          width: sizeIconRacing.width,
+          height: sizeIconRacing.width,
+          position: 'absolute',
+          top: pos.y,
+          justifyContent: 'center',
+          left: pos.x
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: color,
+            alignSelf: 'center',
+            borderRadius: sizeIconRacing.width / 2 - scale(10),
+            width: sizeIconRacing.width - scale(20),
+            height: sizeIconRacing.width - scale(20)
+          }}
+        />
+      </View>
+    );
+  };
 
   componentDidMount() {
     this.props.getUser();
     // this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
-    if(this.state.isReady && this.lastIndexPosition < this.currentPositionIndex){
-      let tempIndex = this.lastIndexPosition + (this.currentPositionIndex - this.lastIndexPosition)*time.delta/1000;  
-      if(Math.ceil(tempIndex) === Math.ceil(this.lastIndexPosition)){
+    if (
+      this.state.isReady &&
+      this.lastIndexPosition < this.currentPositionIndex
+    ) {
+      let tempIndex =
+        this.lastIndexPosition +
+        ((this.currentPositionIndex - this.lastIndexPosition) * time.delta) /
+          1000;
+      if (Math.ceil(tempIndex) === Math.ceil(this.lastIndexPosition)) {
         this.lastIndexPosition = tempIndex;
         // return;
-      }else{
+      } else {
         tempIndex = Math.ceil(this.lastIndexPosition);
         const nextPoint = this.getCurrentPoint(tempIndex);
-        
-        if(tempIndex!== this.currentPositionIndex){
+
+        if (tempIndex !== this.currentPositionIndex) {
           // console.log(TAG,' updateHandler nextPoint begin');
-          const {pos = this.posInit} = this.state;
+          const { pos = this.posInit } = this.state;
           let angle = this.getAngleWithCurrentPoint(tempIndex);
-          console.log(TAG,' updateHandler nextPoint angle ',angle, ' - tempIndex = ',tempIndex);
-        
+          console.log(
+            TAG,
+            ' updateHandler nextPoint angle ',
+            angle,
+            ' - tempIndex = ',
+            tempIndex
+          );
+
           // pos.rotate += (angle - pos.rotate)*time.delta/1000;
           const posNew = {
-            x:nextPoint.x,
-            y:nextPoint.y,
-            rotate:angle
+            x: nextPoint.x,
+            y: nextPoint.y,
+            rotate: angle
           };
           this.setState({
-            pos:posNew
+            pos: posNew
           });
-          this.lastIndexPosition += (this.currentPositionIndex - this.lastIndexPosition)*time.delta/1000;
-        }else{
+          this.lastIndexPosition +=
+            ((this.currentPositionIndex - this.lastIndexPosition) *
+              time.delta) /
+            1000;
+        } else {
           this.lastIndexPosition = this.currentPositionIndex;
         }
-      };
-      
-      
+      }
     }
 
     // update position list player
-    const {players = [],playersColor = {},playersMarker = []} = this.state;
+    const { players = [], playersColor = {}, playersMarker = [] } = this.state;
     let indexPosition;
     let lastIndex = 0;
     let nextPoint = {};
     let isHaveChange = false;
-    const markers =  players.map(player => {
+    const markers = players.map(player => {
       if (!_.isEmpty(player) && !player.isMe) {
         indexPosition = Math.ceil((this.listPoint.length * player.goal) / 100);
-        lastIndex  = this.listLastIndexPosition[player.fbuid]||0;
+        lastIndex = this.listLastIndexPosition[player.fbuid] || 0;
         // console.log(TAG,' updateHandler - players.map indexPosition = ',indexPosition,' lastIndex = ',lastIndex);
-        if(lastIndex < indexPosition){
+        if (lastIndex < indexPosition) {
           isHaveChange = true;
-          lastIndex += (indexPosition - lastIndex)*time.delta/1000;
-        }else{
+          lastIndex += ((indexPosition - lastIndex) * time.delta) / 1000;
+        } else {
           lastIndex = indexPosition;
-        };
-        this.listLastIndexPosition[player.fbuid] = lastIndex||0;
+        }
+        this.listLastIndexPosition[player.fbuid] = lastIndex || 0;
         nextPoint = this.getCurrentPoint(Math.ceil(lastIndex));
-        return this.createMarkerWithPosition(nextPoint,playersColor[player.fbuid]);
+        return this.createMarkerWithPosition(
+          nextPoint,
+          playersColor[player.fbuid]
+        );
       }
     });
 
-    if(isHaveChange || playersMarker?.length!== markers?.length){
-      console.log(TAG,' updateHandler - player change');
+    if (isHaveChange || playersMarker?.length !== markers?.length) {
+      console.log(TAG, ' updateHandler - player change');
       this.setState({
-        playersMarker:markers
-      });     
+        playersMarker: markers
+      });
     }
-
   };
-  finishedRacing = this.onClickView(()=>{
+  finishedRacing = this.onClickView(() => {
     this.roomDataPrefference?.off('value');
-    
+
     // show dialog
     this.popupDialog.show();
   });
@@ -396,17 +573,23 @@ class ChallengeScreen extends BaseScreen {
     //   { playerName: 'HTon', goal: 25 }
     // ];
 
-    let {players=[]} = this.state;
+    let { players = [] } = this.state;
     // sort list player
 
-    players?.sort((a,b)=>Number(b.goal) - Number(a.goal))||[];
+    players?.sort((a, b) => Number(b.goal) - Number(a.goal)) || [];
     return (
       <FastImage
-        style={{flex: 1,width:dialogHeightImage,height:dialogHeightImage}}
+        style={{ flex: 1, width: dialogHeightImage, height: dialogHeightImage }}
         resizeMode={FastImage.resizeMode.stretch}
         source={images.back_score}
       >
-        <View style={{ flex: 1, paddingVertical: verticalScale(30), paddingHorizontal: verticalScale(30) }}>
+        <View
+          style={{
+            flex: 1,
+            paddingVertical: verticalScale(30),
+            paddingHorizontal: verticalScale(30)
+          }}
+        >
           <Text
             style={[
               TextStyle.extraText,
@@ -424,21 +607,41 @@ class ChallengeScreen extends BaseScreen {
             style={{ flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <View style={{ flex: 1 ,marginTop:scale(10)}}>
+            <View style={{ flex: 1, marginTop: scale(10) }}>
               {players.map(player => {
-                const iconResult =Number(player.goal) >= 100? images.ic_gold:images.ic_sliver;
+                const iconResult =
+                  Number(player.goal) >= 100
+                    ? images.ic_gold
+                    : images.ic_sliver;
                 return (
-                  <View style={{ flexDirection: 'row', marginVertical:verticalScale(5),flex:1, marginTop:0, paddingHorizontal:scale(10) }}>
-                    <Image source={iconResult}  style={{alignSelf:'center',marginBottom:scale(10) }}/>
-                    <View style={{ justifyContent: 'center', marginLeft: scale(15),flex:1 }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginVertical: verticalScale(5),
+                      flex: 1,
+                      marginTop: 0,
+                      paddingHorizontal: scale(10)
+                    }}
+                  >
+                    <Image
+                      source={iconResult}
+                      style={{ alignSelf: 'center', marginBottom: scale(10) }}
+                    />
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        marginLeft: scale(15),
+                        flex: 1
+                      }}
+                    >
                       <Text
                         style={[
                           TextStyle.mediumText,
                           {
-                            paddingTop:10,
-                            paddingBottom:10,
+                            paddingTop: 10,
+                            paddingBottom: 10,
                             color: 'white',
-                            fontWeight:'bold',
+                            fontWeight: 'bold',
                             textAlignVertical: 'center'
                           }
                         ]}
@@ -448,17 +651,28 @@ class ChallengeScreen extends BaseScreen {
                       <Text
                         style={[
                           TextStyle.normalText,
-                          { color: 'white', textAlignVertical: 'center',fontWeight:'bold',borderBottomWidth:1,
-                            borderColor:'#8d8d8d20', flex:1,paddingBottom:24}
+                          {
+                            color: 'white',
+                            textAlignVertical: 'center',
+                            fontWeight: 'bold',
+                            borderBottomWidth: 1,
+                            borderColor: '#8d8d8d20',
+                            flex: 1,
+                            paddingBottom: 24
+                          }
                         ]}
                       >
-                      <Text style={[
-                        TextStyle.normalText,
-                        { color: '#8d8d8d' ,fontWeight:'normal'}
-                      ]}>{Number(player.goal) >= 100
-                        ? 'The Champion'
-                        : `Finished `}</Text>
-                         {Number(player.goal) >= 100
+                        <Text
+                          style={[
+                            TextStyle.normalText,
+                            { color: '#8d8d8d', fontWeight: 'normal' }
+                          ]}
+                        >
+                          {Number(player.goal) >= 100
+                            ? 'The Champion'
+                            : 'Finished '}
+                        </Text>
+                        {Number(player.goal) >= 100
                           ? ''
                           : `${Number(player.goal)}%`}
                       </Text>
@@ -468,59 +682,86 @@ class ChallengeScreen extends BaseScreen {
               })}
             </View>
           </ScrollView>
-          
+
           <Button
             title="OK"
             onPress={this.onPressFinish}
-            buttonStyle={[styles.button, { backgroundColor: '#ffc500',width:'30%',alignSelf:'center' }]}
-            textStyle={[TextStyle.mediumText, { fontWeight: 'bold',color:'#534c5f' }]}
+            buttonStyle={[
+              styles.button,
+              { backgroundColor: '#ffc500', width: '30%', alignSelf: 'center' }
+            ]}
+            textStyle={[
+              TextStyle.mediumText,
+              { fontWeight: 'bold', color: '#534c5f' }
+            ]}
           />
         </View>
       </FastImage>
     );
   };
 
-  onPressFinish = this.onClickView(()=>{
-    this.replaceScreen(this.props.navigation,TAGCREATE);
+  onPressFinish = this.onClickView(() => {
+    this.replaceScreen(this.props.navigation, TAGCREATE);
   });
 
   renderMap = () => {
-    const { user, room, isReady, playersMarker=[],isLoading = false,players = []} = this.state;
-    const uriPhoto = room?.photo ?  { uri: room?.photo  } : images.image_start;
+    const {
+      user,
+      room,
+      isReady,
+      playersMarker = [],
+      isLoading = false,
+      players = []
+    } = this.state;
+    const uriPhoto = room?.photo ? { uri: room?.photo } : images.image_start;
     const markersView = this.renderMarker();
     return (
-      <GameLoop style={styles.map} onUpdate={this.updateHandler} >
-        <ImageZoom 
+      <GameLoop style={styles.map} onUpdate={this.updateHandler}>
+        <ImageZoom
           cropWidth={this.sizeMap.width}
-          cropHeight={screenSize.height}
+          cropHeight={heightScreen}
           imageWidth={this.widthMap}
           imageHeight={heightMap}
           minScale={1}
           enableCenterFocus={false}
-          maxScale={2}>
+          maxScale={2}
+        >
           <FastImageView
-            style={{ width: this.widthMap, height: heightMap}}
+            style={{ width: this.widthMap, height: heightMap }}
             resizeMode="contain"
-            source={uriPhoto}>
+            source={uriPhoto}
+          >
             {playersMarker}
             {markersView}
           </FastImageView>
-         
         </ImageZoom>
-        
 
-        {isReady || user?.id!== room.userId || playersMarker?.length<=1 ? null : (
-          <Animatable.View style={[{
-            position: 'absolute',
-            bottom: verticalScale(20)
-          }]} animation="tada" duration={1200} iterationDelay={1000} iterationCount='infinite' delay={3000} direction="normal">
+        {isReady ||
+        user?.id !== room.userId ? null : (
+          <Animatable.View
+            style={[
+              {
+                position: 'absolute',
+                bottom: verticalScale(20)
+              }
+            ]}
+            animation="tada"
+            duration={1200}
+            iterationDelay={1000}
+            iterationCount="infinite"
+            delay={3000}
+            direction="normal"
+          >
             <Button
               loading={isLoading}
               containerViewStyle={[styles.button]}
               title="Get ready"
               onPress={this.onPressReady}
               buttonStyle={[{ backgroundColor: 'transparent' }]}
-              textStyle={[TextStyle.mediumText, {color:'#534c5f', fontWeight: 'bold' }]}
+              textStyle={[
+                TextStyle.mediumText,
+                { color: '#534c5f', fontWeight: 'bold' }
+              ]}
             />
           </Animatable.View>
         )}
@@ -529,79 +770,85 @@ class ChallengeScreen extends BaseScreen {
   };
 
   renderMarker = (pos = this.state.pos || this.posInit) => {
-    return (<Image source={images.ic_racer1} 
-        resizeMode='center'
+    return (
+      <Image
+        source={images.ic_racer1}
+        resizeMode="center"
         style={{
-          backgroundColor:'transparent',
+          backgroundColor: 'transparent',
           position: 'absolute',
-          top: pos.y ,
+          top: pos.y,
           left: pos.x,
-          width:sizeIconRacing.width,
-          height:sizeIconRacing.height,
-          transform:[{rotate:`${pos.rotate}rad`}]
+          width: sizeIconRacing.width,
+          height: sizeIconRacing.height,
+          transform: [{ rotate: `${pos.rotate}rad` }]
         }}
-    />);
-
-    // return icons.markerPlayer({
-    //   color: 'red',
-    //   size: sizeIconRacing.width,
-    //   containerStyle: {
-    //     paddingVertical:0,
-    //     paddingHorizontal:0,
-    //     position: 'absolute',
-    //     top: pos.y ,
-    //     left: pos.x
-    //   }
-    // });
+      />
+    );
   };
 
   onPressReady = this.onClickView(async () => {
-    const {room} = this.state;
-    if(room &&room.session){
+    const { room } = this.state;
+    if (room && room.session) {
       this.setState({ isLoading: true });
-      const index = Util.getRandomInt(0,CONSTANT_MESSAGE.START_RACING.length-1);
+      const index = Util.getRandomInt(
+        0,
+        CONSTANT_MESSAGE.START_RACING.length - 1
+      );
       this.readText(CONSTANT_MESSAGE.START_RACING[index]);
-      
-      await this.props.startRacing({session:room.session});
+
+      await this.props.startRacing({ session: room.session });
       this.setState({ isLoading: false });
     }
   });
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ok');
     // this.props.disconnectBluetooth();
     // this.roomDataPrefference?.off('value');
   }
-  leftRoom = ()=>{
+  leftRoom = async () => {
     const { room } = this.state;
-    this.props.leftRoom({ session: room?.session });
-  }
+    await this.props.leftRoom({ session: room?.session });
+  };
   onPressClose = this.onClickView(async () => {
     try {
-      
       this.showLoadingAllScreen = true;
       this.roomDataPrefference?.off('value');
-      await Util.excuteWithTimeout(this.leftRoom(),4);
-      
+      console.log(TAG, ' onPressClose call-left-room');
+      await Util.excuteWithTimeout(this.leftRoom(), 5);
     } catch (error) {
+    } finally {
       this.showLoadingAllScreen = false;
-    }finally{
       this.replaceScreen(this.props.navigation, TAGCREATE);
     }
-    
   });
 
-  set showLoadingAllScreen(isShow){
-    this.setState({isLoadingAllScreen:isShow});
+  set showLoadingAllScreen(isShow) {
+    this.setState({ isLoadingAllScreen: isShow });
   }
 
   render() {
-    const { room, user,players=[],isLoadingAllScreen = false,playersColor = {} } = this.state;
+    const {
+      room,
+      user,
+      players = [],
+      isLoadingAllScreen = false,
+      playersColor = {}
+    } = this.state;
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <View style={{ alignItems: 'center' }}>
-          <BikerProfile onStreamCreated={this.onStreamCreated} onStreamDestroyed={this.onStreamDestroyed} room={room} user={user} players={players} playersColor={playersColor} />
+        <View style={{ alignItems: 'center'}}>
+          <BikerProfile
+            onStreamCreated={this.onStreamCreated}
+            onStreamDestroyed={this.onStreamDestroyed}
+            room={room}
+            user={user}
+            players={players}
+            playersColor={playersColor}
+          />
         </View>
 
         {icons.close({
@@ -612,15 +859,18 @@ class ChallengeScreen extends BaseScreen {
             left: 10
           }
         })}
-        {ViewUtil.CustomProgressBar({visible:isLoadingAllScreen})}
+        {ViewUtil.CustomProgressBar({ visible: isLoadingAllScreen })}
         <PopupDialog
           width="70%"
-          height={`${dialogPercentHeight*100}%`}
+          height={`${dialogPercentHeight * 100}%`}
           hasOverlay
-          dialogStyle={{backgroundColor:'transparent'}}
+          dialogStyle={{ backgroundColor: 'transparent' }}
           dismissOnTouchOutside={false}
-          ref={(popupDialog) => { this.popupDialog = popupDialog; }}>
-          {this.renderDashBoardAchivement()}  
+          ref={popupDialog => {
+            this.popupDialog = popupDialog;
+          }}
+        >
+          {this.renderDashBoardAchivement()}
         </PopupDialog>
       </View>
     );

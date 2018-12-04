@@ -122,6 +122,12 @@ const StackRouter = createStackNavigator(
         header: null
       }
     },
+    TopRaceScreen: {
+      screen: Screens.TopRaceScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
     ChooseRoundScreen: {
       screen: Screens.ChooseRoundScreen,
       navigationOptions: {
