@@ -2,6 +2,7 @@ import { StatusBar } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { screenSize } from '@/utils/TextStyle';
 import Constants from '@/utils/Constants';
+import * as ConfigReact from 'react-native-config';
 
 const TAG = 'Util';
 export default class Util {
@@ -10,6 +11,11 @@ export default class Util {
       email: 'binh@test.com',
       password: '123456'
     };
+  };
+  static infoConfig = () => {
+    return `FLAVOR = ${ConfigReact.default.FLAVOR}, BUILD_TYPE = ${
+      ConfigReact.default.BUILD_TYPE
+    },DEBUG = ${ConfigReact.default.DEBUG}`;
   };
 
   static isEmailValid(email) {

@@ -23,8 +23,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
-import PopupDialog from 'react-native-popup-dialog';
-import { STATE_BLUETOOTH, CONSTANT_PRACTISE_MESSAGE } from '@/utils/Constants';
+import { STATE_BLUETOOTH, CONSTANT_PRACTISE_MESSAGE, BUILD_MODE } from '@/utils/Constants';
 import {
   fetchUser,
   resetRacing,
@@ -34,6 +33,7 @@ import {
 } from '@/actions/UserAction';
 import * as Animatable from 'react-native-animatable';
 import styles, { sliderWidth, itemWidth } from './styles';
+import Util from '@/utils/Util';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
@@ -63,7 +63,7 @@ class HomeScreen extends BaseScreen {
       _.isEmpty(user) &&
       JSON.stringify(nextProps?.user) !== JSON.stringify(user)
     ) {
-      console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
+      // console.log(TAG, ' componentWillReceiveProps - user = ', nextProps?.user);
       this.setState(
         {
           user: nextProps.user,
@@ -82,18 +82,18 @@ class HomeScreen extends BaseScreen {
       isStarted &&
       JSON.stringify(nextProps?.race) !== JSON.stringify(this.state.race)
     ) {
-      console.log(TAG, ' componentWillReceiveProps race begin ');
+      // console.log(TAG, ' componentWillReceiveProps race begin ');
       const { race = {} } = nextProps;
       const {
         data,
         isSavedDevice = false,
         state = STATE_BLUETOOTH.UNKNOWN
       } = race;
-      console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
+      // console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
       if (isSavedDevice && state === STATE_BLUETOOTH.CONNECTED) {
         const s = distanceRun + data.distanceStreet || 0;
         const sumKcal = kcal + data.kcal || 0;
-        console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
+        // console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
         this.triggerVoiceWithStart(distanceRun,s);
         this.triggerVoiceWithDistance(distanceRun,s);
         this.setSpeed = {
@@ -108,7 +108,7 @@ class HomeScreen extends BaseScreen {
         // save local user
         this.saveUserInfo({ kcal: data.kcal || 0, miles: data.distanceStreet });
       }
-      console.log(TAG, ' componentWillReceiveProps - end');
+      // console.log(TAG, ' componentWillReceiveProps - end');
     }
   }
 
@@ -171,6 +171,12 @@ class HomeScreen extends BaseScreen {
   onPressLeaderBoard = this.onClickView(() => {
     this.props.navigation.navigate(TAGTOPRACE);
   });
+  onClickBluetooth = this.onClickView(()=>{
+    const {sensorInfo = {}} = this.state.race;
+    if(BUILD_MODE.isDebugBuildType && sensorInfo &&sensorInfo.peripheral){
+      this.showToastMessage(sensorInfo?.peripheral);
+    }
+  });
 
   renderBluetoothStatus = () => {
     const status = this.state.race.state || STATE_BLUETOOTH.UNKNOWN;
@@ -179,7 +185,7 @@ class HomeScreen extends BaseScreen {
         ? images.ic_status_bluetooth_on
         : images.ic_status_bluetooth_off;
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={this.onClickBluetooth}>
         <Image
           source={img}
           style={{ width: scale(30), height: scale(30), marginLeft: 40 }}
@@ -197,24 +203,26 @@ class HomeScreen extends BaseScreen {
     // this.speed.countDown = countDown || this.speed.countDown;
   }
   updateHandler = ({ touches, screen, time }) => {
-    if (Math.round(Math.abs(this.speed.value - this.speed.countDown)) > 0) {
+    const valueChange = (this.speed.value - this.speed.countDown) ;
+    if (Math.round(valueChange) != 0) {
       
-      const tempValue =
-        ((this.speed.value - this.speed.countDown) * time.delta) / 1000;
+      const tempValue = (valueChange * (time.delta>1000?0:time.delta)) / 1000;
+      // console.log(TAG,' updateHandler time = ',time,' valueChange = ',valueChange);
+      // const speedCountDown = Math.abs(valueChange) <= this.speed.value ? this.speed.countDown + tempValue : this.speed.value;
       const speedCountDown = this.speed.countDown + tempValue;
-
-      this.speed.countDown =  speedCountDown < 0 ? 0 :  speedCountDown;
-      // console.log(
-      //   TAG,
-      //   ' updateHandler speedCountDown = ',
-      //   Math.round(speedCountDown),
-      //   ' speed = ',
-      //   this.state.speed,
-      //   ', value = ',this.speed.value
-      // );
+      // this.speed.countDown =  speedCountDown < 0 ? this.speed.value :  speedCountDown;
+      this.speed.countDown =  speedCountDown;
+      console.log(
+        TAG,
+        ' updateHandler speedCountDown = ',
+       speedCountDown,
+        ' speed = ',
+        this.state.speed,
+        ', value = ',this.speed.value
+      );
     }
     const nextSpeed = Math.round(this.speed.countDown);
-    if (nextSpeed != Math.round(this.state.speed) && this.speed.countDown >=0 && this.speed.countDown <= this.speed.value) {
+    if (nextSpeed != Math.round(this.state.speed) && this.speed.countDown >=0) {
       console.log(TAG, ' updateHandler 01 ');
       
       this.triggerVoiceWithSpeed(this.state.speed, nextSpeed);
@@ -366,6 +374,7 @@ class HomeScreen extends BaseScreen {
             onPress={this.onPressCreateRoom}
           />
         </View>
+        {this.renderToastMessage()}
         {this.initDialogInvite()}
       </ImageBackground>
     );

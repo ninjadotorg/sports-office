@@ -26,7 +26,8 @@ export const checkSaveDevice = () => async dispatch => {
   dispatch({
     type: ACTIONS.CHECK_SAVING_DEVICE,
     payload: {
-      isSavedDevice: periBluetooth ? true : false
+      isSavedDevice: periBluetooth ? true : false,
+      sensorInfo: periBluetooth ? periBluetooth.toJSON() : null
     }
   });
 };
