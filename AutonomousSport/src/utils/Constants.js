@@ -12,6 +12,8 @@ export default class Constants {
 
 export class BUILD_MODE {
   static isModeRecordVideo = false;
+  static isStaging = 'staging' === ConfigReact.default.FLAVOR;
+  static isDebugBuildType = 'debug' === ConfigReact.default.BUILD_TYPE;
 }
 
 export class STATE_BLUETOOTH {

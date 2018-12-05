@@ -30,6 +30,7 @@ import Util from '@/utils/Util';
 import { disconnectBluetooth } from '@/actions/RaceAction';
 import { scale, verticalScale } from 'react-native-size-matters';
 import styles from './styles';
+import { BUILD_MODE } from '@/utils/Constants';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -61,6 +62,7 @@ class SetupScreen extends BaseScreen {
   }
 
   componentDidMount() {
+    console.log(TAG,' componentDidMount FLAVOR = ',Util.infoConfig());
     AppState.addEventListener('change', this.handleAppStateChange);
 
     this.handlerDiscover = bleManagerEmitter.addListener(
@@ -373,13 +375,15 @@ class SetupScreen extends BaseScreen {
 
   renderItem = item => {
     const color = item.connected ? 'green' : '#fff';
-    // console.log(TAG, ' renderItem = ', item);
+    
+    const peripheral = item.item;
+    // console.log(TAG, ' renderItem = ', peripheral);
+    const name = peripheral?.name + (BUILD_MODE.isStaging?String(' - ' +peripheral.id):'');
     return (
       <TouchableOpacity
         style={[styles.row, { backgroundColor: 'transparent', marginTop: 5 }]}
-        key={item.id}
+        key={peripheral.id}
         onPress={this.onClickView(async () => {
-          console.log(TAG, ' onPressItemConnect = begin ');
           this.isLoading = true;
           await Util.excuteWithTimeout(this.connect(item), 10);
           this.isLoading = false;
@@ -407,7 +411,7 @@ class SetupScreen extends BaseScreen {
             }
           ]}
         >
-          {item?.item?.name || ''}
+          {name}
         </Text>
       </TouchableOpacity>
     );
@@ -532,7 +536,7 @@ class SetupScreen extends BaseScreen {
               <FlatList
                 onRefresh={this.startScan}
                 refreshing={scanning}
-                keyExtractor={(item, index) => item.id}
+                keyExtractor={(item, index) => String(item.id || index)}
                 style={styles.scroll}
                 data={this.getListAdress()}
                 renderItem={this.renderItem}
