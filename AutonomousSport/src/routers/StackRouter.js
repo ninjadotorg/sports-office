@@ -110,6 +110,12 @@ const StackRouter = createStackNavigator(
         header: null
       }
     },
+    ReviewSensorScreen: {
+      screen: Screens.ReviewSensorScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
     FriendsScreen: {
       screen: Screens.FriendsScreen,
       navigationOptions: {

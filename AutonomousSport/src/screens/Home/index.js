@@ -16,6 +16,7 @@ import { TAG as TAGCREATE } from '@/screens/Create';
 import { TAG as TAGFRIENDS } from '@/screens/Friends';
 import { TAG as TAGPROFILE } from '@/screens/Profile';
 import { TAG as TAGTOPRACE } from '@/screens/TopRace';
+import { TAG as TAG_REVIEW_SENSOR } from '@/screens/ReviewSensor';
 import { GameLoop } from 'react-native-game-engine';
 
 import images from '@/assets';
@@ -33,7 +34,6 @@ import {
 } from '@/actions/UserAction';
 import * as Animatable from 'react-native-animatable';
 import styles, { sliderWidth, itemWidth } from './styles';
-import Util from '@/utils/Util';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
@@ -171,11 +171,12 @@ class HomeScreen extends BaseScreen {
   onPressLeaderBoard = this.onClickView(() => {
     this.props.navigation.navigate(TAGTOPRACE);
   });
-  onClickBluetooth = this.onClickView(()=>{
+  onPressBluetooth = this.onClickView(()=>{
     const {sensorInfo = {}} = this.state.race;
     if(BUILD_MODE.isDebugBuildType && sensorInfo &&sensorInfo.peripheral){
       this.showToastMessage(sensorInfo?.peripheral);
     }
+    this.props.navigation.navigate(TAG_REVIEW_SENSOR);
   });
 
   renderBluetoothStatus = () => {
@@ -185,7 +186,7 @@ class HomeScreen extends BaseScreen {
         ? images.ic_status_bluetooth_on
         : images.ic_status_bluetooth_off;
     return (
-      <TouchableOpacity onPress={this.onClickBluetooth}>
+      <TouchableOpacity onPress={this.onPressBluetooth}>
         <Image
           source={img}
           style={{ width: scale(30), height: scale(30), marginLeft: 40 }}
