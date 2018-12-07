@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 10,
     backgroundColor: 'transparent'
   },
@@ -16,8 +16,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 10
   },
+  containerMain: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    flexDirection: 'row'
+  },
   containerRight: {
-    flex: 1
+    flex: 0.85
   },
   textLabel: {
     color: 'white',

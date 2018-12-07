@@ -237,6 +237,107 @@ export const connectAndPrepare = () => async dispatch => {
   }
 };
 
+export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
+  // get data from local
+  dispatch({
+    type: ACTIONS.CONNECT_BLUETOOTH,
+    payload: {
+      state: STATE_BLUETOOTH.IDLE,
+      data: {}
+    }
+  });
+
+  // console.log(TAG, ' connectAndPrepare get data = ', periBluetooth);
+  if (!periBluetoothId) {
+    dispatch({
+      type: ACTIONS.CONNECT_BLUETOOTH,
+      payload: {
+        isSavedDevice: false,
+        state: STATE_BLUETOOTH.UNKNOWN,
+        data: {}
+      }
+    });
+    return;
+  }
+
+  console.log(TAG, ' connectAndPrepare begin 01 ');
+  dispatch({
+    type: ACTIONS.CONNECT_BLUETOOTH,
+    payload: {
+      isSavedDevice: true,
+      state: STATE_BLUETOOTH.SAVING_CONNECTION,
+      data: {}
+    }
+  });
+  // const isConnected = await BleManager.isPeripheralConnected(
+  // periBluetooth.peripheral,
+  // [periBluetooth.service]
+  // );
+  console.log(TAG, ' connectAndPrepare 01 state-----');
+  if (!receiveDataFromBluetooth) {
+    try {
+      await BleManager.connect(periBluetoothId);
+      const peripheralInfo = await BleManager.retrieveServices(periBluetoothId);
+      // const id = peripheralInfo.id;
+      const services = peripheralInfo.services;
+      const characteristics = peripheralInfo.characteristics;
+      var serviceUUID = services[2].uuid;
+
+      var bakeCharacteristic = characteristics[3].characteristic;
+      console.log(TAG, ' connectAndPrepare 02 ');
+      dispatch({
+        type: ACTIONS.CONNECT_BLUETOOTH,
+        payload: {
+          state: STATE_BLUETOOTH.CONNECTING,
+          data: {}
+        }
+      });
+      console.log(TAG, ' connectAndPrepare 04 ');
+      await BleManager.startNotification(
+        periBluetoothId,
+        serviceUUID,
+        bakeCharacteristic
+      );
+      receiveDataFromBluetooth = true;
+    } catch (error) {
+      dispatch({
+        type: ACTIONS.CONNECT_BLUETOOTH,
+        payload: {
+          state: STATE_BLUETOOTH.UNKNOWN,
+          data: {}
+        }
+      });
+    }
+
+    console.log(TAG, ' connectAndPrepare 05 ');
+    if (handlerUpdate) {
+      handlerUpdate.remove();
+      handlerUpdate = null;
+
+      bleManagerEmitter.removeSubscription(handlerDisconnect);
+      handlerDisconnect = null;
+    }
+
+    handlerUpdate = bleManagerEmitter?.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      connectionBluetoothChange(dispatch)
+    );
+
+    handlerDisconnect = bleManagerEmitter.addListener(
+      'BleManagerDisconnectPeripheral',
+      disconnectBluetoothChange(dispatch)
+    );
+  } else {
+    dispatch({
+      type: ACTIONS.CONNECT_BLUETOOTH,
+      payload: {
+        state: STATE_BLUETOOTH.CONNECTED,
+        data: {}
+      }
+    });
+  }
+};
+
 export const disconnectBluetooth = () => async dispatch => {
   dispatch({
     type: ACTIONS.CONNECT_BLUETOOTH,

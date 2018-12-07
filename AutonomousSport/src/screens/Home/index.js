@@ -176,7 +176,7 @@ class HomeScreen extends BaseScreen {
     if(BUILD_MODE.isDebugBuildType && sensorInfo &&sensorInfo.peripheral){
       this.showToastMessage(sensorInfo?.peripheral);
     }
-    this.props.navigation.navigate(TAG_REVIEW_SENSOR);
+    this.props.navigation.navigate(TAG_REVIEW_SENSOR,sensorInfo);
   });
 
   renderBluetoothStatus = () => {

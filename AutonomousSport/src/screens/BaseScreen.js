@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, Text, AppState } from 'react-native';
+import { View, StyleSheet, Image, Text, AppState,Alert } from 'react-native';
 import Util from '@/utils/Util';
 import firebase from 'react-native-firebase';
 import { onClickView } from '@/utils/ViewUtil';
