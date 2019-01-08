@@ -7,6 +7,7 @@ const TAG = 'RaceReducer';
 const initialState = {
   isSavedDevice: false,
   state: STATE_BLUETOOTH.SCANNING,
+  sensorInfo: null,
   data: {}
 };
 const RaceReducer = (state = initialState, action) => {
@@ -26,7 +27,9 @@ const RaceReducer = (state = initialState, action) => {
       console.log(TAG, ' RaceReducer-CHECK_SAVING_DEVICE payload = ', payload);
       return {
         ...state,
-        isSavedDevice: payload?.isSavedDevice || false
+        ...payload
+        // isSavedDevice: payload?.isSavedDevice || false
+        // sensorInfo:payload.sensorInfo
       };
     }
     default:

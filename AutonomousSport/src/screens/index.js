@@ -3,6 +3,7 @@ export { default as ChallengeScreen } from './Challenge';
 export { default as ChallengeMapScreen } from './ChallengeMap';
 export { default as ChallengeNameScreen } from './ChallengeName';
 export { default as CreateRoomScreen } from './Create';
+export { default as ReviewSensorScreen } from './ReviewSensor';
 export { default as SetupScreen } from './Setup';
 export { default as SignInScreen } from './SignIn';
 export { default as NewRoomScreen } from './NewRoom';

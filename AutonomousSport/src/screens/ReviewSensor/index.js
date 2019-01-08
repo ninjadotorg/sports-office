@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import BleManager from 'react-native-ble-manager';
 import BaseScreen from '@/screens/BaseScreen';
 import images, { icons } from '@/assets';
-import _,{debounce} from 'lodash';
+import _, { debounce } from 'lodash';
 import TextStyle from '@/utils/TextStyle';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import LocalDatabase from '@/utils/LocalDatabase';
@@ -30,15 +30,18 @@ import Util from '@/utils/Util';
 import { disconnectBluetooth } from '@/actions/RaceAction';
 import { scale, verticalScale } from 'react-native-size-matters';
 import styles from './styles';
+import { Header } from 'react-native-elements';
 import { BUILD_MODE } from '@/utils/Constants';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-export const TAG = 'SetupScreen';
-class SetupScreen extends BaseScreen {
+export const TAG = 'ReviewSensorScreen';
+class ReviewSensorScreen extends BaseScreen {
   constructor(props) {
     super(props);
-
+    this.oldPeripheralBluetooth = PeripheralBluetooth.fromJson(
+      props.navigation.state.params
+    );
     this.state = {
       scanning: false,
       isLoading: false,
@@ -46,28 +49,26 @@ class SetupScreen extends BaseScreen {
       refreshing: false,
       appState: ''
     };
-    this.peripheralsParams = new Map(); 
+    this.peripheralsParams = new Map();
     BleManager.start({ showAlert: true, forceLegacy: false });
     this.handlerUpdate = null;
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
   }
 
-  set peripherals(newPeripherals:Map){
-    // this.state.peripherals.clear();
-    console.log('set peripherals size = ',newPeripherals.size);
+  set peripherals(newPeripherals: Map) {
+    console.log('set peripherals size = ', newPeripherals.size);
     this.setState({
       scanning: false,
-      peripherals:newPeripherals
+      peripherals: newPeripherals
     });
   }
 
   componentDidMount() {
-    console.log(TAG,' componentDidMount FLAVOR = ',Util.infoConfig());
     AppState.addEventListener('change', this.handleAppStateChange);
 
     this.handlerDiscover = bleManagerEmitter.addListener(
       'BleManagerDiscoverPeripheral',
-      peripheral=>{
+      peripheral => {
         if (
           !this.peripheralsParams.has(peripheral.id) &&
           !_.isEmpty(peripheral) &&
@@ -75,8 +76,7 @@ class SetupScreen extends BaseScreen {
         ) {
           this.peripheralsParams?.set(peripheral.id, peripheral);
         }
-       
-      } 
+      }
     );
     this.handlerStop = bleManagerEmitter.addListener(
       'BleManagerStopScan',
@@ -139,6 +139,36 @@ class SetupScreen extends BaseScreen {
     return Promise.resolve(1);
   };
 
+  renderLeftHeader = () => {
+    return (
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={{ flexDirection: 'row' }}
+          onPress={this.onPressBack}
+        >
+          <Image
+            source={images.ic_backtop}
+            style={{ width: 32, height: 32, marginTop: 10 }}
+          />
+          <Text
+            style={[
+              TextStyle.mediumText,
+              {
+                color: 'white',
+                fontWeight: 'bold',
+                textAlignVertical: 'center',
+                marginHorizontal: 10,
+                marginLeft: 20,
+                marginTop: 10
+              }
+            ]}
+          >
+            Connect to VELO bike
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
   checkConditionForScan = async () => {
     let result = await this.checkPermission();
     if (result && result > 0) {
@@ -155,7 +185,7 @@ class SetupScreen extends BaseScreen {
     }
   };
 
-  handleAppStateChange=(nextAppState)=>{
+  handleAppStateChange = nextAppState => {
     if (
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
@@ -166,19 +196,11 @@ class SetupScreen extends BaseScreen {
       });
     }
     this.setState({ appState: nextAppState });
-  }
+  };
 
   componentWillUnmount() {
     super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ');
-    // clearTimeout(this.timeout);
-    if (this.peripheralBluetooth) {
-      BleManager.stopNotification(
-        this.peripheralBluetooth.peripheral,
-        this.peripheralBluetooth.service,
-        this.peripheralBluetooth.characteristic
-      );
-    }
     console.log(TAG, ' componentWillUnmount01 ');
     this.handlerDiscover?.remove();
     console.log(TAG, ' componentWillUnmount02 ');
@@ -197,141 +219,75 @@ class SetupScreen extends BaseScreen {
   }
 
   handleDisconnectedPeripheral = data => {
-    let peripherals = this.state.peripherals;
-    let peripheral = peripherals.get(data.peripheral);
-    if (peripheral) {
-      peripheral.connected = false;
-      peripherals.set(peripheral.id, peripheral);
-      this.setState({ peripherals });
-    }
-    this.isLoading = false;
+    // let peripherals = this.state.peripherals;
+    // let peripheral = peripherals.get(data.peripheral);
+    // if (peripheral) {
+    //   peripheral.connected = false;
+    //   peripherals.set(peripheral.id, peripheral);
+    //   this.setState({ peripherals });
+    // }
+    // this.isLoading = false;
     console.log('Disconnected from ' + data.peripheral);
   };
 
+  onListenBluetooth = ()=>{
+    this.handlerUpdate?.remove();
+    this.handlerUpdate = bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      this.handleUpdateValueForCharacteristic
+    );
+  }
+
   handleUpdateValueForCharacteristic = async data => {
-    // console.log(' handleUpdateValueForCharacteristic Received  ', data.value);
-    // let temp = bytesToString(data.value);
-    // let a = temp + '';
-    // let b = a.split(',')[1];
-    // console.log(TAG, `handleUpdateValueForCharacteristic 01 Recieved ${temp} for characteristic`);
     // value, peripheral, characteristic, service
     try {
       if (this.peripheralBluetooth && !_.isEmpty(data)) {
-        await BleManager.stopNotification(
-          this.peripheralBluetooth.peripheral,
-          this.peripheralBluetooth.service,
-          this.peripheralBluetooth.characteristic
-        );
-        await LocalDatabase.saveBluetooth(
-          JSON.stringify(this.peripheralBluetooth.toJSON())
-        );
-        // alert("connect succesfully");
+        alert("connect succesfully");
       }
     } catch (error) {
     } finally {
-      this.replaceScreen(this.props.navigation, TAGSIGNIN);
     }
-    // this.handlerUpdate?.remove();
     console.log(TAG, ' handleUpdateValueForCharacteristic ');
   };
 
-  handleStopScan =()=> {
-    console.log('Scan is stopped size = ',this.peripheralsParams.size);
+  // handleUpdateValueForCharacteristic = async data => {
+  //   // value, peripheral, characteristic, service
+  //   try {
+  //     if (this.peripheralBluetooth && !_.isEmpty(data)) {
+  //       await BleManager.stopNotification(
+  //         this.peripheralBluetooth.peripheral,
+  //         this.peripheralBluetooth.service,
+  //         this.peripheralBluetooth.characteristic
+  //       );
+  //       await LocalDatabase.saveBluetooth(
+  //         JSON.stringify(this.peripheralBluetooth.toJSON())
+  //       );
+        
+  //       alert("connect succesfully");
+  //     }
+  //   } catch (error) {
+  //   } finally {
+  //   }
+  //   console.log(TAG, ' handleUpdateValueForCharacteristic ');
+  // };
+
+  handleStopScan = () => {
+    console.log('Scan is stopped size = ', this.peripheralsParams.size);
     this.peripherals = this.peripheralsParams;
-    
-  }
+  };
 
   startScan = () => {
     console.log(TAG, ' Begin Scanning...');
     if (!this.state.scanning) {
       this.peripheralsParams.clear();
       this.state.peripherals.clear();
-      this.setState({ scanning: true}, () => {
+      this.setState({ scanning: true }, () => {
         BleManager.scan([], 10, false).then(results => {
           console.log('Scanning...');
         });
       });
     }
   };
-  
-
-  // connect = item => {
-  //   if (item) {
-  //     let peripheral = item.item;
-  //     if (item.connected) {
-  //       BleManager.disconnect(peripheral.id);
-  //     } else {
-  //       BleManager.connect(peripheral.id)
-  //         .then(() => {
-  //           let peripherals = this.state.peripherals;
-  //           // let p = peripherals.get(peripheral.id);
-  //           // if (p) {
-  //           //   p.connected = true;
-  //           //   peripherals.set(peripheral.id, p);
-  //           //   this.setState({ peripherals });
-  //           // }
-  //           item.connected = true;
-  //           peripherals.set(peripheral.id, item);
-  //           this.setState({ peripherals });
-  //           console.log('Connected to ' + peripheral.id);
-
-  //           // setTimeout(() => {
-  //           // Test using bleno's pizza example
-  //           // https://github.com/sandeepmistry/bleno/tree/master/examples/pizza
-  //           BleManager.retrieveServices(peripheral.id).then(peripheralInfo => {
-  //             console.log(TAG, ' retrieveServices ', peripheralInfo);
-  //             const id = peripheralInfo.id;
-  //             const services = peripheralInfo.services;
-  //             const characteristics = peripheralInfo.characteristics;
-  //             var serviceUUID = services[2].uuid;
-
-  //             var bakeCharacteristic = characteristics[3].characteristic;
-  //             console.log(
-  //               TAG,
-  //               ' retrieveServices serviceUUID = ' +
-  //                 serviceUUID +
-  //                 ' bakeCharacteristicUUID =' +
-  //                 bakeCharacteristic
-  //             );
-  //             clearTimeout(this.timeout || 0);
-  //             BleManager.start({});
-  //             this.timeout = setTimeout(() => {
-  //               console.log(TAG, ' retrieveServices serviceUUID = 01');
-
-  //               BleManager.startNotification(
-  //                 id,
-  //                 serviceUUID,
-  //                 bakeCharacteristic
-  //               )
-  //                 .then(async () => {
-  //                   // save local database :serviceUUID,bakeCharacteristic,peripherals
-  //                   this.peripheralBluetooth = new PeripheralBluetooth(
-  //                     id,
-  //                     serviceUUID,
-  //                     bakeCharacteristic
-  //                   );
-  //                   await LocalDatabase.saveBluetooth(
-  //                     JSON.stringify(this.peripheralBluetooth.toJSON())
-  //                   );
-  //                   this.isLoading = false;
-  //                   console.log('Started notification on end');
-  //                 })
-  //                 .catch(error => {
-  //                   this.isLoading = false;
-
-  //                   console.log('Notification error', error);
-
-  //                 });
-  //             });
-  //           }, 1000);
-  //         })
-  //         .catch(error => {
-  //           this.isLoading = false;
-  //           console.log('Connection error', error);
-  //         });
-  //     }
-  //   }
-  // };
 
   connect = async item => {
     try {
@@ -341,7 +297,7 @@ class SetupScreen extends BaseScreen {
         let peripherals = this.state.peripherals;
         item.connected = true;
         peripherals.set(peripheral.id, item);
-        this.setState({ peripherals });
+        // this.setState({ peripherals });
         console.log(TAG, ' connect Connected to ' + peripheral.id);
         const peripheralInfo = await BleManager.retrieveServices(peripheral.id);
         console.log(TAG, ' retrieveServices ', peripheralInfo);
@@ -358,6 +314,9 @@ class SetupScreen extends BaseScreen {
             ' bakeCharacteristicUUID =' +
             bakeCharacteristic
         );
+        // hold previous connection 
+        this.oldPeripheralBluetooth = this.peripheralBluetooth;
+        this.peripheralBluetooth = null;
         BleManager.startNotification(id, serviceUUID, bakeCharacteristic);
         console.log(TAG, ' connect 03 ');
         this.peripheralBluetooth = new PeripheralBluetooth(
@@ -369,25 +328,28 @@ class SetupScreen extends BaseScreen {
       }
     } catch (error) {
     } finally {
-      this.isLoading = false;
+      
     }
   };
 
   renderItem = item => {
-    const color = item.connected ? 'green' : '#fff';
-    
     const peripheral = item.item;
     // console.log(TAG, ' renderItem = ', peripheral);
-    const name = peripheral?.name + (BUILD_MODE.isStaging?String(' - ' +peripheral.id):'');
+    const name =
+      peripheral?.name +
+      (BUILD_MODE.isStaging ? String(' - ' + peripheral.id) : '');
     return (
       <TouchableOpacity
         style={[styles.row, { backgroundColor: 'transparent', marginTop: 5 }]}
         key={peripheral.id}
         onPress={this.onClickView(async () => {
           this.isLoading = true;
-          await Util.excuteWithTimeout(this.connect(item), 10);
-          this.isLoading = false;
-          this.startScan();
+
+          await Util.excuteWithTimeout(this.excuteDisconnect(), 10);
+          Util.excuteWithTimeout(this.connect(item), 10).then(() => {
+            this.startScan();
+            this.isLoading = false;
+          });
         })}
       >
         <Image
@@ -431,49 +393,27 @@ class SetupScreen extends BaseScreen {
   };
   excuteDisconnect = async () => {
     console.log(TAG, ' disconnectBluetooth begin ');
-    const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
-
-    console.log(TAG, ' disconnectBluetooth get data = ', periBluetooth);
-    if (periBluetooth && periBluetooth.peripheral) {
+    if (this.oldPeripheralBluetooth) {
       console.log(TAG, ' disconnectBluetooth begin02 ');
-      // await BleManager.start({ showAlert: false });
-      // await this.props.disconnectBluetooth();
-      await LocalDatabase.logout();
-      console.log(TAG, ' disconnectBluetooth begin03 ');
-      await BleManager.disconnect(periBluetooth.peripheral);
+      await this.props.disconnectBluetooth();
       console.log(TAG, ' disconnectBluetooth begin04 ');
     }
   };
-  disconnect = this.onClickView(async () => {
-    try {
-      this.isLoading = true;
-      await Util.excuteWithTimeout(this.excuteDisconnect(), 10);
-    } catch (error) {
-      console.log(TAG, ' disconnectBluetooth error ', error);
-    } finally {
-      this.isLoading = false;
-    }
-  });
-
+  
   render() {
-    const { isLoading,scanning } = this.state;
+    const { isLoading, scanning } = this.state;
     return (
       <ImageBackground
         style={[styles.container, { paddingBottom: 0, paddingRight: 0 }]}
         source={images.backgroundx}
       >
-        <View
-          style={[
-            styles.container,
-            { paddingLeft: 40, paddingBottom: 0, paddingRight: 0 }
-          ]}
+        <Header
+          backgroundColor="transparent"
+          outerContainerStyles={{ borderBottomWidth: 0 }}
         >
-          <TouchableOpacity onPress={__DEV__ ? this.disconnect : undefined}>
-            <Image
-              source={images.logo}
-              style={{ width: 58, height: 58, margin: 10, marginTop: 30 }}
-            />
-          </TouchableOpacity>
+          {this.renderLeftHeader()}
+        </Header>
+        <View style={[styles.containerMain]}>
           <View
             style={[styles.containerRight, { marginLeft: 20, marginTop: 10 }]}
           >
@@ -490,15 +430,7 @@ class SetupScreen extends BaseScreen {
                 }
               ]}
             />
-            <Text
-              style={[
-                TextStyle.extraText,
-                styles.textLabel,
-                { marginLeft: 10, marginTop: 10 }
-              ]}
-            >
-              Autonomous
-            </Text>
+
             <Text
               style={[
                 TextStyle.normalText,
@@ -506,16 +438,7 @@ class SetupScreen extends BaseScreen {
                 { marginLeft: 10, marginTop: 10 }
               ]}
             >
-              Welcome to
-              {' '}
-              <Text style={{ fontWeight: 'bold' }}>VELO</Text>
-.
-              Please connect the app to
-              <Text style={{ fontWeight: 'bold' }}>
-                {' '}
-                the Bike via Bluetooth
-              </Text>
-              .
+              Please connect the VELO app to bluetooth sensor in VELO bike.
             </Text>
             <Text
               style={[
@@ -528,22 +451,21 @@ class SetupScreen extends BaseScreen {
               {' '}
               <Text style={{ fontWeight: 'bold' }}>Meilan-SPD</Text>
               {' '}
-              below (pull to refresh if neccessary)
+              below (pull to refresh if neccessary):
             </Text>
-            {isLoading ? (
-              ViewUtil.CustomProgressBar({ visible: true })
-            ) : (
-              <FlatList
-                onRefresh={this.startScan}
-                refreshing={scanning}
-                keyExtractor={(item, index) => String(item.id || index)}
-                style={styles.scroll}
-                data={this.getListAdress()}
-                renderItem={this.renderItem}
-              />
-            )}
+
+            <FlatList
+              onRefresh={this.startScan}
+              refreshing={scanning}
+              keyExtractor={(item, index) => String(item.id || index)}
+              style={styles.scroll}
+              data={this.getListAdress()}
+              renderItem={this.renderItem}
+            />
           </View>
+          {this.renderToastMessage()}
         </View>
+        {ViewUtil.CustomProgressBar({ visible: isLoading })}
       </ImageBackground>
     );
   }
@@ -554,4 +476,4 @@ export default connect(
   {
     disconnectBluetooth
   }
-)(SetupScreen);
+)(ReviewSensorScreen);
