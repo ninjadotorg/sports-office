@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
+import BaseScreen from './BaseScreen';
 
 export const TAG = 'TempScreen';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'red'
   }
 });
-class TempScreen extends Component {
+class TempScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {};
@@ -30,4 +32,7 @@ class TempScreen extends Component {
 TempScreen.propTypes = {};
 
 TempScreen.defaultProps = {};
-export default TempScreen;
+export default connect(
+  state => ({}),
+  {}
+)(TempScreen);

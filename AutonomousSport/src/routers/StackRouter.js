@@ -4,6 +4,7 @@ import * as Screens from '@/screens';
 import { FONT_FAMILY, fontSizeHeader } from '@/utils/TextStyle';
 import { COLOR } from '@/utils/Constants';
 import TransitionConfig from '@/utils/TransitionConfig';
+import TabRouter from './TabRouter';
 
 const customNavigationOption = {
   headerBackTitleStyle: { color: COLOR.BLACK },
@@ -60,96 +61,104 @@ const detailNavigationOption = {
 //   }
 // });
 
-const StackRouter = createStackNavigator(
-  {
-    HomeScreen: {
-      screen: Screens.HomeScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ChallengeScreen: {
-      screen: Screens.ChallengeScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ChallengeMapScreen: {
-      screen: Screens.ChallengeMapScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ChallengeNameScreen: {
-      screen: Screens.ChallengeNameScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    CreateRoomScreen: {
-      screen: Screens.CreateRoomScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    SetupScreen: {
-      screen: Screens.SetupScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    SignInScreen: {
-      screen: Screens.SignInScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    NewRoomScreen: {
-      screen: Screens.NewRoomScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ReviewSensorScreen: {
-      screen: Screens.ReviewSensorScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    FriendsScreen: {
-      screen: Screens.FriendsScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ProfileScreen: {
-      screen: Screens.ProfileScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    TopRaceScreen: {
-      screen: Screens.TopRaceScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ChooseRoundScreen: {
-      screen: Screens.ChooseRoundScreen,
-      navigationOptions: {
-        header: null
-      }
+const StackRouter = createStackNavigator({
+  TabRouter: {
+    screen: TabRouter,
+    navigationOptions: {
+      header: null
     }
-  },
-  {
-    headerMode: 'screen',
-    mode: 'card',
-    // initialRouteName: 'CreateRoomScreen',
-    // initialRouteParams: { transition: 'fade' },
-    transitionConfig: TransitionConfig,
-    lazy: true,
-    initialRouteName: 'SignInScreen'
   }
-);
+});
+
+// const StackRouter = createStackNavigator(
+//   {
+//     TabRouter: {
+//       screen: TabRouter,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     ChallengeScreen: {
+//       screen: Screens.ChallengeScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     ChallengeMapScreen: {
+//       screen: Screens.ChallengeMapScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     ChallengeNameScreen: {
+//       screen: Screens.ChallengeNameScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     CreateRoomScreen: {
+//       screen: Screens.CreateRoomScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     SetupScreen: {
+//       screen: Screens.SetupScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     SignInScreen: {
+//       screen: Screens.SignInScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     NewRoomScreen: {
+//       screen: Screens.NewRoomScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     ReviewSensorScreen: {
+//       screen: Screens.ReviewSensorScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     FriendsScreen: {
+//       screen: Screens.FriendsScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     ProfileScreen: {
+//       screen: Screens.ProfileScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     TopRaceScreen: {
+//       screen: Screens.TopRaceScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     },
+//     ChooseRoundScreen: {
+//       screen: Screens.ChooseRoundScreen,
+//       navigationOptions: {
+//         header: null
+//       }
+//     }
+//   },
+//   {
+//     headerMode: 'screen',
+//     mode: 'card',
+//     // initialRouteParams: { transition: 'fade' },
+//     transitionConfig: TransitionConfig,
+//     lazy: true,
+//     initialRouteName: 'TabRouter'
+//   }
+// );
 
 export default StackRouter;

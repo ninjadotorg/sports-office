@@ -22,8 +22,6 @@ import BaseScreen from '@/screens/BaseScreen';
 import images, { icons } from '@/assets';
 import _, { debounce } from 'lodash';
 import TextStyle from '@/utils/TextStyle';
-import { TAG as TAGSIGNIN } from '@/screens/SignIn';
-import LocalDatabase from '@/utils/LocalDatabase';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 import ViewUtil, { delayCallingManyTime } from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
@@ -249,27 +247,6 @@ class ReviewSensorScreen extends BaseScreen {
     }
     console.log(TAG, ' handleUpdateValueForCharacteristic ');
   };
-
-  // handleUpdateValueForCharacteristic = async data => {
-  //   // value, peripheral, characteristic, service
-  //   try {
-  //     if (this.peripheralBluetooth && !_.isEmpty(data)) {
-  //       await BleManager.stopNotification(
-  //         this.peripheralBluetooth.peripheral,
-  //         this.peripheralBluetooth.service,
-  //         this.peripheralBluetooth.characteristic
-  //       );
-  //       await LocalDatabase.saveBluetooth(
-  //         JSON.stringify(this.peripheralBluetooth.toJSON())
-  //       );
-        
-  //       alert("connect succesfully");
-  //     }
-  //   } catch (error) {
-  //   } finally {
-  //   }
-  //   console.log(TAG, ' handleUpdateValueForCharacteristic ');
-  // };
 
   handleStopScan = () => {
     console.log('Scan is stopped size = ', this.peripheralsParams.size);

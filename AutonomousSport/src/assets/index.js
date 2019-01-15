@@ -1,6 +1,15 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
 
+export const colors = {
+  main_white: '#fcfcfc',
+  main_black: '#262628',
+  main_red: '#f92e5b',
+  text_main_black: '#262628',
+  text_main_black_disable: '#cbcbcb',
+  icon_main_black: '#262628',
+  icon_main_active_red: '#f92e5b'
+};
 const images = {
   backgroundx: require('@/assets/images/bg.png'),
   background_top_race: require('@/assets/images/background_top_race.png'),
@@ -32,6 +41,84 @@ const images = {
   ic_norooms: require('@/assets/images/norooms.png')
 };
 export const icons = {
+  home: ({
+    containerStyle = {},
+    color = colors.icon_main_black,
+    size = 25,
+    onPress = null,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[{}, containerStyle]}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="home"
+      type="feather"
+    />
+  ),
+  demand: ({
+    containerStyle = {},
+    color = colors.icon_main_black,
+    size = 25,
+    onPress = null,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[{}, containerStyle]}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="play"
+      type="feather"
+    />
+  ),
+  setting: ({
+    containerStyle = {},
+    color = colors.icon_main_black,
+    size = 25,
+    onPress = null,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[{}, containerStyle]}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="settings-outline"
+      type="material-community"
+    />
+  ),
+  earth: ({
+    containerStyle = {},
+    color = colors.icon_main_black,
+    size = 25,
+    onPress = null,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[{}, containerStyle]}
+      color={color}
+      size={size}
+      onPress={onPress}
+      name="earth"
+      type="material-community"
+    />
+  ),
+  dot: ({
+    containerStyle = {},
+    color = colors.icon_main_black,
+    size = 15,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[{}, containerStyle]}
+      color={color}
+      size={size}
+      name="dot-single"
+      type="entypo"
+    />
+  ),
   close: ({
     containerStyle,
     color = 'rgba(192, 192, 192,0.5)',

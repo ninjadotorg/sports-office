@@ -16,7 +16,7 @@ import _ from 'lodash';
 import BaseScreen from '@/screens/BaseScreen';
 import { connect } from 'react-redux';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
-import { TAG as TAGHOME } from '@/screens/Home';
+// import { TAG as TAGMAIN } from '@/routers/TabRouter';
 import { TAG as TAGSETUP } from '@/screens/Setup';
 import {
   fetchUser,
@@ -170,7 +170,7 @@ class SignInScreen extends BaseScreen {
         isLogged
       });
       if (isLogged) {
-        this.replaceScreen(this.props.navigation, TAGHOME);
+        this.replaceScreen(this.props.navigation, TAGMAIN);
       } else {
         this.setState({
           isCheckingRegular: false

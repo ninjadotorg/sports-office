@@ -11,3 +11,6 @@ export { default as TopRaceScreen } from './TopRace';
 export { default as FriendsScreen } from './Friends';
 export { default as ProfileScreen } from './Profile';
 export { default as ChooseRoundScreen } from './ChooseRound';
+export { default as FeedScreen } from './Feed';
+export { default as SettingsScreen } from './Settings';
+export { default as PracticeScreen } from './Practice';

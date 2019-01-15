@@ -138,7 +138,7 @@ android {
             signingConfig signingConfigs.config
         }
         debug {
-            versionNameSuffix ""
+            versionNameSuffix "-mirror"
         }
     }
     productFlavors {
@@ -165,6 +165,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-linear-gradient')
     compile project(':react-native-sound-player')
     compile project(':react-native-radial-gradient')
     compile(project(':react-native-fast-image')){

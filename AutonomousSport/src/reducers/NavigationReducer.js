@@ -13,7 +13,7 @@ import { TAG as TAGHOME } from '@/screens/Home';
 //   }
 // }
 
-const initStackState = Routers.StackRouter.router.getStateForAction(TAGHOME);
+const initStackState = Routers.StackRouter.router.getStateForAction('');
 export function StackReducer(state = initStackState, action) {
   console.log(action);
   console.log(JSON.stringify(state));

@@ -14,7 +14,7 @@ import User from '@/models/User';
 import { makeFriend } from '@/actions/FriendAction';
 import { onClickView } from '@/utils/ViewUtil';
 import _ from 'lodash';
-import images from '@/assets';
+import images, { colors } from '@/assets';
 
 export const TAG = 'ItemTopRacer';
 
@@ -72,7 +72,8 @@ class ItemTopRacer extends PureComponent {
             style={[
               TextStyle.mediumText,
               {
-                color: 'white',
+                color: colors.text_main_black,
+                fontWeight:'500',
                 textAlignVertical: 'center'
               }
             ]}
@@ -83,7 +84,8 @@ class ItemTopRacer extends PureComponent {
             style={[
               TextStyle.normalText,
               {
-                color: 'rgba(255,255,255,0.5)',
+                opacity:0.4,
+                color: colors.text_main_black,
                 textAlignVertical: 'center',
                 paddingTop: 2
               }

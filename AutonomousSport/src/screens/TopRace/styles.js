@@ -5,6 +5,7 @@ import {
   scale as scaleSize,
   verticalScale
 } from 'react-native-size-matters';
+import { colors } from '@/assets';
 
 const entryBorderRadius = 8;
 const wp = percentage => {
@@ -25,35 +26,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent'
   },
-  topBar: {
-    alignSelf: 'center',
-    flexDirection: 'row'
-  },
   containerTop: {
-    padding: moderateScale(10),
-    flexDirection: 'column',
-    justifyContent: 'space-between'
-  },
-  title: {
-    color: 'black',
-    fontSize: 15,
-    alignSelf: 'center',
-    fontWeight: 'bold',
-    letterSpacing: 0.5
+    backgroundColor: colors.main_red,
+    flex: 0.75,
+    alignItems: 'center'
   },
   list: {
     flex: 1,
-    paddingVertical: moderateScale(10),
-    marginHorizontal: verticalScale(40),
-    backgroundColor: 'transparent'
+    paddingVertical: scaleSize(20),
+    // paddingHorizontal: verticalScale(40),
+    backgroundColor: 'white'
   },
-  button: {
-    borderRadius: 25,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    borderColor: '#ffc500',
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+  textStyleButton: {
+    color: '#ffffff'
   }
 });
 

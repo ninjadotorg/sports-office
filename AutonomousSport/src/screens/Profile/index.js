@@ -2,13 +2,11 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   Image,
   Platform,
   ScrollView,
   TextInput,
-  Surface,
   ImageBackground,
   KeyboardAvoidingView
 } from 'react-native';
@@ -16,9 +14,6 @@ import _ from 'lodash';
 import BaseScreen from '@/screens/BaseScreen';
 import { connect } from 'react-redux';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
-import { TAG as TAGHOME } from '@/screens/Home';
-import { TAG as TAGSETUP } from '@/screens/Setup';
-import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import {
   fetchUser,
   updateName,
@@ -33,12 +28,12 @@ import { Button, Header } from 'react-native-elements';
 import styles, { color } from './styles';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
-import ApiService from '@/services/ApiService';
 import images, { icons } from '@/assets';
 import { disconnectBluetooth } from '@/actions/RaceAction';
 import DashboardProfile from '@/components/DashboardProfile';
 import LocalDatabase from '@/utils/LocalDatabase';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
+import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 
 export const TAG = 'ProfileScreen';
 

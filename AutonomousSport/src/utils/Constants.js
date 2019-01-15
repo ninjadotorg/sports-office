@@ -39,6 +39,16 @@ export const Config = {
   })(),
   OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || ''
 };
+
+export const WEEK_DAY = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday'
+];
 export const COLOR = {
   TRANSPARENT: 'transparent',
   WHITE: '#ffffff',

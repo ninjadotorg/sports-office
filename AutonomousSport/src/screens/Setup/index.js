@@ -100,15 +100,15 @@ class SetupScreen extends BaseScreen {
 
   checkPermission = async () => {
     if (Platform.OS === 'android' && Platform.Version >= 23) {
-      let result = await PermissionsAndroid.checkPermission(
+      let result = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
       );
 
-      let result2 = await PermissionsAndroid.checkPermission(
+      let result2 = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.CAMERA
       );
 
-      let result3 = await PermissionsAndroid.checkPermission(
+      let result3 = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
       );
 

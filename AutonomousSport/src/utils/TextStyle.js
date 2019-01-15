@@ -33,8 +33,8 @@ export const FONT_FAMILY = Platform.OS === 'ios' ? 'Roboto' : 'Roboto';
 const TextStyle = StyleSheet.create({
   xxxExtraText: {
     fontFamily: FONT_FAMILY,
-    fontSize: verticalScale(60),
-    lineHeight: verticalScale(60)
+    fontSize: verticalScale(80),
+    lineHeight: verticalScale(80)
   },
   xxExtraText: {
     fontFamily: FONT_FAMILY,
