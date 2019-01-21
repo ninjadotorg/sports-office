@@ -43,7 +43,7 @@ const TabRouter = createBottomTabNavigator(
       }
     },
     DemandScreen: {
-      screen: Screens.HomeScreen,
+      screen: Screens.DemandScreen,
       navigationOptions: {
         tabBarLabel: 'On demand',
         tabBarIcon: ({ focused, tintColor }) =>

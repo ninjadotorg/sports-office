@@ -12,6 +12,7 @@ export default class Constants {
 
 export class BUILD_MODE {
   static isModeRecordVideo = false;
+  static isMirror = ConfigReact.default.IS_MIRROR;
   static isStaging = 'staging' === ConfigReact.default.FLAVOR;
   static isDebugBuildType = 'debug' === ConfigReact.default.BUILD_TYPE;
 }

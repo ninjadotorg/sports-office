@@ -61,14 +61,28 @@ const detailNavigationOption = {
 //   }
 // });
 
-const StackRouter = createStackNavigator({
-  TabRouter: {
-    screen: TabRouter,
-    navigationOptions: {
-      header: null
+const StackRouter = createStackNavigator(
+  {
+    TabRouter: {
+      screen: TabRouter,
+      navigationOptions: {
+        header: null
+      }
     }
+  },
+  {
+    headerMode: 'screen',
+    mode: 'card',
+    // initialRouteParams: { transition: 'fade' },
+    cardStyle: {
+      // opacity: 0.2
+      backgroundColor: 'transparent'
+    },
+    transitionConfig: TransitionConfig,
+    lazy: true,
+    initialRouteName: 'TabRouter'
   }
-});
+);
 
 // const StackRouter = createStackNavigator(
 //   {

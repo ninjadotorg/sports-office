@@ -119,6 +119,20 @@ export const icons = {
       type="entypo"
     />
   ),
+  dots: ({
+    containerStyle = {},
+    color = '#ffffff',
+    size = 30,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[{}, containerStyle]}
+      color={color}
+      size={size}
+      name="dots-three-horizontal"
+      type="entypo"
+    />
+  ),
   close: ({
     containerStyle,
     color = 'rgba(192, 192, 192,0.5)',
@@ -136,6 +150,28 @@ export const icons = {
       name="close"
       iconStyle={iconStyle}
       type="evilicon"
+    />
+  ),
+  play: ({
+    containerStyle,
+    color = '#ffffff',
+    size = 12,
+    onPress = null,
+    iconStyle = {}
+  }) => (
+    <Icon
+      containerStyle={[
+        { width: 60, height: 60, borderRadius: 30 },
+        containerStyle
+      ]}
+      color={color}
+      size={size}
+      reverse
+      onPress={onPress}
+      reverseColor="black"
+      name="play"
+      iconStyle={iconStyle}
+      type="font-awesome"
     />
   ),
   markerPlayer: ({

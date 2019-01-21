@@ -67,6 +67,7 @@
 		FFA4CE77DD2E40D9928A32A6 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45644AE42B1B458D8C0F76DC /* Feather.ttf */; };
 		F27062EF672540ACA3D0B4EF /* Roboto_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7C9555941AF4218931CB1E0 /* Roboto_bold.ttf */; };
 		D7732FD06A674B4E90E8AD21 /* libRNSoundPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C5DAFAA2C346188D20D69E /* libRNSoundPlayer.a */; };
+		8BAA1111CB914FED86AC9143 /* Roboto_italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97C63816CC1249AFA45ABB52 /* Roboto_italic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -419,6 +420,7 @@
 		D7C9555941AF4218931CB1E0 /* Roboto_bold.ttf */ = {isa = PBXFileReference; name = "Roboto_bold.ttf"; path = "../src/assets/fonts/Roboto/Roboto_bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		73338E8FCBD645BF8F5D935A /* RNSoundPlayer.xcodeproj */ = {isa = PBXFileReference; name = "RNSoundPlayer.xcodeproj"; path = "../node_modules/react-native-sound-player/ios/RNSoundPlayer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		C4C5DAFAA2C346188D20D69E /* libRNSoundPlayer.a */ = {isa = PBXFileReference; name = "libRNSoundPlayer.a"; path = "libRNSoundPlayer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		97C63816CC1249AFA45ABB52 /* Roboto_italic.ttf */ = {isa = PBXFileReference; name = "Roboto_italic.ttf"; path = "../src/assets/fonts/Roboto/Roboto_italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -719,6 +721,7 @@
 				0D9AA2AE5EDC4E168D1E30A8 /* Roboto-Medium.ttf */,
 				E59C78C386DD492FA877E6D2 /* Roboto.ttf */,
 				D7C9555941AF4218931CB1E0 /* Roboto_bold.ttf */,
+				97C63816CC1249AFA45ABB52 /* Roboto_italic.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -1213,6 +1216,7 @@
 				186F2C583A354011B67B66F4 /* Roboto-Medium.ttf in Resources */,
 				B93ED26714C74D51917C61B9 /* Roboto.ttf in Resources */,
 				F27062EF672540ACA3D0B4EF /* Roboto_bold.ttf in Resources */,
+				8BAA1111CB914FED86AC9143 /* Roboto_italic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

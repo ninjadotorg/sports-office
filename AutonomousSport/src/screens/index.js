@@ -14,3 +14,4 @@ export { default as ChooseRoundScreen } from './ChooseRound';
 export { default as FeedScreen } from './Feed';
 export { default as SettingsScreen } from './Settings';
 export { default as PracticeScreen } from './Practice';
+export { default as DemandScreen } from './Demand';

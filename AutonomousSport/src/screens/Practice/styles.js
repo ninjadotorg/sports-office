@@ -11,12 +11,13 @@ export const sizeCircle = screenSize.width / 1.5;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    backgroundColor: 'transparent'
   },
   containerTop: {
     padding: moderateScale(20),
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent'
   },
   containerBottom: {
     backgroundColor: 'white',
@@ -27,10 +28,10 @@ const styles = StyleSheet.create({
     paddingBottom: 30
   },
   containerCenter: {
-    flex: 1,
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: 'transparent'
   },
   button: {
     borderRadius: scaleSize(30),

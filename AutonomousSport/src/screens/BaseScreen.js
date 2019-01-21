@@ -18,6 +18,7 @@ import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
 import SoundPlayer from 'react-native-sound-player';
 import ApiService from '@/services/ApiService';
+import { BUILD_MODE } from '@/utils/Constants';
 
 export const TAG = 'BaseScreen';
 const styles = StyleSheet.create({
@@ -56,6 +57,11 @@ class BaseScreen extends Component {
     this.appState = AppState.currentState;
     
   }
+  
+  get isMirror(){
+    return BUILD_MODE.isMirror;
+  }
+
   renderToastMessage = () => {
     return <Toast position="top" ref="toast" />;
   };

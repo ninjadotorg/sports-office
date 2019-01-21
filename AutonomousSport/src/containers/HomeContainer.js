@@ -4,6 +4,7 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import TextStyle from '@/utils/TextStyle';
 import { colors } from '@/assets';
 import * as screens from '@/screens';
+import { RNCamera, FaceDetector } from 'react-native-camera';
 
 const PracticeScreen = screens.PracticeScreen;
 const TopRaceScreen = screens.TopRaceScreen;
@@ -11,8 +12,7 @@ export const TAG = 'HomeContainer';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
-    fontWeight: 'bold'
+    backgroundColor: 'transparent'
   },
   textStyleButton: {
     fontWeight: 'bold',

@@ -208,18 +208,14 @@ class PracticeScreen extends BaseScreen {
     return (
       <LinearGradient
         colors={['white', 'white', '#f7f7f7']}
+        // colors={['transparent','transparent']}
         style={styles.container}
       >
         <View style={[styles.containerTop, {}]}>
           <DateTimePicker />
         </View>
         <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            flex: 1,
-            backgroundColor: 'white'
-          }}
+          style={styles.containerCenter}
         >
           <AnimatedCircularProgress
             size={sizeCircle}
