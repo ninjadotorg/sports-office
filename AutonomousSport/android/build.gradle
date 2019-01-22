@@ -6,9 +6,8 @@ buildscript {
             url 'https://maven.google.com/'
             name 'Google'
         }
-        jcenter()
-
         google()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.2'
@@ -17,11 +16,23 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+ext {
+    buildToolsVersion = "27.0.3"
+    minSdkVersion = 23
+    compileSdkVersion = 27
+    targetSdkVersion = 26
+    supportLibVersion = "26.1.0"
+    googlePlayServicesVersion = "16.1.0"
+    firbaseVersion="16.0.5"
+}
 
 allprojects {
     repositories {
+        google()
         mavenLocal()
-
+        maven {
+            url "https://jitpack.io"
+        }
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
@@ -30,23 +41,23 @@ allprojects {
             url 'https://maven.google.com/'
             name 'Google'
         }
-        jcenter()
+
         maven {
             url "http://tokbox.bintray.com/maven"
+        }
+        jcenter()
+    }
+    configurations.all {
+        resolutionStrategy {
+            force "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+//            force "com.google.android.gms:play-services-basement:$googlePlayServicesVersion"
+//            force "com.google.android.gms:play-services-stats:$googlePlayServicesVersion"
         }
     }
 }
 
-ext {
-    buildToolsVersion = "27.0.3"
-    minSdkVersion = 23
-    compileSdkVersion = 27
-    targetSdkVersion = 26
-    supportLibVersion = "26.1.0"
-}
-
 subprojects {
-    afterEvaluate {project ->
+    afterEvaluate { project ->
         if (project.hasProperty("android")) {
             android {
                 compileSdkVersion rootProject.ext.compileSdkVersion
