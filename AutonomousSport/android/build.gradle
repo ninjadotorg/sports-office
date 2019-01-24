@@ -22,7 +22,7 @@ ext {
     compileSdkVersion = 27
     targetSdkVersion = 26
     supportLibVersion = "26.1.0"
-    googlePlayServicesVersion = "16.1.0"
+//    googlePlayServicesVersion = "16.1.0"
     firbaseVersion="16.0.5"
 }
 
@@ -47,13 +47,13 @@ allprojects {
         }
         jcenter()
     }
-    configurations.all {
-        resolutionStrategy {
-            force "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+//    configurations.all {
+//        resolutionStrategy {
+//            force "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 //            force "com.google.android.gms:play-services-basement:$googlePlayServicesVersion"
 //            force "com.google.android.gms:play-services-stats:$googlePlayServicesVersion"
-        }
-    }
+//        }
+//    }
 }
 
 subprojects {

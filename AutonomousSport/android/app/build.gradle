@@ -170,15 +170,9 @@ android {
 
 dependencies {
 
-    compile(project(':react-native-wifi-p2p')) {
-        exclude(group: 'com.google.android.gms', module: 'play-services-stats')
-    }
-    compile(project(':react-native-device-info')) {
-        exclude(group: 'com.google.android.gms', module: 'play-services-gcm')
-    }
-    compile(project(':react-native-camera')) {
-        exclude(group: 'com.google.android.gms', module: 'play-services-base')
-    }
+    compile project(':react-native-wifi-p2p')
+    compile project(':react-native-device-info')
+    compile project(':react-native-camera')
     compile project(':react-native-video')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-sound-player')
@@ -193,7 +187,7 @@ dependencies {
     compile project(':react-native-vector-icons')
     compile project(':opentok-react-native')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.google.android.gms:play-services-base:${rootProject.ext.googlePlayServicesVersion}"
+    compile "com.google.android.gms:play-services-base:16.1.0"
     compile "com.google.firebase:firebase-database:${rootProject.ext.firbaseVersion}"
     compile "com.google.firebase:firebase-auth:${rootProject.ext.firbaseVersion}"
     compile "com.google.firebase:firebase-core:${rootProject.ext.firbaseVersion}"

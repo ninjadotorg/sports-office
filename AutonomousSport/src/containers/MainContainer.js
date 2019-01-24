@@ -13,6 +13,27 @@ import {
   reduxifyNavigator,
   createReactNavigationReduxMiddleware
 } from 'react-navigation-redux-helpers';
+import {
+  initialize,
+  isSuccessfulInitialize,
+  startDiscoveringPeers,
+  stopDiscoveringPeers,
+  unsubscribeFromPeersUpdates,
+  unsubscribeFromConnectionInfoUpdates,
+  subscribeOnConnectionInfoUpdates,
+  subscribeOnPeersUpdates,
+  connect,
+  disconnect,
+  createGroup,
+  removeGroup,
+  receiveMessage,
+  sendMessage,
+  getAvailablePeers,
+  sendFile,
+  receiveFile,
+  getConnectionInfo
+} from 'react-native-wifi-p2p';
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 const reduxMiddleware = createReactNavigationReduxMiddleware(
   'root',
@@ -33,13 +54,101 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   }
 });
+const TAG = 'MainContainer';
 export default class MainContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      store: createStore(reducers, applyMiddleware(...middleware))
+      store: createStore(reducers, applyMiddleware(...middleware)),
+      devices: []
     };
   }
+
+  handleNewInfo = (info, secondParam) => {
+    console.log(TAG, ' handleNewInfo = ', info);
+  };
+
+  // handleNewPeers = peers => {
+  //   console.log(TAG, ' handleNewPeers =', peers);
+  //   this.setState({ devices: peers }, () => {
+  //     // temp
+  //     this.connectToFirstDevice();
+  //   });
+  // };
+
+  connectToFirstDevice = (devices = []) => {
+    // const { devices = [] } = this.state;
+    const firstDevice = devices[0] || {};
+    console.log(TAG, ' connectToFirstDevice = ', firstDevice);
+    connect(firstDevice.deviceAddress)
+      .then(() => {
+        console.log(TAG, ' Successfully connected');
+        this.showToastMessage('P2P Successfully connected');
+      })
+      .catch(err => console.error(TAG, 'P2P- error Details: ', err));
+  };
+
+  onSendMessage = () => {
+    sendMessage('Hello world!')
+      .then(() => console.log('Message sent successfully'))
+      .catch(err => console.log('Error while message sending', err));
+  };
+
+  onReceiveMessage = () => {
+    receiveMessage()
+      .then(msg => console.log('Message received successfully', msg))
+      .catch(err => console.log('Error while message receiving', err));
+  };
+
+  disconnectFromDevice = () => {
+    disconnect()
+      .then(() => console.log(TAG, ' Successfully disconnected'))
+      .catch(err =>
+        console.error(TAG, ' Something gone wrong. Details: ', err)
+      );
+  };
+
+  renderToastMessage = () => {
+    return <Toast position="top" ref="toast" />;
+  };
+  showToastMessage = (text = '', callback = null) => {
+    if (text && this.refs.toast) {
+      this.refs?.toast.show(text, 500, callback);
+    }
+  };
+
+  componentDidMount() {
+    initialize();
+    isSuccessfulInitialize().then(status =>
+      console.log(TAG, ' componentDidMount isSuccessfulInitialize = ', status)
+    );
+    startDiscoveringPeers()
+      .then(() => {
+        console.log(TAG, ' componentDidMount startDiscoveringPeers Sucessfull');
+        getAvailablePeers().then(({ devices }) => {
+          // this.setState({
+          //   devices: devices
+          // });
+          this.connectToFirstDevice(devices);
+        });
+      })
+      .catch(err => console.log(err));
+    // getAvailablePeers().then(peers =>
+    //     console.log(TAG, ' getAvailablePeers ', peers)
+    //   );
+    // subscribeOnPeersUpdates(({ devices }) => this.handleNewPeers(devices));
+  }
+
+  componentWillUnmount() {
+    stopDiscoveringPeers();
+    unsubscribeFromConnectionInfoUpdates(event =>
+      console.log('unsubscribeFromConnectionInfoUpdates', event)
+    );
+    unsubscribeFromPeersUpdates(event =>
+      console.log('unsubscribeFromPeersUpdates', event)
+    );
+  }
+
   render() {
     const { store } = this.state;
     return (
@@ -57,6 +166,7 @@ export default class MainContainer extends Component {
         <Provider store={store}>
           <StackRouter />
         </Provider>
+        {this.renderToastMessage()}
       </View>
     );
   }

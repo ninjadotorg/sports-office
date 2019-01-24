@@ -13,6 +13,7 @@ import {
   verticalScale
 } from 'react-native-size-matters';
 import _ from 'lodash';
+import DeviceInfo from 'react-native-device-info';
 
 import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
@@ -59,7 +60,11 @@ class BaseScreen extends Component {
   }
   
   get isMirror(){
-    return BUILD_MODE.isMirror;
+    return BUILD_MODE.isMirror && DeviceInfo.isTablet();
+  }
+
+  deviceMacAddress = async ()=>{
+    return await DeviceInfo.getMACAddress();
   }
 
   renderToastMessage = () => {

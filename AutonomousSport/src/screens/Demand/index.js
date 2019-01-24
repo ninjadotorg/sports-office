@@ -31,7 +31,7 @@ const tempData = {
       imgThump:
         'https://www.yogajournal.com/.image/t_share/MTQ2MTgwNjcyNDk2MDg0NTEy/yoga-for-runners-girl-sunset-stock.jpg',
       link:
-        'https://r4---sn-i3beln76.googlevideo.com/videoplayback?expire=1547829182&ipbits=0&itag=22&ratebypass=yes&requiressl=yes&lmt=1542513605459710&signature=39E9669CD5E9C7BB6C738F0F49171882CECB3838.41901861F3A0024D313DE1C813F4AD7733BD71C0&txp=5431432&ei=XqtBXIOiCtjNgAPH67WwBg&pl=21&id=o-AN0l_lW1rq3yLeUnbC2wDwcFi2FKa0CZIXD47mzp_3ME&dur=597.217&fvip=4&source=youtube&sparams=dur,ei,expire,id,ip,ipbits,ipbypass,itag,lmt,mime,mip,mm,mn,ms,mv,pl,ratebypass,requiressl,source&ip=115.146.126.68&key=cms1&c=WEB&mime=video/mp4&redirect_counter=1&rm=sn-i3blr76&req_id=f6a6d7ba06ada3ee&cms_redirect=yes&ipbypass=yes&mip=113.161.55.181&mm=31&mn=sn-i3beln76&ms=au&mt=1547807622&mv=m'
+        'https://r1---sn-i3belne6.googlevideo.com/videoplayback?mv=m&mt=1548212262&ms=au,rdu&fvip=4&id=o-AFkD1nH46hFQoeopxuEBhLbwnOfGevxD1Q8GU_Xze--H&lsig=ALy0alEwRQIgRZ2_4GMf8zh5zFIexgmIV3i3WUZHyvMG_57H5tHqSp0CIQCXWWDnJ0ZiOCaJ22bDiuyInDBtRYtI5-9SIK_Dcuq2lw==&ratebypass=yes&mn=sn-i3belne6,sn-i3b7kn76&mm=31,29&ip=115.146.126.68&pl=24&expire=1548234013&dur=1555.481&initcwndbps=3270000&source=youtube&ei=vdhHXObVEseE4gK12rtY&sig=AOvmAUowRAIgfbdyv93HyZ16KrS0lAYWwIv5Jhn1oSnR4EZRrp2fdZ0CIEt6EH7_F1eh5fe__DMpzczy3GdV5hwb2M80Z6pS2_K3&requiressl=yes&c=WEB&lsparams=initcwndbps,mn,mm,pl,ms,mv&itag=22&mime=video/mp4&lmt=1538587220507974&sparams=expire,ei,ip,source,lmt,requiressl,ipbits,mime,itag,dur,ratebypass,id&txp=5531432&ipbits=0'
     },
     {
       title: 'Yoga',
@@ -40,7 +40,7 @@ const tempData = {
       imgThump:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaZ6C0t9eA-bKz8lr_5qEadLIFycpGFzU6qE9J9Mh8hA7lofJE',
       link:
-        'https://r4---sn-i3b7kn76.googlevideo.com/videoplayback?mime=video/mp4&dur=1555.481&txp=5531432&sparams=dur,ei,id,ip,ipbits,itag,lmt,mime,mm,mn,ms,mv,pl,ratebypass,requiressl,source,expire&requiressl=yes&expire=1547829650&itag=22&key=yt6&ipbits=0&ratebypass=yes&ip=115.146.126.68&source=youtube&mm=31,26&mn=sn-i3b7kn76,sn-npoe7nes&id=o-AOrUe_RmHr5h4p1rk6SEVx538R2fQulPC3_C8IhrbBQ0&ei=Mq1BXOrvM8GJgAOS-qnoBw&ms=au,onr&mt=1547807437&mv=u&pl=24&c=WEB&fvip=1&lmt=1538587220507974&signature=2D969673EAF602818C37725914D28E7DA4FFA8CD.E1BEF94E46D3A154C3AF8EB605161FFF287A5B3A'
+        'https://r1---sn-i3belne6.googlevideo.com/videoplayback?mv=m&mt=1548212262&ms=au,rdu&fvip=4&id=o-AFkD1nH46hFQoeopxuEBhLbwnOfGevxD1Q8GU_Xze--H&lsig=ALy0alEwRQIgRZ2_4GMf8zh5zFIexgmIV3i3WUZHyvMG_57H5tHqSp0CIQCXWWDnJ0ZiOCaJ22bDiuyInDBtRYtI5-9SIK_Dcuq2lw==&ratebypass=yes&mn=sn-i3belne6,sn-i3b7kn76&mm=31,29&ip=115.146.126.68&pl=24&expire=1548234013&dur=1555.481&initcwndbps=3270000&source=youtube&ei=vdhHXObVEseE4gK12rtY&sig=AOvmAUowRAIgfbdyv93HyZ16KrS0lAYWwIv5Jhn1oSnR4EZRrp2fdZ0CIEt6EH7_F1eh5fe__DMpzczy3GdV5hwb2M80Z6pS2_K3&requiressl=yes&c=WEB&lsparams=initcwndbps,mn,mm,pl,ms,mv&itag=22&mime=video/mp4&lmt=1538587220507974&sparams=expire,ei,ip,source,lmt,requiressl,ipbits,mime,itag,dur,ratebypass,id&txp=5531432&ipbits=0'
     },
     {
       title: 'Runners Strength & Blance',
@@ -48,7 +48,8 @@ const tempData = {
       time: '16 min',
       imgThump:
         'https://content.active.com/Assets/Active.com+Content+Site+Digital+Assets/Article+Image+Update/2017/Nov+25/Shoes+of+Trail+Runner-Carousel.jpg',
-      link: 'https://www.youtube.com/watch?v=GLuyVc65N9I'
+      link:
+        'https://r1---sn-i3belne6.googlevideo.com/videoplayback?mv=m&mt=1548212262&ms=au,rdu&fvip=4&id=o-AFkD1nH46hFQoeopxuEBhLbwnOfGevxD1Q8GU_Xze--H&lsig=ALy0alEwRQIgRZ2_4GMf8zh5zFIexgmIV3i3WUZHyvMG_57H5tHqSp0CIQCXWWDnJ0ZiOCaJ22bDiuyInDBtRYtI5-9SIK_Dcuq2lw==&ratebypass=yes&mn=sn-i3belne6,sn-i3b7kn76&mm=31,29&ip=115.146.126.68&pl=24&expire=1548234013&dur=1555.481&initcwndbps=3270000&source=youtube&ei=vdhHXObVEseE4gK12rtY&sig=AOvmAUowRAIgfbdyv93HyZ16KrS0lAYWwIv5Jhn1oSnR4EZRrp2fdZ0CIEt6EH7_F1eh5fe__DMpzczy3GdV5hwb2M80Z6pS2_K3&requiressl=yes&c=WEB&lsparams=initcwndbps,mn,mm,pl,ms,mv&itag=22&mime=video/mp4&lmt=1538587220507974&sparams=expire,ei,ip,source,lmt,requiressl,ipbits,mime,itag,dur,ratebypass,id&txp=5531432&ipbits=0'
     },
     {
       title: 'Runners Strength & Blance',
@@ -148,41 +149,43 @@ class DemandScreen extends BaseScreen {
       : [styles.container, { opacity: 0.5, backgroundColor: 'transparent' }];
     return (
       <View style={styleContainer}>
-        <SearchBar
-          onChangeText={this.handleQueryChange}
-          onCancel={this.handleSearchCancel}
-          onClear={this.handleSearchClear}
-          icon={{
-            type: 'font-awesome',
-            name: 'search',
-            style: {
-              // marginTop: -7
-            }
-          }}
-          containerStyle={{
-            borderColor: '#e0e0e0',
-            shadowColor: 'white',
-            backgroundColor: '#f6f6f6',
-            borderWidth: 1,
-            borderRadius: 50,
-            marginBottom: 10
-          }}
-          placeholder="Search..."
-          placeholderTextColor="#262628"
-          inputStyle={[
-            TextStyle.mediumText,
-            {
-              fontStyle: 'italic',
-              margin: 0,
-              textAlignVertical: 'center',
-              paddingLeft: 40,
+        {paused && (
+          <SearchBar
+            onChangeText={this.handleQueryChange}
+            onCancel={this.handleSearchCancel}
+            onClear={this.handleSearchClear}
+            icon={{
+              type: 'font-awesome',
+              name: 'search',
+              style: {
+                // marginTop: -7
+              }
+            }}
+            containerStyle={{
+              borderColor: '#e0e0e0',
+              shadowColor: 'white',
+              backgroundColor: '#f6f6f6',
+              borderWidth: 1,
               borderRadius: 50,
-              height: 60,
-              color: '#262628',
-              backgroundColor: '#f6f6f6'
-            }
-          ]}
-        />
+              marginBottom: 10
+            }}
+            placeholder="Search..."
+            placeholderTextColor="#262628"
+            inputStyle={[
+              TextStyle.mediumText,
+              {
+                fontStyle: 'italic',
+                margin: 0,
+                textAlignVertical: 'center',
+                paddingLeft: 40,
+                borderRadius: 50,
+                height: 60,
+                color: '#262628',
+                backgroundColor: '#f6f6f6'
+              }
+            ]}
+          />
+        )}
 
         <FlatList
           keyExtractor={item => String(item.id)}
