@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, ImageBackground ,StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  ImageBackground,
+  StatusBar
+} from 'react-native';
 import { GameLoop } from 'react-native-game-engine';
 import BaseScreen from '@/screens/BaseScreen';
 import PopupDialog from 'react-native-popup-dialog';
@@ -36,19 +43,37 @@ const colors = ['purple', 'blue', 'yellow', 'green'];
 
 const limitToRotate = 60 * (Math.PI / 180);
 const FastImageView = createImageProgress(FastImage);
-let firstDataForTesing = { E8oouxYufVbXPWssHdL9NqUfxZl1: 
-  { streamId: 'D4CE87E6-FCA2-408D-A858-3C831BC4D731',
+let firstDataForTesing = {
+  E8oouxYufVbXPWssHdL9NqUfxZl1: {
+    streamId: 'D4CE87E6-FCA2-408D-A858-3C831BC4D731',
     status: 2,
     speed: 0,
     playerName: 'Hh11',
-    token: 'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9MThlMTQzMjEyZGZjOTQ1MTBhODhmM2RlZWJlOWE0YzM3MzNkZWNiNTpzZXNzaW9uX2lkPTJfTVg0ME5qRTFORFF5TW41LU1UVTBNelF3TXpJMk9UUXpNMzU2Vldaak1HdEtVWE5KVDJwcGVYSnZRVlJyVnl0TE0zWi1mZyZjcmVhdGVfdGltZT0xNTQzNDAzMjY5Jm5vbmNlPTkwNzAyJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE1NDM0ODk2Njk=',
+    token:
+      'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9MThlMTQzMjEyZGZjOTQ1MTBhODhmM2RlZWJlOWE0YzM3MzNkZWNiNTpzZXNzaW9uX2lkPTJfTVg0ME5qRTFORFF5TW41LU1UVTBNelF3TXpJMk9UUXpNMzU2Vldaak1HdEtVWE5KVDJwcGVYSnZRVlJyVnl0TE0zWi1mZyZjcmVhdGVfdGltZT0xNTQzNDAzMjY5Jm5vbmNlPTkwNzAyJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE1NDM0ODk2Njk=',
     goal: 0,
-    archivement: 0 } };
+    archivement: 0
+  }
+};
+const roomForTest = {
+  id: 54,
+  createdAt: '2018-08-09T17:24:46Z',
+  updatedAt: '2018-11-19T03:51:17Z',
+  deletedAt: null,
+  name: 'Pyongyang',
+  photo: 'https://storage.googleapis.com/oskar-ai/Pyongyang.jpg',
+  cover: 'https://storage.googleapis.com/oskar-ai/Pyong_yang.png',
+  datapoints: {},
+  width: 4000,
+  height: 3000,
+  miles: 11,
+  status: 1
+};
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
     StatusBar.setHidden(true);
     super(props);
-    const room: Room = new Room(props.navigation?.state.params);
+    const room: Room = new Room(props.navigation?.state.params || roomForTest);
     this.lastIndexPosition = 0;
     this.currentPositionIndex = 0;
     this.listLastIndexPosition = {};
@@ -102,7 +127,7 @@ class ChallengeScreen extends BaseScreen {
         .child('players')
         ?.child(user.fbuid)
         .update({ streamId: streamId });
-        // for testing
+      // for testing
       // this.onListenerChanel();
       ////
     }
@@ -214,7 +239,7 @@ class ChallengeScreen extends BaseScreen {
         const keyFirst = Object.keys(firstDataForTesing)[0];
         firstDataForTesing[keyFirst]['goal'] = goal;
         this.updateDataTesting();
-          //////
+        //////
         this.playerMeDataPrefference.update({
           speed: data.speed,
           goal: goal,
@@ -244,13 +269,12 @@ class ChallengeScreen extends BaseScreen {
     // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
 
     if (!_.isEmpty(user)) {
-      
-      const data =firstDataForTesing;
-      // for testing 
+      const data = firstDataForTesing;
+      // for testing
       const keyFirst = Object.keys(data)[0];
       const userToClone = data[keyFirst];
-      
-      if(!_.isEmpty(userToClone)){
+
+      if (!_.isEmpty(userToClone)) {
         let firstItem = _.cloneDeep(userToClone);
         firstItem['fbuid'] = `${firstItem['fbuid']}0`;
         firstItem['goal'] = Math.abs(firstItem['goal'] + 3);
@@ -355,7 +379,7 @@ class ChallengeScreen extends BaseScreen {
     if (!_.isEmpty(user)) {
       this.roomDataPrefference.on('value', dataSnap => {
         const data = dataSnap?.toJSON() || {};
-        
+
         let arr = [];
         let playersColor = {};
         console.log(TAG, ' onListenerChanel ---- ', data);
@@ -471,7 +495,7 @@ class ChallengeScreen extends BaseScreen {
 
   componentDidMount() {
     this.props.getUser();
-    // this.popupDialog.show();
+    this.popupDialog.show();
   }
   updateHandler = ({ touches, screen, time }) => {
     if (
@@ -561,18 +585,13 @@ class ChallengeScreen extends BaseScreen {
   });
 
   renderDashBoardAchivement = () => {
-    // let players = [
-    //   { playerName: 'HienTon', goal: 27 },
-    //   { playerName: 'HIEn', goal: 27 },
-    //   { playerName: 'HTOn27', goal: 27 },
-    //   { playerName: 'HTOn22', goal: 22 },
-    //   { playerName: 'HienTon100', goal: 100 },
-    //   { playerName: 'HTon', goal: 25 },
-    //   { playerName: 'HTon', goal: 25 },
-    //   { playerName: 'HTon', goal: 25 }
-    // ];
+    let players = [
+      { playerName: 'Dave', goal: 100 },
+      { playerName: 'Elaine', goal: 91 },
+      { playerName: 'John Miller', goal: 87 }
+    ];
 
-    let { players = [] } = this.state;
+    // let { players = [] } = this.state;
     // sort list player
 
     players?.sort((a, b) => Number(b.goal) - Number(a.goal)) || [];
@@ -600,7 +619,7 @@ class ChallengeScreen extends BaseScreen {
               }
             ]}
           >
-            You are all finished!
+            The race is over!
           </Text>
           <ScrollView
             style={{ flex: 1 }}
@@ -661,6 +680,9 @@ class ChallengeScreen extends BaseScreen {
                           }
                         ]}
                       >
+                        {Number(player.goal) >= 100
+                          ? ''
+                          : `${Number(player.goal)}% `}
                         <Text
                           style={[
                             TextStyle.normalText,
@@ -669,11 +691,8 @@ class ChallengeScreen extends BaseScreen {
                         >
                           {Number(player.goal) >= 100
                             ? 'The Champion'
-                            : 'Finished '}
+                            : 'completed '}
                         </Text>
-                        {Number(player.goal) >= 100
-                          ? ''
-                          : `${Number(player.goal)}%`}
                       </Text>
                     </View>
                   </View>
@@ -713,6 +732,7 @@ class ChallengeScreen extends BaseScreen {
       players = []
     } = this.state;
     const uriPhoto = room?.photo ? { uri: room?.photo } : images.image_start;
+    console.log(TAG, ' renderMap uriPhoto = ', uriPhoto);
     const markersView = this.renderMarker();
     return (
       <GameLoop style={styles.map} onUpdate={this.updateHandler}>
@@ -735,8 +755,7 @@ class ChallengeScreen extends BaseScreen {
           </FastImageView>
         </ImageZoom>
 
-        {isReady ||
-        user?.id !== room.userId ? null : (
+        {isReady || user?.id !== room.userId ? null : (
           <Animatable.View
             style={[
               {
@@ -798,7 +817,7 @@ class ChallengeScreen extends BaseScreen {
 
       await this.props.startRacing({ session: room.session });
       // this.setState({ isLoading: false });
-      this.setState({ isLoading: false,isReady:true });
+      this.setState({ isLoading: false, isReady: true });
     }
   });
 
@@ -840,7 +859,7 @@ class ChallengeScreen extends BaseScreen {
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <View style={{ alignItems: 'center',display:'none' }}>
+        <View style={{ alignItems: 'center', display: 'none' }}>
           <BikerProfile
             onStreamCreated={this.onStreamCreated}
             onStreamDestroyed={this.onStreamDestroyed}
