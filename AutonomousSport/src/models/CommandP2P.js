@@ -10,6 +10,14 @@ export default class CommandP2P {
     this.data = data;
   }
 
+  isPlayVideo = () => {
+    return COMMAND_P2P.PLAY_VIDEO === this.action;
+  };
+
+  isPauseVideo = () => {
+    return COMMAND_P2P.PAUSE_VIDEO === this.action;
+  };
+
   toJSON() {
     return {
       action: this.action || '',

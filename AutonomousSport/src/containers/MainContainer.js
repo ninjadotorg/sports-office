@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducers from '@/reducers';
 import { StackRouter } from '@/routers';
+
 import { RNCamera } from 'react-native-camera';
 
 import {
@@ -41,6 +42,8 @@ import { BUILD_MODE } from '@/utils/Constants';
 
 import Util from '@/utils/Util';
 import ViewUtil from '@/utils/ViewUtil';
+import { notifyMessage } from '@/actions/P2PAction';
+import CommandP2P from '@/models/CommandP2P';
 
 const reduxMiddleware = createReactNavigationReduxMiddleware(
   'root',
@@ -68,31 +71,27 @@ export default class MainContainer extends Component {
     this.state = {
       store: createStore(reducers, applyMiddleware(...middleware))
     };
-
+    this.isOpeningServerSocket = false;
+    this.isReadySendMessage = false;
     this.device = {};
     this.startDiscovering = null;
   }
 
   handleNewInfo = (info, secondParam) => {
-    console.log(TAG, ' handleNewInfo = ', info);
-    if (!_.isEmpty(this.device)) {
-      const first = this.device;
-      if (!_.isEmpty(first) && first.status === 0) {
-        console.log(TAG, ' handleNewInfo status = 0 ');
-        this.onGetConnectionInfo().then(result => {
-          if (result && result > 0) {
-            if (Util.isMirror()) {
-              console.log(TAG, ' handleNewInfo  mirror receiveMessage');
-              this.onReceiveMessage();
-            } else {
-              Util.timeout(() => {
-                console.log(TAG, ' handleNewInfo  device sendMessage');
-                this.onSendMessage();
-              }, 3);
-            }
-          }
-        });
-      }
+    console.log(TAG, ' handleNewInfo info = ', info);
+    const {
+      isGroupOwner = undefined,
+      groupFormed = undefined,
+      groupOwnerAddress = undefined
+    } = info || {};
+    // if(!Util.isMirror() && !this.isReadySendMessage){
+    //   this.onGetConnectionInfo();
+    // }
+    
+    if (!_.isEmpty(groupOwnerAddress)) {
+      // if(!this.device){
+        this.createEventP2P();
+      // }
     }
   };
 
@@ -100,15 +99,34 @@ export default class MainContainer extends Component {
     if (!_.isEmpty(peers)) {
       const first = peers[0];
       if (!_.isEmpty(first) && first.status === 0) {
-        console.log(TAG, ' handleNewPeers status = 0 , peer =', peers);
+        console.log(TAG, ' handleNewPeers status = 0 , peer =', first);
         this.device = first;
+        this.createEventP2P();
       }
     }
   };
 
-  connectToFirstDevice = (firstDevice = {}) => {
+  createEventP2P = () => {
+    this.onGetConnectionInfo().then(result => {
+      this.isReadySendMessage = result && result > 0;
+      if (this.isReadySendMessage) {
+        
+        if (Util.isMirror()) {
+          console.log(TAG, ' handleNewPeers 01  mirror receiveMessage');
+          this.onReceiveMessage();
+        } else {
+          // Util.timeout(() => {
+          //   console.log(TAG, ' handleNewPeers 02  device sendMessage');
+          // }, 3);
+          // this.onSendMessage();
+        }
+      }
+    });
+  };
+
+  connectDevice = (firstDevice = {}) => {
     return new Promise((resolve, reject) => {
-      console.log(TAG, ' connectToFirstDevice = ', firstDevice);
+      console.log(TAG, ' connectDevice = ', firstDevice);
       if (!_.isEmpty(firstDevice)) {
         connect(firstDevice.deviceAddress)
           .then(() => {
@@ -132,13 +150,36 @@ export default class MainContainer extends Component {
   };
 
   onReceiveMessage = () => {
-    receiveMessage()
-      .then(msg => {
-        console.log('Message received successfully', msg);
-        this.onReceiveMessage();
-        this.showToastMessage('Message OOOOOKKKK = ' + msg);
-      })
-      .catch(err => console.log('Error while message receiving', err));
+    if (!this.isOpeningServerSocket) {
+      this.isOpeningServerSocket = true;
+      receiveMessage()
+        .then(msg => {
+          console.log('Message received successfully', msg);
+
+          try {
+            this.showToastMessage('Message OKKKK = ' + msg);
+            const msgData = JSON.parse(!_.isEmpty(msg)?msg:'')||{};
+            console.log('Message received successfully 01');
+            if (msgData && msgData.action) {
+              console.log('Message received successfully 02');
+              const { store } = this.state;
+              const commandMessage = new CommandP2P(msgData.action, msgData.data);
+              console.log('Message received successfully 03');
+              notifyMessage(commandMessage)(store?.dispatch);
+            }
+          } catch (error) {
+          } finally {
+            this.isOpeningServerSocket = false;
+            this.onReceiveMessage();
+          }
+        })
+        .catch(err => {
+          this.isOpeningServerSocket = false;
+          console.log('Error while message receiving', err);
+        });
+    }else{
+      return Promise.resolve(1);
+    }
   };
 
   disconnectFromDevice = async () => {
@@ -179,15 +220,14 @@ export default class MainContainer extends Component {
   onFindAndGetAvailablePeers = async () => {
     try {
       if (!this.startDiscovering) {
-        startDiscoveringPeers()
-          .then(() => console.log('Sucessfull OKKKKKKKKKKK----'))
-          .catch(err => console.log(err));
-          this.startDiscovering = true;
-          await Util.timeout(async () => {}, 3);
       }
+      startDiscoveringPeers()
+        .then(() => console.log('Sucessfull OKKKKKKKKKKK----'))
+        .catch(err => console.log(err));
+      this.startDiscovering = true;
+      await Util.timeout(async () => {}, 3);
       console.log(TAG, ' onFind...Peers begin');
 
-      
       let devices = await this.peers();
 
       return devices;
@@ -204,7 +244,7 @@ export default class MainContainer extends Component {
           // await this.onRemoveGroup();
           // await this.disconnectFromDevice();
 
-          const devices = await this.onFindAndGetAvailablePeers();
+          const devices: [] = await this.onFindAndGetAvailablePeers();
           console.log(
             TAG,
             ' setConnectionDevice availablePeers',
@@ -212,8 +252,10 @@ export default class MainContainer extends Component {
             ' result = ',
             result
           );
-          if (!_.isEmpty(devices)) {
-            await this.connectToFirstDevice(devices[0]);
+          // find device with status 3;
+          const device = devices.find(item =>_.includes(String(item.deviceName).toLowerCase(), 'mirror') || item.status === 3);
+          if (!_.isEmpty(device)) {
+            await this.connectDevice(device);
           } else {
             this.showToastMessage('Could not find Smart Mirror');
           }
@@ -239,10 +281,10 @@ export default class MainContainer extends Component {
         let result = await isSuccessfulInitialize();
         if (result) {
           // await this.disconnectFromDevice();
-          await this.onRemoveGroup();
+          // await this.onRemoveGroup();
           result = await this.onCreateGroup();
           console.log(TAG, ' setConnectionMirror createGroup = ', result);
-          await this.onGetConnectionInfo();
+          // await this.onGetConnectionInfo();
           return Promise.resolve(1);
         }
         return Promise.reject('error nha');
@@ -295,6 +337,7 @@ export default class MainContainer extends Component {
 
   render() {
     const { store } = this.state;
+
     return (
       <View style={{ flex: 1 }}>
         {/*<RNCamera

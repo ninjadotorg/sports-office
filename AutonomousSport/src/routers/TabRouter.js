@@ -7,6 +7,7 @@ import HomeContainer, {
   TAG as TAG_HOME_CONTAINER
 } from '@/containers/HomeContainer';
 import TextStyle from '@/utils/TextStyle';
+import Util from '@/utils/Util';
 
 export const TAG = 'TabRouter';
 
@@ -35,6 +36,7 @@ const TabRouter = createBottomTabNavigator(
     HomeScreen: {
       screen: HomeContainer,
       navigationOptions: {
+        tabBarVisible: !Util.isMirror(),
         tabBarLabel: 'Home',
         tabBarIcon: ({ focused, tintColor }) =>
           icons.home({

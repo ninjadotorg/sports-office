@@ -12,13 +12,12 @@ import { SearchBar, Icon } from 'react-native-elements';
 import { ParallaxImage } from 'react-native-snap-carousel';
 import { connect } from 'react-redux';
 import TextStyle from '@/utils/TextStyle';
-import ApiService from '@/services/ApiService';
+
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { TAG as INVITEFRIENDS } from '@/screens/Friends';
 import { TAG as TAGHOME } from '@/screens/Home';
 import Video from 'react-native-video';
 import images, { icons, colors } from '@/assets';
-import { verticalScale } from 'react-native-size-matters';
 import _ from 'lodash';
 import { sendMessage, isSuccessfulInitialize } from 'react-native-wifi-p2p';
 import styles, { iconPlay } from './styles';
@@ -99,7 +98,7 @@ class DemandScreen extends BaseScreen {
   }
 
   sendingMessage = (data = {}) => {
-    if (!_.isEmpty(data) && isSuccessfulInitialize()) {
+    if (!this.isMirror && !_.isEmpty(data) && isSuccessfulInitialize()) {
       sendMessage(JSON.stringify(data))
         .then(() => console.log('Message sent successfully'))
         .catch(err => console.log('Error while message sending', err));
@@ -114,14 +113,11 @@ class DemandScreen extends BaseScreen {
       >
         {iconPlay(() => {
           console.log(TAG, ' renderItem = ' + item.link);
-          if (!this.isMirror) {
-            const commandObj = new CommandP2P(COMMAND_P2P.PLAY_VIDEO, {
-              link: item.link
-            });
-            // send message
-            this.sendingMessage(commandObj.toJSON());
-            this.setState({ paused: !this.state.paused, itemSelected: item });
-          }
+
+          const commandObj = new CommandP2P(COMMAND_P2P.PLAY_VIDEO, item);
+          // send message
+          this.sendingMessage(commandObj.toJSON());
+          this.setState({ paused: !this.state.paused, itemSelected: item });
         })}
         <View style={styles.containerBottom}>
           <Text
@@ -216,17 +212,17 @@ class DemandScreen extends BaseScreen {
         {!paused && (
           <TouchableOpacity
             onPress={() => {
+              const commandObj = new CommandP2P(
+                COMMAND_P2P.PAUSE_VIDEO,
+                this.state.itemSelected
+              );
+              this.sendingMessage(commandObj.toJSON());
               this.setState({ paused: !paused });
             }}
             style={styles.containerVideo}
           >
             <Video
               source={{ uri: itemSelected.link }}
-              // source={{
-              //   uri:
-              //     'http://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtube?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,source,id,as&ip=0.0.0.0&ipbits=0&expire=19000000000&signature=51AF5F39AB0CEC3E5497CD9C900EBFEAECCCB5C7.8506521BFC350652163895D4C26DEE124209AA9E&key=ik0',
-              //   type: 'mpd'
-              // }}
               ref={ref => {
                 this.player = ref;
               }}
