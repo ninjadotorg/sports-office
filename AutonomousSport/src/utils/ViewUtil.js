@@ -7,6 +7,7 @@ import TextStyle, { screenSize } from '@/utils/TextStyle';
 import images from '@/assets';
 import { createImageProgress } from 'react-native-image-progress';
 import FastImage from 'react-native-fast-image';
+import Toast from 'react-native-easy-toast';
 
 const TAG = 'ViewUtil';
 export const onClickView = funcOnView => {
@@ -19,6 +20,9 @@ export const delayCallingManyTime = (funcOnView, second = 1) => {
   return debounce(funcOnView, second * 1000);
 };
 const ViewUtil = {
+  Toast: ({ position = 'top', ref = 'toast' }) => (
+    <Toast position={position || 'top'} ref={ref || 'toast'} />
+  ),
   CustomProgressBar: ({ visible }) => (
     <Modal onRequestClose={() => null} visible={visible}>
       <View

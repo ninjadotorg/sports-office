@@ -23,6 +23,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import DateTimePicker from '@/components/DateTimePicker';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
+import { sendMessage, isSuccessfulInitialize } from 'react-native-wifi-p2p';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {
   STATE_BLUETOOTH,
@@ -70,7 +71,7 @@ class PracticeScreen extends BaseScreen {
     super.componentDidMount();
     this.props.getUser();
     // this.showDialogInvite(true);
-    this.onPressReset();
+    // this.onPressReset();
   }
 
   onPressCreateRoom = this.onClickView(async () => {
@@ -211,12 +212,17 @@ class PracticeScreen extends BaseScreen {
         // colors={['transparent','transparent']}
         style={styles.container}
       >
-        <View style={[styles.containerTop, {}]}>
-          <DateTimePicker />
-        </View>
-        <View
-          style={styles.containerCenter}
+        <TouchableOpacity
+          style={[styles.containerTop, {}]}
+          onPress={() => {
+            sendMessage('HEOOOOOOO')
+              .then(() => console.log('Message sent successfully'))
+              .catch(err => console.log('Error while message sending', err));
+          }}
         >
+          <DateTimePicker />
+        </TouchableOpacity>
+        <View style={styles.containerCenter}>
           <AnimatedCircularProgress
             size={sizeCircle}
             rotation={0}

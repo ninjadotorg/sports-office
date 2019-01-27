@@ -55,7 +55,7 @@
     "react-native-svg-uri": "^1.2.3",
     "react-native-vector-icons": "^4.6.0",
     "react-native-video": "^4.3.1",
-    "react-native-wifi-p2p": "^0.6.5",
+    "react-native-wifi-p2p": "git://github.com/matsatit/react-native-wifi-p2p.git",
     "react-navigation": "^2.7.0",
     "react-navigation-redux-helpers": "^2.0.2",
     "react-redux": "^5.0.7",

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, Text, AppState,Alert } from 'react-native';
+import { View, StyleSheet, Image, Text, AppState, Alert } from 'react-native';
 import Util from '@/utils/Util';
 import firebase from 'react-native-firebase';
-import { onClickView } from '@/utils/ViewUtil';
+import ViewUtil, { onClickView } from '@/utils/ViewUtil';
 import PopupDialog from 'react-native-popup-dialog';
 import { Button } from 'react-native-elements';
 import TextStyle from '@/utils/TextStyle';
@@ -56,63 +56,42 @@ class BaseScreen extends Component {
     };
     this.playingVoice = false;
     this.appState = AppState.currentState;
-    
-  }
-  
-  get isMirror(){
-    return BUILD_MODE.isMirror && DeviceInfo.isTablet();
   }
 
-  deviceMacAddress = async ()=>{
-    return await DeviceInfo.getMACAddress();
+  get isMirror() {
+    return Util.isMirror();
   }
+
+  deviceMacAddress = async () => {
+    return await DeviceInfo.getMACAddress();
+  };
 
   renderToastMessage = () => {
-    return <Toast position="top" ref="toast" />;
+    return ViewUtil.Toast({ position: 'bottom' });
   };
   showToastMessage = (text = '', callback = null) => {
     if (text && this.refs.toast) {
-      this.refs.toast.show(text, 500, callback);
+      this.refs.toast.show(text, 1000, callback);
     }
   };
   initVoice = () => {
     this.initializedVoice = false;
     try {
-      SoundPlayer.onFinishedPlaying((success:boolean)=>{
+      SoundPlayer.onFinishedPlaying((success: boolean) => {
         this.playingVoice = false;
       });
-      // this.sound = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, error => {
-      //   if (error) {
-      //     console.log('failed to load the sound', error);
-      //     return;
-      //   }
-      // });
-  
-      // this.sound.setVolume(0.5);
-  
-      // this.sound.setPan(1);
-  
-      // this.sound.setNumberOfLoops(-1);
-  
-      // this.sound.setCurrentTime(2.5);
       this.initializedVoice = true;
-    } catch (error) {
-      
-    }
-    
+    } catch (error) {}
   };
 
   readText = async (fileName: String) => {
     try {
       if (this.initializedVoice && fileName && !this.playingVoice) {
-        console.log(TAG,' readText = ',fileName);
+        console.log(TAG, ' readText = ', fileName);
         this.playingVoice = true;
         SoundPlayer.playSoundFile(fileName, 'mp3');
-      }  
-    } catch (error) {
-      
-    }
-    
+      }
+    } catch (error) {}
   };
 
   componentDidMount() {

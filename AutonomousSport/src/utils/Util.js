@@ -1,8 +1,9 @@
 import { StatusBar } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { screenSize } from '@/utils/TextStyle';
-import Constants from '@/utils/Constants';
+import Constants, { BUILD_MODE } from '@/utils/Constants';
 import * as ConfigReact from 'react-native-config';
+import DeviceInfo from 'react-native-device-info';
 
 const TAG = 'Util';
 export default class Util {
@@ -39,13 +40,24 @@ export default class Util {
     });
   };
 
+  static excuteAndDelayFunc = (promise, timeSecond = 1) => {
+    return Promise.all([
+      promise,
+      new Promise(resolve => setTimeout(resolve, timeSecond * 1000))
+    ]);
+  };
+
   static excuteWithTimeout = (promise, timeSecond = 1) => {
-    return new Promise(function(resolve, reject) {
-      setTimeout(function() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
         reject(new Error('timeout'));
       }, timeSecond * 1000);
-      promise.then(resolve, reject);
+      promise?.then(resolve, reject);
     });
+  };
+
+  static isMirror = () => {
+    return BUILD_MODE.isMirror && DeviceInfo.isTablet();
   };
 
   /**

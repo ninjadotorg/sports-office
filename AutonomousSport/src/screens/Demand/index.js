@@ -19,7 +19,10 @@ import { TAG as TAGHOME } from '@/screens/Home';
 import Video from 'react-native-video';
 import images, { icons, colors } from '@/assets';
 import { verticalScale } from 'react-native-size-matters';
+import _ from 'lodash';
+import { sendMessage, isSuccessfulInitialize } from 'react-native-wifi-p2p';
 import styles, { iconPlay } from './styles';
+import CommandP2P, { COMMAND_P2P } from '@/models/CommandP2P';
 
 export const TAG = 'DemandScreen';
 const tempData = {
@@ -95,6 +98,14 @@ class DemandScreen extends BaseScreen {
     return this.state.dataCourses.data;
   }
 
+  sendingMessage = (data = {}) => {
+    if (!_.isEmpty(data) && isSuccessfulInitialize()) {
+      sendMessage(JSON.stringify(data))
+        .then(() => console.log('Message sent successfully'))
+        .catch(err => console.log('Error while message sending', err));
+    }
+  };
+
   renderItem = ({ item, index }) => {
     return (
       <ImageBackground
@@ -103,7 +114,14 @@ class DemandScreen extends BaseScreen {
       >
         {iconPlay(() => {
           console.log(TAG, ' renderItem = ' + item.link);
-          this.setState({ paused: !this.state.paused, itemSelected: item });
+          if (!this.isMirror) {
+            const commandObj = new CommandP2P(COMMAND_P2P.PLAY_VIDEO, {
+              link: item.link
+            });
+            // send message
+            this.sendingMessage(commandObj.toJSON());
+            this.setState({ paused: !this.state.paused, itemSelected: item });
+          }
         })}
         <View style={styles.containerBottom}>
           <Text
