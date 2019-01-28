@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ImageBackground
+} from 'react-native';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
-import TextStyle from '@/utils/TextStyle';
-import { colors } from '@/assets';
+import TextStyle, { screenSize } from '@/utils/TextStyle';
+import images, { colors, videos } from '@/assets';
 import * as screens from '@/screens';
 import Video from 'react-native-video';
 import _ from 'lodash';
+import {
+  verticalScale,
+  scale as scaleSize,
+  moderateScale
+} from 'react-native-size-matters';
 import Util from '@/utils/Util';
 import { connect } from 'react-redux';
 import CommandP2P from '@/models/CommandP2P';
+import LinearGradient from 'react-native-linear-gradient';
 
 const PracticeScreen = screens.PracticeScreen;
 const TopRaceScreen = screens.TopRaceScreen;
 export const TAG = 'HomeContainer';
+const marginParentChild = 10;
+const widthContainerBottom = screenSize.width - marginParentChild * 2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -28,6 +43,18 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0
+  },
+  containerTop: {
+    paddingBottom: scaleSize(30),
+    paddingTop: scaleSize(15),
+    flexDirection: 'column'
+  },
+  containerBottom: {
+    height: widthContainerBottom / 5,
+    paddingHorizontal: marginParentChild,
+    width: screenSize.width,
+    position: 'absolute',
+    bottom: 0
   },
   selectedTextStyleButton: {
     fontWeight: 'bold',
@@ -46,10 +73,36 @@ const styles = StyleSheet.create({
     borderColor: 'transparent'
   },
   selectedButtonStyle: {
-    borderBottomWidth: 2.5,
     backgroundColor: 'transparent',
+    borderBottomWidth: 2.5,
     shadowColor: 'transparent',
     borderBottomColor: colors.main_red
+  },
+  label: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: scaleSize(20),
+    borderWidth: 1,
+    borderColor: 'transparent',
+    // alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    // height: scaleSize(20),
+    minWidth: scaleSize(70),
+    paddingVertical: scaleSize(4)
+  },
+  labelText: {
+    fontWeight: '500',
+    marginRight: 15,
+    textAlignVertical: 'center',
+    color: 'white'
+  },
+  labelImage: {
+    position: 'absolute',
+    left: 0,
+    alignSelf: 'center',
+    resizeMode: 'cover',
+    height: scaleSize(18),
+    width: scaleSize(18)
   }
 });
 class HomeContainer extends Component {
@@ -62,12 +115,6 @@ class HomeContainer extends Component {
   }
 
   componentDidMount() {}
-
-  // componentWillUpdate(nextProps) {
-  //   console.log(
-  //     `${TAG} - componentWillUpdate - nextProps = ${JSON.stringify(nextProps)} `
-  //   );
-  // }
 
   componentWillReceiveProps(nextProps) {
     if (!_.isEqual(this.state.p2pMessage, nextProps.p2pMessage)) {
@@ -93,18 +140,20 @@ class HomeContainer extends Component {
       (this.dataP2PReceive?.isPlayVideo() &&
         !this.dataP2PReceive?.isPauseVideo()) ||
       false;
-    const itemSelected = this.dataP2PReceive?.data || {};
+    const itemSelected = this.dataP2PReceive?.data || { link: '' };
+    let linkData = itemSelected?.link || '';
+    const isLinkLocal = _.includes(linkData, 'assets_');
+    linkData = (isLinkLocal ? linkData.split('_')[1] : linkData) || '';
+    const sourceLinkVideo = isLinkLocal ? videos[linkData] : { uri: linkData };
 
     return (
       play && (
         <TouchableOpacity
-          onPress={() => {
-            // this.setState({ paused: !paused });
-          }}
-          style={styles.containerVideo}
+          onPress={() => {}}
+          style={[styles.containerVideo, {}]}
         >
           <Video
-            source={{ uri: itemSelected.link }}
+            source={sourceLinkVideo}
             ref={ref => {
               this.player = ref;
             }}
@@ -112,10 +161,43 @@ class HomeContainer extends Component {
             posterResizeMode="cover"
             poster={!play && itemSelected.imgThump}
             paused={!play}
-            // onBuffer={this.onBuffer}
-            // onError={this.videoError}
             style={[styles.containerVideo, {}]}
           />
+          <LinearGradient
+            colors={['#1f1f1f', 'rgba(31, 31, 31, 0)']}
+            style={styles.containerTop}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '60%',
+                justifyContent: 'space-around',
+                alignSelf: 'center'
+              }}
+            >
+              <TouchableOpacity style={styles.label}>
+                <Image source={images.ic_like} style={[styles.labelImage]} />
+                <Text style={[TextStyle.smallText, styles.labelText]}>
+                  127 BPM
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.label}>
+                <Image source={images.ic_battery} style={[styles.labelImage]} />
+                <Text style={[TextStyle.smallText, styles.labelText]}>
+                  520 Kcal
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
+          <LinearGradient
+            colors={['rgba(31, 31, 31, 0)', '#1f1f1f']}
+            style={styles.containerBottom}
+          >
+            <ImageBackground
+              source={images.background_detail_bottom}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </LinearGradient>
         </TouchableOpacity>
       )
     );

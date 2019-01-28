@@ -10,8 +10,13 @@ export const colors = {
   icon_main_black: '#262628',
   icon_main_active_red: '#f92e5b'
 };
+export const videos = {
+  boxing: require('@/assets/videos/boxing.mp4'),
+  yoga: require('@/assets/videos/yoga.mp4')
+};
 const images = {
   backgroundx: require('@/assets/images/bg.png'),
+  background_detail_bottom: require('@/assets/images/background_detail_bottom.png'),
   background_top_race: require('@/assets/images/background_top_race.png'),
   logo: require('@/assets/images/logo.png'),
   ic_gold: require('@/assets/images/ic_gold.png'),
@@ -25,6 +30,8 @@ const images = {
   image_start: require('@/assets/images/image_start.png'),
   image_velocity: require('@/assets/images/image_velocity.png'),
   ic_plus_down: require('@/assets/images/ic_plus_down.png'),
+  ic_like: require('@/assets/images/ic_like.png'),
+  ic_battery: require('@/assets/images/ic_battery.png'),
   ic_plus_up: require('@/assets/images/ic_plus_up.png'),
   ic_bluetooth: require('@/assets/images/bluetooth.png'),
   ic_leader_board: require('@/assets/images/ic_leaderboard.png'),
