@@ -1,17 +1,17 @@
 export default class User {
   constructor(userJson: JSON) {
     this.id = userJson?.id || -1;
-    this.fullname = userJson.fullname || '';
-    this.email = userJson.email || '';
-    this.token = userJson.token || '';
-    this.photoUrl = userJson.photoUrl || '';
-    this.Profile = userJson.Profile || userJson.profile || {};
-    this.fbtoken = userJson.fbtoken || '';
-    this.fbuid = userJson.fbuid || '';
-    this.is_maked_friend = Number(userJson.is_maked_friend) === 1 || false;
-    this.is_add_invited = userJson.is_add_invited || false;
+    this.fullname = userJson?.fullname || '';
+    this.email = userJson?.email || '';
+    this.token = userJson?.token || '';
+    this.photoUrl = userJson?.photoUrl || '';
+    this.Profile = userJson?.Profile || userJson.profile || {};
+    this.fbtoken = userJson?.fbtoken || '';
+    this.fbuid = userJson?.fbuid || '';
+    this.is_maked_friend = Number(userJson?.is_maked_friend) === 1 || false;
+    this.is_add_invited = userJson?.is_add_invited || false;
 
-    this.routeUnit = userJson.routeUnit || 'mile';
+    this.routeUnit = userJson?.routeUnit || 'mile';
   }
 
   get kcal() {

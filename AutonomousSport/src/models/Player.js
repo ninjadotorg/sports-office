@@ -5,11 +5,11 @@ export default class Player extends User {
   constructor(userJson: JSON) {
     super(userJson);
     this.speed = userJson?.speed || 0;
-    this.playerName = userJson.playerName || '';
-    this.goal = userJson.goal || '';
-    this.archivement = userJson.archivement || 0;
-    this.streamId = userJson.streamId || 0;
-    this.isMe = userJson.isMe || false;
+    this.playerName = userJson?.playerName || '';
+    this.goal = userJson?.goal || '';
+    this.archivement = userJson?.archivement || 0;
+    this.streamId = userJson?.streamId || 0;
+    this.isMe = userJson?.isMe || false;
     // console.log(
     //   TAG,
     //   ' contructor streamId = ',
