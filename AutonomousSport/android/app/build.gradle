@@ -171,7 +171,6 @@ dependencies {
         exclude (group: 'com.android.support', module: 'support-fragment')
     }
     compile project(':react-native-svg')
-    compile project(':react-native-firebase')
     compile project(':react-native-ble-manager')
     compile project(':react-native-config')
     compile project(':react-native-vector-icons')

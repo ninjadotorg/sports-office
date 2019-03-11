@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text, AppState,Alert } from 'react-native';
 import Util from '@/utils/Util';
-import firebase from 'react-native-firebase';
+// import firebase from 'react-native-firebase';
 import { onClickView } from '@/utils/ViewUtil';
 import PopupDialog from 'react-native-popup-dialog';
 import { Button } from 'react-native-elements';
@@ -18,6 +18,7 @@ import Room from '@/models/Room';
 import BleManager from 'react-native-ble-manager';
 import SoundPlayer from 'react-native-sound-player';
 import ApiService from '@/services/ApiService';
+import { pubnub } from '@/utils/Constants';
 
 export const TAG = 'BaseScreen';
 const styles = StyleSheet.create({
@@ -164,8 +165,8 @@ class BaseScreen extends Component {
     const fbuid = this.props.user?.userInfo?.fbuid || '';
     // console.log('BaseScreen fbuid', fbuid);
     if (!_.isEmpty(fbuid)) {
-      this.dataPrefference = firebase.database().ref('users/' + fbuid);
-      this.dataPrefference.on('value', dataSnap => {
+      // this.dataPrefference = firebase.database().ref('users/' + fbuid);
+      this.dataPrefference?.on('value', dataSnap => {
         const data = dataSnap.val();
 
         if (data) {
@@ -293,8 +294,12 @@ class BaseScreen extends Component {
     }
   };
 
-  get firebase() {
-    return firebase;
+  // get firebase() {
+    // return firebase;
+  // }
+
+  get pubnub(){
+    return pubnub;
   }
 
   replaceScreen = (navigation, routeName, params = {}) => {

@@ -13,7 +13,6 @@ import { fetchUser, updateRacing } from '@/actions/UserAction';
 import { leftRoom } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle from '@/utils/TextStyle';
-import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
 import {screenSize} from '@/utils/TextStyle';
 import SvgUri from 'react-native-svg-uri';
@@ -78,7 +77,7 @@ class ChallengeMapScreen extends BaseScreen {
     };
 
     this.pathKey = `games/race-rooms/${room?.session || ''}`;
-    this.dataPrefference = firebase.database().ref(this.pathKey);
+    // this.dataPrefference = this.firebase.database().ref(this.pathKey);
   }
 
   componentWillMount() {
