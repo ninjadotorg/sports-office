@@ -39,7 +39,6 @@ import {
 import * as Animatable from 'react-native-animatable';
 import styles, { sliderWidth, itemWidth } from './styles';
 
-
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
 class HomeScreen extends BaseScreen {
@@ -128,7 +127,6 @@ class HomeScreen extends BaseScreen {
     this.props.getUser();
     // this.showDialogInvite(true);
     this.onPressReset();
-  
   }
 
   // componentWillUnmount() {

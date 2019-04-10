@@ -528,7 +528,7 @@ class SetupScreen extends BaseScreen {
               {' '}
               <Text style={{ fontWeight: 'bold' }}>Meilan-SPD</Text>
               {' '}
-              below (pull to refresh if neccessary)
+              below (pull to refresh if necessary)
             </Text>
             {isLoading ? (
               ViewUtil.CustomProgressBar({ visible: true })
