@@ -68,7 +68,19 @@ class SignInScreen extends BaseScreen {
       eye: images.ic_eye,
       secureTextEntry: true
     };
+
+    this.pubnub.addListener({
+      message: function(message) {
+          console.log(TAG, " addListenerPUB " , message);
+          
+      }
+    });
+  
+    this.pubnub.subscribe({ 
+        channels: ['velo_bike'] 
+    });
   }
+
 
   // static getDerivedStateFromProps(nextProps, prevState) {
   //   console.log(TAG, ' getDerivedStateFromProps - begin ');
@@ -87,9 +99,27 @@ class SignInScreen extends BaseScreen {
   //   return null;
   // }
 
+  testPushDataOnPubnub = async ()=>{
+    const delay = time => new Promise(res=>setTimeout(()=>res(),time));
+    await delay(5000);
+    let publishConfig = {
+      channel : "velo_bike",
+      message: { 
+          title: "HIENTON ---- greeting",
+          description: "hello world!"
+      }
+    };
+    this.pubnub.publish(publishConfig,(status,response)=>{
+       console.log(TAG, ' pubnub.publish - begin -status = ',status);
+    });
+  }
+
   componentDidMount() {
     // this.props.fetchUser();
     this.props.checkSaveDevice();
+    this.testPushDataOnPubnub().then(()=>{
+    console.log(TAG, ' componentDidUpdate - test --------');    
+    });
   }
 
   // componentDidUpdate(prevProps,prevState){
@@ -110,6 +140,18 @@ class SignInScreen extends BaseScreen {
   //   }
   // }
 
+  // quickstart = async (
+  //   projectId = 'smart-trash-188411',
+  //   topicName = 'users'
+  // ) => {
+  //   console.log(`Topic ${topicName} begin.`);
+  //   // Instantiates a client
+  //   const pubsub = new PubSub({ projectId });
+
+  //   // Creates the new topic
+  //   const [topic] = await pubsub.createTopic(topicName);
+  //   console.log(`Topic ${topic.name} created.`);
+  // };
   componentWillReceiveProps(nextProps) {
     console.log(TAG, ' componentWillReceiveProps - begin');
     const { user, isSavedDevice } = this.state;
@@ -137,7 +179,8 @@ class SignInScreen extends BaseScreen {
       );
       const isLogged = !_.isEmpty(userNext.userInfo);
       const isPressButton = this.state.loading;
-      const isLoggedFirebase = !_.isEmpty(userNext.firebaseInfo);
+      // hienton TODO
+      const isLoggedFirebase = true || _.isEmpty(userNext.firebaseInfo);
       this.setState({
         user: _.isEmpty(userNext.userInfo) ? undefined : nextProps.user,
         loading: false
@@ -146,17 +189,17 @@ class SignInScreen extends BaseScreen {
         if (isLoggedFirebase) {
           this.receiveSignIn({ isLogged: isLogged });
         } else {
-          this.props.loginWithFirebase({
-            email: userNext.userInfo.email,
-            password: userNext.userInfo.fbtoken
-          });
+          // this.props.loginWithFirebase({
+          //   email: userNext.userInfo.email,
+          //   password: userNext.userInfo.fbtoken
+          // });
         }
       } else {
         this.setState({
           isCheckingRegular: false
         });
         if (isPressButton) {
-          this.showToastMessage('Please check again your infomation to login');
+          this.showToastMessage('Please check again your information to login');
         }
       }
     }
@@ -170,7 +213,7 @@ class SignInScreen extends BaseScreen {
         isLogged
       });
       if (isLogged) {
-        this.replaceScreen(this.props.navigation, TAGHOME);
+        // this.replaceScreen(this.props.navigation, TAGHOME);
       } else {
         this.setState({
           isCheckingRegular: false

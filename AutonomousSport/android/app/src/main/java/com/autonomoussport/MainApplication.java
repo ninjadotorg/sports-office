@@ -6,9 +6,7 @@ import com.facebook.react.ReactApplication;
 import com.johnsonsu.rnsoundplayer.RNSoundPlayerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.surajit.rnrg.RNRadialGradientPackage;
-import com.dylanvann.fastimage.FastImageViewPackage;
 import com.horcrux.svg.SvgPackage;
-import io.invertase.firebase.RNFirebasePackage;
 import it.innove.BleManagerPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -17,10 +15,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import java.util.Arrays;
 import java.util.List;
-import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,13 +34,10 @@ public class MainApplication extends Application implements ReactApplication {
             new RNRadialGradientPackage(),
             new FastImageViewPackage(),
             new SvgPackage(),
-            new RNFirebasePackage(),
-              new RNFirebaseDatabasePackage(),
             new BleManagerPackage(),
             new ReactNativeConfigPackage(),
             new VectorIconsPackage(),
-            new OTPackage(),
-              new RNFirebaseAuthPackage()
+            new OTPackage()
       );
     }
 

@@ -52,7 +52,6 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8C603AAD18F925913E4D8C5B /* libPods-AutonomousSportTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50241237BB70910E55F5F999 /* libPods-AutonomousSportTests.a */; };
 		930CCE38EDFE4050861EB2B2 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73398F86F8224F8AB387D8C0 /* libReactNativeConfig.a */; };
-		A3F01052545245C0A8C7EC19 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D306974B8A47494BBF16670D /* libRNFirebase.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B93ED26714C74D51917C61B9 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E59C78C386DD492FA877E6D2 /* Roboto.ttf */; };
 		BF54B79A4A1C4727AED6D2B1 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C0EA9ED4EC445286B9E62D /* libRNSVG.a */; };
@@ -379,7 +378,6 @@
 		488FE6CBEC0B4AFB91705B80 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		50241237BB70910E55F5F999 /* libPods-AutonomousSportTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AutonomousSportTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		554387B71B754429A2A22F68 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		5D4C4237557E43FF99FD43CD /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		5E0FCAF61FCB43E08EC08831 /* OpenTokReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = OpenTokReactNative.xcodeproj; path = "../node_modules/opentok-react-native/ios/OpenTokReactNative.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		690AAFB28BE044589A1992A7 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
@@ -410,7 +408,6 @@
 		C733F3929177496C8805933A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		CC9DA476E9FDDFA27B864DBA /* libPods-AutonomousSport-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AutonomousSport-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D159D37B953744F8C8D80C84 /* libPods-AutonomousSport-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AutonomousSport-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D306974B8A47494BBF16670D /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = archive.ar; name = libRNFirebase.a; path = libRNFirebase.a; sourceTree = "<group>"; };
 		D47A7439746E4F4C8B52D94F /* libOpenTokReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = archive.ar; name = libOpenTokReactNative.a; path = libOpenTokReactNative.a; sourceTree = "<group>"; };
 		D8FE24CF8CD092ECC19137BB /* libPods-AutonomousSport.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AutonomousSport.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E59C78C386DD492FA877E6D2 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = ../src/assets/fonts/Roboto/Roboto.ttf; sourceTree = "<group>"; };
@@ -452,7 +449,6 @@
 				40650BB530984B71BCF7CB93 /* libRNVectorIcons.a in Frameworks */,
 				930CCE38EDFE4050861EB2B2 /* libReactNativeConfig.a in Frameworks */,
 				37344F6D14BD42A99950B5DF /* libBleManager.a in Frameworks */,
-				A3F01052545245C0A8C7EC19 /* libRNFirebase.a in Frameworks */,
 				BF54B79A4A1C4727AED6D2B1 /* libRNSVG.a in Frameworks */,
 				5024E7E79D77479A90C3CFBD /* libFastImage.a in Frameworks */,
 				EC20BC28E6FE46E8905EC9B3 /* libSRSRadialGradient.a in Frameworks */,
@@ -656,7 +652,6 @@
 				8D16C26B6934427EADED805C /* RNVectorIcons.xcodeproj */,
 				7A08F451BF88477AA86228B0 /* ReactNativeConfig.xcodeproj */,
 				C3934795E41341968633ACC6 /* BleManager.xcodeproj */,
-				5D4C4237557E43FF99FD43CD /* RNFirebase.xcodeproj */,
 				690AAFB28BE044589A1992A7 /* RNSVG.xcodeproj */,
 				BFB02D934D27437BB5EF3FC8 /* FastImage.xcodeproj */,
 				25A8DCE8B19547F4983D7FE6 /* SRSRadialGradient.xcodeproj */,
@@ -1414,7 +1409,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1447,7 +1441,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1481,7 +1474,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1511,7 +1503,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1548,7 +1539,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1590,7 +1580,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1631,7 +1620,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",
@@ -1672,7 +1660,6 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
-					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 					"$(SRCROOT)/../node_modules/react-native-radial-gradient/ios",

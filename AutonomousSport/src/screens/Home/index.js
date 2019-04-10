@@ -24,7 +24,11 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import DashboardProfile from '@/components/DashboardProfile';
 import { connect } from 'react-redux';
 import _, { debounce } from 'lodash';
-import { STATE_BLUETOOTH, CONSTANT_PRACTISE_MESSAGE, BUILD_MODE } from '@/utils/Constants';
+import {
+  STATE_BLUETOOTH,
+  CONSTANT_PRACTISE_MESSAGE,
+  BUILD_MODE
+} from '@/utils/Constants';
 import {
   fetchUser,
   resetRacing,
@@ -34,6 +38,7 @@ import {
 } from '@/actions/UserAction';
 import * as Animatable from 'react-native-animatable';
 import styles, { sliderWidth, itemWidth } from './styles';
+
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
@@ -94,8 +99,8 @@ class HomeScreen extends BaseScreen {
         const s = distanceRun + data.distanceStreet || 0;
         const sumKcal = kcal + data.kcal || 0;
         // console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
-        this.triggerVoiceWithStart(distanceRun,s);
-        this.triggerVoiceWithDistance(distanceRun,s);
+        this.triggerVoiceWithStart(distanceRun, s);
+        this.triggerVoiceWithDistance(distanceRun, s);
         this.setSpeed = {
           value: data.speed || 0
         };
@@ -123,6 +128,7 @@ class HomeScreen extends BaseScreen {
     this.props.getUser();
     // this.showDialogInvite(true);
     this.onPressReset();
+  
   }
 
   // componentWillUnmount() {
@@ -171,12 +177,12 @@ class HomeScreen extends BaseScreen {
   onPressLeaderBoard = this.onClickView(() => {
     this.props.navigation.navigate(TAGTOPRACE);
   });
-  onPressBluetooth = this.onClickView(()=>{
-    const {sensorInfo = {}} = this.state.race;
-    if(BUILD_MODE.isDebugBuildType && sensorInfo &&sensorInfo.peripheral){
+  onPressBluetooth = this.onClickView(() => {
+    const { sensorInfo = {} } = this.state.race;
+    if (BUILD_MODE.isDebugBuildType && sensorInfo && sensorInfo.peripheral) {
       this.showToastMessage(sensorInfo?.peripheral);
     }
-    this.props.navigation.navigate(TAG_REVIEW_SENSOR,sensorInfo);
+    this.props.navigation.navigate(TAG_REVIEW_SENSOR, sensorInfo);
   });
 
   renderBluetoothStatus = () => {
@@ -204,28 +210,32 @@ class HomeScreen extends BaseScreen {
     // this.speed.countDown = countDown || this.speed.countDown;
   }
   updateHandler = ({ touches, screen, time }) => {
-    const valueChange = (this.speed.value - this.speed.countDown) ;
+    const valueChange = this.speed.value - this.speed.countDown;
     if (Math.round(valueChange) != 0) {
-      
-      const tempValue = (valueChange * (time.delta>1000?0:time.delta)) / 1000;
+      const tempValue =
+        (valueChange * (time.delta > 1000 ? 0 : time.delta)) / 1000;
       // console.log(TAG,' updateHandler time = ',time,' valueChange = ',valueChange);
       // const speedCountDown = Math.abs(valueChange) <= this.speed.value ? this.speed.countDown + tempValue : this.speed.value;
       const speedCountDown = this.speed.countDown + tempValue;
       // this.speed.countDown =  speedCountDown < 0 ? this.speed.value :  speedCountDown;
-      this.speed.countDown =  speedCountDown;
+      this.speed.countDown = speedCountDown;
       console.log(
         TAG,
         ' updateHandler speedCountDown = ',
-       speedCountDown,
+        speedCountDown,
         ' speed = ',
         this.state.speed,
-        ', value = ',this.speed.value
+        ', value = ',
+        this.speed.value
       );
     }
     const nextSpeed = Math.round(this.speed.countDown);
-    if (nextSpeed != Math.round(this.state.speed) && this.speed.countDown >=0) {
+    if (
+      nextSpeed != Math.round(this.state.speed) &&
+      this.speed.countDown >= 0
+    ) {
       console.log(TAG, ' updateHandler 01 ');
-      
+
       this.triggerVoiceWithSpeed(this.state.speed, nextSpeed);
       this.setState({
         speed: nextSpeed
@@ -247,20 +257,21 @@ class HomeScreen extends BaseScreen {
       this.readText(CONSTANT_PRACTISE_MESSAGE.REACH_A_DISTANCE(next));
     }
   };
-  triggerVoiceWithEnergy =(previous = 0, next = 0)=>{
+  triggerVoiceWithEnergy = (previous = 0, next = 0) => {
     // implement here
     previous = Math.floor(previous);
     next = Math.floor(next);
-    if(previous < next ){
-     this.readText(CONSTANT_PRACTISE_MESSAGE.REACH_A_ENERGY(next));
+    if (previous < next) {
+      this.readText(CONSTANT_PRACTISE_MESSAGE.REACH_A_ENERGY(next));
     }
- }
- triggerVoiceWithStart =(previous = 0, next = 0)=>{
-  // implement here
-  if(previous === 0 && previous < next ){
-   this.readText(CONSTANT_PRACTISE_MESSAGE.START_RACING());
-  }
-}
+  };
+  triggerVoiceWithStart = (previous = 0, next = 0) => {
+    // implement here
+    if (previous === 0 && previous < next) {
+      this.readText(CONSTANT_PRACTISE_MESSAGE.START_RACING());
+    }
+  };
+
   render() {
     const { user, speed, isStarted } = this.state;
 

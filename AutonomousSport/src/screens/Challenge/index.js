@@ -8,14 +8,12 @@ import { Button } from 'react-native-elements';
 import BikerProfile from '@/components/BikerProfile';
 import Room from '@/models/Room';
 import images, { icons } from '@/assets';
-
 import { connect } from 'react-redux';
 import { fetchUser, updateRacing } from '@/actions/UserAction';
 import { leftRoom, startRacing, finishedRoom } from '@/actions/RoomAction';
 import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { scale, verticalScale } from 'react-native-size-matters';
-import firebase from 'react-native-firebase';
 import _, { debounce } from 'lodash';
 import Constants, { STATE_BLUETOOTH, CONSTANT_MESSAGE, BUILD_MODE } from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
@@ -90,8 +88,8 @@ class ChallengeScreen extends BaseScreen {
     };
 
     this.pathKey = `games/race-rooms/${room?.session || ''}`;
-    this.dataPrefference = firebase.database().ref(this.pathKey);
-    this.roomDataPrefference = this.dataPrefference.child('players');
+    // this.dataPrefference = this.firebase.database().ref(this.pathKey);
+    this.roomDataPrefference = this.dataPrefference?.child('players');
   }
 
   onStreamCreated = streamId => {
