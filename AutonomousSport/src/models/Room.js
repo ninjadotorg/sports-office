@@ -1,7 +1,11 @@
+import _ from 'lodash';
+import Player from './Player';
+
 const TAG = 'Room';
+
 export default class Room {
   constructor(roomJson) {
-    console.log(TAG, ' constructor roomJson = ', roomJson);
+    // console.log(TAG, ' constructor roomJson = ', roomJson);
     this.id = roomJson?.id || -1;
     this.userId = roomJson?.userId || 0; // is mentor
     this.createdAt = roomJson?.createdAt || '';
@@ -34,6 +38,25 @@ export default class Room {
       width: map.width,
       height: map.height
     };
+  };
+  getPlayerMe = id => {
+    if (_.isEmpty(this.playerMe)) {
+      this.listPlayers(id);
+    }
+    return this.playerMe;
+  };
+  listPlayers = (id, streamId = 0): Player[] => {
+    try {
+      const json = this.RoomPlayers;
+      let isMe = false;
+      return json.map(value => {
+        isMe = id === value?.userId;
+        value['isMe'] = isMe;
+        value['streamId'] = streamId;
+        this.playerMe = isMe ? value : this.playerMe;
+        return new Player(value);
+      });
+    } catch (error) {}
   };
   toJSON() {
     return {

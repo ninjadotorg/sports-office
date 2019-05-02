@@ -14,12 +14,12 @@ const RoomReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.GET_ALL_MAP: {
       const payload = action.payload || {};
-      console.log(TAG, ' RoomReducer-GET_ALL_MAP payload = ', payload);
+      // console.log(TAG, ' RoomReducer-GET_ALL_MAP payload = ', payload);
       return { ...state, mapList: payload };
     }
     case ACTIONS.GET_ALL_ROOM: {
       const payload = action.payload || {};
-      console.log(TAG, ' RoomReducer-GET_ALL_ROOM payload = ', payload);
+      // console.log(TAG, ' RoomReducer-GET_ALL_ROOM payload = ', payload);
       return { ...state, roomList: payload };
     }
     case ACTIONS.LEFT_ROOM: {

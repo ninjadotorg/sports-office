@@ -69,18 +69,16 @@ class SignInScreen extends BaseScreen {
       secureTextEntry: true
     };
 
-    this.pubnub.addListener({
-      message: function(message) {
-          console.log(TAG, " addListenerPUB " , message);
-          
-      }
-    });
-  
-    this.pubnub.subscribe({ 
-        channels: ['velo_bike'] 
-    });
-  }
+    // this.pubnub.addListener({
+    //   message: function(message) {
+    //     console.log(TAG, ' addListenerPUB ', message);
+    //   }
+    // });
 
+    // this.pubnub.subscribe({
+    //   channels: ['velo_bike']
+    // });
+  }
 
   // static getDerivedStateFromProps(nextProps, prevState) {
   //   console.log(TAG, ' getDerivedStateFromProps - begin ');
@@ -99,27 +97,27 @@ class SignInScreen extends BaseScreen {
   //   return null;
   // }
 
-  testPushDataOnPubnub = async ()=>{
-    const delay = time => new Promise(res=>setTimeout(()=>res(),time));
-    await delay(5000);
-    let publishConfig = {
-      channel : "velo_bike",
-      message: { 
-          title: "HIENTON ---- greeting",
-          description: "hello world!"
-      }
-    };
-    this.pubnub.publish(publishConfig,(status,response)=>{
-       console.log(TAG, ' pubnub.publish - begin -status = ',status);
-    });
-  }
+  // testPushDataOnPubnub = async () => {
+  //   const delay = time => new Promise(res => setTimeout(() => res(), time));
+  //   await delay(5000);
+  //   let publishConfig = {
+  //     channel: 'velo_bike',
+  //     message: {
+  //       title: 'HIENTON ---- greeting',
+  //       description: 'hello world!'
+  //     }
+  //   };
+  //   this.pubnub.publish(publishConfig, (status, response) => {
+  //     console.log(TAG, ' pubnub.publish - begin -status = ', status);
+  //   });
+  // };
 
   componentDidMount() {
     // this.props.fetchUser();
     this.props.checkSaveDevice();
-    this.testPushDataOnPubnub().then(()=>{
-    console.log(TAG, ' componentDidUpdate - test --------');    
-    });
+    // this.testPushDataOnPubnub().then(() => {
+    //   console.log(TAG, ' componentDidUpdate - test --------');
+    // });
   }
 
   // componentDidUpdate(prevProps,prevState){
@@ -213,7 +211,7 @@ class SignInScreen extends BaseScreen {
         isLogged
       });
       if (isLogged) {
-        // this.replaceScreen(this.props.navigation, TAGHOME);
+        this.replaceScreen(this.props.navigation, TAGHOME);
       } else {
         this.setState({
           isCheckingRegular: false
@@ -469,13 +467,14 @@ class SignInScreen extends BaseScreen {
   }
   render() {
     const { swap, texts, loading, isCheckingRegular } = this.state;
+    let isCheckingRegularTesting = false;
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.scrollView}
         >
-          {ViewUtil.SplashScreen({ visible: isCheckingRegular })}
+          {ViewUtil.SplashScreen({ visible: isCheckingRegularTesting })}
           <View style={styles.mainView}>
             <Text
               style={[
@@ -497,7 +496,7 @@ class SignInScreen extends BaseScreen {
                 textStyle={[
                   TextStyle.mediumText,
                   styles.textButton,
-                  { fontWeight: 'bold', flex: 1,color:'#534c5f' }
+                  { fontWeight: 'bold', flex: 1, color: '#534c5f' }
                 ]}
                 containerViewStyle={[styles.buttonStyle, {}]}
                 onPress={this.onPressSignIn}

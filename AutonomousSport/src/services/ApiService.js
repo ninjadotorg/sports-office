@@ -297,7 +297,7 @@ export default class ApiService {
     const response = await ApiService.getURL(METHOD.POST, url, {
       session: session
     });
-    console.log(TAG, ' - joinRoom = ', response);
+    // console.log(TAG, ' - joinRoom = ', response);
     return response;
   }
 
@@ -305,7 +305,7 @@ export default class ApiService {
     const url = Api.JOIN_RANDOM_ROOM;
     const response = await ApiService.getURL(METHOD.GET, url, {});
 
-    console.log(TAG, ' - joinRandomRoom = ', response);
+    // console.log(TAG, ' - joinRandomRoom = ', response);
     return !_.isEmpty(response) && !_.isEmpty(response.room)
       ? new Room(response?.room)
       : response;
@@ -317,7 +317,7 @@ export default class ApiService {
       session: session
     });
 
-    console.log(TAG, ' - startRacing = ', response);
+    // console.log(TAG, ' - startRacing = ', response);
     return !_.isEmpty(response) && !_.isEmpty(response?.room)
       ? new Room(response?.room)
       : null;

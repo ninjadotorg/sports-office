@@ -32,7 +32,7 @@ const UserReducer = (state = initialState, action) => {
       const payload = action.payload || {};
       const practiceInfo = action.payloadPracticeInfo || {};
       if (!_.isEmpty(payload)) {
-        console.log(TAG, ' UserReducer-GET_USER payload = ', payload);
+        // console.log(TAG, ' UserReducer-GET_USER payload = ', payload);
         ApiService.token = payload.token;
       }
       return { ...state, userInfo: payload, practiceInfo: practiceInfo };

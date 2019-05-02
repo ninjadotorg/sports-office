@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, ImageBackground ,StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  ImageBackground,
+  StatusBar
+} from 'react-native';
 import { GameLoop } from 'react-native-game-engine';
 import BaseScreen from '@/screens/BaseScreen';
 import PopupDialog from 'react-native-popup-dialog';
@@ -15,9 +22,13 @@ import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { scale, verticalScale } from 'react-native-size-matters';
 import _, { debounce } from 'lodash';
-import Constants, { STATE_BLUETOOTH, CONSTANT_MESSAGE, BUILD_MODE } from '@/utils/Constants';
+import Constants, {
+  STATE_BLUETOOTH,
+  CONSTANT_MESSAGE,
+  BUILD_MODE
+} from '@/utils/Constants';
 import ImageZoom from 'react-native-image-pan-zoom';
-import Player from '@/models/Player';
+import Player, { FBUID_TEMPLATE } from '@/models/Player';
 import Util from '@/utils/Util';
 import ViewUtil from '@/utils/ViewUtil';
 import FastImage from 'react-native-fast-image';
@@ -26,7 +37,7 @@ import * as Animatable from 'react-native-animatable';
 import styles, { sizeIconRacing } from './styles';
 
 export const TAG = 'ChallengeScreen';
-const heightScreen = screenSize.height ;
+const heightScreen = screenSize.height;
 let heightMap = heightScreen;
 const dialogPercentHeight = 0.8;
 const dialogHeightImage = screenSize.height * dialogPercentHeight;
@@ -34,17 +45,21 @@ const colors = ['purple', 'blue', 'yellow', 'green'];
 
 const limitToRotate = 60 * (Math.PI / 180);
 const FastImageView = createImageProgress(FastImage);
-let firstDataForTesing = { E8oouxYufVbXPWssHdL9NqUfxZl1: 
-  { streamId: 'D4CE87E6-FCA2-408D-A858-3C831BC4D731',
+let firstDataForTesing = {
+  E8oouxYufVbXPWssHdL9NqUfxZl1: {
+    streamId: 'D4CE87E6-FCA2-408D-A858-3C831BC4D731',
     status: 2,
     speed: 0,
     playerName: 'Hh11',
-    token: 'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9MThlMTQzMjEyZGZjOTQ1MTBhODhmM2RlZWJlOWE0YzM3MzNkZWNiNTpzZXNzaW9uX2lkPTJfTVg0ME5qRTFORFF5TW41LU1UVTBNelF3TXpJMk9UUXpNMzU2Vldaak1HdEtVWE5KVDJwcGVYSnZRVlJyVnl0TE0zWi1mZyZjcmVhdGVfdGltZT0xNTQzNDAzMjY5Jm5vbmNlPTkwNzAyJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE1NDM0ODk2Njk=',
+    token:
+      'T1==cGFydG5lcl9pZD00NjE1NDQyMiZzaWc9MThlMTQzMjEyZGZjOTQ1MTBhODhmM2RlZWJlOWE0YzM3MzNkZWNiNTpzZXNzaW9uX2lkPTJfTVg0ME5qRTFORFF5TW41LU1UVTBNelF3TXpJMk9UUXpNMzU2Vldaak1HdEtVWE5KVDJwcGVYSnZRVlJyVnl0TE0zWi1mZyZjcmVhdGVfdGltZT0xNTQzNDAzMjY5Jm5vbmNlPTkwNzAyJnJvbGU9cHVibGlzaGVyJmV4cGlyZV90aW1lPTE1NDM0ODk2Njk=',
     goal: 0,
-    archivement: 0 } };
+    archivement: 0
+  }
+};
 class ChallengeScreen extends BaseScreen {
   constructor(props) {
-    if(BUILD_MODE.isModeRecordVideo){
+    if (BUILD_MODE.isModeRecordVideo) {
       StatusBar.setHidden(true);
     }
     super(props);
@@ -86,24 +101,314 @@ class ChallengeScreen extends BaseScreen {
       isFinished: false,
       isReady: false
     };
+    this.players = [];
 
-    this.pathKey = `games/race-rooms/${room?.session || ''}`;
+    // ROOM_DETAIL_<SESSION_ID>
+    //  ROOM_PLAYERS_<SESSION_ID>
+    //  CH_PLAYER_<USER_ID>
+    // this.pathKey = `games/race-rooms/${room?.session || ''}`;
     // this.dataPrefference = this.firebase.database().ref(this.pathKey);
-    this.roomDataPrefference = this.dataPrefference?.child('players');
+
+    this.chanelGroupRoomKey = {
+      DETAIL: `ROOM_DETAIL_${room?.session || ''}`,
+      PLAYERS: `ROOM_PLAYERS_${room?.session || ''}`
+    };
+    // this.chanelGroupRoomMessage = {
+    //   channelGroups:[this.chanelGroupRoomKey],
+
+    // };
+    // this.roomDataPrefference = this.dataPrefference?.child('players');
+
+    this.roomDataPrefference = {
+      subscribe: {
+        channelGroups: [this.chanelGroupRoomKey.PLAYERS]
+        // dont use
+        // channelGroup: this.chanelGroupRoomKey.PLAYERS
+      },
+      listener: {
+        message: function(message) {
+          const dataSnap = message;
+          console.log(TAG, ' onListenerChanel begin');
+          console.log(dataSnap);
+          const { user, room } = this.state;
+          const data = dataSnap?.toJSON() || {};
+
+          let arr = [];
+          let playersColor = {};
+          console.log(TAG, ' onListenerChanel ---- ', data);
+
+          let index = 0;
+          let isGetReady = false,
+            isFinished = false;
+          let winner = null;
+          let reachMeMessage = '';
+
+          Object.keys(data).forEach(key => {
+            const value = data[key];
+
+            // console.log(TAG, ' updateDataFromOtherPlayer -', value);
+            if (!_.isEmpty(value)) {
+              value['fbuid'] = key;
+              value['isMe'] = key === user?.id;
+              isGetReady = value['status'] === 2 || isGetReady;
+              const player = new Player(value);
+              playersColor[key] = colors[index];
+              arr.push(player);
+              isFinished = player.goal >= 100 || isFinished;
+              index++;
+              winner = !winner || player.goal > winner.goal ? player : winner;
+
+              // many case with is ME
+              reachMeMessage =
+                value['isMe'] && [20, 50, 70, 90, 99].includes(value.goal)
+                  ? value.goal
+                  : '';
+            }
+          });
+          if (reachMeMessage) {
+            const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
+            const distance = (reachMeMessage * room?.miles) / 100 || 0;
+            const message = arr(distance)[Util.getRandomInt(0, arr.length - 1)];
+            this.readText(message);
+          }
+
+          if (
+            isGetReady &&
+            !isFinished &&
+            this.state.winner &&
+            winner &&
+            winner['fbuid'] !== this.state.winner['fbuid']
+          ) {
+            const arr = winner['isMe']
+              ? CONSTANT_MESSAGE.PASS_X
+              : CONSTANT_MESSAGE.X_PASS;
+
+            const index = Util.getRandomInt(0, arr().length - 1);
+            const message = arr(
+              (winner['isMe']
+                ? this.state.winner.playerName
+                : winner['playerName']) || ''
+            )[index];
+            console.log(
+              TAG,
+              ' updateDataFromOtherPlayer - readText PASSS - ',
+              message
+            );
+            this.readText(message);
+          }
+          this.setState({
+            isFinished: isFinished,
+            isReady: isGetReady || this.state.isReady,
+            players: arr,
+            winner: winner,
+            playersColor: playersColor
+          });
+          if (isFinished) {
+            if (winner) {
+              // read text
+              const arr = winner['isMe']
+                ? CONSTANT_MESSAGE.FINISH_ANNOUCE_ME
+                : CONSTANT_MESSAGE.FINISH_OTHER;
+              const index = Util.getRandomInt(0, arr.length - 1);
+              const s = arr(winner.playerName)[index];
+              this.readText(s);
+            }
+            this.finishedRacing();
+          }
+        }
+      },
+      publish: {}
+    };
+
+    this.roomDetailPrefference = {
+      subscribe: {
+        channels: [this.chanelGroupRoomKey.DETAIL]
+      },
+      listener: {
+        message: this.onDataRealTime,
+        presence: function(presence) {
+          console.log(TAG, 'FRIEND PRESENCE: ', presence);
+        }
+      },
+
+      publish: {}
+    };
   }
+  onDataRealTime = data => {
+    // console.log(TAG, 'onDataRealTime data ', data);
+    const { message = {}, channel = '', subscribedChannel = '' } = data;
+    switch (subscribedChannel) {
+      case this.chanelGroupRoomKey.DETAIL: {
+        let isGetReady = message['status'] === 2;
+        this.setState({
+          isReady: isGetReady || this.state.isReady
+        });
+        break;
+      }
+      case this.chanelGroupRoomKey.PLAYERS: {
+        // update list player
+        console.log(TAG, ' onDataRealTime begin ---------------');
+        const { user, room, isReady, playersColor } = this.state;
+        // console.log(TAG, ' onDataRealTime begin userId', user.id);
+        let value = message || {};
+
+        let arr = this.players || [];
+        let playersColorTemp = playersColor || {};
+
+        console.log(TAG, ' onDataRealTime value ---- ', value);
+        let isFinished = false;
+        let winner: Player = null;
+        let reachMeMessage = '';
+        if (!_.isEmpty(value)) {
+          const key = `${FBUID_TEMPLATE}${value.userId}`;
+          let indexPlayer = arr.findIndex(
+            item => String(item.userId) == String(value.userId)
+          );
+          value['fbuid'] = key;
+          value['isMe'] = value.userId == user.id;
+          value['status'] = isReady ? 2 : 1;
+          value = indexPlayer >= 0 ? { ...arr[indexPlayer], ...value } : value;
+
+          const player = new Player(value);
+          if (indexPlayer >= 0) {
+            playersColorTemp[key] = colors[indexPlayer];
+            arr[indexPlayer] = player;
+          } else {
+            arr.push(player);
+            indexPlayer = arr.indexOf(player);
+            playersColorTemp[key] = colors[indexPlayer];
+          }
+          console.log(
+            TAG,
+            ' onDataRealTime color ---- ',
+            playersColorTemp[key],
+            ' playerName = ',
+            value['playerName'],
+            ',streamId = ',
+            value['streamId']
+          );
+          // console.log(TAG, ' onDataRealTime after size player = ', arr.length);
+          isFinished = player.goal >= 100 || isFinished;
+          winner = !winner || player.goal > winner.goal ? player : winner;
+
+          // many case with is ME
+          reachMeMessage =
+            player.isMe && [20, 50, 70, 90, 99].includes(value.goal)
+              ? value.goal
+              : '';
+        }
+        if (reachMeMessage) {
+          const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
+          const distance = (reachMeMessage * room?.miles) / 100 || 0;
+          const message = arr(distance)[Util.getRandomInt(0, arr.length - 1)];
+          this.readText(message);
+        }
+
+        if (
+          isReady &&
+          !isFinished &&
+          this.state.winner &&
+          winner &&
+          winner.id !== this.state.winner['id']
+        ) {
+          const arr = winner.isMe
+            ? CONSTANT_MESSAGE.PASS_X
+            : CONSTANT_MESSAGE.X_PASS;
+
+          const index = Util.getRandomInt(0, arr().length - 1);
+          const message = arr(
+            (winner.isMe ? this.state.winner.playerName : winner.playerName) ||
+              ''
+          )[index];
+          // console.log(
+          //   TAG,
+          //   ' updateDataFromOtherPlayer - readText PASSS - ',
+          //   message
+          // );
+          this.readText(message);
+        }
+        this.players = arr;
+        this.setState({
+          isFinished: isFinished,
+          players: arr,
+          winner: winner,
+          playersColor: playersColorTemp
+        });
+        if (isFinished) {
+          if (winner) {
+            // read text
+            const arr = winner['isMe']
+              ? CONSTANT_MESSAGE.FINISH_ANNOUCE_ME
+              : CONSTANT_MESSAGE.FINISH_OTHER;
+            const index = Util.getRandomInt(0, arr.length - 1);
+            const s = arr(winner.playerName)[index];
+            this.readText(s);
+          }
+          this.finishedRacing();
+        }
+        console.log(TAG, ' onDataRealTime end ***************');
+        break;
+      }
+    }
+    // console.log(TAG, 'onDataRealTime end ', message);
+  };
 
   onStreamCreated = streamId => {
-    console.log(TAG, ' ChallengeScreen streamId ', streamId);
-
-    const { user } = this.state;
+    const { user = {}, room, playersColor } = this.state;
     // push stream Id on firebase
     if (!_.isEmpty(streamId) && !_.isEmpty(user)) {
-      this.dataPrefference
-        .child('players')
-        ?.child(user.fbuid)
-        .update({ streamId: streamId });
-      this.onListenerChanel();
+      const userId = user.id;
+      const listPlayers: Player[] = room?.listPlayers(userId, streamId);
+      const message = new Player({
+        ...user,
+        userId: userId,
+        streamId: streamId
+      }).messageToPublish();
+      this.playerMeDataPrefference = {
+        channelName: `CH_PLAYER_${userId || ''}`,
+        subscribe: {
+          channelGroups: [this.chanelGroupRoomKey.PLAYERS],
+          channels: [`CH_PLAYER_${userId || ''}`]
+        },
+        publish: {
+          channelGroup: this.chanelGroupRoomKey.PLAYERS,
+          channel: `CH_PLAYER_${userId || ''}`,
+          message: message
+        }
+      };
+      console.log(TAG, ' onStreamCreated message ', message);
       
+
+      // update streamId in players->chanel(user.fbuid||user.id)
+      // this.playerMeDataPrefference.publish['message'] = message;
+      this.pubnub.subscribe(this.playerMeDataPrefference.subscribe);
+      this.pubnub.publish(
+        this.playerMeDataPrefference.publish,
+        (status, response) => {
+          // console.log(
+          //   TAG,
+          //   ' pubnub.publish -onStreamCreated -  begin -status = ',
+          //   status
+          // );
+        }
+      );
+      this.players = listPlayers;
+      let playersColorTemp = playersColor || {};
+
+      listPlayers.forEach((playerObj, index) => {
+        playersColorTemp[playerObj.fbuid] = colors[index];
+      });
+
+      this.setState({
+        players: listPlayers,
+        playersColor: playersColorTemp
+      });
+
+      // this.dataPrefference
+      //   ?.child('players')
+      //   ?.child(user.fbuid)
+      //   .update({ streamId: streamId });
+      // this.onListenerChanel();
     }
   };
   onStreamDestroyed = streamId => {
@@ -148,7 +453,7 @@ class ChallengeScreen extends BaseScreen {
       isReady,
       kcal = 0
     } = this.state;
-
+    console.log(TAG, ' componentWillReceiveProps begin --------');
     if (!_.isEqual(nextProps?.user, user)) {
       this.setState(
         {
@@ -161,14 +466,15 @@ class ChallengeScreen extends BaseScreen {
             _.isEmpty(this.state.race) ||
             race.state !== STATE_BLUETOOTH.CONNECTED
           ) {
-            console.log(
-              TAG,
-              ' componentWillReceiveProps - user = ',
-              nextProps?.user
-            );
-            this.playerMeDataPrefference = this.dataPrefference
-              .child('players')
-              .child(this.state.user.fbuid);
+            // console.log(
+            //   TAG,
+            //   ' componentWillReceiveProps - user = ',
+            //   nextProps?.user
+            // );
+            // this.playerMeDataPrefference = this.dataPrefference
+            //   ?.child('players')
+            //   ?.child(this.state.user.fbuid);
+
             this.props.connectAndPrepare();
           }
         }
@@ -178,14 +484,14 @@ class ChallengeScreen extends BaseScreen {
       console.log(TAG, ' componentWillReceiveProps race begin ');
       const { race = {} } = nextProps;
       const { data } = race;
-      console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
+      // console.log(TAG, ' componentWillReceiveProps race begin01 data = ', data);
       if (isReady && !isFinished && this.playerMeDataPrefference) {
         const s = distanceRun + (data.distanceStreet || 0);
         const sumKcal = kcal + (data.kcal || 0);
         // caculate goal
         const goalPercentNumber = (s * 100) / room?.miles || 0;
         const goal = Math.ceil(goalPercentNumber) || 0;
-        console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
+        // console.log(TAG, ' componentWillReceiveProps 01 - s = ', s);
 
         const indexPosition = Math.ceil(
           (this.listPoint.length * goalPercentNumber) / 100
@@ -200,27 +506,35 @@ class ChallengeScreen extends BaseScreen {
           kcal: sumKcal
         });
 
-        console.log(
-          TAG,
-          ' componentWillReceiveProps02 - goal = ',
-          goal,
-          ' - indexPosition = ',
-          indexPosition,
-          ' sumKcal = ',
-          sumKcal
-        );
-        if(BUILD_MODE.isModeRecordVideo){
-        // for testing
+        // console.log(
+        //   TAG,
+        //   ' componentWillReceiveProps02 - goal = ',
+        //   goal,
+        //   ' - indexPosition = ',
+        //   indexPosition,
+        //   ' sumKcal = ',
+        //   sumKcal
+        // );
+        if (BUILD_MODE.isModeRecordVideo) {
+          // for testing
           const keyFirst = Object.keys(firstDataForTesing)[0];
           firstDataForTesing[keyFirst]['goal'] = goal;
           this.updateDataTesting();
           //////
         }
-        this.playerMeDataPrefference.update({
+        // publish value
+        this.playerMeDataPrefference.publish['message'] = {
+          ...this.playerMeDataPrefference.publish['message'],
           speed: data.speed,
           goal: goal,
           kcal: sumKcal
-        });
+        };
+        this.pubnub.publish(this.playerMeDataPrefference.publish);
+        // this.playerMeDataPrefference?.update({
+        //   speed: data.speed,
+        //   goal: goal,
+        //   kcal: sumKcal
+        // });
 
         // save local user
         this.saveUserInfo({ kcal: data.kcal || 0, miles: data.distanceStreet });
@@ -235,7 +549,7 @@ class ChallengeScreen extends BaseScreen {
   }
 
   saveUserInfo = debounce(({ kcal = 0, miles = 0 }) => {
-    console.log(TAG, ' saveUserInfo begin ');
+    // console.log(TAG, ' saveUserInfo begin ');
 
     this.props.updateRacing({ kcal, miles });
   }, 200);
@@ -245,13 +559,12 @@ class ChallengeScreen extends BaseScreen {
     // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
 
     if (!_.isEmpty(user)) {
-      
-      const data =firstDataForTesing;
-      // for testing 
+      const data = firstDataForTesing;
+      // for testing
       const keyFirst = Object.keys(data)[0];
       const userToClone = data[keyFirst];
-      
-      if(!_.isEmpty(userToClone)){
+
+      if (!_.isEmpty(userToClone)) {
         let firstItem = _.cloneDeep(userToClone);
         firstItem['fbuid'] = `${firstItem['fbuid']}0`;
         firstItem['goal'] = Math.abs(firstItem['goal'] + 3);
@@ -351,95 +664,12 @@ class ChallengeScreen extends BaseScreen {
 
   onListenerChanel = () => {
     const { user } = this.state;
-    // console.log(TAG, ' onListenerChanel = ', user?.fbuid);
+    console.log(TAG, ' onListenerChanel = ', user?.fbuid);
 
     if (!_.isEmpty(user)) {
-      this.roomDataPrefference.on('value', dataSnap => {
-        const data = dataSnap?.toJSON() || {};
-        
-        let arr = [];
-        let playersColor = {};
-        console.log(TAG, ' onListenerChanel ---- ', data);
-
-        let index = 0;
-        let isGetReady = false,
-          isFinished = false;
-        let winner = null;
-        let reachMeMessage = '';
-
-        Object.keys(data).forEach(key => {
-          const value = data[key];
-
-          // console.log(TAG, ' updateDataFromOtherPlayer -', value);
-          if (!_.isEmpty(value)) {
-            value['fbuid'] = key;
-            value['isMe'] = key === user?.fbuid;
-            isGetReady = value['status'] === 2 || isGetReady;
-            const player = new Player(value);
-            playersColor[key] = colors[index];
-            arr.push(player);
-            isFinished = player.goal >= 100 || isFinished;
-            index++;
-            winner = !winner || player.goal > winner.goal ? player : winner;
-
-            // many case with is ME
-            reachMeMessage =
-              value['isMe'] && [20, 50, 70, 90, 99].includes(value.goal)
-                ? value.goal
-                : '';
-          }
-        });
-        if (reachMeMessage) {
-          const arr = CONSTANT_MESSAGE[`REACH_${reachMeMessage}`];
-          const distance = (reachMeMessage * this.state.room?.miles) / 100 || 0;
-          const message = arr(distance)[Util.getRandomInt(0, arr.length - 1)];
-          this.readText(message);
-        }
-
-        if (
-          isGetReady &&
-          !isFinished &&
-          this.state.winner &&
-          winner &&
-          winner['fbuid'] !== this.state.winner['fbuid']
-        ) {
-          const arr = winner['isMe']
-            ? CONSTANT_MESSAGE.PASS_X
-            : CONSTANT_MESSAGE.X_PASS;
-
-          const index = Util.getRandomInt(0, arr().length - 1);
-          const message = arr(
-            (winner['isMe']
-              ? this.state.winner.playerName
-              : winner['playerName']) || ''
-          )[index];
-          console.log(
-            TAG,
-            ' updateDataFromOtherPlayer - readText PASSS - ',
-            message
-          );
-          this.readText(message);
-        }
-        this.setState({
-          isFinished: isFinished,
-          isReady: isGetReady || this.state.isReady,
-          players: arr,
-          winner: winner,
-          playersColor: playersColor
-        });
-        if (isFinished) {
-          if (winner) {
-            // read text
-            const arr = winner['isMe']
-              ? CONSTANT_MESSAGE.FINISH_ANNOUCE_ME
-              : CONSTANT_MESSAGE.FINISH_OTHER;
-            const index = Util.getRandomInt(0, arr.length - 1);
-            const s = arr(winner.playerName)[index];
-            this.readText(s);
-          }
-          this.finishedRacing();
-        }
-      });
+      // subcribe value 'players'
+      // this.pubnub.subscribe(this.roomDataPrefference.subscribe.channelGroups);
+      // this.roomDataPrefference?.on('value', dataSnap => {});
     }
   };
 
@@ -469,6 +699,13 @@ class ChallengeScreen extends BaseScreen {
       </View>
     );
   };
+
+  componentWillMount() {
+    super.componentWillMount();
+    // this.pubnub.subscribe(this.roomDataPrefference.subscribe.channelGroups);
+    this.pubnub.addListener(this.roomDetailPrefference.listener);
+    this.pubnub.subscribe(this.roomDetailPrefference.subscribe);
+  }
 
   componentDidMount() {
     super.componentDidMount();
@@ -547,14 +784,15 @@ class ChallengeScreen extends BaseScreen {
     });
 
     if (isHaveChange || playersMarker?.length !== markers?.length) {
-      console.log(TAG, ' updateHandler - player change');
+      // console.log(TAG, ' updateHandler - player change');
       this.setState({
         playersMarker: markers
       });
     }
   };
   finishedRacing = this.onClickView(() => {
-    this.roomDataPrefference?.off('value');
+    this.pubnub.unsubscribeAll();
+    // this.roomDataPrefference?.off('value');
 
     // show dialog
     this.popupDialog.show();
@@ -562,9 +800,9 @@ class ChallengeScreen extends BaseScreen {
 
   renderDashBoardAchivement = () => {
     // let players = [
-      // { playerName: 'Kat Brown', goal: 100 },
-      // { playerName: 'Elina Hill', goal: 84 },
-      // { playerName: 'Jone Miller', goal: 80  },
+    // { playerName: 'Kat Brown', goal: 100 },
+    // { playerName: 'Elina Hill', goal: 84 },
+    // { playerName: 'Jone Miller', goal: 80  },
     //   { playerName: 'HTOn22', goal: 22 },
     //   { playerName: 'HienTon100', goal: 100 },
     //   { playerName: 'HTon', goal: 25 },
@@ -708,8 +946,7 @@ class ChallengeScreen extends BaseScreen {
       room,
       isReady,
       playersMarker = [],
-      isLoading = false,
-      players = []
+      isLoading = false
     } = this.state;
     const uriPhoto = room?.photo ? { uri: room?.photo } : images.image_start;
     const markersView = this.renderMarker();
@@ -734,8 +971,7 @@ class ChallengeScreen extends BaseScreen {
           </FastImageView>
         </ImageZoom>
 
-        {isReady ||
-        user?.id !== room.userId ? null : (
+        {isReady || user?.id !== room.userId ? null : (
           <Animatable.View
             style={[
               {
@@ -810,10 +1046,80 @@ class ChallengeScreen extends BaseScreen {
     const { room } = this.state;
     await this.props.leftRoom({ session: room?.session });
   };
+  onPressTestAddChanel = this.onClickView(async () => {
+    this.pubnub.channelGroups.addChannels(
+      {
+        channels: ['HienTon'],
+        channelGroup: this.chanelGroupRoomKey.PLAYERS
+      },
+      function(status) {
+        if (status.error) {
+          console.log(TAG, 'addChannels operation failed w/ status: ', status);
+        } else {
+          console.log(TAG, 'addChannels: Channel added to channel group');
+        }
+      }
+    );
+  });
+  onPressTest = this.onClickView(async () => {
+    this.pubnub.channelGroups.listChannels(
+      {
+        channelGroup: this.chanelGroupRoomKey.PLAYERS
+      },
+      function(status, response) {
+        if (status.error) {
+          console.log(TAG, 'listChannels operation failed w/ error:', status);
+          return;
+        }
+        console.log(TAG, 'listChannels FRIENDLIST: ');
+        response.channels.forEach(function(channel) {
+          console.log(TAG, ' listChannels channels.forEach = ', channel);
+        });
+      }
+    );
+
+    // // Which Friends are online right now
+    // this.pubnub.hereNow(
+    //   this.roomDataPrefference.subscribe.channelGroups,
+    //   function(status, response) {
+    //     if (status.error) {
+    //       console.log(TAG, 'hereNow operation failed w/ error:', status);
+    //     } else {
+    //       console.log(TAG, 'hereNow ONLINE NOW: ', response);
+    //     }
+    //   }
+    // );
+    // this.pubnub.history(
+    //   {
+    //     ...this.playerMeDataPrefference.history,
+    //     ...{ channel: this.chanelGroupRoomKey.DETAIL }
+    //   },
+    //   function(status, response) {
+    //     console.log(TAG, ' pubnub.history -begin - response = ', response);
+    //   }
+    // );
+    this.pubnub.publish(
+      {
+        channel: 'HienTon',
+        message: {
+          Hienton: 'Test ne'
+        },
+        channelGroup: this.chanelGroupRoomKey.PLAYERS
+      },
+      (status, response) => {
+        console.log(
+          TAG,
+          ' pubnub.publish -onStreamCreated -  begin -status = ',
+          status
+        );
+      }
+    );
+  });
   onPressClose = this.onClickView(async () => {
     try {
       this.showLoadingAllScreen = true;
-      this.roomDataPrefference?.off('value');
+      this.pubnub.unsubscribeAll();
+      // this.roomDataPrefference?.off('value');
       console.log(TAG, ' onPressClose call-left-room');
       await Util.excuteWithTimeout(this.leftRoom(), 5);
     } catch (error) {
@@ -838,7 +1144,7 @@ class ChallengeScreen extends BaseScreen {
     return (
       <View style={styles.container}>
         {this.renderMap()}
-        <View style={{ alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <BikerProfile
             onStreamCreated={this.onStreamCreated}
             onStreamDestroyed={this.onStreamDestroyed}
@@ -857,13 +1163,28 @@ class ChallengeScreen extends BaseScreen {
             left: 10
           }
         })}
+        {/* {icons.groupUser({
+          onPress: this.onPressTestAddChanel,
+          containerStyle: {
+            position: 'absolute',
+            top: 80,
+            left: 10
+          }
+        })} */}
+        {/* {icons.close({
+          onPress: this.onPressTest,
+          containerStyle: {
+            position: 'absolute',
+            top: 150,
+            left: 10
+          }
+        })} */}
         {ViewUtil.CustomProgressBar({ visible: isLoadingAllScreen })}
         <PopupDialog
           width="70%"
           height={`${dialogPercentHeight * 100}%`}
           hasOverlay
-          
-          dialogStyle={{ backgroundColor: 'transparent',alignItems:'center' }}
+          dialogStyle={{ backgroundColor: 'transparent', alignItems: 'center' }}
           dismissOnTouchOutside={false}
           ref={popupDialog => {
             this.popupDialog = popupDialog;

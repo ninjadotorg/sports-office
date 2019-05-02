@@ -119,11 +119,11 @@ class RoomList extends Component {
       JSON.stringify(nextProps?.joinRoomData) !== JSON.stringify(joinRoom)
     ) {
       itemSelected['token'] = nextProps?.joinRoomData['token'];
-      console.log(
-        TAG,
-        ' componentWillReceiveProps - JoinRoom itemSelected ',
-        itemSelected
-      );
+      // console.log(
+      //   TAG,
+      //   ' componentWillReceiveProps - JoinRoom itemSelected ',
+      //   itemSelected
+      // );
       if (itemSelected?.session) {
         this.props.navigation.navigate(TAGCHALLENGE, itemSelected);
       }

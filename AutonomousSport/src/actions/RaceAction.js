@@ -70,7 +70,7 @@ export const connectionBluetoothChange = dispatch => {
       const round = value[2] * 255 + value[1];
       if (round !== roundPrevious) {
         // const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
-        console.log(TAG, ` connectionBluetoothChange data =  ${value}`);
+        // console.log(TAG, ` connectionBluetoothChange data =  ${value}`);
         const rps = round - (roundPrevious <= 0 ? round : roundPrevious);
         // const rph = rps * timeHour;
         // let speed = rph * 0.68 * cycle;
@@ -79,7 +79,7 @@ export const connectionBluetoothChange = dispatch => {
         // speed = cycle * 6.28 * 2.2369356 * (rps + 200);
         // speed = cycle * 6.28 * 2.2369356 * rps;
         // speed = 0.0009171425863 * rps;
-        speed = 3.301713108 * rps * (__DEV__ ? 1 : 1); // mi/hour
+        speed = 3.301713108 * rps * (__DEV__ ? 100 : 1); // mi/hour
         speed = speed < 0 ? 0 : speed;
 
         const distanceRun = speed * timeHour;
