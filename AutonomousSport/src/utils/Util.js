@@ -39,12 +39,21 @@ export default class Util {
     });
   };
 
-  static excuteWithTimeout = (promise, timeSecond = 1) => {
+  static excuteWithTimeout = (promise: Promise, timeSecond = 1) => {
     return new Promise(function(resolve, reject) {
-      setTimeout(function() {
+      const timeout = setTimeout(function() {
         reject(new Error('timeout'));
       }, timeSecond * 1000);
-      promise.then(resolve, reject);
+      promise.then(
+        success => {
+          clearTimeout(timeout);
+          resolve(success);
+        },
+        error => {
+          reject(error);
+        }
+      );
+      // promise.then(resolve, reject);
     });
   };
 

@@ -467,14 +467,13 @@ class SignInScreen extends BaseScreen {
   }
   render() {
     const { swap, texts, loading, isCheckingRegular } = this.state;
-    let isCheckingRegularTesting = false;
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.scrollView}
         >
-          {ViewUtil.SplashScreen({ visible: isCheckingRegularTesting })}
+          {ViewUtil.SplashScreen({ visible: isCheckingRegular })}
           <View style={styles.mainView}>
             <Text
               style={[

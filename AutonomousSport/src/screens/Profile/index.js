@@ -33,7 +33,6 @@ import { Button, Header } from 'react-native-elements';
 import styles, { color } from './styles';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
-import ApiService from '@/services/ApiService';
 import images, { icons } from '@/assets';
 import { disconnectBluetooth } from '@/actions/RaceAction';
 import DashboardProfile from '@/components/DashboardProfile';
@@ -84,6 +83,7 @@ class ProfileScreen extends BaseScreen {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     this.props.getUser();
     this.props.updateDataPracticeInfo();
   }
@@ -315,7 +315,11 @@ class ProfileScreen extends BaseScreen {
               TextStyle.extraText,
               styles.text,
               styles.textLogo,
-              { marginBottom: verticalScale(15), color: '#ffc500',fontWeight:'normal' }
+              {
+                marginBottom: verticalScale(15),
+                color: '#ffc500',
+                fontWeight: 'normal'
+              }
             ]}
           >
             {texts[swap].button}
@@ -427,7 +431,7 @@ class ProfileScreen extends BaseScreen {
   };
 
   render() {
-    const { swap, texts, loading, isCheckingRegular } = this.state;
+    const { swap, texts, loading } = this.state;
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
         <ScrollView
@@ -461,7 +465,7 @@ class ProfileScreen extends BaseScreen {
               >
                 <Button
                   loading={loading}
-                  backgroundColor='transparent'
+                  backgroundColor="transparent"
                   title={texts[swap]['bottonBtn']}
                   textStyle={[TextStyle.mediumText, styles.textButton]}
                   containerViewStyle={[
@@ -480,9 +484,11 @@ class ProfileScreen extends BaseScreen {
                   : texts['profile'].bottomText}
               </Text>
             </View>
+
             {ViewUtil.CustomProgressBar({ visible: loading })}
           </View>
         </ScrollView>
+        {this.initDialogInvite()}
       </ImageBackground>
     );
   }

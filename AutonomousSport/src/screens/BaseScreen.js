@@ -63,19 +63,21 @@ class BaseScreen extends Component {
       },
       listener: {
         message: data => {
-          const { message = {}, channel = '', subscribedChannel = '' } = data;
-          console.log('BaseScreen channel Invite message',message);
-          if (channel === this.chanelGroupInviteKey.subscribe.channels[0] && !_.isEmpty(message)) {
+          const { message = {}, channel = '' } = data;
+          console.log('BaseScreen channel Invite message', message);
+          if (
+            channel === this.chanelGroupInviteKey.subscribe.channels[0] &&
+            !_.isEmpty(message)
+          ) {
             const room = new Room(message);
-            if (!_.isEmpty(room)) {
-              console.log('BaseScreen room cover', room.cover);
-              this.setState({
-                errorMessage: false,
-                roomInfo: room,
-                playername: data.inviter
-              });
-              this.showDialogInvite(true);
-            }
+
+            console.log('BaseScreen room cover', room.cover);
+            this.setState({
+              errorMessage: false,
+              roomInfo: room,
+              playername: message.inviter
+            });
+            this.showDialogInvite(true);
           }
         }
       }
@@ -83,34 +85,14 @@ class BaseScreen extends Component {
     this.playingVoice = false;
     this.appState = AppState.currentState;
   }
-  renderToastMessage = () => {
-    return <Toast position="top" ref="toast" />;
-  };
-  showToastMessage = (text = '', callback = null) => {
-    if (text && this.refs.toast) {
-      this.refs.toast.show(text, 500, callback);
-    }
-  };
+
   initVoice = () => {
     this.initializedVoice = false;
     try {
       SoundPlayer.onFinishedPlaying((success: boolean) => {
         this.playingVoice = false;
       });
-      // this.sound = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, error => {
-      //   if (error) {
-      //     console.log('failed to load the sound', error);
-      //     return;
-      //   }
-      // });
 
-      // this.sound.setVolume(0.5);
-
-      // this.sound.setPan(1);
-
-      // this.sound.setNumberOfLoops(-1);
-
-      // this.sound.setCurrentTime(2.5);
       this.initializedVoice = true;
     } catch (error) {}
   };
@@ -125,24 +107,34 @@ class BaseScreen extends Component {
     } catch (error) {}
   };
 
+  componentWillMount() {
+    this.pubnub.addListener(this.chanelGroupInviteKey.listener);
+  }
+
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
     this.initVoice();
   }
-
-  componentWillMount() {
-    this.pubnub.addListener(this.chanelGroupInviteKey.listener);
-  }
-  unmountPubnub = () => {
-    this.pubnub.removeListener(this.chanelGroupInviteKey.listener);
-    this.pubnub.unsubscribe(this.chanelGroupInviteKey.subscribe);
-  };
 
   componentWillUnmount() {
     this.unmountPubnub();
     SoundPlayer.unmount();
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
+
+  renderToastMessage = () => {
+    return <Toast position="top" ref="toast" />;
+  };
+  showToastMessage = (text = '', callback = null) => {
+    if (text && this.refs.toast) {
+      this.refs.toast.show(text, 500, callback);
+    }
+  };
+
+  unmountPubnub = () => {
+    this.pubnub.removeListener(this.chanelGroupInviteKey.listener);
+    this.pubnub.unsubscribe(this.chanelGroupInviteKey.subscribe);
+  };
 
   handleAppStateChange = nextAppState => {
     if (
@@ -156,6 +148,10 @@ class BaseScreen extends Component {
     }
     this.appState = nextAppState;
   };
+
+  isForeground = ()=>{
+    return this.appState.match(/inactive|background/) && AppState.currentState === 'active';
+  }
 
   onPressBack = () => {
     this.props.navigation?.goBack();
@@ -193,33 +189,17 @@ class BaseScreen extends Component {
   ) => {
     const userInfo = this.props.user?.userInfo || {};
     const fbuid = userInfo?.fbuid || '';
-
     console.log('BaseScreen fbuid', fbuid);
     if (!_.isEmpty(userInfo)) {
-      const channelName = `${this.chanelGroupInviteKey.channelTemplate}${userInfo.id || ''}`;
+      const channelName = `${
+        this.chanelGroupInviteKey.channelTemplate
+      }${userInfo.id || ''}`;
       this.chanelGroupInviteKey.subscribe.channels = [channelName];
-      // this.dataPrefference = firebase.database().ref('users/' + fbuid);
       this.pubnub.subscribe(this.chanelGroupInviteKey.subscribe);
-      // this.dataPrefference?.on('value', dataSnap => {
-      //   const data = dataSnap.val();
-
-      //   if (data) {
-      //     const room = new Room(data.room);
-      //     if (!_.isEmpty(room)) {
-      //       console.log('BaseScreen room cover', room.Map.cover);
-      //       this.setState({
-      //         errorMessage: false,
-      //         roomInfo: room,
-      //         playername: data.inviter
-      //       });
-      //       this.dataPrefference?.remove();
-      //       this.showDialogInvite(true);
-      //     }
-      //   }
-      // });
     }
+    const { roomInfo = {}, playername = '', errorMessage = '' } = this.state;
     const uri =
-      this.state.roomInfo?.cover ||
+      roomInfo?.cover ||
       'https://storage.googleapis.com/oskar-ai/1/HongKong_nNYONeB1BpzY331lNoD9.jpg';
     return (
       <PopupDialog
@@ -251,7 +231,7 @@ class BaseScreen extends Component {
               ]}
             >
               <Text style={[TextStyle.mediumText, { fontWeight: 'bold' }]}>
-                {this.state.playername || 'HienTon'}
+                {playername}
               </Text>
               <Text style={[TextStyle.mediumText, {}]}>
                 {' '}
@@ -265,12 +245,11 @@ class BaseScreen extends Component {
                   { fontWeight: 'bold', color: 'black' }
                 ]}
               >
-                {`${this.state.roomInfo?.name || ''} (${this.state.roomInfo
-                  ?.miles || '0'} Miles)`}
+                {`${roomInfo?.name || ''} (${roomInfo?.miles || '0'} Miles)`}
               </Text>
             </Text>
 
-            {this.state.errorMessage ? (
+            {errorMessage ? (
               <Text
                 style={[
                   TextStyle.mediumText,
@@ -281,7 +260,7 @@ class BaseScreen extends Component {
                   }
                 ]}
               >
-                Sorry, Your room not aready to join.
+                Sorry, Your room not already to join.
               </Text>
             ) : null}
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -327,14 +306,6 @@ class BaseScreen extends Component {
       isShow ? this.popupInviteDialog.show() : this.popupInviteDialog.dismiss();
     }
   };
-
-  // get firebase() {
-  // return firebase;
-  // }
-
-  // get pubnub() {
-  //   return this.pubnub;
-  // }
 
   replaceScreen = (navigation, routeName, params = {}) => {
     Util.resetRoute(navigation, routeName, params);

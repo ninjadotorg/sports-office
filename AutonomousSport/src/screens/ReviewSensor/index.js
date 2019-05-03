@@ -201,7 +201,6 @@ class ReviewSensorScreen extends BaseScreen {
   componentWillUnmount() {
     super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ');
-    console.log(TAG, ' componentWillUnmount01 ');
     this.handlerDiscover?.remove();
     console.log(TAG, ' componentWillUnmount02 ');
     this.handlerStop?.remove();
@@ -242,7 +241,15 @@ class ReviewSensorScreen extends BaseScreen {
     // value, peripheral, characteristic, service
     try {
       if (this.peripheralBluetooth && !_.isEmpty(data)) {
-        alert("connect succesfully");
+        await BleManager.stopNotification(
+          this.peripheralBluetooth.peripheral,
+          this.peripheralBluetooth.service,
+          this.peripheralBluetooth.characteristic
+        );
+        await LocalDatabase.saveBluetooth(
+          JSON.stringify(this.peripheralBluetooth.toJSON())
+        );
+        alert("Connect successfully");
       }
     } catch (error) {
     } finally {
