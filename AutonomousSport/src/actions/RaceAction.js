@@ -79,7 +79,7 @@ export const connectionBluetoothChange = dispatch => {
         // speed = cycle * 6.28 * 2.2369356 * (rps + 200);
         // speed = cycle * 6.28 * 2.2369356 * rps;
         // speed = 0.0009171425863 * rps;
-        speed = 3.301713108 * rps * (__DEV__ ? 100 : 10); // mi/hour
+        speed = 3.301713108 * rps * (__DEV__ ? 100 : 1); // mi/hour
         speed = speed < 0 ? 0 : speed;
 
         const distanceRun = speed * timeHour;

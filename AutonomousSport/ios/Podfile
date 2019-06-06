@@ -6,7 +6,7 @@ target 'AutonomousSport' do
   # use_frameworks!
 
   # Pods for AutonomousSport
-  pod 'OpenTok', '2.15.0'
+  pod 'OpenTok'
 
 
   target 'AutonomousSportTests' do

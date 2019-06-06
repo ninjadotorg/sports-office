@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "convert-string": "^0.1.0",
-    "opentok-react-native": "git://github.com/matsatit/opentok-react-native.git",
+    "opentok-react-native": "^0.10.3",
     "prop-types": "^15.6.2",
     "pubnub": "^4.23.0",
     "react": "16.4.1",
