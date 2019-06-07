@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React, { Component } from 'react';
 import {
   Text,
@@ -9,12 +10,11 @@ import {
   Platform,
   PermissionsAndroid,
   FlatList,
-  ScrollView,
+  RefreshControl,
   Image,
   AppState,
   Alert,
-  ImageBackground,
-  Dimensions
+  ImageBackground
 } from 'react-native';
 import { connect } from 'react-redux';
 import BleManager from 'react-native-ble-manager';
@@ -25,7 +25,7 @@ import TextStyle from '@/utils/TextStyle';
 import { TAG as TAGSIGNIN } from '@/screens/SignIn';
 import LocalDatabase from '@/utils/LocalDatabase';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
-import ViewUtil, { delayCallingManyTime } from '@/utils/ViewUtil';
+import ViewUtil, {  } from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
 import { disconnectBluetooth } from '@/actions/RaceAction';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -140,19 +140,22 @@ class SetupScreen extends BaseScreen {
   };
 
   checkConditionForScan = async () => {
-    let result = await this.checkPermission();
-    if (result && result > 0) {
-      result = await BleManager.enableBluetooth();
-      if (!result) {
-        return true;
+    if(Platform.OS === 'android'){
+      let result = await this.checkPermission();
+      if (result && result > 0) {
+        result = await BleManager.enableBluetooth();
+        if (!result) {
+          return true;
+        } else {
+          Alert.alert('You need to enable bluetooth to use this app.');
+          return false;
+        }
       } else {
-        Alert.alert('You need to enable bluetooth to use this app.');
+        Alert.alert('You need to permission to use this app.');
         return false;
       }
-    } else {
-      Alert.alert('You need to permission to use this app.');
-      return false;
     }
+    return true;
   };
 
   handleAppStateChange=(nextAppState)=>{
@@ -253,104 +256,27 @@ class SetupScreen extends BaseScreen {
       });
     }
   };
-  
-
-  // connect = item => {
-  //   if (item) {
-  //     let peripheral = item.item;
-  //     if (item.connected) {
-  //       BleManager.disconnect(peripheral.id);
-  //     } else {
-  //       BleManager.connect(peripheral.id)
-  //         .then(() => {
-  //           let peripherals = this.state.peripherals;
-  //           // let p = peripherals.get(peripheral.id);
-  //           // if (p) {
-  //           //   p.connected = true;
-  //           //   peripherals.set(peripheral.id, p);
-  //           //   this.setState({ peripherals });
-  //           // }
-  //           item.connected = true;
-  //           peripherals.set(peripheral.id, item);
-  //           this.setState({ peripherals });
-  //           console.log('Connected to ' + peripheral.id);
-
-  //           // setTimeout(() => {
-  //           // Test using bleno's pizza example
-  //           // https://github.com/sandeepmistry/bleno/tree/master/examples/pizza
-  //           BleManager.retrieveServices(peripheral.id).then(peripheralInfo => {
-  //             console.log(TAG, ' retrieveServices ', peripheralInfo);
-  //             const id = peripheralInfo.id;
-  //             const services = peripheralInfo.services;
-  //             const characteristics = peripheralInfo.characteristics;
-  //             var serviceUUID = services[2].uuid;
-
-  //             var bakeCharacteristic = characteristics[3].characteristic;
-  //             console.log(
-  //               TAG,
-  //               ' retrieveServices serviceUUID = ' +
-  //                 serviceUUID +
-  //                 ' bakeCharacteristicUUID =' +
-  //                 bakeCharacteristic
-  //             );
-  //             clearTimeout(this.timeout || 0);
-  //             BleManager.start({});
-  //             this.timeout = setTimeout(() => {
-  //               console.log(TAG, ' retrieveServices serviceUUID = 01');
-
-  //               BleManager.startNotification(
-  //                 id,
-  //                 serviceUUID,
-  //                 bakeCharacteristic
-  //               )
-  //                 .then(async () => {
-  //                   // save local database :serviceUUID,bakeCharacteristic,peripherals
-  //                   this.peripheralBluetooth = new PeripheralBluetooth(
-  //                     id,
-  //                     serviceUUID,
-  //                     bakeCharacteristic
-  //                   );
-  //                   await LocalDatabase.saveBluetooth(
-  //                     JSON.stringify(this.peripheralBluetooth.toJSON())
-  //                   );
-  //                   this.isLoading = false;
-  //                   console.log('Started notification on end');
-  //                 })
-  //                 .catch(error => {
-  //                   this.isLoading = false;
-
-  //                   console.log('Notification error', error);
-
-  //                 });
-  //             });
-  //           }, 1000);
-  //         })
-  //         .catch(error => {
-  //           this.isLoading = false;
-  //           console.log('Connection error', error);
-  //         });
-  //     }
-  //   }
-  // };
 
   connect = async item => {
     try {
       if (item) {
         let peripheral = item.item;
+        console.log(TAG, ' connect  begin', item);
         await BleManager.connect(peripheral.id);
         let peripherals = this.state.peripherals;
         item.connected = true;
         peripherals.set(peripheral.id, item);
         this.setState({ peripherals });
-        console.log(TAG, ' connect Connected to ' + peripheral.id);
-        const peripheralInfo = await BleManager.retrieveServices(peripheral.id);
+        
+        const peripheralInfo = await BleManager.retrieveServices(peripheral.id,Platform.OS==='ios'?peripheral.serviceUUIDs:'');
         console.log(TAG, ' retrieveServices ', peripheralInfo);
         const id = peripheralInfo.id;
         const services = peripheralInfo.services;
+        console.log(TAG, ' connect Connected to id = ' + peripheral.id+ '-servives = ',services);
         const characteristics = peripheralInfo.characteristics;
-        var serviceUUID = services[2].uuid;
+        var serviceUUID = Platform.OS === 'ios'? services[0]: services[2].uuid;
         console.log(TAG, ' connect 01 ');
-        var bakeCharacteristic = characteristics[3].characteristic;
+        var bakeCharacteristic = Platform.OS === 'ios'?characteristics[0].characteristic: characteristics[3].characteristic;
         console.log(
           TAG,
           ' retrieveServices serviceUUID = ' +
@@ -365,6 +291,7 @@ class SetupScreen extends BaseScreen {
           serviceUUID,
           bakeCharacteristic
         );
+        
         console.log('Started notification on end');
       }
     } catch (error) {
@@ -377,7 +304,7 @@ class SetupScreen extends BaseScreen {
     const color = item.connected ? 'green' : '#fff';
     
     const peripheral = item.item;
-    // console.log(TAG, ' renderItem = ', peripheral);
+    
     const name = peripheral?.name + (BUILD_MODE.isStaging?String(' - ' +peripheral.id):'');
     return (
       <TouchableOpacity
@@ -386,8 +313,10 @@ class SetupScreen extends BaseScreen {
         onPress={this.onClickView(async () => {
           this.isLoading = true;
           await Util.excuteWithTimeout(this.connect(item), 10);
-          this.isLoading = false;
-          this.startScan();
+          if(!this.peripheralBluetooth){
+            this.isLoading = false;
+            this.startScan();
+          }
         })}
       >
         <Image
@@ -534,8 +463,11 @@ class SetupScreen extends BaseScreen {
               ViewUtil.CustomProgressBar({ visible: true })
             ) : (
               <FlatList
-                onRefresh={this.startScan}
-                refreshing={scanning}
+                refreshControl={
+                  <RefreshControl onRefresh={this.startScan}
+                  tintColor='white'
+                  refreshing={scanning}/>
+                }
                 keyExtractor={(item, index) => String(item.id || index)}
                 style={styles.scroll}
                 data={this.getListAdress()}

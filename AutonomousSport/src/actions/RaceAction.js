@@ -23,6 +23,7 @@ export const ACTIONS = {
 };
 export const checkSaveDevice = () => async dispatch => {
   const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
+  // console.log(TAG, 'checkSaveDevice ', periBluetooth);
   dispatch({
     type: ACTIONS.CHECK_SAVING_DEVICE,
     payload: {

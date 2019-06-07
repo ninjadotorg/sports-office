@@ -13,6 +13,7 @@
 @rem See the License for the specific language governing permissions and
 @rem limitations under the License.
 @rem
+
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
@@ -64,7 +65,6 @@ goto fail
 @rem Get command-line arguments, handling Windows variants
 
 if not "%OS%" == "Windows_NT" goto win9xME_args
-
 
 :win9xME_args
 @rem Slurp the command line arguments.
