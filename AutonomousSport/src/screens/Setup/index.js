@@ -274,9 +274,9 @@ class SetupScreen extends BaseScreen {
         const services = peripheralInfo.services;
         console.log(TAG, ' connect Connected to id = ' + peripheral.id+ '-servives = ',services);
         const characteristics = peripheralInfo.characteristics;
-        var serviceUUID = Platform.OS === 'ios'? services[0]: services[2].uuid;
+        const serviceUUID = Platform.OS === 'ios'? services[0]: services[2].uuid;
         console.log(TAG, ' connect 01 ');
-        var bakeCharacteristic = Platform.OS === 'ios'?characteristics[0].characteristic: characteristics[3].characteristic;
+        const bakeCharacteristic = Platform.OS === 'ios'?characteristics[0].characteristic: characteristics[3].characteristic;
         console.log(
           TAG,
           ' retrieveServices serviceUUID = ' +

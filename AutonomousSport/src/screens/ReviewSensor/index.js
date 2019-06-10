@@ -9,6 +9,7 @@ import {
   Platform,
   PermissionsAndroid,
   FlatList,
+  RefreshControl,
   ScrollView,
   Image,
   AppState,
@@ -141,14 +142,16 @@ class ReviewSensorScreen extends BaseScreen {
 
   renderLeftHeader = () => {
     return (
-      <View style={styles.topBar}>
         <TouchableOpacity
-          style={{ flexDirection: 'row' }}
+          style={{ 
+            flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center' }}
           onPress={this.onPressBack}
         >
           <Image
             source={images.ic_backtop}
-            style={{ width: 32, height: 32, marginTop: 10 }}
+            style={{ width: 32, height: 32 }}
           />
           <Text
             style={[
@@ -158,31 +161,32 @@ class ReviewSensorScreen extends BaseScreen {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 marginHorizontal: 10,
-                marginLeft: 20,
-                marginTop: 10
+                marginLeft: 20
               }
             ]}
           >
             Connect to VELO bike
           </Text>
         </TouchableOpacity>
-      </View>
     );
   };
   checkConditionForScan = async () => {
-    let result = await this.checkPermission();
-    if (result && result > 0) {
-      result = await BleManager.enableBluetooth();
-      if (!result) {
-        return true;
+    if(Platform.OS === 'android'){
+      let result = await this.checkPermission();
+      if (result && result > 0) {
+        result = await BleManager.enableBluetooth();
+        if (!result) {
+          return true;
+        } else {
+          Alert.alert('You need to enable bluetooth to use this app.');
+          return false;
+        }
       } else {
-        Alert.alert('You need to enable bluetooth to use this app.');
+        Alert.alert('You need to permission to use this app.');
         return false;
       }
-    } else {
-      Alert.alert('You need to permission to use this app.');
-      return false;
     }
+    return true;
   };
 
   handleAppStateChange = nextAppState => {
@@ -306,14 +310,14 @@ class ReviewSensorScreen extends BaseScreen {
         peripherals.set(peripheral.id, item);
         // this.setState({ peripherals });
         console.log(TAG, ' connect Connected to ' + peripheral.id);
-        const peripheralInfo = await BleManager.retrieveServices(peripheral.id);
+        const peripheralInfo = await BleManager.retrieveServices(peripheral.id,Platform.OS==='ios'?peripheral.serviceUUIDs:'');
         console.log(TAG, ' retrieveServices ', peripheralInfo);
         const id = peripheralInfo.id;
         const services = peripheralInfo.services;
         const characteristics = peripheralInfo.characteristics;
-        var serviceUUID = services[2].uuid;
+        const serviceUUID = Platform.OS === 'ios'? services[0]: services[2].uuid;
         console.log(TAG, ' connect 01 ');
-        var bakeCharacteristic = characteristics[3].characteristic;
+        const bakeCharacteristic = Platform.OS === 'ios'?characteristics[0].characteristic: characteristics[3].characteristic;
         console.log(
           TAG,
           ' retrieveServices serviceUUID = ' +
@@ -416,7 +420,10 @@ class ReviewSensorScreen extends BaseScreen {
       >
         <Header
           backgroundColor="transparent"
-          outerContainerStyles={{ borderBottomWidth: 0 }}
+          leftContainerStyle={{ flex: 1 }}
+          centerContainerStyle={{flex: 1}}
+          rightContainerStyle={{ flex: 0 }}
+          containerStyle={{ borderBottomWidth: 0 }}
         >
           {this.renderLeftHeader()}
         </Header>
@@ -462,8 +469,10 @@ class ReviewSensorScreen extends BaseScreen {
             </Text>
 
             <FlatList
-              onRefresh={this.startScan}
-              refreshing={scanning}
+              refreshControl={<RefreshControl onRefresh={this.startScan}
+                  tintColor='white'
+                  refreshing={scanning}/>
+              }
               keyExtractor={(item, index) => String(item.id || index)}
               style={styles.scroll}
               data={this.getListAdress()}
