@@ -37,7 +37,7 @@ import {
   loginWithFirebase
 } from '@/actions/UserAction';
 import * as Animatable from 'react-native-animatable';
-import styles, { sliderWidth, itemWidth } from './styles';
+import styles from './styles';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
@@ -359,7 +359,7 @@ class HomeScreen extends BaseScreen {
         <View style={styles.containerBottom}>
           <Button
             title={isStarted ? 'Reset' : 'Practice'}
-            textStyle={[
+            titleStyle={[
               TextStyle.mediumText,
               { fontWeight: 'bold', color: '#ffc500' }
             ]}
@@ -377,7 +377,7 @@ class HomeScreen extends BaseScreen {
                 borderWidth: 0
               }
             ]}
-            textStyle={[
+            titleStyle={[
               TextStyle.mediumText,
               { fontWeight: 'bold', color: '#534c5f' }
             ]}

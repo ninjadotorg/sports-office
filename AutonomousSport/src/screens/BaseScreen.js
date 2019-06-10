@@ -118,7 +118,9 @@ class BaseScreen extends Component {
 
   componentWillUnmount() {
     this.unmountPubnub();
-    SoundPlayer.unmount();
+    if(this.initializedVoice){
+      SoundPlayer.unmount();
+    }
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
