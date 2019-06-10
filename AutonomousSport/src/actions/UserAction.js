@@ -173,23 +173,25 @@ export const updatePassword = (cpassword = '', npassword) => async dispatch => {
       cpassword: cpassword,
       npassword: npassword
     });
-    console.log(TAG, ' - updateName - response ', response);
+    console.log(TAG, ' - updatePassword - response ', response);
+    const { status = 0, messsage = '' } = response || {};
 
     let user: User = await LocalDatabase.getUserInfo();
-    if (!_.isEmpty(response) && user) {
+    if (status === 1 && user) {
       response.user.Profile['kcal'] = user.Profile.kcal || 0;
       response.user.Profile['miles'] = user.Profile.miles || 0;
     }
-
     dispatch({
       type: ACTIONS.UPDATE_USER_PASSWORD,
       payload: response?.user || {}
     });
-    return;
+
+    return Promise.resolve(response);
   } catch (e) {
-    console.log(TAG, ' - updateName - error ', e);
+    console.log(TAG, ' - updatePassword - error ', e);
+    dispatch({ type: ACTIONS.UPDATE_USER_PASSWORD, payload: {} });
+    return Promise.reject(e);
   }
-  dispatch({ type: ACTIONS.UPDATE_USER_PASSWORD, payload: {} });
 };
 
 export const updateRacing = ({ kcal = 0, miles = 0 }) => async dispatch => {

@@ -8,7 +8,6 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  Surface,
   ImageBackground,
   KeyboardAvoidingView
 } from 'react-native';
@@ -23,8 +22,6 @@ import {
   fetchUser,
   updateName,
   updatePassword,
-  signIn,
-  forGotPass,
   logout,
   updateDataPracticeInfo
 } from '@/actions/UserAction';
@@ -189,20 +186,21 @@ class ProfileScreen extends BaseScreen {
       });
       const cpassword = this.password._lastNativeText;
       const npassword = this.npassword._lastNativeText;
-      let data = this.props.updatePassword(cpassword, npassword);
-      this.setState({
-        npassw: '',
-        cpassw: ''
-      });
+      const {status = 0,message} = await this.props.updatePassword(cpassword, npassword);
+      const messageNotify = status === 1 ? 'Your password has been successfully updated' : message;
+      console.log(TAG,'updatePassword message '+ messageNotify);
+      this.showToastMessage(messageNotify);
     }
 
     this.setState({
+      npassw: '',
+      cpassw: '',
       isLoading: false
     });
   });
 
   renderProfilePage = () => {
-    const { error, user, loading, swap, texts } = this.state;
+    const { error, user, swap, texts } = this.state;
     const { userInfo = {} } = user || {};
     return (
       <KeyboardAvoidingView
@@ -316,9 +314,7 @@ class ProfileScreen extends BaseScreen {
               styles.text,
               styles.textLogo,
               {
-                marginBottom: verticalScale(15),
-                color: '#ffc500',
-                fontWeight: 'normal'
+                marginBottom: verticalScale(15)
               }
             ]}
           >
@@ -431,7 +427,7 @@ class ProfileScreen extends BaseScreen {
   };
 
   render() {
-    const { swap, texts, loading } = this.state;
+    const { swap, texts, isLoading,loading } = this.state;
     return (
       <ImageBackground style={styles.container} source={images.backgroundx}>
         <ScrollView
@@ -440,7 +436,7 @@ class ProfileScreen extends BaseScreen {
         >
           <Header
             backgroundColor="transparent"
-            outerContainerStyles={{
+            containerStyle={{
               borderBottomWidth: 0,
               position: 'absolute',
               left: 20,
@@ -464,11 +460,10 @@ class ProfileScreen extends BaseScreen {
                 }}
               >
                 <Button
-                  loading={loading}
-                  backgroundColor="transparent"
+                  loading={isLoading}
                   title={texts[swap]['bottonBtn']}
-                  textStyle={[TextStyle.mediumText, styles.textButton]}
-                  containerViewStyle={[
+                  titleStyle={[TextStyle.mediumText, styles.textButton]}
+                  buttonStyle={[
                     styles.buttonStyle,
                     { marginLeft: 0, marginRight: 0 }
                   ]}
@@ -487,8 +482,10 @@ class ProfileScreen extends BaseScreen {
 
             {ViewUtil.CustomProgressBar({ visible: loading })}
           </View>
+          {this.renderToastMessage()}
         </ScrollView>
         {this.initDialogInvite()}
+        
       </ImageBackground>
     );
   }
