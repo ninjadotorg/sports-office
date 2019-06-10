@@ -21,20 +21,12 @@ import { fetchAllUser, fetchAllFriend } from '@/actions/FriendAction';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import User from '@/models/User';
-import Util from '@/utils/Util';
-import { updateName } from '@/actions/UserAction';
 
 const limitRow = 24;
 export const TAG = 'FriendsScreen';
 const buttons = ['Your Friends', 'All The World'];
-const ivitesbuttons = ['Skip', 'Next'];
 
 class FriendsScreen extends BaseScreen {
-  static navigationOptions = navigation => {
-    return {
-      title: 'Friends'
-    };
-  };
   constructor(props) {
     super(props);
 
@@ -102,7 +94,11 @@ class FriendsScreen extends BaseScreen {
       const listNew = nextProps?.friends?.list || [];
       // let listSum = _.unionBy(listNew, friends.list, 'id');
       // listSum = _.sortBy(listSum, 'id').reverse();
-      console.log(TAG, ' componentWillReceiveProps02 = listNew length ', listNew.length);
+      console.log(
+        TAG,
+        ' componentWillReceiveProps02 = listNew length ',
+        listNew.length
+      );
       const listFriendsNew =
         listNew?.map(item => {
           return new User(item);
@@ -137,8 +133,8 @@ class FriendsScreen extends BaseScreen {
       this.setState(
         {
           selectedIndex: selectedIndexItem,
-          offset:0,
-          limit:limitRow
+          offset: 0,
+          limit: limitRow
         },
         () => {
           this.onRefreshData();
@@ -163,17 +159,17 @@ class FriendsScreen extends BaseScreen {
   handleQueryChange = delayCallingManyTime(search => {
     // const { isLoading, offset, limit } = this.state;
     // if (!isLoading) {
-    this.setState({ search: search || '', offset:0,limit:limitRow });
-    this.fetchData({ offset: 0, limit:limitRow, search });
+    this.setState({ search: search || '', offset: 0, limit: limitRow });
+    this.fetchData({ offset: 0, limit: limitRow, search });
     // }
-  }, 0.5);
+  }, 0.1);
 
   handleSearchCancel = () => this.handleQueryChange('');
   handleSearchClear = () => this.handleQueryChange('');
 
   fetchData = ({ offset, limit, search }) => {
     const { selectedIndex } = this.state;
-    console.log(TAG, ' fetchData begin search = ',search);
+    console.log(TAG, ' fetchData begin search = ', search);
     selectedIndex === 0
       ? this.props.fetchAllFriend({ offset, limit, search })
       : this.props.fetchAllUser({ offset, limit, search });
@@ -191,21 +187,20 @@ class FriendsScreen extends BaseScreen {
           isLoading: true
         },
         () => {
-          this.fetchData({ offset: 0,limit: limitRow, search });
+          this.fetchData({ offset: 0, limit: limitRow, search });
         }
       );
     }
   });
   onLoadMore = this.onClickView(() => {
-    
     let { isLoading, offset, limit, search } = this.state;
-    if (!this.isLoadMore && offset>=limit) {
+    if (!this.isLoadMore && offset >= limit) {
       console.log(TAG, ' onLoadMore begin');
       this.isLoadMore = true;
       this.setState({
-        isLoading:true
+        isLoading: true
       });
-      this.fetchData({ offset, limit, search });  
+      this.fetchData({ offset, limit, search });
     }
   });
   onPressBack = this.onClickView(() => {
@@ -213,63 +208,67 @@ class FriendsScreen extends BaseScreen {
   });
   renderLeftHeader = () => {
     return (
-      <View style={[styles.topBar]}>
-        <View style={{ flexDirection: 'row', flex: 1 }}>
-          <TouchableOpacity
-            style={{ flexDirection: 'row' }}
-            onPress={this.onPressBack}
-          >
-            <Image
-              source={images.ic_backtop}
-              style={{ width: 32, height: 32, marginTop: 12 }}
-            />
-            <Text
-              style={[
-                TextStyle.mediumText,
-                {
-                  color: 'white',
-                  fontWeight: 'bold',
-                  textAlignVertical: 'center',
-                  marginLeft: 20
-                }
-              ]}
-            >
-              {this.state.inviteMode ? 'Invite people' : 'Explore the world'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <SearchBar
-          round
-          onChangeText={this.handleQueryChange}
-          onCancel={this.handleSearchCancel}
-          onClear={this.handleSearchClear}
-          icon={{ type: 'font-awesome', name: 'search' }}
-          noIcon
-          containerStyle={{
-            flex: 1,
-            borderBottomColor: 'transparent',
-            borderTopColor: 'transparent',
-            shadowColor: 'white',
-            backgroundColor: 'transparent',
-            borderWidth: 0,
-            borderRadius: 30
-          }}
-          placeholder="Find friend by email or name"
-          placeholderTextColor="#f9f9f960"
-          inputStyle={[
-            TextStyle.normalText,
+      <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center'
+        }}
+        onPress={this.onPressBack}
+      >
+        <Image source={images.ic_backtop} style={{ width: 32, height: 32 }} />
+        <Text
+          style={[
+            TextStyle.mediumText,
             {
-              paddingBottom:0,
-              paddingTop:0,
-              textAlignVertical:'center',
-              paddingLeft: 20,
-              borderRadius: 30,
-              color: '#FFFFFF',
-              backgroundColor: 'rgba(255,255,255,0.15)'
+              color: 'white',
+              fontWeight: 'bold',
+              textAlignVertical: 'center',
+              marginLeft: 20
             }
           ]}
-        />
-      </View>
+        >
+          {this.state.inviteMode ? 'Invite people' : 'Explore the world'}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+  renderRightHeader = () => {
+    const { search } = this.state;
+    return (
+      <SearchBar
+        value={search}
+        onChangeText={this.handleQueryChange}
+        onCancel={this.handleSearchCancel}
+        onClear={this.handleSearchClear}
+        icon={{ type: 'font-awesome', name: 'search' }}
+        containerStyle={{
+          flex: 1,
+          flexDirection: 'row',
+          borderBottomColor: 'transparent',
+          borderTopColor: 'transparent',
+          shadowColor: 'white',
+          backgroundColor: 'transparent',
+          borderWidth: 0
+        }}
+        placeholder="Find friend by email or name"
+        placeholderTextColor="#f9f9f960"
+        inputContainerStyle={{
+          flex: 1,
+          paddingBottom: 0,
+          paddingTop: 0,
+          paddingLeft: 20,
+          borderRadius: 30,
+          backgroundColor: 'rgba(255,255,255,0.15)'
+        }}
+        inputStyle={[
+          TextStyle.normalText,
+          {
+            textAlignVertical: 'center',
+            color: '#FFFFFF'
+          }
+        ]}
+      />
     );
   };
 
@@ -350,14 +349,22 @@ class FriendsScreen extends BaseScreen {
       >
         <Header
           backgroundColor="transparent"
-          outerContainerStyles={{
+          containerStyle={{
             borderBottomWidth: 0,
             paddingLeft: verticalScale(10),
             paddingRight: verticalScale(40),
-            paddingTop: 40
+            marginTop: verticalScale(20)
           }}
+          leftContainerStyle={{ flex: 1 }}
+          centerContainerStyle={{
+            flexDirection: 'column',
+            flex: 1,
+            alignItems: 'flex-start'
+          }}
+          rightContainerStyle={{ flex: 0 }}
         >
           {this.renderLeftHeader()}
+          {this.renderRightHeader()}
         </Header>
 
         <View style={[styles.containerTop]}>{this.renderTabButton()}</View>

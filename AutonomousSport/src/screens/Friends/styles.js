@@ -7,9 +7,50 @@ import {
 } from 'react-native-size-matters';
 
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: 'transparent',
+    borderColor: '#ffc500',
+    borderRadius: 32,
+    borderWidth: 1,
+    minWidth: scaleSize(100),
+    paddingHorizontal: scaleSize(20)
+  },
+  button2: {
+    backgroundColor: '#ffc500',
+    borderColor: '#ffc500',
+    borderRadius: 32,
+    borderWidth: 1,
+    minWidth: scaleSize(100),
+    paddingHorizontal: scaleSize(20)
+  },
+
+  buttonGroup: {
+    backgroundColor: 'transparent',
+    borderColor: '#ffc500',
+    borderRadius: 32
+  },
+  buttondis2: {
+    backgroundColor: '#ffc500',
+    borderColor: '#ffc500',
+    borderRadius: 32,
+    borderWidth: 1,
+    minWidth: scaleSize(100),
+    opacity: 0.5,
+    paddingHorizontal: scaleSize(20)
+  },
   container: {
+    backgroundColor: '#181818',
+    flex: 1
+  },
+  containerBottom: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    marginBottom: verticalScale(20)
+  },
+  containerCenter: {
     flex: 1,
-    backgroundColor: '#181818'
+    flexDirection: 'column'
   },
   containerImg: {
     flex: 1,
@@ -17,81 +58,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-
-  topBar: {
-    alignSelf: 'center',
-    flexDirection: 'row'
-  },
   containerTop: {
-    paddingVertical: moderateScale(10),
-    paddingHorizontal: verticalScale(40),
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingHorizontal: verticalScale(40),
+    paddingVertical: moderateScale(10)
   },
-  containerBottom: {
-    flexDirection: 'row',
-    marginBottom: verticalScale(20),
+  image: {
     alignItems: 'center',
-    alignSelf: 'center'
-  },
-  containerCenter: {
-    flex: 1,
-    flexDirection: 'column'
+    borderRadius: Platform.OS === 'ios' ? 8 : 0,
+    justifyContent: 'center',
+    resizeMode: 'cover'
   },
   list: {
+    backgroundColor: 'transparent',
     flex: 1,
-    paddingVertical: moderateScale(10),
     marginHorizontal: verticalScale(40),
-    backgroundColor: 'transparent'
-  },
-  textStyleButton: {
-    color: '#ffc500'
-  },
-  selectedTextStyleButton: {
-    color: '#534c5f'
-  },
-  buttonGroup: {
-    borderColor: '#ffc500',
-    borderRadius: 32,
-    backgroundColor: 'transparent'
+    paddingVertical: moderateScale(10)
   },
   selectedButtonStyle: {
     backgroundColor: '#ffc500',
     borderColor: '#ffc500'
   },
-  button2: {
-    borderRadius: 32,
-    borderWidth: 1,
-    backgroundColor: '#ffc500',
-    borderColor: '#ffc500',
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
-  },
-  buttondis2: {
-    borderRadius: 32,
-    borderWidth: 1,
-    backgroundColor: '#ffc500',
-    borderColor: '#ffc500',
-    opacity: 0.5,
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+  selectedTextStyleButton: {
+    color: '#534c5f'
   },
 
-  button: {
-    borderRadius: 32,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    borderColor: '#ffc500',
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
-  },
-  image: {
-    resizeMode: 'cover',
-    borderRadius: Platform.OS === 'ios' ? 8 : 0,
-    alignItems: 'center',
-    justifyContent: 'center'
-    // borderTopLeftRadius: entryBorderRadius,
-    // borderTopRightRadius: entryBorderRadius
+  textStyleButton: {
+    color: '#ffc500'
   }
 });
 

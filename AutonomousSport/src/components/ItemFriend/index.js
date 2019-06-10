@@ -154,7 +154,7 @@ class ItemFriend extends PureComponent {
         {this.props.inviteMode ? (
           <Button
             loading={isLoading}
-            containerViewStyle={{
+            containerStyle={{
               marginRight: 0,
               borderRadius: scale(30),
               borderWidth: 1,
@@ -173,19 +173,20 @@ class ItemFriend extends PureComponent {
                 color: dataItem?.is_add_invited ? 'white' : '#544e60'
               }
             ]}
+            iconRight
             buttonStyle={{ backgroundColor: 'transparent' }}
             title={dataItem?.is_add_invited ? 'Invited' : 'Invite'}
             onPress={this.onClickMakeFriend}
-            rightIcon={
+            icon={
               dataItem?.is_add_invited
-                ? { name: 'ios-checkmark', type: 'ionicon' }
+                ? { name: 'ios-checkmark', type: 'ionicon', color: 'white' }
                 : undefined
             }
           />
         ) : (
           <Button
             loading={isLoading}
-            containerViewStyle={{
+            containerStyle={{
               marginRight: 0,
               borderRadius: scale(30),
               borderWidth: 1,
@@ -200,7 +201,7 @@ class ItemFriend extends PureComponent {
               alignSelf: 'center',
               justifyContent: 'center'
             }}
-            textStyle={[
+            titleStyle={[
               TextStyle.normalText,
               {
                 color: dataItem?.is_maked_friend ? 'white' : '#544e60'
@@ -209,9 +210,10 @@ class ItemFriend extends PureComponent {
             buttonStyle={{ backgroundColor: 'transparent' }}
             title={dataItem?.is_maked_friend ? 'Friend' : 'Add Friend'}
             onPress={this.onClickMakeFriend}
-            rightIcon={
+            iconRight
+            icon={
               dataItem?.is_maked_friend
-                ? { name: 'ios-checkmark', type: 'ionicon' }
+                ? { name: 'ios-checkmark', type: 'ionicon', color: 'white' }
                 : undefined
             }
           />

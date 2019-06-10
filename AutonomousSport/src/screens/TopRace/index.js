@@ -17,8 +17,7 @@ import { getTopRacer } from '@/actions/UserAction';
 import ItemTopRacer from '@/components/ItemTopRacer';
 import _ from 'lodash';
 import User from '@/models/User';
-import { scale } from 'react-native-size-matters';
-import styles, { sliderWidth, itemWidth } from './styles';
+import styles from './styles';
 
 export const TAG = 'TopRaceScreen';
 
@@ -148,7 +147,7 @@ class TopRaceScreen extends BaseScreen {
         <View style={styles.container}>
           <Header
             backgroundColor="transparent"
-            outerContainerStyles={{ borderBottomWidth: 0 }}
+            containerStyle={{ borderBottomWidth: 0 }}
           >
             {this.renderLeftHeader()}
           </Header>
