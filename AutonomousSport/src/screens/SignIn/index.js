@@ -8,7 +8,6 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  Surface,
   ImageBackground,
   KeyboardAvoidingView
 } from 'react-native';
@@ -337,11 +336,14 @@ class SignInScreen extends BaseScreen {
               keyboardType="email-address"
             />
           </View>
-          {swap != 'forgot' ? (
+          {swap !== 'forgot' ? (
             <View
               style={[
                 styles.containerInput,
-                { marginBottom: verticalScale(7) }
+                {
+                  marginBottom: verticalScale(7),
+                  alignItems: 'center'
+                }
               ]}
             >
               <Text style={[TextStyle.normalText, styles.textLabel]}>
@@ -359,6 +361,12 @@ class SignInScreen extends BaseScreen {
                 underlineColorAndroid="transparent"
                 secureTextEntry={this.state.secureTextEntry}
               />
+              <TouchableOpacity onPress={this.onPressEye}>
+                <Image
+                  source={this.state.eye}
+                  style={{ width: 24, height: 16 }}
+                />
+              </TouchableOpacity>
             </View>
           ) : null}
 
@@ -378,26 +386,6 @@ class SignInScreen extends BaseScreen {
                     )*/}
             </View>
             <View style={{ alignSelf: 'flex-end' }}>
-              {swap != 'signup' ? null : (
-                <TouchableOpacity
-                  onPress={this.onPressEye}
-                  style={[
-                    styles.buttonStyle,
-                    {
-                      position: 'absolute',
-                      marginRight: 2,
-                      right: 3,
-                      marginTop: -72,
-                      backgroundColor: 'transparent'
-                    }
-                  ]}
-                >
-                  <Image
-                    source={this.state.eye}
-                    style={{ width: 24, height: 16 }}
-                  />
-                </TouchableOpacity>
-              )}
               {swap == 'forgot' ? null : (
                 <Text
                   onPress={this.onPressForgot}
@@ -489,15 +477,15 @@ class SignInScreen extends BaseScreen {
 
             <View style={[styles.bottomContainer]}>
               <Button
+                type="solid"
                 loading={loading}
-                buttonStyle={[{ backgroundColor: 'transparent' }]}
+                buttonStyle={[styles.buttonStyle, {}]}
                 title={texts[swap]['button']}
-                textStyle={[
+                titleStyle={[
                   TextStyle.mediumText,
                   styles.textButton,
                   { fontWeight: 'bold', flex: 1, color: '#534c5f' }
                 ]}
-                containerViewStyle={[styles.buttonStyle, {}]}
                 onPress={this.onPressSignIn}
               />
 

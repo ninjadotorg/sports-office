@@ -123,11 +123,11 @@ class BaseScreen extends Component {
   }
 
   renderToastMessage = () => {
-    return <Toast position="top" ref="toast" />;
+    return <Toast position="center" ref="toast" />;
   };
   showToastMessage = (text = '', callback = null) => {
     if (text && this.refs.toast) {
-      this.refs.toast.show(text, 500, callback);
+      this.refs.toast.show(text, 700, callback);
     }
   };
 
