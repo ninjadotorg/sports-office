@@ -155,7 +155,8 @@ ItemRoom.propTypes = {
 };
 
 ItemRoom.defaultProps = {
-  checked: false
+  checked: false,
+  parallaxProps: null
 };
 
 export default connect(

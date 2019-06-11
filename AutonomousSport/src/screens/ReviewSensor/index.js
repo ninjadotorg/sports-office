@@ -204,6 +204,7 @@ class ReviewSensorScreen extends BaseScreen {
 
   componentWillUnmount() {
     super.componentWillUnmount();
+    BleManager.stopScan();
     console.log(TAG, ' componentWillUnmount ');
     this.handlerDiscover?.remove();
     console.log(TAG, ' componentWillUnmount02 ');

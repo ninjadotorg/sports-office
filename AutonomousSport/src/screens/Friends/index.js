@@ -293,7 +293,7 @@ class FriendsScreen extends BaseScreen {
       <View style={[styles.containerBottom, {}]}>
         <Button
           title="Skip sending invitation"
-          textStyle={[
+          titleStyle={[
             TextStyle.mediumText,
             {
               fontWeight: 'bold',
@@ -308,7 +308,7 @@ class FriendsScreen extends BaseScreen {
           title="Send invitation and start"
           disabled={this.state.checkinvitebtn}
           disabledStyle={styles.buttondis2}
-          textStyle={[
+          titleStyle={[
             TextStyle.mediumText,
             { fontWeight: 'bold', color: '#534c5f' }
           ]}
@@ -404,13 +404,7 @@ class FriendsScreen extends BaseScreen {
             renderItem={this.renderItem}
           />
         )}
-        {inviteMode ? (
-          <View style={[styles.containerTop, { marginLeft: 40 }]}>
-            {this.renderbottomButton()}
-          </View>
-        ) : (
-          this.initDialogInvite()
-        )}
+        {inviteMode ? this.renderbottomButton() : this.initDialogInvite()}
       </ImageBackground>
     );
   }
