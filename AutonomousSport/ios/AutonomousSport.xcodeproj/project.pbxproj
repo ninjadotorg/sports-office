@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -46,12 +47,15 @@
 		5024E7E79D77479A90C3CFBD /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F714D6AC9D054E70A04C641A /* libFastImage.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		63C14D8B1ECF46B589FFF6BF /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 554387B71B754429A2A22F68 /* EvilIcons.ttf */; };
+		6A765A5872BA4A189C031BA7 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FCAD4E5A9AA64C3E850FF9D1 /* AntDesign.ttf */; };
+		7074F1C59ABB4435BDB79BF6 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C6106EDD12546E7A4D1E5AC /* FontAwesome5_Solid.ttf */; };
 		7451C76E75AD4E0E9CD97C96 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 944CD56F15354A418A74D77B /* Zocial.ttf */; };
 		75AB620A4F154FEE835D9144 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C733F3929177496C8805933A /* SimpleLineIcons.ttf */; };
 		791F2D23D7414FE4B0B754E8 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE6E0BF0870E4AE992EC2945 /* MaterialIcons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8C603AAD18F925913E4D8C5B /* libPods-AutonomousSportTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50241237BB70910E55F5F999 /* libPods-AutonomousSportTests.a */; };
 		930CCE38EDFE4050861EB2B2 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73398F86F8224F8AB387D8C0 /* libReactNativeConfig.a */; };
+		93F260D93554448EAE03BD43 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF10F098E6C54716B5FE2C3E /* FontAwesome5_Brands.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B93ED26714C74D51917C61B9 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E59C78C386DD492FA877E6D2 /* Roboto.ttf */; };
 		BF54B79A4A1C4727AED6D2B1 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C0EA9ED4EC445286B9E62D /* libRNSVG.a */; };
@@ -59,19 +63,141 @@
 		CF1830F072FE41FCB4FE7D32 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEB91DDC3C684ABA81D71628 /* MaterialCommunityIcons.ttf */; };
 		D7732FD06A674B4E90E8AD21 /* libRNSoundPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C5DAFAA2C346188D20D69E /* libRNSoundPlayer.a */; };
 		D7FEB5394929444FB09E0F6D /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAA88F946A24FD0937F3590 /* FontAwesome.ttf */; };
+		E0089EBA66EB41CFB7A6C8D4 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13E8F236CE854BCB909B5323 /* FontAwesome5_Regular.ttf */; };
 		E1F06A2BF1414B0E939E2B9C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 821D5465E1F74E69BA13D3D8 /* Ionicons.ttf */; };
 		EC20BC28E6FE46E8905EC9B3 /* libSRSRadialGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0205723BD9CD429FAD20C03E /* libSRSRadialGradient.a */; };
 		F27062EF672540ACA3D0B4EF /* Roboto_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7C9555941AF4218931CB1E0 /* Roboto_bold.ttf */; };
 		F9F6E9BAA7D479D09493F315 /* libPods-AutonomousSport-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D159D37B953744F8C8D80C84 /* libPods-AutonomousSport-tvOSTests.a */; };
 		FE0D1117B2B44142A2F8F1FC /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE07A5FF255A4FA4A14D98D6 /* libRNSVG-tvOS.a */; };
 		FE3D8E9F22AA25460020C776 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE3D8E6622AA25460020C776 /* JavaScriptCore.framework */; };
+		FED1268222AFAE460059411C /* reach_50k_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED125D222AFAE380059411C /* reach_50k_1.mp3 */; };
+		FED1268322AFAE460059411C /* round_50_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260622AFAE380059411C /* round_50_2.mp3 */; };
+		FED1268422AFAE460059411C /* start_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260722AFAE380059411C /* start_3.mp3 */; };
+		FED1268522AFAE460059411C /* round_50_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260822AFAE380059411C /* round_50_1.mp3 */; };
+		FED1268622AFAE460059411C /* passed_9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260922AFAE380059411C /* passed_9.mp3 */; };
+		FED1268722AFAE460059411C /* round_90_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260A22AFAE390059411C /* round_90_5.mp3 */; };
+		FED1268822AFAE460059411C /* round_70_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260B22AFAE390059411C /* round_70_4.mp3 */; };
+		FED1268922AFAE460059411C /* passed_8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260C22AFAE390059411C /* passed_8.mp3 */; };
+		FED1268A22AFAE460059411C /* pass_7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260D22AFAE390059411C /* pass_7.mp3 */; };
+		FED1268B22AFAE460059411C /* reach_200k_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260E22AFAE390059411C /* reach_200k_3.mp3 */; };
+		FED1268C22AFAE460059411C /* pass_5_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1260F22AFAE390059411C /* pass_5_3.mp3 */; };
+		FED1268D22AFAE460059411C /* start_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261022AFAE390059411C /* start_4.mp3 */; };
+		FED1268E22AFAE460059411C /* round_50_6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261122AFAE390059411C /* round_50_6.mp3 */; };
+		FED1268F22AFAE460059411C /* start_practice_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261222AFAE390059411C /* start_practice_1.mp3 */; };
+		FED1269022AFAE460059411C /* reach_2mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261322AFAE390059411C /* reach_2mi_2.mp3 */; };
+		FED1269122AFAE460059411C /* pass_11.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261422AFAE3A0059411C /* pass_11.mp3 */; };
+		FED1269222AFAE460059411C /* pass_5_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261522AFAE3A0059411C /* pass_5_2.mp3 */; };
+		FED1269322AFAE460059411C /* pass_40_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261622AFAE3A0059411C /* pass_40_2.mp3 */; };
+		FED1269422AFAE460059411C /* round_70_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261722AFAE3A0059411C /* round_70_3.mp3 */; };
+		FED1269522AFAE460059411C /* loser_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261822AFAE3A0059411C /* loser_4.mp3 */; };
+		FED1269622AFAE460059411C /* reach_50k_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261922AFAE3A0059411C /* reach_50k_3.mp3 */; };
+		FED1269722AFAE460059411C /* loser_6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261A22AFAE3A0059411C /* loser_6.mp3 */; };
+		FED1269822AFAE460059411C /* start_7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261B22AFAE3A0059411C /* start_7.mp3 */; };
+		FED1269922AFAE460059411C /* start_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261C22AFAE3A0059411C /* start_5.mp3 */; };
+		FED1269A22AFAE460059411C /* pass_10_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261D22AFAE3B0059411C /* pass_10_3.mp3 */; };
+		FED1269B22AFAE460059411C /* reach_20mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261E22AFAE3B0059411C /* reach_20mi_1.mp3 */; };
+		FED1269C22AFAE460059411C /* pass_20_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1261F22AFAE3B0059411C /* pass_20_3.mp3 */; };
+		FED1269D22AFAE460059411C /* loser_7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262022AFAE3B0059411C /* loser_7.mp3 */; };
+		FED1269E22AFAE460059411C /* round_90_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262122AFAE3B0059411C /* round_90_3.mp3 */; };
+		FED1269F22AFAE460059411C /* round_50_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262222AFAE3B0059411C /* round_50_3.mp3 */; };
+		FED126A022AFAE460059411C /* loser_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262322AFAE3B0059411C /* loser_3.mp3 */; };
+		FED126A122AFAE460059411C /* round_50_9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262422AFAE3B0059411C /* round_50_9.mp3 */; };
+		FED126A222AFAE460059411C /* passed_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262522AFAE3C0059411C /* passed_3.mp3 */; };
+		FED126A322AFAE460059411C /* pass_20_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262622AFAE3C0059411C /* pass_20_2.mp3 */; };
+		FED126A422AFAE460059411C /* reach_1mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262722AFAE3C0059411C /* reach_1mi_3.mp3 */; };
+		FED126A522AFAE460059411C /* reach_10mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262822AFAE3C0059411C /* reach_10mi_2.mp3 */; };
+		FED126A622AFAE460059411C /* reach_5mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262922AFAE3C0059411C /* reach_5mi_1.mp3 */; };
+		FED126A722AFAE460059411C /* reach_40mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262A22AFAE3C0059411C /* reach_40mi_3.mp3 */; };
+		FED126A822AFAE460059411C /* pass_40_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262B22AFAE3C0059411C /* pass_40_3.mp3 */; };
+		FED126A922AFAE460059411C /* round_70_6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262C22AFAE3C0059411C /* round_70_6.mp3 */; };
+		FED126AA22AFAE460059411C /* pass_5_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262D22AFAE3C0059411C /* pass_5_1.mp3 */; };
+		FED126AB22AFAE460059411C /* reach_3mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262E22AFAE3C0059411C /* reach_3mi_3.mp3 */; };
+		FED126AC22AFAE460059411C /* reach_100k_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1262F22AFAE3D0059411C /* reach_100k_1.mp3 */; };
+		FED126AD22AFAE460059411C /* reach_3mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263022AFAE3D0059411C /* reach_3mi_1.mp3 */; };
+		FED126AE22AFAE460059411C /* champion_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263122AFAE3D0059411C /* champion_5.mp3 */; };
+		FED126AF22AFAE460059411C /* reach_100k_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263222AFAE3D0059411C /* reach_100k_3.mp3 */; };
+		FED126B022AFAE460059411C /* pass_9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263322AFAE3D0059411C /* pass_9.mp3 */; };
+		FED126B122AFAE460059411C /* round_70_7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263422AFAE3D0059411C /* round_70_7.mp3 */; };
+		FED126B222AFAE460059411C /* start_6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263522AFAE3D0059411C /* start_6.mp3 */; };
+		FED126B322AFAE460059411C /* round_90_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263622AFAE3D0059411C /* round_90_1.mp3 */; };
+		FED126B422AFAE460059411C /* start_practice_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263722AFAE3D0059411C /* start_practice_2.mp3 */; };
+		FED126B522AFAE460059411C /* round_50_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263822AFAE3D0059411C /* round_50_5.mp3 */; };
+		FED126B622AFAE460059411C /* pass_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263922AFAE3E0059411C /* pass_5.mp3 */; };
+		FED126B722AFAE460059411C /* pass_6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263A22AFAE3E0059411C /* pass_6.mp3 */; };
+		FED126B822AFAE460059411C /* round_90_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263B22AFAE3E0059411C /* round_90_2.mp3 */; };
+		FED126B922AFAE460059411C /* round_99_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263C22AFAE3E0059411C /* round_99_1.mp3 */; };
+		FED126BA22AFAE460059411C /* pass_8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263D22AFAE3E0059411C /* pass_8.mp3 */; };
+		FED126BB22AFAE460059411C /* reach_200k_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263E22AFAE3E0059411C /* reach_200k_1.mp3 */; };
+		FED126BC22AFAE460059411C /* round_99_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1263F22AFAE3E0059411C /* round_99_2.mp3 */; };
+		FED126BD22AFAE460059411C /* pass_10_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264022AFAE3E0059411C /* pass_10_1.mp3 */; };
+		FED126BE22AFAE460059411C /* start_8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264122AFAE3E0059411C /* start_8.mp3 */; };
+		FED126BF22AFAE460059411C /* reach_2mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264222AFAE3F0059411C /* reach_2mi_1.mp3 */; };
+		FED126C022AFAE460059411C /* pass_40_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264322AFAE3F0059411C /* pass_40_1.mp3 */; };
+		FED126C122AFAE460059411C /* passed_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264422AFAE3F0059411C /* passed_5.mp3 */; };
+		FED126C222AFAE460059411C /* round_70_8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264522AFAE3F0059411C /* round_70_8.mp3 */; };
+		FED126C322AFAE460059411C /* round_50_10.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264622AFAE3F0059411C /* round_50_10.mp3 */; };
+		FED126C422AFAE460059411C /* reach_1mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264722AFAE3F0059411C /* reach_1mi_1.mp3 */; };
+		FED126C522AFAE460059411C /* reach_10mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264822AFAE3F0059411C /* reach_10mi_3.mp3 */; };
+		FED126C622AFAE460059411C /* pass_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264922AFAE3F0059411C /* pass_2.mp3 */; };
+		FED126C722AFAE460059411C /* round_50_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264A22AFAE3F0059411C /* round_50_4.mp3 */; };
+		FED126C822AFAE460059411C /* round_99_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264B22AFAE400059411C /* round_99_3.mp3 */; };
+		FED126C922AFAE460059411C /* champion_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264C22AFAE400059411C /* champion_3.mp3 */; };
+		FED126CA22AFAE460059411C /* round_20_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264D22AFAE400059411C /* round_20_2.mp3 */; };
+		FED126CB22AFAE460059411C /* round_99_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264E22AFAE400059411C /* round_99_5.mp3 */; };
+		FED126CC22AFAE460059411C /* round_50_8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1264F22AFAE400059411C /* round_50_8.mp3 */; };
+		FED126CD22AFAE460059411C /* pass_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265022AFAE400059411C /* pass_1.mp3 */; };
+		FED126CE22AFAE460059411C /* passed_7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265122AFAE400059411C /* passed_7.mp3 */; };
+		FED126CF22AFAE460059411C /* round_70_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265222AFAE400059411C /* round_70_5.mp3 */; };
+		FED126D022AFAE460059411C /* passed_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265322AFAE400059411C /* passed_1.mp3 */; };
+		FED126D122AFAE460059411C /* pass_20_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265422AFAE410059411C /* pass_20_1.mp3 */; };
+		FED126D222AFAE460059411C /* start_practice_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265522AFAE410059411C /* start_practice_3.mp3 */; };
+		FED126D322AFAE460059411C /* pass_10.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265622AFAE410059411C /* pass_10.mp3 */; };
+		FED126D422AFAE460059411C /* round_70_9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265722AFAE410059411C /* round_70_9.mp3 */; };
+		FED126D522AFAE460059411C /* pass_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265822AFAE410059411C /* pass_3.mp3 */; };
+		FED126D622AFAE460059411C /* reach_100k_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265922AFAE410059411C /* reach_100k_2.mp3 */; };
+		FED126D722AFAE460059411C /* round_70_10.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265A22AFAE410059411C /* round_70_10.mp3 */; };
+		FED126D822AFAE460059411C /* loser_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265B22AFAE410059411C /* loser_2.mp3 */; };
+		FED126D922AFAE460059411C /* start_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265C22AFAE420059411C /* start_2.mp3 */; };
+		FED126DA22AFAE460059411C /* round_20_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265D22AFAE420059411C /* round_20_3.mp3 */; };
+		FED126DB22AFAE460059411C /* reach_50k_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265E22AFAE420059411C /* reach_50k_2.mp3 */; };
+		FED126DC22AFAE460059411C /* reach_300k_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1265F22AFAE420059411C /* reach_300k_2.mp3 */; };
+		FED126DD22AFAE460059411C /* reach_20mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266022AFAE420059411C /* reach_20mi_2.mp3 */; };
+		FED126DE22AFAE460059411C /* loser_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266122AFAE420059411C /* loser_1.mp3 */; };
+		FED126DF22AFAE460059411C /* pass_10_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266222AFAE420059411C /* pass_10_2.mp3 */; };
+		FED126E022AFAE460059411C /* round_90_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266322AFAE420059411C /* round_90_4.mp3 */; };
+		FED126E122AFAE460059411C /* pass_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266422AFAE420059411C /* pass_4.mp3 */; };
+		FED126E222AFAE460059411C /* reach_200k_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266522AFAE430059411C /* reach_200k_2.mp3 */; };
+		FED126E322AFAE460059411C /* loser_8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266622AFAE430059411C /* loser_8.mp3 */; };
+		FED126E422AFAE460059411C /* round_70_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266722AFAE430059411C /* round_70_1.mp3 */; };
+		FED126E522AFAE460059411C /* round_20_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266822AFAE430059411C /* round_20_1.mp3 */; };
+		FED126E622AFAE460059411C /* reach_5mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266922AFAE430059411C /* reach_5mi_2.mp3 */; };
+		FED126E722AFAE460059411C /* reach_300k_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266A22AFAE430059411C /* reach_300k_1.mp3 */; };
+		FED126E822AFAE460059411C /* reach_2mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266B22AFAE430059411C /* reach_2mi_3.mp3 */; };
+		FED126E922AFAE460059411C /* passed_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266C22AFAE430059411C /* passed_2.mp3 */; };
+		FED126EA22AFAE460059411C /* reach_10mi_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266D22AFAE430059411C /* reach_10mi_4.mp3 */; };
+		FED126EB22AFAE460059411C /* champion_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266E22AFAE440059411C /* champion_2.mp3 */; };
+		FED126EC22AFAE460059411C /* start_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1266F22AFAE440059411C /* start_1.mp3 */; };
+		FED126ED22AFAE460059411C /* round_50_7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267022AFAE440059411C /* round_50_7.mp3 */; };
+		FED126EE22AFAE460059411C /* reach_20mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267122AFAE440059411C /* reach_20mi_3.mp3 */; };
+		FED126EF22AFAE460059411C /* reach_3mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267222AFAE440059411C /* reach_3mi_2.mp3 */; };
+		FED126F022AFAE460059411C /* round_20_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267322AFAE440059411C /* round_20_4.mp3 */; };
+		FED126F122AFAE460059411C /* reach_300k_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267422AFAE440059411C /* reach_300k_3.mp3 */; };
+		FED126F222AFAE460059411C /* round_70_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267522AFAE450059411C /* round_70_2.mp3 */; };
+		FED126F322AFAE460059411C /* passed_10.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267622AFAE450059411C /* passed_10.mp3 */; };
+		FED126F422AFAE460059411C /* champion_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267722AFAE450059411C /* champion_1.mp3 */; };
+		FED126F522AFAE460059411C /* reach_1mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267822AFAE450059411C /* reach_1mi_2.mp3 */; };
+		FED126F622AFAE460059411C /* round_99_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267922AFAE450059411C /* round_99_4.mp3 */; };
+		FED126F722AFAE460059411C /* passed_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267A22AFAE450059411C /* passed_4.mp3 */; };
+		FED126F822AFAE460059411C /* reach_40mi_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267B22AFAE450059411C /* reach_40mi_2.mp3 */; };
+		FED126F922AFAE460059411C /* loser_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267C22AFAE450059411C /* loser_5.mp3 */; };
+		FED126FA22AFAE460059411C /* passed_6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267D22AFAE450059411C /* passed_6.mp3 */; };
+		FED126FB22AFAE460059411C /* champion_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267E22AFAE450059411C /* champion_4.mp3 */; };
+		FED126FC22AFAE460059411C /* reach_10mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1267F22AFAE460059411C /* reach_10mi_1.mp3 */; };
+		FED126FD22AFAE460059411C /* reach_40mi_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1268022AFAE460059411C /* reach_40mi_1.mp3 */; };
+		FED126FE22AFAE460059411C /* reach_5mi_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FED1268122AFAE460059411C /* reach_5mi_3.mp3 */; };
 		FEEB6A9822A8FEC0005EFB02 /* OTInstall.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEB6A9722A8FEC0005EFB02 /* OTInstall.swift */; };
 		FEEB6B2322A90770005EFB02 /* libPods-AutonomousSport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8FE24CF8CD092ECC19137BB /* libPods-AutonomousSport.a */; };
 		FFA4CE77DD2E40D9928A32A6 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45644AE42B1B458D8C0F76DC /* Feather.ttf */; };
-		6A765A5872BA4A189C031BA7 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FCAD4E5A9AA64C3E850FF9D1 /* AntDesign.ttf */; };
-		93F260D93554448EAE03BD43 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF10F098E6C54716B5FE2C3E /* FontAwesome5_Brands.ttf */; };
-		E0089EBA66EB41CFB7A6C8D4 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13E8F236CE854BCB909B5323 /* FontAwesome5_Regular.ttf */; };
-		7074F1C59ABB4435BDB79BF6 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C6106EDD12546E7A4D1E5AC /* FontAwesome5_Solid.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -348,6 +474,13 @@
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
+		FED1260222AFAE380059411C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8D16C26B6934427EADED805C /* RNVectorIcons.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A39873CE1EA65EE60051E01A;
+			remoteInfo = "RNVectorIcons-tvOS";
+		};
 		FEEB6A6122A8F504005EFB02 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C3934795E41341968633ACC6 /* BleManager.xcodeproj */;
@@ -448,9 +581,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AutonomousSport/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AutonomousSport/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AutonomousSport/main.m; sourceTree = "<group>"; };
+		13E8F236CE854BCB909B5323 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1E592237769DCE42D030C856 /* Pods-AutonomousSportTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutonomousSportTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AutonomousSportTests/Pods-AutonomousSportTests.debug.xcconfig"; sourceTree = "<group>"; };
 		25A8DCE8B19547F4983D7FE6 /* SRSRadialGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SRSRadialGradient.xcodeproj; path = "../node_modules/react-native-radial-gradient/ios/SRSRadialGradient.xcodeproj"; sourceTree = "<group>"; };
+		2C6106EDD12546E7A4D1E5AC /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* AutonomousSport-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutonomousSport-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* AutonomousSport-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AutonomousSport-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -484,6 +619,7 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		AE07A5FF255A4FA4A14D98D6 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		AEB91DDC3C684ABA81D71628 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		AF10F098E6C54716B5FE2C3E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		B62BF4D25DE8C55F98470FFB /* Pods-AutonomousSport.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutonomousSport.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AutonomousSport/Pods-AutonomousSport.debug.xcconfig"; sourceTree = "<group>"; };
 		BE6E0BF0870E4AE992EC2945 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		BFB02D934D27437BB5EF3FC8 /* FastImage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
@@ -499,13 +635,135 @@
 		E59C78C386DD492FA877E6D2 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = ../src/assets/fonts/Roboto/Roboto.ttf; sourceTree = "<group>"; };
 		F6EFF16061A44C89AEDD74A2 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		F714D6AC9D054E70A04C641A /* libFastImage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libFastImage.a; sourceTree = "<group>"; };
+		FCAD4E5A9AA64C3E850FF9D1 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		FE3D8E6622AA25460020C776 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FED125D222AFAE380059411C /* reach_50k_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_50k_1.mp3; path = ../android/app/src/main/res/raw/reach_50k_1.mp3; sourceTree = "<group>"; };
+		FED1260622AFAE380059411C /* round_50_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_2.mp3; path = ../android/app/src/main/res/raw/round_50_2.mp3; sourceTree = "<group>"; };
+		FED1260722AFAE380059411C /* start_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_3.mp3; path = ../android/app/src/main/res/raw/start_3.mp3; sourceTree = "<group>"; };
+		FED1260822AFAE380059411C /* round_50_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_1.mp3; path = ../android/app/src/main/res/raw/round_50_1.mp3; sourceTree = "<group>"; };
+		FED1260922AFAE380059411C /* passed_9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_9.mp3; path = ../android/app/src/main/res/raw/passed_9.mp3; sourceTree = "<group>"; };
+		FED1260A22AFAE390059411C /* round_90_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_90_5.mp3; path = ../android/app/src/main/res/raw/round_90_5.mp3; sourceTree = "<group>"; };
+		FED1260B22AFAE390059411C /* round_70_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_4.mp3; path = ../android/app/src/main/res/raw/round_70_4.mp3; sourceTree = "<group>"; };
+		FED1260C22AFAE390059411C /* passed_8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_8.mp3; path = ../android/app/src/main/res/raw/passed_8.mp3; sourceTree = "<group>"; };
+		FED1260D22AFAE390059411C /* pass_7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_7.mp3; path = ../android/app/src/main/res/raw/pass_7.mp3; sourceTree = "<group>"; };
+		FED1260E22AFAE390059411C /* reach_200k_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_200k_3.mp3; path = ../android/app/src/main/res/raw/reach_200k_3.mp3; sourceTree = "<group>"; };
+		FED1260F22AFAE390059411C /* pass_5_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_5_3.mp3; path = ../android/app/src/main/res/raw/pass_5_3.mp3; sourceTree = "<group>"; };
+		FED1261022AFAE390059411C /* start_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_4.mp3; path = ../android/app/src/main/res/raw/start_4.mp3; sourceTree = "<group>"; };
+		FED1261122AFAE390059411C /* round_50_6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_6.mp3; path = ../android/app/src/main/res/raw/round_50_6.mp3; sourceTree = "<group>"; };
+		FED1261222AFAE390059411C /* start_practice_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_practice_1.mp3; path = ../android/app/src/main/res/raw/start_practice_1.mp3; sourceTree = "<group>"; };
+		FED1261322AFAE390059411C /* reach_2mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_2mi_2.mp3; path = ../android/app/src/main/res/raw/reach_2mi_2.mp3; sourceTree = "<group>"; };
+		FED1261422AFAE3A0059411C /* pass_11.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_11.mp3; path = ../android/app/src/main/res/raw/pass_11.mp3; sourceTree = "<group>"; };
+		FED1261522AFAE3A0059411C /* pass_5_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_5_2.mp3; path = ../android/app/src/main/res/raw/pass_5_2.mp3; sourceTree = "<group>"; };
+		FED1261622AFAE3A0059411C /* pass_40_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_40_2.mp3; path = ../android/app/src/main/res/raw/pass_40_2.mp3; sourceTree = "<group>"; };
+		FED1261722AFAE3A0059411C /* round_70_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_3.mp3; path = ../android/app/src/main/res/raw/round_70_3.mp3; sourceTree = "<group>"; };
+		FED1261822AFAE3A0059411C /* loser_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_4.mp3; path = ../android/app/src/main/res/raw/loser_4.mp3; sourceTree = "<group>"; };
+		FED1261922AFAE3A0059411C /* reach_50k_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_50k_3.mp3; path = ../android/app/src/main/res/raw/reach_50k_3.mp3; sourceTree = "<group>"; };
+		FED1261A22AFAE3A0059411C /* loser_6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_6.mp3; path = ../android/app/src/main/res/raw/loser_6.mp3; sourceTree = "<group>"; };
+		FED1261B22AFAE3A0059411C /* start_7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_7.mp3; path = ../android/app/src/main/res/raw/start_7.mp3; sourceTree = "<group>"; };
+		FED1261C22AFAE3A0059411C /* start_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_5.mp3; path = ../android/app/src/main/res/raw/start_5.mp3; sourceTree = "<group>"; };
+		FED1261D22AFAE3B0059411C /* pass_10_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_10_3.mp3; path = ../android/app/src/main/res/raw/pass_10_3.mp3; sourceTree = "<group>"; };
+		FED1261E22AFAE3B0059411C /* reach_20mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_20mi_1.mp3; path = ../android/app/src/main/res/raw/reach_20mi_1.mp3; sourceTree = "<group>"; };
+		FED1261F22AFAE3B0059411C /* pass_20_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_20_3.mp3; path = ../android/app/src/main/res/raw/pass_20_3.mp3; sourceTree = "<group>"; };
+		FED1262022AFAE3B0059411C /* loser_7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_7.mp3; path = ../android/app/src/main/res/raw/loser_7.mp3; sourceTree = "<group>"; };
+		FED1262122AFAE3B0059411C /* round_90_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_90_3.mp3; path = ../android/app/src/main/res/raw/round_90_3.mp3; sourceTree = "<group>"; };
+		FED1262222AFAE3B0059411C /* round_50_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_3.mp3; path = ../android/app/src/main/res/raw/round_50_3.mp3; sourceTree = "<group>"; };
+		FED1262322AFAE3B0059411C /* loser_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_3.mp3; path = ../android/app/src/main/res/raw/loser_3.mp3; sourceTree = "<group>"; };
+		FED1262422AFAE3B0059411C /* round_50_9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_9.mp3; path = ../android/app/src/main/res/raw/round_50_9.mp3; sourceTree = "<group>"; };
+		FED1262522AFAE3C0059411C /* passed_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_3.mp3; path = ../android/app/src/main/res/raw/passed_3.mp3; sourceTree = "<group>"; };
+		FED1262622AFAE3C0059411C /* pass_20_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_20_2.mp3; path = ../android/app/src/main/res/raw/pass_20_2.mp3; sourceTree = "<group>"; };
+		FED1262722AFAE3C0059411C /* reach_1mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_1mi_3.mp3; path = ../android/app/src/main/res/raw/reach_1mi_3.mp3; sourceTree = "<group>"; };
+		FED1262822AFAE3C0059411C /* reach_10mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_10mi_2.mp3; path = ../android/app/src/main/res/raw/reach_10mi_2.mp3; sourceTree = "<group>"; };
+		FED1262922AFAE3C0059411C /* reach_5mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_5mi_1.mp3; path = ../android/app/src/main/res/raw/reach_5mi_1.mp3; sourceTree = "<group>"; };
+		FED1262A22AFAE3C0059411C /* reach_40mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_40mi_3.mp3; path = ../android/app/src/main/res/raw/reach_40mi_3.mp3; sourceTree = "<group>"; };
+		FED1262B22AFAE3C0059411C /* pass_40_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_40_3.mp3; path = ../android/app/src/main/res/raw/pass_40_3.mp3; sourceTree = "<group>"; };
+		FED1262C22AFAE3C0059411C /* round_70_6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_6.mp3; path = ../android/app/src/main/res/raw/round_70_6.mp3; sourceTree = "<group>"; };
+		FED1262D22AFAE3C0059411C /* pass_5_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_5_1.mp3; path = ../android/app/src/main/res/raw/pass_5_1.mp3; sourceTree = "<group>"; };
+		FED1262E22AFAE3C0059411C /* reach_3mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_3mi_3.mp3; path = ../android/app/src/main/res/raw/reach_3mi_3.mp3; sourceTree = "<group>"; };
+		FED1262F22AFAE3D0059411C /* reach_100k_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_100k_1.mp3; path = ../android/app/src/main/res/raw/reach_100k_1.mp3; sourceTree = "<group>"; };
+		FED1263022AFAE3D0059411C /* reach_3mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_3mi_1.mp3; path = ../android/app/src/main/res/raw/reach_3mi_1.mp3; sourceTree = "<group>"; };
+		FED1263122AFAE3D0059411C /* champion_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = champion_5.mp3; path = ../android/app/src/main/res/raw/champion_5.mp3; sourceTree = "<group>"; };
+		FED1263222AFAE3D0059411C /* reach_100k_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_100k_3.mp3; path = ../android/app/src/main/res/raw/reach_100k_3.mp3; sourceTree = "<group>"; };
+		FED1263322AFAE3D0059411C /* pass_9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_9.mp3; path = ../android/app/src/main/res/raw/pass_9.mp3; sourceTree = "<group>"; };
+		FED1263422AFAE3D0059411C /* round_70_7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_7.mp3; path = ../android/app/src/main/res/raw/round_70_7.mp3; sourceTree = "<group>"; };
+		FED1263522AFAE3D0059411C /* start_6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_6.mp3; path = ../android/app/src/main/res/raw/start_6.mp3; sourceTree = "<group>"; };
+		FED1263622AFAE3D0059411C /* round_90_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_90_1.mp3; path = ../android/app/src/main/res/raw/round_90_1.mp3; sourceTree = "<group>"; };
+		FED1263722AFAE3D0059411C /* start_practice_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_practice_2.mp3; path = ../android/app/src/main/res/raw/start_practice_2.mp3; sourceTree = "<group>"; };
+		FED1263822AFAE3D0059411C /* round_50_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_5.mp3; path = ../android/app/src/main/res/raw/round_50_5.mp3; sourceTree = "<group>"; };
+		FED1263922AFAE3E0059411C /* pass_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_5.mp3; path = ../android/app/src/main/res/raw/pass_5.mp3; sourceTree = "<group>"; };
+		FED1263A22AFAE3E0059411C /* pass_6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_6.mp3; path = ../android/app/src/main/res/raw/pass_6.mp3; sourceTree = "<group>"; };
+		FED1263B22AFAE3E0059411C /* round_90_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_90_2.mp3; path = ../android/app/src/main/res/raw/round_90_2.mp3; sourceTree = "<group>"; };
+		FED1263C22AFAE3E0059411C /* round_99_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_99_1.mp3; path = ../android/app/src/main/res/raw/round_99_1.mp3; sourceTree = "<group>"; };
+		FED1263D22AFAE3E0059411C /* pass_8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_8.mp3; path = ../android/app/src/main/res/raw/pass_8.mp3; sourceTree = "<group>"; };
+		FED1263E22AFAE3E0059411C /* reach_200k_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_200k_1.mp3; path = ../android/app/src/main/res/raw/reach_200k_1.mp3; sourceTree = "<group>"; };
+		FED1263F22AFAE3E0059411C /* round_99_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_99_2.mp3; path = ../android/app/src/main/res/raw/round_99_2.mp3; sourceTree = "<group>"; };
+		FED1264022AFAE3E0059411C /* pass_10_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_10_1.mp3; path = ../android/app/src/main/res/raw/pass_10_1.mp3; sourceTree = "<group>"; };
+		FED1264122AFAE3E0059411C /* start_8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_8.mp3; path = ../android/app/src/main/res/raw/start_8.mp3; sourceTree = "<group>"; };
+		FED1264222AFAE3F0059411C /* reach_2mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_2mi_1.mp3; path = ../android/app/src/main/res/raw/reach_2mi_1.mp3; sourceTree = "<group>"; };
+		FED1264322AFAE3F0059411C /* pass_40_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_40_1.mp3; path = ../android/app/src/main/res/raw/pass_40_1.mp3; sourceTree = "<group>"; };
+		FED1264422AFAE3F0059411C /* passed_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_5.mp3; path = ../android/app/src/main/res/raw/passed_5.mp3; sourceTree = "<group>"; };
+		FED1264522AFAE3F0059411C /* round_70_8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_8.mp3; path = ../android/app/src/main/res/raw/round_70_8.mp3; sourceTree = "<group>"; };
+		FED1264622AFAE3F0059411C /* round_50_10.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_10.mp3; path = ../android/app/src/main/res/raw/round_50_10.mp3; sourceTree = "<group>"; };
+		FED1264722AFAE3F0059411C /* reach_1mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_1mi_1.mp3; path = ../android/app/src/main/res/raw/reach_1mi_1.mp3; sourceTree = "<group>"; };
+		FED1264822AFAE3F0059411C /* reach_10mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_10mi_3.mp3; path = ../android/app/src/main/res/raw/reach_10mi_3.mp3; sourceTree = "<group>"; };
+		FED1264922AFAE3F0059411C /* pass_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_2.mp3; path = ../android/app/src/main/res/raw/pass_2.mp3; sourceTree = "<group>"; };
+		FED1264A22AFAE3F0059411C /* round_50_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_4.mp3; path = ../android/app/src/main/res/raw/round_50_4.mp3; sourceTree = "<group>"; };
+		FED1264B22AFAE400059411C /* round_99_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_99_3.mp3; path = ../android/app/src/main/res/raw/round_99_3.mp3; sourceTree = "<group>"; };
+		FED1264C22AFAE400059411C /* champion_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = champion_3.mp3; path = ../android/app/src/main/res/raw/champion_3.mp3; sourceTree = "<group>"; };
+		FED1264D22AFAE400059411C /* round_20_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_20_2.mp3; path = ../android/app/src/main/res/raw/round_20_2.mp3; sourceTree = "<group>"; };
+		FED1264E22AFAE400059411C /* round_99_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_99_5.mp3; path = ../android/app/src/main/res/raw/round_99_5.mp3; sourceTree = "<group>"; };
+		FED1264F22AFAE400059411C /* round_50_8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_8.mp3; path = ../android/app/src/main/res/raw/round_50_8.mp3; sourceTree = "<group>"; };
+		FED1265022AFAE400059411C /* pass_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_1.mp3; path = ../android/app/src/main/res/raw/pass_1.mp3; sourceTree = "<group>"; };
+		FED1265122AFAE400059411C /* passed_7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_7.mp3; path = ../android/app/src/main/res/raw/passed_7.mp3; sourceTree = "<group>"; };
+		FED1265222AFAE400059411C /* round_70_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_5.mp3; path = ../android/app/src/main/res/raw/round_70_5.mp3; sourceTree = "<group>"; };
+		FED1265322AFAE400059411C /* passed_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_1.mp3; path = ../android/app/src/main/res/raw/passed_1.mp3; sourceTree = "<group>"; };
+		FED1265422AFAE410059411C /* pass_20_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_20_1.mp3; path = ../android/app/src/main/res/raw/pass_20_1.mp3; sourceTree = "<group>"; };
+		FED1265522AFAE410059411C /* start_practice_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_practice_3.mp3; path = ../android/app/src/main/res/raw/start_practice_3.mp3; sourceTree = "<group>"; };
+		FED1265622AFAE410059411C /* pass_10.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_10.mp3; path = ../android/app/src/main/res/raw/pass_10.mp3; sourceTree = "<group>"; };
+		FED1265722AFAE410059411C /* round_70_9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_9.mp3; path = ../android/app/src/main/res/raw/round_70_9.mp3; sourceTree = "<group>"; };
+		FED1265822AFAE410059411C /* pass_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_3.mp3; path = ../android/app/src/main/res/raw/pass_3.mp3; sourceTree = "<group>"; };
+		FED1265922AFAE410059411C /* reach_100k_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_100k_2.mp3; path = ../android/app/src/main/res/raw/reach_100k_2.mp3; sourceTree = "<group>"; };
+		FED1265A22AFAE410059411C /* round_70_10.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_10.mp3; path = ../android/app/src/main/res/raw/round_70_10.mp3; sourceTree = "<group>"; };
+		FED1265B22AFAE410059411C /* loser_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_2.mp3; path = ../android/app/src/main/res/raw/loser_2.mp3; sourceTree = "<group>"; };
+		FED1265C22AFAE420059411C /* start_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_2.mp3; path = ../android/app/src/main/res/raw/start_2.mp3; sourceTree = "<group>"; };
+		FED1265D22AFAE420059411C /* round_20_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_20_3.mp3; path = ../android/app/src/main/res/raw/round_20_3.mp3; sourceTree = "<group>"; };
+		FED1265E22AFAE420059411C /* reach_50k_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_50k_2.mp3; path = ../android/app/src/main/res/raw/reach_50k_2.mp3; sourceTree = "<group>"; };
+		FED1265F22AFAE420059411C /* reach_300k_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_300k_2.mp3; path = ../android/app/src/main/res/raw/reach_300k_2.mp3; sourceTree = "<group>"; };
+		FED1266022AFAE420059411C /* reach_20mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_20mi_2.mp3; path = ../android/app/src/main/res/raw/reach_20mi_2.mp3; sourceTree = "<group>"; };
+		FED1266122AFAE420059411C /* loser_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_1.mp3; path = ../android/app/src/main/res/raw/loser_1.mp3; sourceTree = "<group>"; };
+		FED1266222AFAE420059411C /* pass_10_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_10_2.mp3; path = ../android/app/src/main/res/raw/pass_10_2.mp3; sourceTree = "<group>"; };
+		FED1266322AFAE420059411C /* round_90_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_90_4.mp3; path = ../android/app/src/main/res/raw/round_90_4.mp3; sourceTree = "<group>"; };
+		FED1266422AFAE420059411C /* pass_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pass_4.mp3; path = ../android/app/src/main/res/raw/pass_4.mp3; sourceTree = "<group>"; };
+		FED1266522AFAE430059411C /* reach_200k_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_200k_2.mp3; path = ../android/app/src/main/res/raw/reach_200k_2.mp3; sourceTree = "<group>"; };
+		FED1266622AFAE430059411C /* loser_8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_8.mp3; path = ../android/app/src/main/res/raw/loser_8.mp3; sourceTree = "<group>"; };
+		FED1266722AFAE430059411C /* round_70_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_1.mp3; path = ../android/app/src/main/res/raw/round_70_1.mp3; sourceTree = "<group>"; };
+		FED1266822AFAE430059411C /* round_20_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_20_1.mp3; path = ../android/app/src/main/res/raw/round_20_1.mp3; sourceTree = "<group>"; };
+		FED1266922AFAE430059411C /* reach_5mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_5mi_2.mp3; path = ../android/app/src/main/res/raw/reach_5mi_2.mp3; sourceTree = "<group>"; };
+		FED1266A22AFAE430059411C /* reach_300k_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_300k_1.mp3; path = ../android/app/src/main/res/raw/reach_300k_1.mp3; sourceTree = "<group>"; };
+		FED1266B22AFAE430059411C /* reach_2mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_2mi_3.mp3; path = ../android/app/src/main/res/raw/reach_2mi_3.mp3; sourceTree = "<group>"; };
+		FED1266C22AFAE430059411C /* passed_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_2.mp3; path = ../android/app/src/main/res/raw/passed_2.mp3; sourceTree = "<group>"; };
+		FED1266D22AFAE430059411C /* reach_10mi_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_10mi_4.mp3; path = ../android/app/src/main/res/raw/reach_10mi_4.mp3; sourceTree = "<group>"; };
+		FED1266E22AFAE440059411C /* champion_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = champion_2.mp3; path = ../android/app/src/main/res/raw/champion_2.mp3; sourceTree = "<group>"; };
+		FED1266F22AFAE440059411C /* start_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = start_1.mp3; path = ../android/app/src/main/res/raw/start_1.mp3; sourceTree = "<group>"; };
+		FED1267022AFAE440059411C /* round_50_7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_50_7.mp3; path = ../android/app/src/main/res/raw/round_50_7.mp3; sourceTree = "<group>"; };
+		FED1267122AFAE440059411C /* reach_20mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_20mi_3.mp3; path = ../android/app/src/main/res/raw/reach_20mi_3.mp3; sourceTree = "<group>"; };
+		FED1267222AFAE440059411C /* reach_3mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_3mi_2.mp3; path = ../android/app/src/main/res/raw/reach_3mi_2.mp3; sourceTree = "<group>"; };
+		FED1267322AFAE440059411C /* round_20_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_20_4.mp3; path = ../android/app/src/main/res/raw/round_20_4.mp3; sourceTree = "<group>"; };
+		FED1267422AFAE440059411C /* reach_300k_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_300k_3.mp3; path = ../android/app/src/main/res/raw/reach_300k_3.mp3; sourceTree = "<group>"; };
+		FED1267522AFAE450059411C /* round_70_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_70_2.mp3; path = ../android/app/src/main/res/raw/round_70_2.mp3; sourceTree = "<group>"; };
+		FED1267622AFAE450059411C /* passed_10.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_10.mp3; path = ../android/app/src/main/res/raw/passed_10.mp3; sourceTree = "<group>"; };
+		FED1267722AFAE450059411C /* champion_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = champion_1.mp3; path = ../android/app/src/main/res/raw/champion_1.mp3; sourceTree = "<group>"; };
+		FED1267822AFAE450059411C /* reach_1mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_1mi_2.mp3; path = ../android/app/src/main/res/raw/reach_1mi_2.mp3; sourceTree = "<group>"; };
+		FED1267922AFAE450059411C /* round_99_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = round_99_4.mp3; path = ../android/app/src/main/res/raw/round_99_4.mp3; sourceTree = "<group>"; };
+		FED1267A22AFAE450059411C /* passed_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_4.mp3; path = ../android/app/src/main/res/raw/passed_4.mp3; sourceTree = "<group>"; };
+		FED1267B22AFAE450059411C /* reach_40mi_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_40mi_2.mp3; path = ../android/app/src/main/res/raw/reach_40mi_2.mp3; sourceTree = "<group>"; };
+		FED1267C22AFAE450059411C /* loser_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = loser_5.mp3; path = ../android/app/src/main/res/raw/loser_5.mp3; sourceTree = "<group>"; };
+		FED1267D22AFAE450059411C /* passed_6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = passed_6.mp3; path = ../android/app/src/main/res/raw/passed_6.mp3; sourceTree = "<group>"; };
+		FED1267E22AFAE450059411C /* champion_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = champion_4.mp3; path = ../android/app/src/main/res/raw/champion_4.mp3; sourceTree = "<group>"; };
+		FED1267F22AFAE460059411C /* reach_10mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_10mi_1.mp3; path = ../android/app/src/main/res/raw/reach_10mi_1.mp3; sourceTree = "<group>"; };
+		FED1268022AFAE460059411C /* reach_40mi_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_40mi_1.mp3; path = ../android/app/src/main/res/raw/reach_40mi_1.mp3; sourceTree = "<group>"; };
+		FED1268122AFAE460059411C /* reach_5mi_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = reach_5mi_3.mp3; path = ../android/app/src/main/res/raw/reach_5mi_3.mp3; sourceTree = "<group>"; };
 		FEEB6A9622A8FEBF005EFB02 /* AutonomousSport-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AutonomousSport-Bridging-Header.h"; sourceTree = "<group>"; };
 		FEEB6A9722A8FEC0005EFB02 /* OTInstall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTInstall.swift; sourceTree = "<group>"; };
-		FCAD4E5A9AA64C3E850FF9D1 /* AntDesign.ttf */ = {isa = PBXFileReference; name = "AntDesign.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		AF10F098E6C54716B5FE2C3E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Brands.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		13E8F236CE854BCB909B5323 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Regular.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		2C6106EDD12546E7A4D1E5AC /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Solid.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -764,6 +1022,131 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				FED1267722AFAE450059411C /* champion_1.mp3 */,
+				FED1266E22AFAE440059411C /* champion_2.mp3 */,
+				FED1264C22AFAE400059411C /* champion_3.mp3 */,
+				FED1267E22AFAE450059411C /* champion_4.mp3 */,
+				FED1263122AFAE3D0059411C /* champion_5.mp3 */,
+				FED1266122AFAE420059411C /* loser_1.mp3 */,
+				FED1265B22AFAE410059411C /* loser_2.mp3 */,
+				FED1262322AFAE3B0059411C /* loser_3.mp3 */,
+				FED1261822AFAE3A0059411C /* loser_4.mp3 */,
+				FED1267C22AFAE450059411C /* loser_5.mp3 */,
+				FED1261A22AFAE3A0059411C /* loser_6.mp3 */,
+				FED1262022AFAE3B0059411C /* loser_7.mp3 */,
+				FED1266622AFAE430059411C /* loser_8.mp3 */,
+				FED1265022AFAE400059411C /* pass_1.mp3 */,
+				FED1264922AFAE3F0059411C /* pass_2.mp3 */,
+				FED1265822AFAE410059411C /* pass_3.mp3 */,
+				FED1266422AFAE420059411C /* pass_4.mp3 */,
+				FED1262D22AFAE3C0059411C /* pass_5_1.mp3 */,
+				FED1261522AFAE3A0059411C /* pass_5_2.mp3 */,
+				FED1260F22AFAE390059411C /* pass_5_3.mp3 */,
+				FED1263922AFAE3E0059411C /* pass_5.mp3 */,
+				FED1263A22AFAE3E0059411C /* pass_6.mp3 */,
+				FED1260D22AFAE390059411C /* pass_7.mp3 */,
+				FED1263D22AFAE3E0059411C /* pass_8.mp3 */,
+				FED1263322AFAE3D0059411C /* pass_9.mp3 */,
+				FED1264022AFAE3E0059411C /* pass_10_1.mp3 */,
+				FED1266222AFAE420059411C /* pass_10_2.mp3 */,
+				FED1261D22AFAE3B0059411C /* pass_10_3.mp3 */,
+				FED1265622AFAE410059411C /* pass_10.mp3 */,
+				FED1261422AFAE3A0059411C /* pass_11.mp3 */,
+				FED1265422AFAE410059411C /* pass_20_1.mp3 */,
+				FED1262622AFAE3C0059411C /* pass_20_2.mp3 */,
+				FED1261F22AFAE3B0059411C /* pass_20_3.mp3 */,
+				FED1264322AFAE3F0059411C /* pass_40_1.mp3 */,
+				FED1261622AFAE3A0059411C /* pass_40_2.mp3 */,
+				FED1262B22AFAE3C0059411C /* pass_40_3.mp3 */,
+				FED1265322AFAE400059411C /* passed_1.mp3 */,
+				FED1266C22AFAE430059411C /* passed_2.mp3 */,
+				FED1262522AFAE3C0059411C /* passed_3.mp3 */,
+				FED1267A22AFAE450059411C /* passed_4.mp3 */,
+				FED1264422AFAE3F0059411C /* passed_5.mp3 */,
+				FED1267D22AFAE450059411C /* passed_6.mp3 */,
+				FED1265122AFAE400059411C /* passed_7.mp3 */,
+				FED1260C22AFAE390059411C /* passed_8.mp3 */,
+				FED1260922AFAE380059411C /* passed_9.mp3 */,
+				FED1267622AFAE450059411C /* passed_10.mp3 */,
+				FED1264722AFAE3F0059411C /* reach_1mi_1.mp3 */,
+				FED1267822AFAE450059411C /* reach_1mi_2.mp3 */,
+				FED1262722AFAE3C0059411C /* reach_1mi_3.mp3 */,
+				FED1264222AFAE3F0059411C /* reach_2mi_1.mp3 */,
+				FED1261322AFAE390059411C /* reach_2mi_2.mp3 */,
+				FED1266B22AFAE430059411C /* reach_2mi_3.mp3 */,
+				FED1263022AFAE3D0059411C /* reach_3mi_1.mp3 */,
+				FED1267222AFAE440059411C /* reach_3mi_2.mp3 */,
+				FED1262E22AFAE3C0059411C /* reach_3mi_3.mp3 */,
+				FED1262922AFAE3C0059411C /* reach_5mi_1.mp3 */,
+				FED1266922AFAE430059411C /* reach_5mi_2.mp3 */,
+				FED1268122AFAE460059411C /* reach_5mi_3.mp3 */,
+				FED1267F22AFAE460059411C /* reach_10mi_1.mp3 */,
+				FED1262822AFAE3C0059411C /* reach_10mi_2.mp3 */,
+				FED1264822AFAE3F0059411C /* reach_10mi_3.mp3 */,
+				FED1266D22AFAE430059411C /* reach_10mi_4.mp3 */,
+				FED1261E22AFAE3B0059411C /* reach_20mi_1.mp3 */,
+				FED1266022AFAE420059411C /* reach_20mi_2.mp3 */,
+				FED1267122AFAE440059411C /* reach_20mi_3.mp3 */,
+				FED1268022AFAE460059411C /* reach_40mi_1.mp3 */,
+				FED1267B22AFAE450059411C /* reach_40mi_2.mp3 */,
+				FED1262A22AFAE3C0059411C /* reach_40mi_3.mp3 */,
+				FED125D222AFAE380059411C /* reach_50k_1.mp3 */,
+				FED1265E22AFAE420059411C /* reach_50k_2.mp3 */,
+				FED1261922AFAE3A0059411C /* reach_50k_3.mp3 */,
+				FED1262F22AFAE3D0059411C /* reach_100k_1.mp3 */,
+				FED1265922AFAE410059411C /* reach_100k_2.mp3 */,
+				FED1263222AFAE3D0059411C /* reach_100k_3.mp3 */,
+				FED1263E22AFAE3E0059411C /* reach_200k_1.mp3 */,
+				FED1266522AFAE430059411C /* reach_200k_2.mp3 */,
+				FED1260E22AFAE390059411C /* reach_200k_3.mp3 */,
+				FED1266A22AFAE430059411C /* reach_300k_1.mp3 */,
+				FED1265F22AFAE420059411C /* reach_300k_2.mp3 */,
+				FED1267422AFAE440059411C /* reach_300k_3.mp3 */,
+				FED1266822AFAE430059411C /* round_20_1.mp3 */,
+				FED1264D22AFAE400059411C /* round_20_2.mp3 */,
+				FED1265D22AFAE420059411C /* round_20_3.mp3 */,
+				FED1267322AFAE440059411C /* round_20_4.mp3 */,
+				FED1260822AFAE380059411C /* round_50_1.mp3 */,
+				FED1260622AFAE380059411C /* round_50_2.mp3 */,
+				FED1262222AFAE3B0059411C /* round_50_3.mp3 */,
+				FED1264A22AFAE3F0059411C /* round_50_4.mp3 */,
+				FED1263822AFAE3D0059411C /* round_50_5.mp3 */,
+				FED1261122AFAE390059411C /* round_50_6.mp3 */,
+				FED1267022AFAE440059411C /* round_50_7.mp3 */,
+				FED1264F22AFAE400059411C /* round_50_8.mp3 */,
+				FED1262422AFAE3B0059411C /* round_50_9.mp3 */,
+				FED1264622AFAE3F0059411C /* round_50_10.mp3 */,
+				FED1266722AFAE430059411C /* round_70_1.mp3 */,
+				FED1267522AFAE450059411C /* round_70_2.mp3 */,
+				FED1261722AFAE3A0059411C /* round_70_3.mp3 */,
+				FED1260B22AFAE390059411C /* round_70_4.mp3 */,
+				FED1265222AFAE400059411C /* round_70_5.mp3 */,
+				FED1262C22AFAE3C0059411C /* round_70_6.mp3 */,
+				FED1263422AFAE3D0059411C /* round_70_7.mp3 */,
+				FED1264522AFAE3F0059411C /* round_70_8.mp3 */,
+				FED1265722AFAE410059411C /* round_70_9.mp3 */,
+				FED1265A22AFAE410059411C /* round_70_10.mp3 */,
+				FED1263622AFAE3D0059411C /* round_90_1.mp3 */,
+				FED1263B22AFAE3E0059411C /* round_90_2.mp3 */,
+				FED1262122AFAE3B0059411C /* round_90_3.mp3 */,
+				FED1266322AFAE420059411C /* round_90_4.mp3 */,
+				FED1260A22AFAE390059411C /* round_90_5.mp3 */,
+				FED1263C22AFAE3E0059411C /* round_99_1.mp3 */,
+				FED1263F22AFAE3E0059411C /* round_99_2.mp3 */,
+				FED1264B22AFAE400059411C /* round_99_3.mp3 */,
+				FED1267922AFAE450059411C /* round_99_4.mp3 */,
+				FED1264E22AFAE400059411C /* round_99_5.mp3 */,
+				FED1266F22AFAE440059411C /* start_1.mp3 */,
+				FED1265C22AFAE420059411C /* start_2.mp3 */,
+				FED1260722AFAE380059411C /* start_3.mp3 */,
+				FED1261022AFAE390059411C /* start_4.mp3 */,
+				FED1261C22AFAE3A0059411C /* start_5.mp3 */,
+				FED1263522AFAE3D0059411C /* start_6.mp3 */,
+				FED1261B22AFAE3A0059411C /* start_7.mp3 */,
+				FED1264122AFAE3E0059411C /* start_8.mp3 */,
+				FED1261222AFAE390059411C /* start_practice_1.mp3 */,
+				FED1263722AFAE3D0059411C /* start_practice_2.mp3 */,
+				FED1265522AFAE410059411C /* start_practice_3.mp3 */,
 				FEEB6A9722A8FEC0005EFB02 /* OTInstall.swift */,
 				13B07FAE1A68108700A75B9A /* AutonomousSport */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -870,6 +1253,7 @@
 			isa = PBXGroup;
 			children = (
 				FEEB6A7A22A8F504005EFB02 /* libRNVectorIcons.a */,
+				FED1260322AFAE380059411C /* libRNVectorIcons-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1398,6 +1782,13 @@
 			remoteRef = FE3D8E9522AA25460020C776 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FED1260322AFAE380059411C /* libRNVectorIcons-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNVectorIcons-tvOS.a";
+			remoteRef = FED1260222AFAE380059411C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FEEB6A6222A8F504005EFB02 /* libBleManager.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1489,27 +1880,152 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FED126DD22AFAE460059411C /* reach_20mi_2.mp3 in Resources */,
+				FED1268F22AFAE460059411C /* start_practice_1.mp3 in Resources */,
+				FED126BD22AFAE460059411C /* pass_10_1.mp3 in Resources */,
+				FED126F822AFAE460059411C /* reach_40mi_2.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				FED126C522AFAE460059411C /* reach_10mi_3.mp3 in Resources */,
+				FED1269722AFAE460059411C /* loser_6.mp3 in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				FED126EC22AFAE460059411C /* start_1.mp3 in Resources */,
+				FED1268722AFAE460059411C /* round_90_5.mp3 in Resources */,
+				FED1269022AFAE460059411C /* reach_2mi_2.mp3 in Resources */,
+				FED126BC22AFAE460059411C /* round_99_2.mp3 in Resources */,
+				FED126D922AFAE460059411C /* start_2.mp3 in Resources */,
 				299ECF0C95414149B49C5C19 /* Entypo.ttf in Resources */,
+				FED126E722AFAE460059411C /* reach_300k_1.mp3 in Resources */,
+				FED126EE22AFAE460059411C /* reach_20mi_3.mp3 in Resources */,
+				FED126D422AFAE460059411C /* round_70_9.mp3 in Resources */,
 				63C14D8B1ECF46B589FFF6BF /* EvilIcons.ttf in Resources */,
+				FED126D122AFAE460059411C /* pass_20_1.mp3 in Resources */,
+				FED126A022AFAE460059411C /* loser_3.mp3 in Resources */,
+				FED126E922AFAE460059411C /* passed_2.mp3 in Resources */,
 				FFA4CE77DD2E40D9928A32A6 /* Feather.ttf in Resources */,
+				FED126B722AFAE460059411C /* pass_6.mp3 in Resources */,
+				FED126B322AFAE460059411C /* round_90_1.mp3 in Resources */,
+				FED126CC22AFAE460059411C /* round_50_8.mp3 in Resources */,
+				FED126F622AFAE460059411C /* round_99_4.mp3 in Resources */,
+				FED126E822AFAE460059411C /* reach_2mi_3.mp3 in Resources */,
+				FED1269222AFAE460059411C /* pass_5_2.mp3 in Resources */,
+				FED126BF22AFAE460059411C /* reach_2mi_1.mp3 in Resources */,
+				FED126FB22AFAE460059411C /* champion_4.mp3 in Resources */,
+				FED126B022AFAE460059411C /* pass_9.mp3 in Resources */,
+				FED126C022AFAE460059411C /* pass_40_1.mp3 in Resources */,
+				FED126CE22AFAE460059411C /* passed_7.mp3 in Resources */,
+				FED1268522AFAE460059411C /* round_50_1.mp3 in Resources */,
+				FED126C622AFAE460059411C /* pass_2.mp3 in Resources */,
+				FED126EA22AFAE460059411C /* reach_10mi_4.mp3 in Resources */,
+				FED1268C22AFAE460059411C /* pass_5_3.mp3 in Resources */,
+				FED126A922AFAE460059411C /* round_70_6.mp3 in Resources */,
 				D7FEB5394929444FB09E0F6D /* FontAwesome.ttf in Resources */,
+				FED126FC22AFAE460059411C /* reach_10mi_1.mp3 in Resources */,
+				FED126C422AFAE460059411C /* reach_1mi_1.mp3 in Resources */,
+				FED126A122AFAE460059411C /* round_50_9.mp3 in Resources */,
+				FED126DC22AFAE460059411C /* reach_300k_2.mp3 in Resources */,
+				FED126F922AFAE460059411C /* loser_5.mp3 in Resources */,
 				3D2416D3E50742219ED0A62B /* Foundation.ttf in Resources */,
 				E1F06A2BF1414B0E939E2B9C /* Ionicons.ttf in Resources */,
+				FED1268922AFAE460059411C /* passed_8.mp3 in Resources */,
 				CF1830F072FE41FCB4FE7D32 /* MaterialCommunityIcons.ttf in Resources */,
+				FED126F422AFAE460059411C /* champion_1.mp3 in Resources */,
 				791F2D23D7414FE4B0B754E8 /* MaterialIcons.ttf in Resources */,
+				FED1268322AFAE460059411C /* round_50_2.mp3 in Resources */,
+				FED126EF22AFAE460059411C /* reach_3mi_2.mp3 in Resources */,
+				FED126B122AFAE460059411C /* round_70_7.mp3 in Resources */,
+				FED126BA22AFAE460059411C /* pass_8.mp3 in Resources */,
+				FED126CA22AFAE460059411C /* round_20_2.mp3 in Resources */,
+				FED126FA22AFAE460059411C /* passed_6.mp3 in Resources */,
+				FED1268B22AFAE460059411C /* reach_200k_3.mp3 in Resources */,
+				FED126AD22AFAE460059411C /* reach_3mi_1.mp3 in Resources */,
+				FED126FD22AFAE460059411C /* reach_40mi_1.mp3 in Resources */,
 				2F862BA468874A9E9D43B4FF /* Octicons.ttf in Resources */,
+				FED126A822AFAE460059411C /* pass_40_3.mp3 in Resources */,
+				FED1268A22AFAE460059411C /* pass_7.mp3 in Resources */,
+				FED126E522AFAE460059411C /* round_20_1.mp3 in Resources */,
+				FED1268222AFAE460059411C /* reach_50k_1.mp3 in Resources */,
 				75AB620A4F154FEE835D9144 /* SimpleLineIcons.ttf in Resources */,
+				FED1268D22AFAE460059411C /* start_4.mp3 in Resources */,
+				FED126DE22AFAE460059411C /* loser_1.mp3 in Resources */,
+				FED126F722AFAE460059411C /* passed_4.mp3 in Resources */,
+				FED126CD22AFAE460059411C /* pass_1.mp3 in Resources */,
+				FED1269822AFAE460059411C /* start_7.mp3 in Resources */,
+				FED126C822AFAE460059411C /* round_99_3.mp3 in Resources */,
 				7451C76E75AD4E0E9CD97C96 /* Zocial.ttf in Resources */,
 				4B27D7D575F64773934B4A72 /* Roboto-Bold.ttf in Resources */,
+				FED126C122AFAE460059411C /* passed_5.mp3 in Resources */,
+				FED126E322AFAE460059411C /* loser_8.mp3 in Resources */,
+				FED1269322AFAE460059411C /* pass_40_2.mp3 in Resources */,
+				FED126F122AFAE460059411C /* reach_300k_3.mp3 in Resources */,
+				FED126F522AFAE460059411C /* reach_1mi_2.mp3 in Resources */,
+				FED126AB22AFAE460059411C /* reach_3mi_3.mp3 in Resources */,
+				FED1269122AFAE460059411C /* pass_11.mp3 in Resources */,
+				FED1269422AFAE460059411C /* round_70_3.mp3 in Resources */,
+				FED126E622AFAE460059411C /* reach_5mi_2.mp3 in Resources */,
+				FED126DB22AFAE460059411C /* reach_50k_2.mp3 in Resources */,
+				FED126A522AFAE460059411C /* reach_10mi_2.mp3 in Resources */,
 				186F2C583A354011B67B66F4 /* Roboto-Medium.ttf in Resources */,
+				FED126D822AFAE460059411C /* loser_2.mp3 in Resources */,
+				FED1269B22AFAE460059411C /* reach_20mi_1.mp3 in Resources */,
+				FED1269D22AFAE460059411C /* loser_7.mp3 in Resources */,
+				FED1268622AFAE460059411C /* passed_9.mp3 in Resources */,
+				FED126B922AFAE460059411C /* round_99_1.mp3 in Resources */,
+				FED1269F22AFAE460059411C /* round_50_3.mp3 in Resources */,
+				FED126A722AFAE460059411C /* reach_40mi_3.mp3 in Resources */,
+				FED126ED22AFAE460059411C /* round_50_7.mp3 in Resources */,
+				FED1269622AFAE460059411C /* reach_50k_3.mp3 in Resources */,
+				FED1269E22AFAE460059411C /* round_90_3.mp3 in Resources */,
+				FED126C922AFAE460059411C /* champion_3.mp3 in Resources */,
+				FED126FE22AFAE460059411C /* reach_5mi_3.mp3 in Resources */,
+				FED126BB22AFAE460059411C /* reach_200k_1.mp3 in Resources */,
+				FED126F222AFAE460059411C /* round_70_2.mp3 in Resources */,
+				FED1268422AFAE460059411C /* start_3.mp3 in Resources */,
+				FED126C222AFAE460059411C /* round_70_8.mp3 in Resources */,
+				FED126F322AFAE460059411C /* passed_10.mp3 in Resources */,
+				FED126CB22AFAE460059411C /* round_99_5.mp3 in Resources */,
+				FED126AE22AFAE460059411C /* champion_5.mp3 in Resources */,
+				FED1268822AFAE460059411C /* round_70_4.mp3 in Resources */,
+				FED126A322AFAE460059411C /* pass_20_2.mp3 in Resources */,
+				FED1269C22AFAE460059411C /* pass_20_3.mp3 in Resources */,
+				FED1269522AFAE460059411C /* loser_4.mp3 in Resources */,
+				FED126A222AFAE460059411C /* passed_3.mp3 in Resources */,
+				FED1268E22AFAE460059411C /* round_50_6.mp3 in Resources */,
+				FED1269A22AFAE460059411C /* pass_10_3.mp3 in Resources */,
+				FED126A422AFAE460059411C /* reach_1mi_3.mp3 in Resources */,
+				FED126DA22AFAE460059411C /* round_20_3.mp3 in Resources */,
+				FED126EB22AFAE460059411C /* champion_2.mp3 in Resources */,
+				FED126B422AFAE460059411C /* start_practice_2.mp3 in Resources */,
 				B93ED26714C74D51917C61B9 /* Roboto.ttf in Resources */,
 				F27062EF672540ACA3D0B4EF /* Roboto_bold.ttf in Resources */,
+				FED126D022AFAE460059411C /* passed_1.mp3 in Resources */,
+				FED126DF22AFAE460059411C /* pass_10_2.mp3 in Resources */,
+				FED126D722AFAE460059411C /* round_70_10.mp3 in Resources */,
+				FED126D522AFAE460059411C /* pass_3.mp3 in Resources */,
+				FED126C322AFAE460059411C /* round_50_10.mp3 in Resources */,
+				FED126AA22AFAE460059411C /* pass_5_1.mp3 in Resources */,
+				FED126E422AFAE460059411C /* round_70_1.mp3 in Resources */,
+				FED126A622AFAE460059411C /* reach_5mi_1.mp3 in Resources */,
+				FED126D322AFAE460059411C /* pass_10.mp3 in Resources */,
+				FED126F022AFAE460059411C /* round_20_4.mp3 in Resources */,
 				6A765A5872BA4A189C031BA7 /* AntDesign.ttf in Resources */,
 				93F260D93554448EAE03BD43 /* FontAwesome5_Brands.ttf in Resources */,
+				FED126AC22AFAE460059411C /* reach_100k_1.mp3 in Resources */,
+				FED126E122AFAE460059411C /* pass_4.mp3 in Resources */,
+				FED126D622AFAE460059411C /* reach_100k_2.mp3 in Resources */,
+				FED126E022AFAE460059411C /* round_90_4.mp3 in Resources */,
+				FED126CF22AFAE460059411C /* round_70_5.mp3 in Resources */,
 				E0089EBA66EB41CFB7A6C8D4 /* FontAwesome5_Regular.ttf in Resources */,
 				7074F1C59ABB4435BDB79BF6 /* FontAwesome5_Solid.ttf in Resources */,
+				FED126E222AFAE460059411C /* reach_200k_2.mp3 in Resources */,
+				FED126B622AFAE460059411C /* pass_5.mp3 in Resources */,
+				FED1269922AFAE460059411C /* start_5.mp3 in Resources */,
+				FED126B222AFAE460059411C /* start_6.mp3 in Resources */,
+				FED126BE22AFAE460059411C /* start_8.mp3 in Resources */,
+				FED126B822AFAE460059411C /* round_90_2.mp3 in Resources */,
+				FED126D222AFAE460059411C /* start_practice_3.mp3 in Resources */,
+				FED126B522AFAE460059411C /* round_50_5.mp3 in Resources */,
+				FED126C722AFAE460059411C /* round_50_4.mp3 in Resources */,
+				FED126AF22AFAE460059411C /* reach_100k_3.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1786,6 +2302,9 @@
 					"$(SRCROOT)/../node_modules/react-native-sound-player/ios",
 				);
 				INFOPLIST_FILE = AutonomousSport/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1813,6 +2332,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 54DJVWMJCC;
@@ -1828,6 +2348,9 @@
 					"$(SRCROOT)/../node_modules/react-native-sound-player/ios",
 				);
 				INFOPLIST_FILE = AutonomousSport/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1840,7 +2363,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.autonomous.velo;
 				PRODUCT_NAME = AutonomousSport;
-				PROVISIONING_PROFILE_SPECIFIER = "Velo-Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "Velo-Distribution";
 				SWIFT_OBJC_BRIDGING_HEADER = "AutonomousSport-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;

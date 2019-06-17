@@ -268,15 +268,14 @@ class BaseScreen extends Component {
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Button
                 title="Decline"
-                buttonStyle={{ backgroundColor: 'transparent' }}
                 onPress={onPressDecline}
-                containerViewStyle={[
+                buttonStyle={[
                   styles.button,
                   {
                     borderWidth: 0
                   }
                 ]}
-                textStyle={[
+                titleStyle={[
                   TextStyle.normalText,
                   { fontWeight: 'bold', color: 'black' }
                 ]}
@@ -284,14 +283,13 @@ class BaseScreen extends Component {
               <Button
                 title="Join now"
                 onPress={onPressJoinNow}
-                buttonStyle={{ backgroundColor: 'transparent' }}
-                containerViewStyle={[
+                buttonStyle={[
                   styles.button,
                   {
                     backgroundColor: '#ffc500'
                   }
                 ]}
-                textStyle={[
+                titleStyle={[
                   TextStyle.normalText,
                   { fontWeight: 'bold', color: '#534c5f' }
                 ]}

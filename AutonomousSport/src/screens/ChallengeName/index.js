@@ -26,7 +26,7 @@ import { leftRoom } from '@/actions/RoomAction';
 
 export const TAG = 'ChallengeNameScreen';
 
-const sizeImageCenter = moderateScale(130);
+
 class ChallengeNameScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -126,32 +126,30 @@ class ChallengeNameScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={{ flexDirection: 'row' }}
-          onPress={this.onPressBack}
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center' }}
+        onPress={this.onPressBack}
+      >
+        <Image
+          source={images.ic_backtop}
+          style={{ width: 32, height: 32, marginTop: 12 }}
+        />
+        <Text
+          style={[
+            TextStyle.mediumText,
+            {
+              color: 'white',
+              textAlignVertical: 'center',
+              fontWeight: 'bold',
+              marginHorizontal: 10,
+              marginLeft: 20,
+              marginTop: 10
+            }
+          ]}
         >
-          <Image
-            source={images.ic_backtop}
-            style={{ width: 32, height: 32, marginTop: 12 }}
-          />
-          <Text
-            style={[
-              TextStyle.mediumText,
-              {
-                color: 'white',
-                textAlignVertical: 'center',
-                fontWeight: 'bold',
-                marginHorizontal: 10,
-                marginLeft: 20,
-                marginTop: 10
-              }
-            ]}
-          >
-            Set name for the race
-          </Text>
-        </TouchableOpacity>
-      </View>
+          Set name for the race
+        </Text>
+      </TouchableOpacity>
     );
   };
 
@@ -163,7 +161,12 @@ class ChallengeNameScreen extends BaseScreen {
         <View style={styles.container}>
           <Header
             backgroundColor="transparent"
-            outerContainerStyles={{ borderBottomWidth: 0 }}
+            leftContainerStyle={{ flex: 1 }}
+            centerContainerStyle={{
+              flex: 0
+            }}
+            rightContainerStyle={{ flex: 0 }}
+            containerStyle={{ borderBottomWidth: 0 }}
           >
             {this.renderLeftHeader()}
           </Header>
@@ -202,12 +205,11 @@ class ChallengeNameScreen extends BaseScreen {
               <Button
                 loading={isLoading}
                 title="Next"
-                textStyle={[
+                titleStyle={[
                   TextStyle.mediumText,
                   { fontWeight: 'bold', color: '#4e4759' }
                 ]}
-                buttonStyle={{ backgroundColor: 'transparent' }}
-                containerViewStyle={[styles.button, {}]}
+                buttonStyle={[styles.button, {}]}
                 onPress={this.onPressCreateRoom}
               />
             </View>
