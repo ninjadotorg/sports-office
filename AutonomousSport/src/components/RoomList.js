@@ -11,17 +11,15 @@ import {
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
-import ApiService from '@/services/ApiService';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { compose } from 'redux';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
 import ItemRoom from '@/components/ItemRoom';
 import { fetchRoom, joinRoom } from '@/actions/RoomAction';
-import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
-import { screenSize } from '@/utils/TextStyle';
+import TextStyle, { screenSize } from '@/utils/TextStyle';
 import images, { icons } from '@/assets';
-import TextStyle from '@/utils/TextStyle';
+
 import { verticalScale, moderateScale, scale } from 'react-native-size-matters';
 
 export const TAG = 'RoomList';
@@ -37,8 +35,8 @@ export const itemWidth = slideWidth + itemHorizontalMargin * 2;
 export const sliderWidth = screenSize?.width || 100;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 10
   },
@@ -48,27 +46,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  list: {
-    flex: 1
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: Platform.OS === 'ios' ? 8 : 0,
+    resizeMode: 'cover'
+  },
+  imageContainer: {
+    borderRadius: 8,
+    height: '100%',
+    marginBottom: Platform.OS === 'ios' ? 0 : -1
+  },
+  imageIconNoroom: {
+    alignItems: 'center',
+    borderRadius: Platform.OS === 'ios' ? 8 : 0,
+    justifyContent: 'center',
+    resizeMode: 'cover'
   },
   item: {
     paddingVertical: 10
   },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
-    borderRadius: Platform.OS === 'ios' ? 8 : 0
-  },
-  imageIconNoroom: {
-    resizeMode: 'cover',
-    borderRadius: Platform.OS === 'ios' ? 8 : 0,
+  list: {
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  imageContainer: {
-    height: '100%',
-    marginBottom: Platform.OS === 'ios' ? 0 : -1,
-    borderRadius: 8
+    flexGrow: 1,
+    justifyContent: 'flex-start'
   }
 });
 class RoomList extends Component {
@@ -232,34 +232,10 @@ class RoomList extends Component {
     const { isFetching, dataFilter = [] } = this.state;
     return (
       <View style={styles.container}>
-        {/*dataFilter.length == 0 ? (
-          <View style={[styles.containerImg, {}]}>
-            <Image
-              source={images.ic_norooms}
-              style={[
-                styles.imageIconNoroom,
-                { resizeMode: 'cover', height: scale(48), width: scale(48) }
-              ]}
-            />
-            <Text
-              style={[
-                TextStyle.smallText,
-                TextStyle.buttonText,
-                { marginTop: verticalScale(10), color: '#8A8398' }
-              ]}
-            >
-              There are no rooms available
-            </Text>
-          </View>
-            ) : null*/}
-
         <FlatList
           horizontal
-          contentContainerStyle={{
-            flexGrow: 1
-          }}
+          contentContainerStyle={styles.list}
           ListEmptyComponent={this.renderEmpty}
-          style={[styles.list, {}]}
           ListHeaderComponent={this.renderHeader}
           data={dataFilter}
           initialNumToRender={5}

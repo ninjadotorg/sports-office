@@ -1,7 +1,6 @@
 import { ACTIONS } from '@/actions/RaceAction';
 import _ from 'lodash';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
-import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 
 const TAG = 'RaceReducer';
 const initialState = {

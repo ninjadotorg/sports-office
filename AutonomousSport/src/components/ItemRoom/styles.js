@@ -26,13 +26,12 @@ const styles = StyleSheet.create({
   //   paddingBottom: 10
   // },
   container: {
-    flex: 1,
     alignItems: 'center',
+    borderRadius: moderateScale(10),
+    height: heightItem,
     justifyContent: 'center',
     marginHorizontal: moderateScale(10),
-    borderRadius: moderateScale(10),
-    width: widthImage,
-    height: heightItem
+    width: widthImage
   },
   containerItemsChecked: {
     borderColor: 'green',
@@ -45,9 +44,9 @@ const styles = StyleSheet.create({
   //   borderColor: 'blue'
   // },
   containerItem: {
+    borderColor: 'blue',
     flexDirection: 'column',
-    height: '100%',
-    borderColor: 'blue'
+    height: '100%'
   },
 
   slideInnerContainer: {},
@@ -66,10 +65,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   image: {
-    width: widthImage,
-    height: heightImage,
     borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
+    borderTopRightRadius: 10,
+    height: heightImage,
+    width: widthImage
   }
   // image: {
   //   ...StyleSheet.absoluteFillObject,

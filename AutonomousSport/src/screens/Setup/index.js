@@ -27,7 +27,7 @@ import LocalDatabase from '@/utils/LocalDatabase';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
 import ViewUtil, {  } from '@/utils/ViewUtil';
 import Util from '@/utils/Util';
-import { disconnectBluetooth } from '@/actions/RaceAction';
+import { disconnectBluetooth,connectAndSaving } from '@/actions/RaceAction';
 import { scale, verticalScale } from 'react-native-size-matters';
 import styles from './styles';
 import { BUILD_MODE } from '@/utils/Constants';
@@ -171,26 +171,33 @@ class SetupScreen extends BaseScreen {
     this.setState({ appState: nextAppState });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = async ()=> {
     super.componentWillUnmount();
     console.log(TAG, ' componentWillUnmount ');
-    // clearTimeout(this.timeout);
-    if (this.peripheralBluetooth) {
-      BleManager.stopNotification(
+    this.stopNotifty();
+  }
+
+  stopNotifty = async ()=>{
+    
+    console.log(TAG, ' stopNotifty 01');
+    this.handlerDiscover?.remove();
+    this.handlerStop?.remove();
+    this.handlerDisconnect?.remove();
+    this.handlerUpdate?.remove();
+    
+    if(this.handlerDiscover && this.peripheralBluetooth){
+      console.log(TAG, ' stopNotifty 02');
+      await BleManager.stopNotification(
         this.peripheralBluetooth.peripheral,
         this.peripheralBluetooth.service,
         this.peripheralBluetooth.characteristic
       );
     }
-    console.log(TAG, ' componentWillUnmount01 ');
-    this.handlerDiscover?.remove();
-    console.log(TAG, ' componentWillUnmount02 ');
-    this.handlerStop?.remove();
-    console.log(TAG, ' componentWillUnmount03 ');
-    this.handlerDisconnect?.remove();
-    console.log(TAG, ' componentWillUnmount04 ');
-    this.handlerUpdate?.remove();
-    console.log(TAG, ' componentWillUnmountend ');
+    BleManager.stopScan();
+    this.handlerDiscover = null;
+    this.handlerUpdate = null;
+    this.handlerDisconnect = null;
+    this.handlerStop = null;
   }
 
   set isLoading(isLoading) {
@@ -220,21 +227,19 @@ class SetupScreen extends BaseScreen {
     // value, peripheral, characteristic, service
     try {
       if (this.peripheralBluetooth && !_.isEmpty(data)) {
-        await BleManager.stopNotification(
-          this.peripheralBluetooth.peripheral,
-          this.peripheralBluetooth.service,
-          this.peripheralBluetooth.characteristic
-        );
+        
         await LocalDatabase.saveBluetooth(
           JSON.stringify(this.peripheralBluetooth.toJSON())
         );
+        await this.stopNotifty();
         // alert("connect succesfully");
       }
     } catch (error) {
     } finally {
+      
       this.replaceScreen(this.props.navigation, TAGSIGNIN);
     }
-    // this.handlerUpdate?.remove();
+    
     console.log(TAG, ' handleUpdateValueForCharacteristic ');
   };
 
@@ -274,9 +279,9 @@ class SetupScreen extends BaseScreen {
         const services = peripheralInfo.services;
         console.log(TAG, ' connect Connected to id = ' + peripheral.id+ '-servives = ',services);
         const characteristics = peripheralInfo.characteristics;
-        var serviceUUID = Platform.OS === 'ios'? services[0]: services[2].uuid;
+        const serviceUUID = Platform.OS === 'ios'? services[0]: services[2].uuid;
         console.log(TAG, ' connect 01 ');
-        var bakeCharacteristic = Platform.OS === 'ios'?characteristics[0].characteristic: characteristics[3].characteristic;
+        const bakeCharacteristic = Platform.OS === 'ios'?characteristics[0].characteristic: characteristics[3].characteristic;
         console.log(
           TAG,
           ' retrieveServices serviceUUID = ' +
@@ -296,7 +301,7 @@ class SetupScreen extends BaseScreen {
       }
     } catch (error) {
     } finally {
-      this.isLoading = false;
+      
     }
   };
 
@@ -484,6 +489,7 @@ class SetupScreen extends BaseScreen {
 export default connect(
   state => ({}),
   {
-    disconnectBluetooth
+    disconnectBluetooth,
+    connectAndSaving
   }
 )(SetupScreen);

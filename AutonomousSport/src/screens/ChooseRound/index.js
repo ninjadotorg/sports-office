@@ -8,11 +8,9 @@ import {
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import { SearchBar, Button, Header, ButtonGroup } from 'react-native-elements';
-import { ParallaxImage } from 'react-native-snap-carousel';
-import styles, { sliderWidth, itemWidth } from './styles';
+import { Button, Header } from 'react-native-elements';
+import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
-import ApiService from '@/services/ApiService';
 import { TAG as TAGCHALLENGE } from '@/screens/Challenge';
 import { TAG as INVITEFRIENDS } from '@/screens/Friends';
 
@@ -72,31 +70,25 @@ class ChooseRoundScreen extends BaseScreen {
   renderLeftHeader = () => {
     const { selectedIndex } = this.state;
     return (
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={{ flexDirection: 'row' }}
-          onPress={this.onPressBack}
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center' }}
+        onPress={this.onPressBack}
+      >
+        <Image source={images.ic_backtop} style={{ width: 32, height: 32 }} />
+        <Text
+          style={[
+            TextStyle.mediumText,
+            {
+              color: 'white',
+              fontWeight: 'bold',
+              textAlignVertical: 'center',
+              marginLeft: 20
+            }
+          ]}
         >
-          <Image
-            source={images.ic_backtop}
-            style={{ width: 32, height: 32, marginTop: 12 }}
-          />
-          <Text
-            style={[
-              TextStyle.mediumText,
-              {
-                color: 'white',
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-                marginLeft: 20,
-                marginTop: 10
-              }
-            ]}
-          >
-            Number of rounds
-          </Text>
-        </TouchableOpacity>
-      </View>
+          Number of rounds
+        </Text>
+      </TouchableOpacity>
     );
   };
   onPress = direct => {
@@ -115,7 +107,12 @@ class ChooseRoundScreen extends BaseScreen {
       <ImageBackground style={[styles.container]} source={images.backgroundx}>
         <Header
           backgroundColor="transparent"
-          outerContainerStyles={{ borderBottomWidth: 0 }}
+          leftContainerStyle={{ flex: 1 }}
+          centerContainerStyle={{
+            flex: 0
+          }}
+          rightContainerStyle={{ flex: 0 }}
+          containerStyle={{ borderBottomWidth: 0 }}
         >
           {this.renderLeftHeader()}
         </Header>
@@ -196,14 +193,11 @@ class ChooseRoundScreen extends BaseScreen {
           <Button
             loading={isLoading}
             title="Next"
-            textStyle={[
+            titleStyle={[
               TextStyle.mediumText,
               { fontWeight: 'bold', color: '#534c5f' }
             ]}
-            containerViewStyle={[
-              styles.button,
-              { marginBottom: verticalScale(40) }
-            ]}
+            buttonStyle={[styles.button, { marginBottom: verticalScale(40) }]}
             backgroundColor="transparent"
             onPress={this.onPressCreateRoom}
           />

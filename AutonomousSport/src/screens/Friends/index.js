@@ -237,17 +237,19 @@ class FriendsScreen extends BaseScreen {
     const { search } = this.state;
     return (
       <SearchBar
+        round
         value={search}
         onChangeText={this.handleQueryChange}
         onCancel={this.handleSearchCancel}
         onClear={this.handleSearchClear}
-        icon={{ type: 'font-awesome', name: 'search' }}
+        searchIcon={{ type: 'font-awesome', name: 'search' }}
         containerStyle={{
           flex: 1,
           flexDirection: 'row',
           borderBottomColor: 'transparent',
           borderTopColor: 'transparent',
           shadowColor: 'white',
+          padding: 0,
           backgroundColor: 'transparent',
           borderWidth: 0
         }}
@@ -255,10 +257,9 @@ class FriendsScreen extends BaseScreen {
         placeholderTextColor="#f9f9f960"
         inputContainerStyle={{
           flex: 1,
-          paddingBottom: 0,
-          paddingTop: 0,
           paddingLeft: 20,
           borderRadius: 30,
+          margin: 0,
           backgroundColor: 'rgba(255,255,255,0.15)'
         }}
         inputStyle={[
@@ -293,7 +294,7 @@ class FriendsScreen extends BaseScreen {
       <View style={[styles.containerBottom, {}]}>
         <Button
           title="Skip sending invitation"
-          textStyle={[
+          titleStyle={[
             TextStyle.mediumText,
             {
               fontWeight: 'bold',
@@ -308,7 +309,7 @@ class FriendsScreen extends BaseScreen {
           title="Send invitation and start"
           disabled={this.state.checkinvitebtn}
           disabledStyle={styles.buttondis2}
-          textStyle={[
+          titleStyle={[
             TextStyle.mediumText,
             { fontWeight: 'bold', color: '#534c5f' }
           ]}
@@ -351,14 +352,15 @@ class FriendsScreen extends BaseScreen {
           backgroundColor="transparent"
           containerStyle={{
             borderBottomWidth: 0,
+            backgroundColor: 'transparent',
             paddingLeft: verticalScale(10),
-            paddingRight: verticalScale(40),
-            marginTop: verticalScale(20)
+            paddingRight: verticalScale(40)
           }}
           leftContainerStyle={{ flex: 1 }}
           centerContainerStyle={{
-            flexDirection: 'column',
             flex: 1,
+            backgroundColor: 'transparent',
+            paddingVertical: 0,
             alignItems: 'flex-start'
           }}
           rightContainerStyle={{ flex: 0 }}
@@ -404,13 +406,7 @@ class FriendsScreen extends BaseScreen {
             renderItem={this.renderItem}
           />
         )}
-        {inviteMode ? (
-          <View style={[styles.containerTop, { marginLeft: 40 }]}>
-            {this.renderbottomButton()}
-          </View>
-        ) : (
-          this.initDialogInvite()
-        )}
+        {inviteMode ? this.renderbottomButton() : this.initDialogInvite()}
       </ImageBackground>
     );
   }

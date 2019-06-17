@@ -1,5 +1,4 @@
 import { StyleSheet, Platform } from 'react-native';
-import { screenSize, scale } from '@/utils/TextStyle';
 import {
   verticalScale,
   scale as scaleSize,
@@ -12,16 +11,16 @@ const styles = StyleSheet.create({
     borderColor: '#ffc500',
     borderRadius: 32,
     borderWidth: 1,
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+    minWidth: verticalScale(20),
+    paddingHorizontal: verticalScale(20)
   },
   button2: {
     backgroundColor: '#ffc500',
     borderColor: '#ffc500',
     borderRadius: 32,
     borderWidth: 1,
-    minWidth: scaleSize(100),
-    paddingHorizontal: scaleSize(20)
+    minWidth: verticalScale(20),
+    paddingHorizontal: verticalScale(20)
   },
 
   buttonGroup: {
@@ -34,18 +33,17 @@ const styles = StyleSheet.create({
     borderColor: '#ffc500',
     borderRadius: 32,
     borderWidth: 1,
-    minWidth: scaleSize(100),
+    minWidth: verticalScale(80),
     opacity: 0.5,
-    paddingHorizontal: scaleSize(20)
+    paddingHorizontal: verticalScale(20)
   },
   container: {
     backgroundColor: '#181818',
     flex: 1
   },
   containerBottom: {
-    alignItems: 'center',
-    alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
     marginBottom: verticalScale(20)
   },
   containerCenter: {

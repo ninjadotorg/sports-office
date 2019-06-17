@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ViewUtil, { onClickView } from '@/utils/ViewUtil';
@@ -14,15 +14,15 @@ export const TAG = 'MapList';
 const PAGE_SIZE = 10;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'transparent',
+    flex: 1,
     padding: 10
-  },
-  list: {
-    flex: 1
   },
   item: {
     paddingVertical: 10
+  },
+  list: {
+    flex: 1
   }
 });
 class MapList extends Component {
@@ -129,7 +129,7 @@ class MapList extends Component {
     return this.listData;
   };
   render() {
-    const { data, isFetching, refreshing } = this.state;
+    const { isFetching, refreshing } = this.state;
     return (
       <View style={[styles.container, {}]}>
         <FlatList
@@ -144,8 +144,13 @@ class MapList extends Component {
           }}
           renderItem={this.renderItem}
           onEndReachedThreshold={0.5}
-          onRefresh={this.handleRefresh}
-          refreshing={refreshing}
+          refreshControl={(
+            <RefreshControl
+              tintColor="white"
+              onRefresh={this.handleRefresh}
+              refreshing={refreshing}
+            />
+)}
           onEndReached={this.handleLoadMore}
           ListFooterComponent={this.renderLoading}
         />

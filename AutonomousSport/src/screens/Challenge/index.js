@@ -4,7 +4,7 @@ import {
   Text,
   Image,
   ScrollView,
-  ImageBackground,
+  Platform,
   StatusBar
 } from 'react-native';
 import { GameLoop } from 'react-native-game-engine';
@@ -43,7 +43,6 @@ const dialogPercentHeight = 0.8;
 const dialogHeightImage = screenSize.height * dialogPercentHeight;
 const colors = ['purple', 'blue', 'yellow', 'green'];
 
-const limitToRotate = 60 * (Math.PI / 180);
 const FastImageView = createImageProgress(FastImage);
 let firstDataForTesing = {
   E8oouxYufVbXPWssHdL9NqUfxZl1: {
@@ -239,7 +238,9 @@ class ChallengeScreen extends BaseScreen {
     const { message = {}, channel = '', subscribedChannel = '' } = data;
     switch (subscribedChannel) {
       case this.chanelGroupRoomKey.DETAIL: {
+        console.log(TAG, 'onDataRealTime message ', message);
         let isGetReady = message['status'] === 2;
+        console.log(TAG, 'onDataRealTime data isGetReady = ', isGetReady);
         this.setState({
           isReady: isGetReady || this.state.isReady
         });
@@ -377,7 +378,6 @@ class ChallengeScreen extends BaseScreen {
         }
       };
       console.log(TAG, ' onStreamCreated message ', message);
-      
 
       // update streamId in players->chanel(user.fbuid||user.id)
       // this.playerMeDataPrefference.publish['message'] = message;
@@ -466,11 +466,11 @@ class ChallengeScreen extends BaseScreen {
             _.isEmpty(this.state.race) ||
             race.state !== STATE_BLUETOOTH.CONNECTED
           ) {
-            // console.log(
-            //   TAG,
-            //   ' componentWillReceiveProps - user = ',
-            //   nextProps?.user
-            // );
+            console.log(
+              TAG,
+              ' componentWillReceiveProps - user = ',
+              nextProps?.user
+            );
             // this.playerMeDataPrefference = this.dataPrefference
             //   ?.child('players')
             //   ?.child(this.state.user.fbuid);
@@ -800,9 +800,9 @@ class ChallengeScreen extends BaseScreen {
 
   renderDashBoardAchivement = () => {
     // let players = [
-    // { playerName: 'Kat Brown', goal: 100 },
-    // { playerName: 'Elina Hill', goal: 84 },
-    // { playerName: 'Jone Miller', goal: 80  },
+    //   { playerName: 'Kat Brown', goal: 100 },
+    //   { playerName: 'Elina Hill', goal: 84 },
+    //   { playerName: 'Jone Miller', goal: 80 },
     //   { playerName: 'HTOn22', goal: 22 },
     //   { playerName: 'HienTon100', goal: 100 },
     //   { playerName: 'HTon', goal: 25 },
@@ -859,10 +859,7 @@ class ChallengeScreen extends BaseScreen {
                       paddingHorizontal: scale(10)
                     }}
                   >
-                    <Image
-                      source={iconResult}
-                      style={{ alignSelf: 'center', marginBottom: scale(10) }}
-                    />
+                    <Image source={iconResult} />
                     <View
                       style={{
                         justifyContent: 'center',
@@ -926,7 +923,7 @@ class ChallengeScreen extends BaseScreen {
               styles.button,
               { backgroundColor: '#ffc500', width: '30%', alignSelf: 'center' }
             ]}
-            textStyle={[
+            titleStyle={[
               TextStyle.mediumText,
               { fontWeight: 'bold', color: '#534c5f' }
             ]}
@@ -988,11 +985,10 @@ class ChallengeScreen extends BaseScreen {
           >
             <Button
               loading={isLoading}
-              containerViewStyle={[styles.button]}
+              buttonStyle={[styles.button]}
               title="Get ready"
               onPress={this.onPressReady}
-              buttonStyle={[{ backgroundColor: 'transparent' }]}
-              textStyle={[
+              titleStyle={[
                 TextStyle.mediumText,
                 { color: '#534c5f', fontWeight: 'bold' }
               ]}
@@ -1007,7 +1003,7 @@ class ChallengeScreen extends BaseScreen {
     return (
       <Image
         source={images.ic_racer1}
-        resizeMode="center"
+        resizeMode={Platform.OS === 'android' ? 'center' : 'center'}
         style={{
           backgroundColor: 'transparent',
           position: 'absolute',
@@ -1038,9 +1034,9 @@ class ChallengeScreen extends BaseScreen {
 
   componentWillUnmount() {
     super.componentWillUnmount();
+    this.pubnub.unsubscribe(this.playerMeDataPrefference.subscribe);
+    this.pubnub.unsubscribe(this.roomDetailPrefference.subscribe);
     console.log(TAG, ' componentWillUnmount ok');
-    // this.props.disconnectBluetooth();
-    // this.roomDataPrefference?.off('value');
   }
   leftRoom = async () => {
     const { room } = this.state;
