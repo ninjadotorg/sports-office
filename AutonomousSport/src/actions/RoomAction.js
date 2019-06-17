@@ -21,7 +21,7 @@ export const fetchMap = ({ offset = 0, limit = 12 }) => async dispatch => {
       offset: offset,
       limit: limit
     });
-    console.log(TAG, ' - fetchMap - response ', response);
+    // console.log(TAG, ' - fetchMap - response ', response);
     if (!_.isEmpty(response)) {
       response['list'] = response?.list?.map(item => {
         return new Map(item);
@@ -42,7 +42,7 @@ export const fetchRoom = ({ offset = 0, limit = 12 }) => async dispatch => {
       offset: offset,
       limit: limit
     });
-    console.log(TAG, ' - fetchRoom - response ', response);
+    // console.log(TAG, ' - fetchRoom - response ', response);
     if (!_.isEmpty(response)) {
       response['list'] = response?.list?.map(item => {
         return new Room(item);

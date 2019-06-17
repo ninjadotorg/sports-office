@@ -45,11 +45,6 @@ export const color = {
 //backgroundColor: '#232339'
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-
   bottomContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -58,36 +53,70 @@ const styles = StyleSheet.create({
     // paddingBottom: verticalScale(10)
   },
 
-  text: {
-    color: 'white'
-  },
-  textLogo: {
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: verticalScale(20)
-  },
-  textLabel: { color: color.placeHolder, flex: 1, textAlignVertical: 'center' },
-  endScreenText: {},
-  textButton,
-  socialButtonText,
   buttonStyle,
-  socialContainer: {
-    flexDirection: 'column',
+
+  container: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  containerInput: {
+    borderBottomColor: 'rgba(255,255,255,0.2)',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    paddingVertical: verticalScale(10)
+  },
+  containerStyle: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    justifyContent: 'center',
+    paddingVertical: moderateScale(10)
+  },
+  endScreenText: {},
+  errorItem: {
+    color: 'red',
+    justifyContent: 'center',
+    textAlign: 'center',
+    width: '100%'
+  },
+  imgContainerStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 40
+  },
+  inputContainerStyle: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    justifyContent: 'center'
+  },
+  link: {
+    alignSelf: 'center',
+    color: 'white',
+    textAlign: 'center'
+  },
+  linkContainer: {
+    borderBottomWidth: 1,
+    borderColor: 'white'
+  },
+  linkContainerMargin: {
+    alignSelf: 'center',
+    marginBottom: 0
+  },
+
+  mainView: { backgroundColor: 'transparent', flex: 1 },
+  marginBottom10: { marginBottom: 10 },
+  scrollView: {
+    backgroundColor: 'transparent',
+    flexGrow: 1,
+    paddingHorizontal: scaleSize(120)
+  },
+  socialBottomText: { color: color.placeHolder },
+  socialBottomTextContainer: {
+    flexDirection: 'row',
     justifyContent: 'center'
   },
   socialButton: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  socialButtonIcon: { marginRight: 10, marginLeft: 0 },
-
-  socialButtonTextFB: {
-    ...socialButtonText,
-    color: color.textSocial.facebook
-  },
-  socialButtonTextGG: {
-    ...socialButtonText,
-    color: color.textSocial.google
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   socialButtonFB: {
     flex: 1,
@@ -96,66 +125,35 @@ const styles = StyleSheet.create({
     backgroundColor: color.social.facebook
   },
   socialButtonGG: {
+    backgroundColor: color.social.google,
     flex: 1,
-    marginLeft: 5,
     flexDirection: 'row',
-    backgroundColor: color.social.google
+    marginLeft: 5
   },
-  socialBottomTextContainer: {
-    flexDirection: 'row',
+  socialButtonIcon: { marginLeft: 0, marginRight: 10 },
+  socialButtonText,
+  socialButtonTextFB: {
+    ...socialButtonText,
+    color: color.textSocial.facebook
+  },
+  socialButtonTextGG: {
+    ...socialButtonText,
+    color: color.textSocial.google
+  },
+  socialContainer: {
+    flexDirection: 'column',
     justifyContent: 'center'
   },
-  socialBottomText: { color: color.placeHolder },
-  marginBottom10: { marginBottom: 10 },
-  linkContainer: {
-    borderBottomWidth: 1,
-    borderColor: 'white'
+  text: {
+    color: 'white'
   },
-  linkContainerMargin: {
-    marginBottom: 0,
-    alignSelf: 'center'
-  },
-  link: {
-    textAlign: 'center',
-    color: 'white',
-    alignSelf: 'center'
-  },
-  containerInput: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    paddingVertical: verticalScale(10),
-    borderBottomColor: 'rgba(255,255,255,0.2)'
-  },
-  scrollView: {
-    flexGrow: 1,
-    backgroundColor: 'transparent',
-    paddingHorizontal: scaleSize(120)
-  },
-  mainView: { flex: 1, backgroundColor: 'transparent' },
-  containerStyle: {
-    flex: 1,
-    paddingVertical: moderateScale(10),
-    // backgroundColor: 'blue',
-    backgroundColor: 'transparent',
-    //backgroundColor:'#232339',
-    justifyContent: 'center'
-  },
-  imgContainerStyle: {
-    paddingBottom: 40,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  textButton,
 
-  inputContainerStyle: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    justifyContent: 'center'
-  },
-  errorItem: {
-    color: 'red',
-    textAlign: 'center',
-    justifyContent: 'center',
-    width: '100%'
+  textLabel: { color: color.placeHolder, flex: 1, textAlignVertical: 'center' },
+  textLogo: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    marginTop: verticalScale(20)
   }
 });
 

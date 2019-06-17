@@ -30,7 +30,7 @@ class ItemTopRacer extends PureComponent {
   componentDidMount() {}
 
   onClickMakeFriend = onClickView(() => {
-    const { dataItem, makeFriend} = this.props;
+    const { dataItem, makeFriend } = this.props;
     // console.log('invited onClickMakeFriend', dataItem);
     if (dataItem?.id && !dataItem['is_maked_friend']) {
       this.setState({
@@ -55,7 +55,7 @@ class ItemTopRacer extends PureComponent {
 
   render() {
     const { dataItem, isLoading } = this.state;
-    const {icon,isMe} = this.props;
+    const { icon, isMe } = this.props;
     const mile = Math.ceil(dataItem.Profile.miles || 0);
     return (
       <View style={[styles.container, {}]}>
@@ -95,36 +95,41 @@ class ItemTopRacer extends PureComponent {
           </Text>
         </View>
 
-        {!isMe?(<Button
-          loading={isLoading}
-          containerViewStyle={{
-            marginRight: 0,
-            borderRadius: scale(30),
-            borderWidth: 1,
-            borderColor: dataItem?.is_maked_friend ? '#76717f' : 'transparent',
-            backgroundColor: dataItem?.is_maked_friend
-              ? 'transparent'
-              : '#ffc500',
-            height: 45,
-            minWidth: scale(80),
-            alignSelf: 'center',
-            justifyContent: 'center'
-          }}
-          textStyle={[
-            TextStyle.normalText,
-            {
-              color: dataItem?.is_maked_friend ? 'white' : '#544e60'
+        {!isMe ? (
+          <Button
+            loading={isLoading}
+            containerStyle={{
+              marginRight: 0,
+              borderRadius: scale(30),
+              borderWidth: 1,
+              borderColor: dataItem?.is_maked_friend
+                ? '#76717f'
+                : 'transparent',
+              backgroundColor: dataItem?.is_maked_friend
+                ? 'transparent'
+                : '#ffc500',
+              height: 45,
+              minWidth: scale(80),
+              alignSelf: 'center',
+              justifyContent: 'center'
+            }}
+            titleStyle={[
+              TextStyle.normalText,
+              {
+                color: dataItem?.is_maked_friend ? 'white' : '#544e60'
+              }
+            ]}
+            buttonStyle={{ backgroundColor: 'transparent' }}
+            title={dataItem?.is_maked_friend ? 'Friend' : 'Add Friend'}
+            onPress={this.onClickMakeFriend}
+            iconRight
+            icon={
+              dataItem?.is_maked_friend
+                ? { name: 'ios-checkmark', type: 'ionicon', color: 'white' }
+                : undefined
             }
-          ]}
-          buttonStyle={{ backgroundColor: 'transparent' }}
-          title={dataItem?.is_maked_friend ? 'Friend' : 'Add Friend'}
-          onPress={this.onClickMakeFriend}
-          rightIcon={
-            dataItem?.is_maked_friend
-              ? { name: 'ios-checkmark', type: 'ionicon' }
-              : undefined
-          }
-        />):null}
+          />
+        ) : null}
       </View>
     );
   }
@@ -133,14 +138,14 @@ class ItemTopRacer extends PureComponent {
 ItemTopRacer.propTypes = {
   dataItem: PropTypes.instanceOf(User).isRequired,
   icon: PropTypes.element,
-  isMe:PropTypes.bool,
-  makeFriend:PropTypes.func
+  isMe: PropTypes.bool,
+  makeFriend: PropTypes.func
 };
 
 ItemTopRacer.defaultProps = {
   icon: (
     <Avatar
-      medium
+      size="medium"
       rounded
       overlayContainerStyle={{
         backgroundColor: 'rgba(255,255,255,0.2)',
@@ -151,8 +156,8 @@ ItemTopRacer.defaultProps = {
       containerStyle={{ alignSelf: 'center' }}
     />
   ),
-  isMe:false,
-  makeFriend:null
+  isMe: false,
+  makeFriend: null
 };
 
 export default connect(

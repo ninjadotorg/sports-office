@@ -5,10 +5,11 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 import LocalDatabase from '@/utils/LocalDatabase';
 import { STATE_BLUETOOTH } from '@/utils/Constants';
 import PeripheralBluetooth from '@/models/PeripheralBluetooth';
+import Util from '@/utils/Util';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-
+BleManager.start({ showAlert: false });
 let receiveDataFromBluetooth = false;
 let handlerUpdate = null,
   handlerDisconnect = null;
@@ -23,13 +24,16 @@ export const ACTIONS = {
 };
 export const checkSaveDevice = () => async dispatch => {
   const periBluetooth: PeripheralBluetooth = await LocalDatabase.getBluetooth();
+  // console.log(TAG, 'checkSaveDevice ', periBluetooth);
+  const isSavedDevice = periBluetooth ? true : false;
   dispatch({
     type: ACTIONS.CHECK_SAVING_DEVICE,
     payload: {
-      isSavedDevice: periBluetooth ? true : false,
+      isSavedDevice,
       sensorInfo: periBluetooth ? periBluetooth.toJSON() : null
     }
   });
+  return Promise.resolve(periBluetooth);
 };
 /**
  * The RPM to Linear Velocity formular is : 
@@ -66,7 +70,7 @@ export const connectionBluetoothChange = dispatch => {
   return ({ value, peripheral, characteristic, service }) => {
     if (value && value.length > 4) {
       // const timestamp = Math.floor(Date.now());
-
+      receiveDataFromBluetooth = true;
       const round = value[2] * 255 + value[1];
       if (round !== roundPrevious) {
         // const timeHour = (timestamp - timestampPrevious) / (1000 * 3600);
@@ -79,7 +83,7 @@ export const connectionBluetoothChange = dispatch => {
         // speed = cycle * 6.28 * 2.2369356 * (rps + 200);
         // speed = cycle * 6.28 * 2.2369356 * rps;
         // speed = 0.0009171425863 * rps;
-        speed = 3.301713108 * rps * (__DEV__ ? 1 : 1); // mi/hour
+        speed = 3.301713108 * rps * (__DEV__ ? 100 : 1); // mi/hour
         speed = speed < 0 ? 0 : speed;
 
         const distanceRun = speed * timeHour;
@@ -138,6 +142,34 @@ export const disconnectBluetoothChange = dispatch => {
   };
 };
 
+const connectAndStartNotfication = async (
+  periBluetooth: PeripheralBluetooth
+) => {
+  try {
+    // await BleManager.start({ showAlert: false });
+    const services = [periBluetooth.service];
+    console.log(TAG, ' connectWithTimeout 02 ');
+    // await Util.excuteWithTimeout(
+    //   BleManager.connect(periBluetooth.peripheral),
+    //   2
+    // );
+    await BleManager.connect(periBluetooth.peripheral);
+    console.log(TAG, ' connectWithTimeout 03 ');
+    await BleManager.retrieveServices(periBluetooth.peripheral, services);
+    console.log(TAG, ' connectWithTimeout 04 ');
+    await BleManager.startNotification(
+      periBluetooth.peripheral,
+      periBluetooth.service,
+      periBluetooth.characteristic
+    );
+  } catch (error) {
+    console.log(TAG, ' connectWithTimeout error ', error);
+    return Promise.reject(error);
+  }
+
+  return Promise.resolve(1);
+};
+
 export const connectAndPrepare = () => async dispatch => {
   // get data from local
   dispatch({
@@ -158,7 +190,7 @@ export const connectAndPrepare = () => async dispatch => {
         data: {}
       }
     });
-    return;
+    return Promise.resolve(0);
   }
   // Connect to device
   console.log(TAG, ' connectAndPrepare begin 01 ');
@@ -171,34 +203,36 @@ export const connectAndPrepare = () => async dispatch => {
     }
   });
 
-  await BleManager.start({ showAlert: false });
   // const isConnected = await BleManager.isPeripheralConnected(
   // periBluetooth.peripheral,
   // [periBluetooth.service]
   // );
-  console.log(TAG, ' connectAndPrepare 01 state-----');
+  console.log(
+    TAG,
+    ' connectAndPrepare 01 state-----',
+    receiveDataFromBluetooth
+  );
   if (!receiveDataFromBluetooth) {
     try {
-      await BleManager.connect(periBluetooth.peripheral);
-      console.log(TAG, ' connectAndPrepare 02 ');
+      await Util.excuteWithTimeout(
+        connectAndStartNotfication(periBluetooth),
+        3
+      );
       dispatch({
         type: ACTIONS.CONNECT_BLUETOOTH,
         payload: {
-          state: STATE_BLUETOOTH.CONNECTING,
+          state: STATE_BLUETOOTH.CONNECTED,
           data: {}
         }
       });
-
-      console.log(TAG, ' connectAndPrepare 03 ');
-      await BleManager.retrieveServices(periBluetooth.peripheral);
-      console.log(TAG, ' connectAndPrepare 04 ');
-      await BleManager.startNotification(
-        periBluetooth.peripheral,
-        periBluetooth.service,
-        periBluetooth.characteristic
+      console.log(
+        TAG,
+        ' connectAndPrepare 02 state-----',
+        receiveDataFromBluetooth
       );
-      receiveDataFromBluetooth = true;
+      // receiveDataFromBluetooth = true;
     } catch (error) {
+      console.log(TAG, ' connectAndPrepare error timeout - ', error);
       dispatch({
         type: ACTIONS.CONNECT_BLUETOOTH,
         payload: {
@@ -206,13 +240,14 @@ export const connectAndPrepare = () => async dispatch => {
           data: {}
         }
       });
+      return Promise.reject(error);
     }
 
     console.log(TAG, ' connectAndPrepare 05 ');
     if (handlerUpdate) {
+      console.log(TAG, ' connectAndPrepare 06 ');
       handlerUpdate.remove();
       handlerUpdate = null;
-
       bleManagerEmitter.removeSubscription(handlerDisconnect);
       handlerDisconnect = null;
     }
@@ -257,10 +292,10 @@ export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
         data: {}
       }
     });
-    return;
+    return Promise.resolve(0);
   }
 
-  console.log(TAG, ' connectAndPrepare begin 01 ');
+  console.log(TAG, ' connectAndSaving begin 01 ');
   dispatch({
     type: ACTIONS.CONNECT_BLUETOOTH,
     payload: {
@@ -273,9 +308,13 @@ export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
   // periBluetooth.peripheral,
   // [periBluetooth.service]
   // );
-  console.log(TAG, ' connectAndPrepare 01 state-----');
+  console.log(
+    TAG,
+    ` connectAndSaving 01 state-----${receiveDataFromBluetooth}`
+  );
   if (!receiveDataFromBluetooth) {
     try {
+      // await BleManager.start({ showAlert: false });
       await BleManager.connect(periBluetoothId);
       const peripheralInfo = await BleManager.retrieveServices(periBluetoothId);
       // const id = peripheralInfo.id;
@@ -284,7 +323,7 @@ export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
       var serviceUUID = services[2].uuid;
 
       var bakeCharacteristic = characteristics[3].characteristic;
-      console.log(TAG, ' connectAndPrepare 02 ');
+      console.log(TAG, ' connectAndSaving 02 ');
       dispatch({
         type: ACTIONS.CONNECT_BLUETOOTH,
         payload: {
@@ -292,7 +331,7 @@ export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
           data: {}
         }
       });
-      console.log(TAG, ' connectAndPrepare 04 ');
+      console.log(TAG, ' connectAndSaving 04 ');
       await BleManager.startNotification(
         periBluetoothId,
         serviceUUID,
@@ -309,7 +348,7 @@ export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
       });
     }
 
-    console.log(TAG, ' connectAndPrepare 05 ');
+    console.log(TAG, ' connectAndSaving 05 ');
     if (handlerUpdate) {
       handlerUpdate.remove();
       handlerUpdate = null;
@@ -336,6 +375,7 @@ export const connectAndSaving = (periBluetoothId = '') => async dispatch => {
       }
     });
   }
+  return Promise.resolve(1);
 };
 
 export const disconnectBluetooth = () => async dispatch => {
@@ -359,9 +399,11 @@ export const disconnectBluetooth = () => async dispatch => {
     }
     if (periBluetooth && periBluetooth.peripheral) {
       console.log(TAG, ' disconnectBluetooth stop-----');
-      await BleManager.start({ showAlert: false });
+      // await BleManager.start({ showAlert: false });
+      // await BleManager.retrieveServices(periBluetooth.peripheral);
       console.log(TAG, ' disconnectBluetooth stop11-----');
       receiveDataFromBluetooth = false;
+      await BleManager.disconnect(periBluetooth.peripheral);
       console.log(TAG, ' disconnectBluetooth stop12-----');
       await BleManager.stopNotification(
         periBluetooth.peripheral,
@@ -369,10 +411,9 @@ export const disconnectBluetooth = () => async dispatch => {
         periBluetooth.characteristic
       );
       console.log(TAG, ' disconnectBluetooth stop13-----');
-      await BleManager.disconnect(periBluetooth.peripheral);
     }
   } catch (error) {
-    console.log(TAG, ' disconnectBluetooth error');
+    console.log(TAG, ' disconnectBluetooth error', error);
   }
 
   console.log(TAG, ' disconnectBluetooth end ');

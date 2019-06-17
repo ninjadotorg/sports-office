@@ -12,10 +12,10 @@ export default class Util {
       password: '123456'
     };
   };
+  static delay = timeSecond =>
+    new Promise(res => setTimeout(() => res(), timeSecond * 1000));
   static infoConfig = () => {
-    return `FLAVOR = ${ConfigReact.default.FLAVOR}, BUILD_TYPE = ${
-      ConfigReact.default.BUILD_TYPE
-    },DEBUG = ${ConfigReact.default.DEBUG}`;
+    return `FLAVOR = ${ConfigReact.default.FLAVOR}, BUILD_TYPE = ${ConfigReact.default.BUILD_TYPE},DEBUG = ${ConfigReact.default.DEBUG}`;
   };
 
   static isEmailValid(email) {
@@ -39,13 +39,54 @@ export default class Util {
     });
   };
 
-  static excuteWithTimeout = (promise, timeSecond = 1) => {
+  static excuteWithTimeout = (promise: Promise, timeSecond = 1) => {
     return new Promise(function(resolve, reject) {
-      setTimeout(function() {
+      const timeout = setTimeout(function() {
         reject(new Error('timeout'));
       }, timeSecond * 1000);
-      promise.then(resolve, reject);
+      promise.then(
+        success => {
+          clearTimeout(timeout);
+          resolve(success);
+        },
+        error => {
+          reject(error);
+        }
+      );
+      // promise.then(resolve, reject);
     });
+  };
+
+  /**
+   * Retries the given function until it succeeds given a number of retries and an interval between them. They are set
+   * by default to retry 5 times with 1sec in between. There's also a flag to make the cooldown time exponential
+   * @author Daniel Iñigo <danielinigobanos@gmail.com>
+   * @param {Function} fn - Returns a promise
+   * @param {Number} retriesLeft - Number of retries. If -1 will keep retrying
+   * @param {Number} interval - Millis between retries. If exponential set to true will be doubled each retry
+   * @param {Boolean} exponential - Flag for exponential back-off mode
+   * @return {Promise<*>}
+   */
+  static retry = async (
+    promisefn,
+    retriesLeft = 3,
+    interval = 1000,
+    exponential = false
+  ) => {
+    try {
+      const val = await promisefn();
+      return val;
+    } catch (error) {
+      if (retriesLeft) {
+        await new Promise(r => setTimeout(r, interval));
+        return Util.retry(
+          promisefn,
+          retriesLeft - 1,
+          exponential ? interval * 2 : interval,
+          exponential
+        );
+      } else throw new Error('Max retries reached');
+    }
   };
 
   /**

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
-import { scale,verticalScale } from 'react-native-size-matters';
+import { scale, verticalScale } from 'react-native-size-matters';
 import _ from 'lodash';
 import StyleBikeProfile from './styles';
 import images, { icons } from '@/assets';
@@ -16,9 +16,10 @@ const MAX_LENGHT = 7;
 class OTPublisherCustom extends OTPublisher {
   constructor(props) {
     super(props);
-    console.log(TAG, ' OTPublisherCustom constructor begin');
+    const { playerMe } = props;
+    // console.log(TAG, ' OTPublisherCustom constructor playerMe =  ', playerMe);
   }
- 
+
   render() {
     // const {playerMe = {}} = this.state;
     const { playerMe = {}, styles } = this.props;
@@ -27,24 +28,42 @@ class OTPublisherCustom extends OTPublisher {
       <View style={styles.parentViewInfo}>
         {super.render()}
         <View style={styles.parentViewPublishView}>
-          <View style={[styles.publisherInfo,{backgroundColor:'transparent'}]}>
-            <View style={{flexDirection:'row',justifyContent:'center'}}>
+          <View
+            style={[styles.publisherInfo, { backgroundColor: 'transparent' }]}
+          >
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               {icons.bike({
                 containerStyle: { marginRight: scale(2) },
-                color:'#00e751',
-                size:verticalScale(12)
+                color: '#00e751',
+                size: verticalScale(12)
               })}
-              <Text style={[TextStyle.normalText, { color: '#ffffff' ,fontWeight:'bold' }]}>
-                {Util.truncate(playerMe?.playerName,MAX_LENGHT) || ''}
+              <Text
+                style={[
+                  TextStyle.normalText,
+                  { color: '#ffffff', fontWeight: 'bold' }
+                ]}
+              >
+                {Util.truncate(playerMe?.playerName, MAX_LENGHT) || ''}
               </Text>
             </View>
-            
-            <Text style={[TextStyle.normalText, {  color: '#ffffff70' ,fontWeight:'bold' }]}>
+
+            <Text
+              style={[
+                TextStyle.normalText,
+                { color: '#ffffff70', fontWeight: 'bold' }
+              ]}
+            >
               {Math.round(playerMe?.speed || 0)}
               mi/h
             </Text>
-            <Text style={[TextStyle.normalText, {  color: '#ffffff70' ,fontWeight:'bold' }]}>
-              {playerMe?.goal || 0}%
+            <Text
+              style={[
+                TextStyle.normalText,
+                { color: '#ffffff70', fontWeight: 'bold' }
+              ]}
+            >
+              {playerMe?.goal || 0}
+%
             </Text>
           </View>
         </View>
@@ -58,6 +77,7 @@ class OTSubscriberCustom extends OTSubscriber {
     this.state = {
       streams: props.streams || []
     };
+    // console.log(TAG, ' OTSubscriberCustom constructor streams =  ', props.streams );
   }
   render() {
     const { streams = [] } = this.state;
@@ -71,14 +91,14 @@ class OTSubscriberCustom extends OTSubscriber {
       return (
         <View
           key={streamId}
-          style={[styles.parentViewPublishView,{}]}
+          style={[styles.parentViewPublishView, {}]}
           // style={[
           //   styles.subcriber,
           //   { flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }
           // ]}
         >
           <View
-            style={[styles.publisherInfo,{backgroundColor:'transparent'}]}
+            style={[styles.publisherInfo, { backgroundColor: 'transparent' }]}
             // style={{
             //   width: '100%',
             //   flexDirection: 'row',
@@ -87,26 +107,42 @@ class OTSubscriberCustom extends OTSubscriber {
             //   backgroundColor: 'transparent'
             // }}
           >
-            <View style={{flexDirection:'row',alignItems:'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
                 style={{
-                  backgroundColor: playersColor[player?.fbuid||'']||'transparent',
-                  borderRadius: verticalScale(12)/2,
+                  backgroundColor:
+                    playersColor[player?.fbuid || ''] || 'transparent',
+                  borderRadius: verticalScale(12) / 2,
                   width: verticalScale(12),
                   height: verticalScale(12),
                   marginRight: scale(2)
                 }}
               />
-              <Text style={[TextStyle.normalText, {  color: '#ffffff' ,fontWeight:'bold'}]}>
-                {Util.truncate(player?.playerName,MAX_LENGHT) || ''}
+              <Text
+                style={[
+                  TextStyle.normalText,
+                  { color: '#ffffff', fontWeight: 'bold' }
+                ]}
+              >
+                {Util.truncate(player?.playerName, MAX_LENGHT) || ''}
               </Text>
             </View>
 
-            <Text style={[TextStyle.normalText, {  color: '#ffffff70' ,fontWeight:'bold' }]}>
+            <Text
+              style={[
+                TextStyle.normalText,
+                { color: '#ffffff70', fontWeight: 'bold' }
+              ]}
+            >
               {Math.round(player?.speed || 0)}
               mi/h
             </Text>
-            <Text style={[TextStyle.normalText, {  color: '#ffffff70' ,fontWeight:'bold' }]}>
+            <Text
+              style={[
+                TextStyle.normalText,
+                { color: '#ffffff70', fontWeight: 'bold' }
+              ]}
+            >
               {player?.goal || 0}
 %
             </Text>
@@ -154,7 +190,7 @@ class BikerProfile extends Component {
 
     this.publisherEventHandlers = {
       streamCreated: event => {
-        console.log(TAG, ' Publisher stream created!', event);
+        // console.log(TAG, ' Publisher stream created!', event);
 
         // push stream Id on firebase
         if (!_.isEmpty(event) && event.streamId) {
@@ -162,7 +198,7 @@ class BikerProfile extends Component {
         }
       },
       streamDestroyed: event => {
-        console.log(TAG, ' Publisher stream destroyed!', event);
+        // console.log(TAG, ' Publisher stream destroyed!', event);
         this.props.onStreamDestroyed(event?.streamId || '');
       }
     };
@@ -210,11 +246,11 @@ class BikerProfile extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!BikerProfile.isArrayEqual(nextProps?.players, this.state.players)) {
-      console.log(
-        TAG,
-        ' componentWillReceiveProps - have player --- ',
-        nextProps.players
-      );
+      // console.log(
+      //   TAG,
+      //   ' componentWillReceiveProps - have player --- ',
+      //   nextProps.players
+      // );
       this.setState({
         players: nextProps.players,
         playersColor: nextProps.playersColor
@@ -225,12 +261,11 @@ class BikerProfile extends Component {
     //   players: nextProps.players
     // });
   }
-  
 
   render() {
     const { players = [], playersColor = {} } = this.state;
     const playerMe = players?.find(item => item.isMe === true);
-    // console.log(TAG, ' render playerMe = ',playerMe );
+    // console.log(TAG, ' render playerMe = ', playerMe);
     return (
       <ScrollView
         style={[this.styles.container, { height: '100%' }]}

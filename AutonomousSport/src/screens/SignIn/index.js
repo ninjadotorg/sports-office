@@ -8,7 +8,6 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  Surface,
   ImageBackground,
   KeyboardAvoidingView
 } from 'react-native';
@@ -69,18 +68,16 @@ class SignInScreen extends BaseScreen {
       secureTextEntry: true
     };
 
-    this.pubnub.addListener({
-      message: function(message) {
-          console.log(TAG, " addListenerPUB " , message);
-          
-      }
-    });
-  
-    this.pubnub.subscribe({ 
-        channels: ['velo_bike'] 
-    });
-  }
+    // this.pubnub.addListener({
+    //   message: function(message) {
+    //     console.log(TAG, ' addListenerPUB ', message);
+    //   }
+    // });
 
+    // this.pubnub.subscribe({
+    //   channels: ['velo_bike']
+    // });
+  }
 
   // static getDerivedStateFromProps(nextProps, prevState) {
   //   console.log(TAG, ' getDerivedStateFromProps - begin ');
@@ -99,27 +96,27 @@ class SignInScreen extends BaseScreen {
   //   return null;
   // }
 
-  testPushDataOnPubnub = async ()=>{
-    const delay = time => new Promise(res=>setTimeout(()=>res(),time));
-    await delay(5000);
-    let publishConfig = {
-      channel : "velo_bike",
-      message: { 
-          title: "HIENTON ---- greeting",
-          description: "hello world!"
-      }
-    };
-    this.pubnub.publish(publishConfig,(status,response)=>{
-       console.log(TAG, ' pubnub.publish - begin -status = ',status);
-    });
-  }
+  // testPushDataOnPubnub = async () => {
+  //   const delay = time => new Promise(res => setTimeout(() => res(), time));
+  //   await delay(5000);
+  //   let publishConfig = {
+  //     channel: 'velo_bike',
+  //     message: {
+  //       title: 'HIENTON ---- greeting',
+  //       description: 'hello world!'
+  //     }
+  //   };
+  //   this.pubnub.publish(publishConfig, (status, response) => {
+  //     console.log(TAG, ' pubnub.publish - begin -status = ', status);
+  //   });
+  // };
 
   componentDidMount() {
     // this.props.fetchUser();
     this.props.checkSaveDevice();
-    this.testPushDataOnPubnub().then(()=>{
-    console.log(TAG, ' componentDidUpdate - test --------');    
-    });
+    // this.testPushDataOnPubnub().then(() => {
+    //   console.log(TAG, ' componentDidUpdate - test --------');
+    // });
   }
 
   // componentDidUpdate(prevProps,prevState){
@@ -213,7 +210,7 @@ class SignInScreen extends BaseScreen {
         isLogged
       });
       if (isLogged) {
-        // this.replaceScreen(this.props.navigation, TAGHOME);
+        this.replaceScreen(this.props.navigation, TAGHOME);
       } else {
         this.setState({
           isCheckingRegular: false
@@ -339,11 +336,14 @@ class SignInScreen extends BaseScreen {
               keyboardType="email-address"
             />
           </View>
-          {swap != 'forgot' ? (
+          {swap !== 'forgot' ? (
             <View
               style={[
                 styles.containerInput,
-                { marginBottom: verticalScale(7) }
+                {
+                  marginBottom: verticalScale(7),
+                  alignItems: 'center'
+                }
               ]}
             >
               <Text style={[TextStyle.normalText, styles.textLabel]}>
@@ -361,6 +361,12 @@ class SignInScreen extends BaseScreen {
                 underlineColorAndroid="transparent"
                 secureTextEntry={this.state.secureTextEntry}
               />
+              <TouchableOpacity onPress={this.onPressEye}>
+                <Image
+                  source={this.state.eye}
+                  style={{ width: 24, height: 16 }}
+                />
+              </TouchableOpacity>
             </View>
           ) : null}
 
@@ -380,26 +386,6 @@ class SignInScreen extends BaseScreen {
                     )*/}
             </View>
             <View style={{ alignSelf: 'flex-end' }}>
-              {swap != 'signup' ? null : (
-                <TouchableOpacity
-                  onPress={this.onPressEye}
-                  style={[
-                    styles.buttonStyle,
-                    {
-                      position: 'absolute',
-                      marginRight: 2,
-                      right: 3,
-                      marginTop: -72,
-                      backgroundColor: 'transparent'
-                    }
-                  ]}
-                >
-                  <Image
-                    source={this.state.eye}
-                    style={{ width: 24, height: 16 }}
-                  />
-                </TouchableOpacity>
-              )}
               {swap == 'forgot' ? null : (
                 <Text
                   onPress={this.onPressForgot}
@@ -491,15 +477,15 @@ class SignInScreen extends BaseScreen {
 
             <View style={[styles.bottomContainer]}>
               <Button
+                type="solid"
                 loading={loading}
-                buttonStyle={[{ backgroundColor: 'transparent' }]}
+                buttonStyle={[styles.buttonStyle, {}]}
                 title={texts[swap]['button']}
-                textStyle={[
+                titleStyle={[
                   TextStyle.mediumText,
                   styles.textButton,
-                  { fontWeight: 'bold', flex: 1,color:'#534c5f' }
+                  { fontWeight: 'bold', flex: 1, color: '#534c5f' }
                 ]}
-                containerViewStyle={[styles.buttonStyle, {}]}
                 onPress={this.onPressSignIn}
               />
 

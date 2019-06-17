@@ -17,8 +17,8 @@ import { getTopRacer } from '@/actions/UserAction';
 import ItemTopRacer from '@/components/ItemTopRacer';
 import _ from 'lodash';
 import User from '@/models/User';
-import { scale } from 'react-native-size-matters';
-import styles, { sliderWidth, itemWidth } from './styles';
+import { verticalScale } from 'react-native-size-matters';
+import styles from './styles';
 
 export const TAG = 'TopRaceScreen';
 
@@ -66,28 +66,29 @@ class TopRaceScreen extends BaseScreen {
 
   renderLeftHeader = () => {
     return (
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={{ flexDirection: 'row', marginTop: 10 }}
-          onPress={this.onPressBack}
+      <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center'
+        }}
+        onPress={this.onPressBack}
+      >
+        <Image source={images.ic_backtop} style={{ width: 32, height: 32 }} />
+        <Text
+          style={[
+            TextStyle.mediumText,
+            {
+              color: 'white',
+              fontWeight: 'bold',
+              textAlignVertical: 'center',
+              marginLeft: 20
+            }
+          ]}
         >
-          <Image source={images.ic_backtop} style={{ width: 32, height: 32 }} />
-          <Text
-            style={[
-              TextStyle.mediumText,
-              {
-                color: 'white',
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-                marginHorizontal: 10,
-                marginLeft: 20
-              }
-            ]}
-          >
-            Top 10 bikers around the world
-          </Text>
-        </TouchableOpacity>
-      </View>
+          Top 10 bikers around the world
+        </Text>
+      </TouchableOpacity>
     );
   };
   iconImage = asset => {
@@ -97,7 +98,6 @@ class TopRaceScreen extends BaseScreen {
     const isMe = this.state.dataTopRacer.list[index]['is_me'] || false;
     let iconResult = (
       <Avatar
-        rounded
         titleStyle={[
           TextStyle.mediumText,
           {
@@ -108,12 +108,15 @@ class TopRaceScreen extends BaseScreen {
         overlayContainerStyle={{
           backgroundColor: 'rgba(255,255,255,0.2)',
           borderWidth: 0,
+          borderRadius: 33,
           borderColor: 'white'
         }}
-        width={65}
-        height={65}
         title={String(index + 1)}
-        containerStyle={{ alignSelf: 'center' }}
+        containerStyle={{
+          alignSelf: 'center',
+          width: 66,
+          height: 66
+        }}
       />
     );
 
@@ -148,10 +151,15 @@ class TopRaceScreen extends BaseScreen {
         <View style={styles.container}>
           <Header
             backgroundColor="transparent"
-            outerContainerStyles={{ borderBottomWidth: 0 }}
-          >
-            {this.renderLeftHeader()}
-          </Header>
+            containerStyle={{
+              borderBottomWidth: 0,
+              paddingLeft: verticalScale(10)
+            }}
+            leftContainerStyle={{ flex: 1 }}
+            centerContainerStyle={{ flex: 1 }}
+            rightContainerStyle={{ flex: 0 }}
+            leftComponent={this.renderLeftHeader()}
+          />
 
           <FlatList
             keyExtractor={item => String(item.id)}

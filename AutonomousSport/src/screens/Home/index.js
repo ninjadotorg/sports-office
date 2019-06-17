@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
 import { Button } from 'react-native-elements';
-import { connectAndPrepare, disconnectBluetooth } from '@/actions/RaceAction';
+import { connectAndPrepare } from '@/actions/RaceAction';
 import TextStyle, { screenSize } from '@/utils/TextStyle';
 import { TAG as TAGCREATE } from '@/screens/Create';
 import { TAG as TAGFRIENDS } from '@/screens/Friends';
@@ -33,12 +33,11 @@ import {
   fetchUser,
   resetRacing,
   updateRacing,
-  updatePractiseRacing,
-  loginWithFirebase
+  updatePractiseRacing
 } from '@/actions/UserAction';
 import * as Animatable from 'react-native-animatable';
-import styles, { sliderWidth, itemWidth } from './styles';
-
+import styles from './styles';
+import Util from '@/utils/Util';
 
 export const TAG = 'HomeScreen';
 const sizeImageCenter = verticalScale(130);
@@ -79,7 +78,8 @@ class HomeScreen extends BaseScreen {
           const { race } = this.state;
           if (_.isEmpty(race) || race.state !== STATE_BLUETOOTH.CONNECTED) {
             console.log(TAG, ' componentWillReceiveProps - user1111');
-            this.props.connectAndPrepare();
+            Util.retry(this.props.connectAndPrepare, 3, 9000);
+            // this.props.connectAndPrepare();
           }
         }
       );
@@ -128,7 +128,6 @@ class HomeScreen extends BaseScreen {
     this.props.getUser();
     // this.showDialogInvite(true);
     this.onPressReset();
-  
   }
 
   // componentWillUnmount() {
@@ -361,7 +360,7 @@ class HomeScreen extends BaseScreen {
         <View style={styles.containerBottom}>
           <Button
             title={isStarted ? 'Reset' : 'Practice'}
-            textStyle={[
+            titleStyle={[
               TextStyle.mediumText,
               { fontWeight: 'bold', color: '#ffc500' }
             ]}
@@ -379,7 +378,7 @@ class HomeScreen extends BaseScreen {
                 borderWidth: 0
               }
             ]}
-            textStyle={[
+            titleStyle={[
               TextStyle.mediumText,
               { fontWeight: 'bold', color: '#534c5f' }
             ]}
@@ -403,11 +402,9 @@ export default connect(
   }),
   {
     getUser: fetchUser,
-    loginWithFirebase,
     updatePractiseRacing,
     resetRacing,
     connectAndPrepare,
-    disconnectBluetooth,
     updateRacing
   }
 )(HomeScreen);

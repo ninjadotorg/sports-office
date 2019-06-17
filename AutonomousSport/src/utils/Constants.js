@@ -5,6 +5,7 @@ import * as ConfigReact from 'react-native-config';
 import { scale } from 'react-native-size-matters';
 import Util from '@/utils/Util';
 import PubNub from 'pubnub';
+// import PubNubReact from 'pubnub-react';
 
 export default class Constants {
   static BACK_KEY = 'BACK';
@@ -38,14 +39,17 @@ export const Config = {
 
     return ConfigReact.default.API_URL;
   })(),
-  OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || ''
+  OPENTOK_API_KEY: ConfigReact.default.OPENTOK_API_KEY || '',
+  PUBNUB_API_KEY: {
+    // subscribeKey: 'sub-c-f38a1c3c-4085-11e9-bd6d-163ac0efd868',
+    // publishKey: 'pub-c-7a7f3406-00e4-4839-a5b9-4a279daa1bc7',
+    subscribeKey: 'sub-c-2f622326-602a-11e9-92bf-0e148eae7978',
+    publishKey: 'pub-c-597dc147-e4e1-450d-83ca-fd546f351719'
+    // ssl: true
+  }
 };
 
-export const pubnub = new PubNub({
-  subscribeKey: 'sub-c-f38a1c3c-4085-11e9-bd6d-163ac0efd868',
-  publishKey: 'pub-c-7a7f3406-00e4-4839-a5b9-4a279daa1bc7',
-  ssl: true
-});
+export const pubnub = new PubNub(Config.PUBNUB_API_KEY);
 
 export const COLOR = {
   TRANSPARENT: 'transparent',

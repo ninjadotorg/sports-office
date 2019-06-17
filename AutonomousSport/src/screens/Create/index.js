@@ -8,7 +8,7 @@ import {
   ImageBackground
 } from 'react-native';
 import BaseScreen from '@/screens/BaseScreen';
-import { Button, Header, ButtonGroup } from 'react-native-elements';
+import { Button, Header } from 'react-native-elements';
 import { TAG as TAGHOME } from '@/screens/Home';
 import styles from './styles';
 import TextStyle from '@/utils/TextStyle';
@@ -27,11 +27,6 @@ import Room from '@/models/Room';
 export const TAG = 'CreateRoomScreen';
 
 class CreateRoomScreen extends BaseScreen {
-  static navigationOptions = navigation => {
-    return {
-      title: 'Create'
-    };
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -141,7 +136,12 @@ class CreateRoomScreen extends BaseScreen {
         <View style={styles.container}>
           <Header
             backgroundColor="transparent"
-            outerContainerStyles={{ borderBottomWidth: 0 }}
+            leftContainerStyle={{ flex: 1 }}
+            centerContainerStyle={{
+              flex: 0
+            }}
+            rightContainerStyle={{ flex: 0 }}
+            containerStyle={{ borderBottomWidth: 0 }}
           >
             {this.renderLeftHeader()}
           </Header>
@@ -150,7 +150,7 @@ class CreateRoomScreen extends BaseScreen {
             <Button
               loading={isLoading}
               title="Random"
-              textStyle={[
+              titleStyle={[
                 TextStyle.mediumText,
                 { fontWeight: 'bold', color: '#ffc500' }
               ]}
@@ -163,7 +163,7 @@ class CreateRoomScreen extends BaseScreen {
                 styles.button,
                 { backgroundColor: '#ffc500', borderColor: 'transparent' }
               ]}
-              textStyle={[
+              titleStyle={[
                 TextStyle.mediumText,
                 { fontWeight: 'bold', color: '#534c5f' }
               ]}

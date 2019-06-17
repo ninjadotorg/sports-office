@@ -11,7 +11,7 @@ const KEY_SAVE = {
 };
 export default class LocalDatabase {
   static async getValue(key: String): String {
-    console.log(TAG, ' getValue begin ', key);
+    // console.log(TAG, ' getValue begin ', key);
     const s = await AsyncStorage.getItem(key);
     return s;
   }
@@ -37,16 +37,16 @@ export default class LocalDatabase {
     }
   }
   static async getBluetooth(): PeripheralBluetooth {
-    console.log(TAG, ' getBluetooth begin ');
+    // console.log(TAG, ' getBluetooth begin ');
     const jsonString = await this.getValue(KEY_SAVE.BLUETOOTH);
     const json = _.isEmpty(jsonString) ? null : JSON.parse(jsonString);
-    console.log(
-      TAG,
-      ' getBluetooth begin01 json = ',
-      json,
-      ' jsonString = ',
-      jsonString
-    );
+    // console.log(
+    //   TAG,
+    //   ' getBluetooth begin01 json = ',
+    //   json,
+    //   ' jsonString = ',
+    //   jsonString
+    // );
     return _.isEmpty(json)
       ? null
       : new PeripheralBluetooth(
